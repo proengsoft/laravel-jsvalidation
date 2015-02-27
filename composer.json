@@ -1,0 +1,42 @@
+{
+    "name": "proengsoft/laravel-jqueryvalidation",
+    "type": "library",
+    "description": "Integates Laravel validator with jQquery validation .org plugin.",
+    "keywords": [
+        "proengsoft",
+        "laravel",
+        "validator",
+        "jQuery Validator"
+    ],
+    "homepage": "https://github.com/thephpleague/:package_name",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": ":author_name",
+            "email": ":author_email",
+            "homepage": ":author_website",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : ">=5.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "4.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Proengsoft\\JQueryValidation\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Proengsoft\\JQueryValidation\\Test\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
