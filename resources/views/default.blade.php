@@ -1,0 +1,1 @@
+@include('jsvalidator::'.$validator['plugin'].'.default', array('validator'=>$validator))
