@@ -2,7 +2,7 @@
 <script>
     jQuery(document).ready(function(){
 
-        $({{ $validator['selector'] }}).validate({
+        $('{{ $validator['selector'] }}').validate({
             highlight: function (element) { // hightlight error inputs
                 $(element)
                         .closest('.form-group').addClass('has-error'); // set error class to the control group
