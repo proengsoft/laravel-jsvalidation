@@ -9,8 +9,8 @@
 namespace Proengsoft\JQueryValidation;
 
 use Illuminate\Validation\Validator as BaseValidator;
-use Proengsoft\JQueryValidation\Plugins\JQueryValidation;
 use Symfony\Component\Translation\TranslatorInterface;
+use Illuminate\Support\Str;
 
 
 class ValidationAdapter extends BaseValidator {
@@ -20,7 +20,7 @@ class ValidationAdapter extends BaseValidator {
     /**
      * @var JQueryValidation
      */
-    protected $plugin;
+    protected $converter;
 
     protected $jsRules;
     protected $jsMessages;
@@ -33,11 +33,11 @@ class ValidationAdapter extends BaseValidator {
         array $rules,
         array $messages = array(),
         array $customAttributes = array(),
-        JQueryValidation $plugin
+        JQueryValidation $converter
     ) {
         parent::__construct($translator, $data, $rules, $messages, $customAttributes);
 
-        $this->plugin = $plugin;
+        $this->converter = $converter;
         $this->generateValidations();
 
 
@@ -115,7 +115,7 @@ class ValidationAdapter extends BaseValidator {
 
 
     /**
-     * Convert a given rule using the plugin.
+     * Convert a given rule using the converter.
      *
      * @param  string  $attribute
      * @param  string  $rule
@@ -133,12 +133,12 @@ class ValidationAdapter extends BaseValidator {
         if (!$this->isValidatable($rule, $attribute, null)) return [];
 
         $method = "rule{$rule}";
-        return $this->plugin->$method($attribute, $parameters, $this);
+        return $this->converter->$method($attribute, $parameters, $this);
 
     }
 
     /**
-     * Convert the message from given rule using the plugin.
+     * Convert the message from given rule using the converter.
      *
      * @param  string  $attribute
      * @param  string  $rule
@@ -152,7 +152,7 @@ class ValidationAdapter extends BaseValidator {
 
         $message = $this->doReplacements($message, $attribute, $rule, $parameters);
 
-        return $this->plugin->message($attribute, $message, $parameters, $this);
+        return $this->converter->message($attribute, $message, $parameters, $this);
 
     }
 
@@ -163,35 +163,17 @@ class ValidationAdapter extends BaseValidator {
     }
 
 
-    /*
-
-    public function getJsRules()
-    {
-        return $this->jsRules;
-    }
-
-    public function getJsMessages()
-    {
-        return $this->jsMessages;
-    }
-
-    public function getCssSelector()
-    {
-        return $this->selector;
-    }
-    */
-
     public function form($selector)
     {
         $this->selector=$selector;
     }
 
-    public function jsValidator($selector = null)
+    public function js($selector = null)
     {
         $this->selector=is_null($selector)?$this->selector:$selector;
 
         return [
-            'plugin' => $this->plugin->slug(),
+            'converter' => Str::slug(class_basename($this->converter)),
             'selector' => $this->selector,
             'rules' => $this->jsRules,
             'messages' => $this->jsMessages
