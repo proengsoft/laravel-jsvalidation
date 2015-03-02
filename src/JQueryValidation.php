@@ -6,15 +6,11 @@
  * Time: 23:38
  */
 
-namespace Proengsoft\JQueryValidation\Plugins;
+namespace Proengsoft\JQueryValidation;
 
 
 class JQueryValidation {
 
-    public function slug()
-    {
-        return str_slug(class_basename($this));
-    }
 
     public function message($attribute, $message, $parameters)
     {
@@ -22,20 +18,37 @@ class JQueryValidation {
     }
 
 
+    /**
+     * "Validate" optional attributes.
+     *
+     * Always returns empty, just lets us put sometimes in rules.
+     *
+     * @return array
+     */
     public function ruleSometimes()
     {
-
         return [];
     }
 
-    public function ruleRequired($attribute)
+    /**
+     * Validate that a required attribute exists.
+     *
+     * @return array
+     */
+    public function ruleRequired()
     {
         return ['required' =>true ];
     }
 
+    /**
+     * Validate the given attribute is filled if it is present.
+     *
+     * @param  string  $attribute
+     * @return bool
+     */
     public function ruleFilled($attribute)
     {
-        return [];
+        return ['required' =>true ];
     }
 
     public function ruleRequiredWith($attribute, $parameters)
