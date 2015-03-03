@@ -1,4 +1,3 @@
-
-jQuery.validator.addMethod("existsRequired", function(value, element) {
-    alert (element)
-}, "Please specify the correct domain for your documents");
+jQuery.validator.addMethod("different", function(value, element, param) {
+    return this.optional(element) || value != param;
+}, "Please specify a different (non-default) value");

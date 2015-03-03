@@ -15,18 +15,18 @@ class JsValidationServiceProvider extends ServiceProvider {
 	{
 
         $viewPath = __DIR__.'/../resources/views';
-        $this->loadViewsFrom($viewPath, 'jsvalidator');
+        $this->loadViewsFrom($viewPath, 'jsvalidation');
         $this->publishes([
-            $viewPath => base_path('resources/views/vendor/jsvalidator'),
+            $viewPath => base_path('resources/views/vendor/jsvalidation'),
         ]);
         /*
         $configPath = __DIR__ . '/../config/jsvalidator.php';
         $this->publishes([$configPath => config_path('jsvalidator.php')], 'config');
-
-        $this->publishes([
-            __DIR__.'../public/path/to/assets' => public_path('proengsoft/courier'),
-        ], 'public');
         */
+        $this->publishes([
+            __DIR__.'/../public' => public_path('vendor/jsvalidation'),
+        ], 'public');
+
         $this->bootValidator();
     }
 

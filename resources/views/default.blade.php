@@ -1,1 +1,0 @@
-@include('jsvalidator::'.$validator['converter'].'.bootstrap', array('validator'=>$validator))
