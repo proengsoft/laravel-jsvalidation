@@ -1,8 +1,10 @@
-<script type="text/javascript" src="{{ asset('themes/admin/')}}/global/plugins/jquery-validation/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jqueryvalidation/jquery.validate.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jqueryvalidation/additional-methods.validate.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/laravel.js')}}"></script>
 <script>
     jQuery(document).ready(function(){
 
-        $('{{ $validator["selector"] }}').validate({
+        $({!! "'".$validator["selector"]."'" !!}).validate({
             highlight: function (element) { // hightlight error inputs
                 $(element)
                         .closest('.form-group').addClass('has-error'); // set error class to the control group
@@ -31,7 +33,7 @@
                         .closest('.form-group').removeClass('has-error'); // set success class to the control group
             },
             rules:
-                {!! json_encode($validator['rules']) !!},
+                {!! json_encode($validator['rules']) !!} ,
             messages:
                 {!! json_encode($validator['messages']) !!}
         })

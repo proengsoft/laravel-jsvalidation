@@ -130,7 +130,7 @@ class ValidationAdapter extends BaseValidator {
 
         // We will verify that the attribute is indeed validatable. Unless the rule
         // implies that the attribute is required, rules are not run for missing values.
-        if (!$this->isValidatable($rule, $attribute, null)) return [];
+        //if (!$this->isValidatable($rule, $attribute, null)) return [];
 
         $method = "rule{$rule}";
         return $this->converter->$method($attribute, $parameters, $this);
@@ -152,7 +152,7 @@ class ValidationAdapter extends BaseValidator {
 
         $message = $this->doReplacements($message, $attribute, $rule, $parameters);
 
-        return $this->converter->message($attribute, $message, $parameters, $this);
+        return $this->converter->message($attribute, $message, $rule, $parameters, $this);
 
     }
 
