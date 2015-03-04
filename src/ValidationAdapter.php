@@ -127,14 +127,32 @@ class ValidationAdapter extends BaseValidator {
 
         if ($rule == '') return [];
 
+       //$newRules=$this->isImplicit($attribute,$rule)?$this->converter->ruleRequired($attribute):[];
 
-        // We will verify that the attribute is indeed validatable. Unless the rule
-        // implies that the attribute is required, rules are not run for missing values.
-        //if (!$this->isValidatable($rule, $attribute, null)) return [];
 
         $method = "rule{$rule}";
-        return $this->converter->$method($attribute, $parameters, $this);
+        $newRules=$this->converter->$method($attribute, $parameters, $this);
 
+
+    }
+
+    protected function isOptional($attribute, $rule)
+    {
+        if ($this->hasRule($attribute, 'require')) return [];
+
+    }
+
+    /**
+     * Determine if the attribute is validatable.
+     *
+     * @param  string  $rule
+     * @param  string  $attribute
+     * @return bool
+     */
+    protected function isJsValidatable($rule, $attribute)
+    {
+        return $this->isImplicit($rule) &&
+        $this->passesOptionalCheck($attribute);
     }
 
     /**
