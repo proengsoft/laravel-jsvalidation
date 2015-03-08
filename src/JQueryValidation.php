@@ -47,7 +47,6 @@ class JQueryValidation {
      */
     public function ruleRequired()
     {
-        //@todo: detect if field exists
         return ['required' =>true ];
     }
 
@@ -62,6 +61,7 @@ class JQueryValidation {
         return ['required' =>true ];
     }
 
+
     /**
      * Validate that an attribute exists when any other attribute exists.
      *
@@ -71,14 +71,28 @@ class JQueryValidation {
      */
     public function ruleRequiredWith($attribute, $parameters)
     {
-        // @todo:  ruleRequiredWith
-        return [];
+        $selector=implode(', ', array_map(function($param) {
+                return "[name='$param']";
+        },$parameters));
+
+        return ['require_from_group'=>[1,$selector]];
+
     }
 
+    /**
+     * Validate that an attribute exists when all other attributes exists.
+     *
+     * @param  string  $attribute
+     * @param  mixed   $parameters
+     * @return bool
+     */
     public function ruleRequiredWithAll($attribute, $parameters)
     {
-        // @todo:  ruleRequiredWithAll
-        return [];
+        $selector=implode(', ', array_map(function($param) {
+            return "[name='$param']";
+        },$parameters));
+
+        return ['require_from_group'=>[count($parameters),$selector]];
     }
 
     public function ruleRequiredWithout($attribute, $parameters)
@@ -191,7 +205,7 @@ class JQueryValidation {
      */
     public function ruleString($attribute)
     {
-        return ['pattern'=>'/[a-z]+|^$/i'];
+        return ['pattern'=>'/[a-z]+/i'];
     }
 
     /**
@@ -334,7 +348,7 @@ class JQueryValidation {
      */
     public function ruleAlpha($attribute)
     {
-        return ['pattern'=>'/^[a-z]+$|^$/i'];
+        return ['pattern'=>'/^[a-z]+$/i'];
     }
 
     /**
@@ -350,7 +364,7 @@ class JQueryValidation {
 
     public function ruleAlphaDash($attribute)
     {
-        return ['pattern' =>'/^[\w+\-_]+$|^$/'];
+        return ['pattern' =>'/^[\w+\-_]+$/'];
     }
 
     public function ruleRegex($attribute, $parameters)
