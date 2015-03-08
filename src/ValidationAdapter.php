@@ -45,6 +45,7 @@ class ValidationAdapter extends BaseValidator {
     }
 
 
+
     /**
      * Determine if the data passes the validation rules.
      *
@@ -56,8 +57,11 @@ class ValidationAdapter extends BaseValidator {
         // rule. All enabled rules will be converted.
         foreach ($this->rules as $attribute => $rules)
         {
-            if (!$this->validationEnabled($attribute)) break;
+            // Check if JS Validation is disabled for this attribute
+            if (!$this->jsValidationEnabled($attribute)) continue;
 
+            // Convert each rules and messages
+            $hasImplicit=false;
             foreach ($rules as $rule)
             {
                 $js_rule=$this->convertRule($attribute, $rule);
@@ -65,8 +69,16 @@ class ValidationAdapter extends BaseValidator {
 
                 $js_message=$this->convertMessage($attribute, $rule);
                 $this->mergeJsMessages($attribute,$js_message);
-
+                $hasImplicit = $hasImplicit || $this->isImplicit($rule);
             }
+
+            // Determine if a given rule implies the attribute is required.
+            if ($hasImplicit && !$this->hasRule($attribute,'Required')) {
+                $js_rule=$this->convertRule($attribute, 'Required');
+                //$this->mergeJsRules($attribute,$js_rule);
+            };
+
+
         }
 
     }
@@ -105,7 +117,11 @@ class ValidationAdapter extends BaseValidator {
     }
 
 
-    protected function validationEnabled($attribute)
+    /**
+     * Check if JS Validation is disabled for attribute
+     * @param $attribute
+     * @return bool
+    protected function jsValidationEnabled($attribute)
     {
         $rules = isset($this->rules[$attribute]) ? $this->rules[$attribute] : [];
 
@@ -127,33 +143,12 @@ class ValidationAdapter extends BaseValidator {
 
         if ($rule == '') return [];
 
-       //$newRules=$this->isImplicit($attribute,$rule)?$this->converter->ruleRequired($attribute):[];
-
-
+        return ["laravel{$rule}"=>$parameters];
         $method = "rule{$rule}";
-        $newRules=$this->converter->$method($attribute, $parameters, $this);
-
-
-    }
-
-    protected function isOptional($attribute, $rule)
-    {
-        if ($this->hasRule($attribute, 'require')) return [];
+        return $this->converter->$method($attribute, $parameters, $this);
 
     }
 
-    /**
-     * Determine if the attribute is validatable.
-     *
-     * @param  string  $rule
-     * @param  string  $attribute
-     * @return bool
-     */
-    protected function isJsValidatable($rule, $attribute)
-    {
-        return $this->isImplicit($rule) &&
-        $this->passesOptionalCheck($attribute);
-    }
 
     /**
      * Convert the message from given rule using the converter.
@@ -173,6 +168,20 @@ class ValidationAdapter extends BaseValidator {
         return $this->converter->message($attribute, $message, $rule, $parameters, $this);
 
     }
+
+    /**
+     * Check if JS Validation is disabled for attribute
+     * @param $attribute
+     * @return bool
+     */
+    protected function jsValidationEnabled($attribute)
+    {
+        return !$this->hasRule($attribute,self::DISABLE_JS_RULE);
+
+    }
+
+
+
 
 
     public function validateNoJsValidation($attribute, $value, $parameters)
@@ -197,8 +206,6 @@ class ValidationAdapter extends BaseValidator {
             'messages' => $this->jsMessages
         ];
 
-
     }
-
 
 }
