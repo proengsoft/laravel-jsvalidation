@@ -2,6 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 
+use Proengsoft\JQueryValidation\Validator;
 class JsValidationServiceProvider extends ServiceProvider {
 
 
@@ -46,7 +47,7 @@ class JsValidationServiceProvider extends ServiceProvider {
     {
         $this->app['validator']->resolver( function( $translator, $data, $rules, $messages = array(), $customAttributes = array() ) {
             $plugin = new JQueryValidation();
-            return new ValidationAdapter( $translator, $data, $rules, $messages, $customAttributes, $plugin );
+            return new Validator( $translator, $data, $rules, $messages, $customAttributes, $plugin );
         } );
 
     }
