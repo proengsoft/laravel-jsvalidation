@@ -9,7 +9,6 @@ trait JavascriptValidator {
 
     private $jsRules;
     private $jsMessages;
-    private $selector = 'form';
 
 
     /**
@@ -73,20 +72,6 @@ trait JavascriptValidator {
         $this->jsMessages[$attribute] = array_merge($current, $messages);
     }
 
-
-    /**
-     * Check if JS Validation is disabled for attribute
-     * @param $attribute
-     * @return bool
-    protected function jsValidationEnabled($attribute)
-    {
-        $rules = isset($this->rules[$attribute]) ? $this->rules[$attribute] : [];
-
-        return ! in_array(self::DISABLE_JS_RULE, $rules);
-    }
-
-
-
     /**
      * Convert a given rule using the converter.
      *
@@ -101,8 +86,6 @@ trait JavascriptValidator {
         if ($rule == '') return [];
 
         return array("laravel{$rule}"=>$parameters);
-        //$method = "rule{$rule}";
-        //return $this->converter->$method($attribute, $parameters, $this);
 
     }
 
@@ -121,8 +104,7 @@ trait JavascriptValidator {
         $message = $this->getMessage($attribute, $rule);
 
         $message = $this->doReplacements($message, $attribute, $rule, $parameters);
-        return $message;
-        //return $this->converter->message($attribute, $message, $rule, $parameters, $this);
+        return array("laravel{$rule}"=>$message);
 
     }
 
@@ -143,19 +125,11 @@ trait JavascriptValidator {
         return true;
     }
 
-
-    public function form($selector)
+    public function js()
     {
-        $this->selector=$selector;
-    }
-
-    public function js($selector = null)
-    {
-        $this->selector=is_null($selector)?$this->selector:$selector;
+        $this->generateJavascriptValidations();
 
         return [
-            'converter' => Str::slug(class_basename($this->converter)),
-            'selector' => $this->selector,
             'rules' => $this->jsRules,
             'messages' => $this->jsMessages
         ];

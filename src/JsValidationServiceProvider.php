@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 
-use Proengsoft\JQueryValidation\Validator;
+use Proengsoft\JQueryValidation;
 class JsValidationServiceProvider extends ServiceProvider {
 
 
@@ -20,10 +20,10 @@ class JsValidationServiceProvider extends ServiceProvider {
         $this->publishes([
             $viewPath => base_path('resources/views/vendor/jsvalidation'),
         ]);
-        /*
-        $configPath = __DIR__ . '/../config/jsvalidator.php';
-        $this->publishes([$configPath => config_path('jsvalidator.php')], 'config');
-        */
+
+        $configPath = __DIR__ . '/../config/jsvalidation.php';
+        $this->publishes([$configPath => config_path('jsvalidation.php')], 'config');
+
         $this->publishes([
             __DIR__.'/../public' => public_path('vendor/jsvalidation'),
         ], 'public');
@@ -38,16 +38,19 @@ class JsValidationServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bindShared('jsvalidator', function ($app) {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/jsvalidation.php', 'jsvalidation'
+        );
 
+		$this->app->bind('jsvalidator', function ($app) {
+            return new JsValidator();
         });
 	}
 
     protected function bootValidator()
     {
         $this->app['validator']->resolver( function( $translator, $data, $rules, $messages = array(), $customAttributes = array() ) {
-            $plugin = new JQueryValidation();
-            return new Validator( $translator, $data, $rules, $messages, $customAttributes, $plugin );
+            return new Validator( $translator, $data, $rules, $messages, $customAttributes);
         } );
 
     }

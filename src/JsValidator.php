@@ -1,72 +1,75 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Albert
- * Date: 28/02/2015
- * Time: 4:09
- */
-
-namespace Proengsoft\JQueryValidation;
+<?php namespace Proengsoft\JQueryValidation;
 
 
-use \Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
+use Illuminate\Foundation\Http\FormRequest;
 
-class JsValidator {
+class JsValidator implements Arrayable {
 
     /**
-     * @var ValidationAdapter
+     * @var Validator
      */
     protected $validator;
 
-    protected $selector = 'form';
-    /**
-     * @var Application
-     */
-    private $app;
+    protected $selector ;
 
-    public function __construct(ValidationAdapter $validator, Application $app)
-    {
-        $this->validator = $validator;
-        $this->app = $app;
+    public function __construct($selector='form') {
+        $this->selector=$selector;
     }
 
-    public function rules()
-    {
-        return $this->encode($this->validator->getJsRules());
+
+    public function validator(ValidatorContract $validator, $selector=null) {
+        $selector=is_null($selector)?$this->selector:$selector;
+        $this->validator=$validator;
+        $this->selector=$selector;
+        return $this;
     }
 
-    public function messages()
+    public function rules( array $rules, array $messages = array(), array $customAttributes = array(), $selector=null)
     {
-        return $this->encode($this->validator->getJsMessages());
+        return $this->validator($this->make($rules,$messages,$customAttributes), $selector);
     }
 
-    public function formSelector()
+    protected function make( array $rules, array $messages = array(), array $customAttributes = array())
     {
-        return $this->selector;
+        $factory=app('Illuminate\Contracts\Validation\Factory');
+        return $factory->make([], $rules, $messages,$customAttributes);
     }
 
-    public function generate($selector = null)
+    public function formRequest(FormRequest $fromRequest, $selector=null) {
+
+        return $this->validator($this->make($fromRequest->rules(),$fromRequest->messages()),$selector);
+    }
+
+
+    public function render($view=null)
     {
-        $selector = is_null($selector)?$this->selector:$selector;
-        $viewToRender='jsvalidation::botstrap.jqueryvalidation.blade.php';
-
-        return view();
-
+        $view=is_null($view)?config('jsvalidation.default_view'):$view;
+        return view($view, ['validator'=>$this->getViewData()])->render();
     }
 
     protected function getViewData()
     {
-        return [
-            'rules' => $this->rules(),
-            'messages' => $this->messages(),
+        $data= [
+            'selector' => $this->selector
         ];
+        return array_merge($data,$this->validator->js());
     }
 
-    protected function encode($data)
+    public function __toString()
     {
-        return json_encode($data);
+        return $this->render();
     }
 
 
-
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getViewData();
+    }
 }
