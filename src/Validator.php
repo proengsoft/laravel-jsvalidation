@@ -1,10 +1,8 @@
 <?php namespace Proengsoft\JQueryValidation;
 
-namespace Proengsoft\JQueryValidation\Traits;
+use Proengsoft\JQueryValidation\Traits\JavascriptValidator;
 use Illuminate\Validation\Validator as BaseValidator;
-
 
 class Validator extends BaseValidator {
     use JavascriptValidator;
-
 }
