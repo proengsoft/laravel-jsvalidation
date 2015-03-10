@@ -84,6 +84,7 @@
         $.validator.addMethod("laravelRequiredIf", function(value, element, params) {
             // Searching the element to check
             var $form =  $(element).closest('form');
+            var elementCache= {};
             var $el = $form
                 .find(selector(params[0]))
                 // .find( "input"+selectorName+", select"+selectorName+", textarea"+selectorName )
@@ -102,7 +103,7 @@
                 return false;
             }
 
-            return $el[0].val()==params[1];
+            return $el.val()==params[1];
         }, $.validator.format("The :attribute field is required when {0} is {1}."));
 
         /**
@@ -192,7 +193,7 @@
     /**
      * The field under validation must have a length between the given min and max.
      */
-    $.validator.addMethod("laravelBetween", function(value, element, params) {
+    $.validator.addMethod("laravelDigitsBetween", function(value, element, params) {
         return this.optional(element) ||
             ($.validator.methods.number.call(this, value, element, true)
             && value.length>=params[0] && value.length<=params[1]);

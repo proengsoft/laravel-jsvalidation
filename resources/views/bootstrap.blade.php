@@ -1,12 +1,11 @@
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/moment.phpDateFormat.js')}}"></script>
-<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jqueryvalidation/jquery.validate.js')}}"></script>
-<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jqueryvalidation/additional-methods.js')}}"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.js"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.js"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/laravel.js')}}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/laravel-date.js')}}"></script>
 <script>
     jQuery(document).ready(function(){
-
         $({!! "'".$validator["selector"]."'" !!}).validate({
             highlight: function (element) { // hightlight error inputs
                 $(element)
