@@ -28,7 +28,7 @@ class JSFormRequest extends Request {
             'alpha' => 'alpha',
             'alpha_dash' => 'alpha_dash',
             'alpha_num' => 'alpha_num',
-            //'array' => 'array',
+            'array' => 'array',
             'before' => 'before:"+1 week"',
             'between' => 'between:3,5',
             'boolean' => 'boolean',

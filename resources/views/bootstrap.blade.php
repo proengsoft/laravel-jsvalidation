@@ -1,11 +1,15 @@
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/moment.phpDateFormat.js')}}"></script>
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.js"></script>
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.js"></script>
+<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jqueryvalidation/jquery.validate.js')}}"></script>
+<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jqueryvalidation/additional-methods.js')}}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/laravel.js')}}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/laravel-date.js')}}"></script>
 <script>
+    jQuery.validator.setDefaults({
+        debug: true
+    });
     jQuery(document).ready(function(){
+        console.log($({!! "'".$validator["selector"]."'" !!}));
         $({!! "'".$validator["selector"]."'" !!}).validate({
             highlight: function (element) { // hightlight error inputs
                 $(element)
@@ -35,9 +39,9 @@
                         .closest('.form-group').removeClass('has-error'); // set success class to the control group
             },
             rules:
-                {!! json_encode($validator['rules']) !!} ,
+                {!! json_encode($validator['rules'],JSON_PRETTY_PRINT) !!} ,
             messages:
-                {!! json_encode($validator['messages']) !!}
+                {!! json_encode($validator['messages'],JSON_PRETTY_PRINT) !!}
         })
     })
 </script>

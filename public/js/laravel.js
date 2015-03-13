@@ -5,6 +5,18 @@
  *
  * Copyright (c) 2014 Proengsoft
  * Released under the MIT license
+ *
+ * @test:
+ *      accepted: OK
+ *      active_url: Falla(http://vegeta/)
+ *      after: NO
+ *      alpha: OK
+ *      alpha_dash: OK
+ *      alpha_num: OK
+ *      array: OK
+
+ *
+ *
  */
 
 (function( factory ) {
@@ -45,7 +57,7 @@
             var selector = [];
             if (!$.isArray(names)) names=[names];
             for (var i=0; i< names.length; i++) {
-                selector.push("[name='"+names[i]+"']");
+                selector.push("[name*='"+names[i]+"']");
             }
             return selector.join();
         }
@@ -138,13 +150,14 @@
      * This validation rule implies the attribute is "required".
      */
     $.validator.addMethod("laravelAccepted", function(value, element, params) {
-        return $.validator.methods.pattern.call(this, value, element, '/^(yes|on|1|true)$/i');
+        var regex = new RegExp("^(?:(yes|on|1|true))$",'i');
+        return regex.test(value);
     }, $.validator.format("The field must be accepted."));
 
     /**
      * Validate that an attribute is an array.
      */
-    $.validator.addMethod("laravelRuleArray", function(value, element, params) {
+    $.validator.addMethod("laravelArray", function(value, element, params) {
         return this.optional(element) ||
             $.isArray(value);
     }, $.validator.format("The :attribute must be an array."));
@@ -153,16 +166,16 @@
      * Validate that an attribute is a boolean.
      */
     $.validator.addMethod("laravelBoolean", function(value, element, params) {
-        return this.optional(element) ||
-            $.validator.methods.pattern.call(this, value, element, '/^(true|false|1|0)$/i');
+        var regex= new RegExp("^(?:(true|false|1|0))$",'i').test(value);
+        return this.optional(element) ||  regex.test(value);
     }, $.validator.format("The field must be true or false"));
 
     /**
      * Validate that an attribute is an integer.
      */
     $.validator.addMethod("laravelInteger", function(value, element, params) {
-        return this.optional(element) ||
-            $.validator.methods.patern.call(this, value, element, '/^-?\\d+$/');
+        var regex= new RegExp("^(?:-?\\d+)$",'i').test(value);
+        return this.optional(element) ||  regex.test(value);
     }, $.validator.format("The field must be must be a integer."));
 
     /**
@@ -391,7 +404,7 @@
      */
     $.validator.addMethod("laravelActiveUrl", function(value, element, params) {
         // @todo: Validate that an attribute is an active URL.
-        return this.optional(element) || true;
+        return this.optional(element) || $.validator.methods.url.call(this, value, element, true);
     }, $.validator.format("The :attribute is not a valid URL."));
 
     /**
@@ -416,32 +429,34 @@
      * Validate that an attribute contains only alphabetic characters.
      */
     $.validator.addMethod("laravelAlpha", function(value, element, params) {
-        return this.optional(element) ||
-            $.validator.methods.alphanumeric.call(this, value, element,true);
+        var regex = new RegExp("^(?:^[a-z]+$)$",'i');
+        return this.optional(element) || regex.test(value);
+
     }, $.validator.format("The :attribute may only contain letters."));
 
     /**
      * Validate that an attribute contains only alpha-numeric characters.
      */
     $.validator.addMethod("laravelAlphaNum", function(value, element, params) {
-        return this.optional(element) ||
-            $.validator.methods.pattern.call(this, value, element, '/^[a-z]+$/i');
+        var regex = new RegExp("^(?:^[a-z0-9]+$)$",'i');
+        return  this.optional(element) || regex.test(value);
     }, $.validator.format("The :attribute may only contain letters and numbers."));
 
     /**
      * Validate that an attribute contains only alphabetic characters.
      */
     $.validator.addMethod("laravelAlphaDash", function(value, element, params) {
-        return this.optional(element) ||
-            $.validator.methods.pattern.call(this, value, element,'/^[\\w+\\-_]+$/');
+        var regex = new RegExp("^(?:^[\\w\\-_]+$)$",'i');
+        return  this.optional(element) || regex.test(value);
     }, $.validator.format("The :attribute may only contain letters, numbers, and dashes."));
 
     /**
      * Validate that an attribute passes a regular expression check.
      */
     $.validator.addMethod("laravelRegex", function(value, element, params) {
-        return this.optional(element) ||
-            $.validator.methods.pattern.call(this, value, element,params[0]);
+        var regex = new RegExp("^(?:"+params[0]+")$",'i');
+        return  this.optional(element) || regex.test(value);
+
     }, $.validator.format("The :attribute format is invalid."));
 
 

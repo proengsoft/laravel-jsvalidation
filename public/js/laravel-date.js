@@ -317,7 +317,7 @@
      * Validate the date is after a given date.
      */
     $.validator.addMethod("laravelAfter", function(value, element, params) {
-
+        console.log($.validator.staticRules(element));
         if ('laravelDateFormat' in $.validator.staticRules(element)) {
             dateValue = moment(params[0],moment.phpDateFormat);
             dateParam= moment(value,moment.phpDateFormat);
@@ -327,8 +327,10 @@
             dateParam = moment.unix(strtotime(params[0]));
         }
 
-        return this.optional(element) ||
-            (dateValue.isValid() && dateParam.isValid()  && dateValue.isAfter(dateParam));
+        console.log(strtotime(value));
+        console.log(strtotime(params[0]));
+
+        return (dateValue.isValid() && dateParam.isValid()  && dateValue.isAfter(dateParam));
     }, $.validator.format("The :attribute must be a date after {0}."));
 
     /**

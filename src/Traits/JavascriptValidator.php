@@ -34,7 +34,6 @@ trait JavascriptValidator {
                 $this->mergeJsMessages($attribute,$js_message);
             }
 
-
         }
 
     }
@@ -84,7 +83,11 @@ trait JavascriptValidator {
         list($rule, $parameters) = $this->parseRule($rule);
 
         if ($rule == '') return [];
-
+        /*
+        if ($this->checkImplicit($rule)) {
+            return array("laravelRequired"=>[],"laravel{$rule}"=>$parameters);
+        }
+        */
         return array("laravel{$rule}"=>$parameters);
 
     }
@@ -101,11 +104,23 @@ trait JavascriptValidator {
     {
         list($rule, $parameters) = $this->parseRule($rule);
 
-        $message = $this->getMessage($attribute, $rule);
+        if ($rule == '') return [];
 
+        $message = $this->getMessage($attribute, $rule);
         $message = $this->doReplacements($message, $attribute, $rule, $parameters);
+        /*
+        if ($this->checkImplicit($rule)){
+            return array("laravelRequired"=>$message,"laravel{$rule}"=>$message);
+        }
+        */
         return array("laravel{$rule}"=>$message);
 
+    }
+
+
+    protected function checkImplicit($rule)
+    {
+        return $rule!="Required" && $this->isImplicit($rule);
     }
 
     /**

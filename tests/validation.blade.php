@@ -17,7 +17,7 @@
 							</ul>
 						</div>
 					@endif
-
+                    {{ strtotime('2015-05-14') }}
 					<form class="form-horizontal" role="form" method="POST" action="" id="ddd">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -26,13 +26,28 @@
                             <div class="form-group">
                                 <label class="col-md-4 control-label">{{$field}}</label>
                                 <div class="col-md-6 col-md-offset-4">
+                                    {{$message}}
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="{{$field}}"> {{$message}}
+                                            <input type="checkbox" name="{{$field}}" value="1">
                                         </label>
                                     </div>
                                 </div>
                             </div>
+                            @elseif ($field=="array")
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Array</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="{{$field}}[]">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label"></label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="{{$field}}[]">
+                                        <p>{{$message}}</p>
+                                    </div>
+                                </div>
                             @elseif ($field=="confirmation")
                                 <div class="form-group">
                                     <label class="col-md-4 control-label">Password</label>
@@ -51,7 +66,7 @@
                                 <div class="form-group">
                                     <label class="col-md-4 control-label">{{snake_case($field)}}</label>
                                     <div class="col-md-6">
-                                        <input type="email" class="form-control" name="{{$field}}" placeholder="{{$message}}" >
+                                        <input class="form-control" name="{{$field}}" placeholder="{{$message}}" >
                                     </div>
                                 </div>
                             @endif
