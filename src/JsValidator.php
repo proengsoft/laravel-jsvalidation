@@ -37,7 +37,11 @@ class JsValidator implements Arrayable {
         return $factory->make([], $rules, $messages,$customAttributes);
     }
 
-    public function formRequest(FormRequest $fromRequest, $selector=null) {
+    public function formRequest($fromRequest, $selector=null) {
+
+        if (is_string($fromRequest)) {
+            $fromRequest = new $fromRequest;
+        }
 
         return $this->validator($this->make($fromRequest->rules(),$fromRequest->messages()),$selector);
     }
