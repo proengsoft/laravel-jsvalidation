@@ -44,11 +44,16 @@ trait JavascriptValidator
 
             // Convert each rules and messages
             foreach ($rules as $rule) {
+                list($attribute,$rule, $parameters,$message) = $this->convertValidations($attribute,$rule);
+                $jsRules[$attribute][$rule]=$parameters;
+                $jsMessages[$attribute][$rule]=$message;
+                /*
                 $js_rule[$attribute]=$this->convertRule($attribute, $rule);
                 $jsRules = array_merge($jsRules, $js_rule);
 
                 $js_message[$attribute]=$this->convertMessage($attribute, $rule);
                 $jsMessages=array_merge($jsMessages, $js_message);
+                */
             }
         }
 
@@ -64,6 +69,33 @@ trait JavascriptValidator
     protected function isImplemented($rule)
     {
         return in_array($rule, $this->implementedRules);
+    }
+
+
+    protected function convertValidations($attribute,$rule)
+    {
+        list($rule, $parameters) = $this->parseRule($rule);
+
+        // Check if rule is implemented
+        if ($rule == '' || !$this->isImplemented($rule)) {
+            return array($attribute,[],[],[]);
+        }
+
+        // Gets the message
+        $message = $this->getMessage($attribute, $rule);
+        $message = $this->doReplacements($message, $attribute, $rule, $parameters);
+
+        // call the convert function if is defined
+        $method="jsRule{$rule}";
+
+        if (method_exists($this,"jsRule{$rule}")) {
+            list($attribute,$rule, $parameters,$message) = $this->$method($attribute,$rule,$parameters,$message);
+        } else {
+            $rule="laravel{$rule}";
+        }
+
+        return [$attribute,$rule,$parameters,$message];
+
     }
 
 
@@ -144,5 +176,14 @@ trait JavascriptValidator
             'rules' => $jsRules,
             'messages' => $jsMessages
         ];
+    }
+
+    protected function jsRuleConfirmed($attribute,$rule, array $parameters,$message)
+    {
+        $parameters[0]=$attribute;
+        $rule="laravel{$rule}";
+        $attribute="{$attribute}_confirmation";
+
+        return [$attribute,$rule, $parameters,$message];
     }
 }
