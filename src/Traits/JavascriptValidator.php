@@ -1,14 +1,20 @@
 <?php namespace Proengsoft\JQueryValidation\Traits;
 
-use Illuminate\Support\Str;
-
 
 trait JavascriptValidator {
 
-    private $disable_js_rule='no_js_validation';
+    protected $disable_js_rule='no_js_validation';
 
-    private $jsRules;
-    private $jsMessages;
+    protected $implementedRules=['Accepted', 'ActiveUrl', 'After', 'Alpha', 'AlphaDash',
+        'AlphaNum', 'Array', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
+        'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Exists', 'Image',
+        'In', 'Integer', 'Ip', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
+        'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
+        'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'String', 'Timezone', 'Unique', 'Url'];
+
+    protected $jsRules;
+    protected $jsMessages;
+
 
 
     /**
@@ -16,6 +22,9 @@ trait JavascriptValidator {
      */
     protected function generateJavascriptValidations()
     {
+        // Reinitializing arrays
+        $jsRules=[];
+        $jsMessages=[];
 
         // We'll spin through each rule, validating the attributes attached to that
         // rule. All enabled rules will be converted.
@@ -27,15 +36,21 @@ trait JavascriptValidator {
             // Convert each rules and messages
             foreach ($rules as $rule)
             {
-                $js_rule=$this->convertRule($attribute, $rule);
-                $this->mergeJsRules($attribute,$js_rule);
+                $js_rule[$attribute]=$this->convertRule($attribute, $rule);
+                $jsRules = array_merge($jsRules,$js_rule);
 
-                $js_message=$this->convertMessage($attribute, $rule);
-                $this->mergeJsMessages($attribute,$js_message);
+                $js_message[$attribute]=$this->convertMessage($attribute, $rule);
+                $jsMessages=array_merge($jsMessages, $js_message);
             }
-
         }
 
+        return array($jsRules,$jsMessages);
+
+    }
+    
+    protected function isImplemented($rule)
+    {
+        return in_array($rule,$this->implementedRules);
     }
 
 
@@ -46,7 +61,7 @@ trait JavascriptValidator {
      * @param  string|array  $rules
      * @return void
      */
-    private function mergeJsRules($attribute, $rules)
+    protected function mergeJsRules($attribute, $rules)
     {
         $current = isset($this->jsRules[$attribute]) ? $this->jsRules[$attribute] : [];
 
@@ -62,7 +77,7 @@ trait JavascriptValidator {
      * @param  string|array  $messages
      * @return void
      */
-    private function mergeJsMessages($attribute, $messages)
+    protected function mergeJsMessages($attribute, $messages)
     {
         $current = isset($this->jsMessages[$attribute]) ? $this->jsMessages[$attribute] : [];
 
@@ -78,16 +93,13 @@ trait JavascriptValidator {
      * @param  string  $rule
      * @return array
      */
-    private function convertRule($attribute, $rule)
+    protected function convertRule($attribute, $rule)
     {
         list($rule, $parameters) = $this->parseRule($rule);
 
-        if ($rule == '') return [];
-        /*
-        if ($this->checkImplicit($rule)) {
-            return array("laravelRequired"=>[],"laravel{$rule}"=>$parameters);
-        }
-        */
+        // Check if rule is implemented
+        if ($rule == '' || !$this->isImplemented($rule)) return [];
+
         return array("laravel{$rule}"=>$parameters);
 
     }
@@ -100,31 +112,25 @@ trait JavascriptValidator {
      * @param  string  $rule
      * @return array
      */
-    private function convertMessage($attribute, $rule)
+    protected function convertMessage($attribute, $rule)
     {
         list($rule, $parameters) = $this->parseRule($rule);
 
-        if ($rule == '') return [];
+        // Check if rule is implemented
+        if ($rule == '' || !$this->isImplemented($rule)) return [];
 
         $message = $this->getMessage($attribute, $rule);
         $message = $this->doReplacements($message, $attribute, $rule, $parameters);
-        /*
-        if ($this->checkImplicit($rule)){
-            return array("laravelRequired"=>$message,"laravel{$rule}"=>$message);
-        }
-        */
+
         return array("laravel{$rule}"=>$message);
 
     }
 
 
-    protected function checkImplicit($rule)
-    {
-        return $rule!="Required" && $this->isImplicit($rule);
-    }
 
     /**
      * Check if JS Validation is disabled for attribute
+     * 
      * @param $attribute
      * @return bool
      */
@@ -142,11 +148,11 @@ trait JavascriptValidator {
 
     public function js()
     {
-        $this->generateJavascriptValidations();
+        list($jsRules,$jsMessages)=$this->generateJavascriptValidations();
 
         return [
-            'rules' => $this->jsRules,
-            'messages' => $this->jsMessages
+            'rules' => $jsRules,
+            'messages' => $jsMessages
         ];
 
     }

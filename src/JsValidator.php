@@ -3,7 +3,7 @@
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Foundation\Http\FormRequest;
+use Proengsoft\JQueryValidation\Exceptions\PropertyNotFoundException;
 
 class JsValidator implements Arrayable {
 
@@ -14,44 +14,60 @@ class JsValidator implements Arrayable {
 
     protected $selector ;
 
-    public function __construct($selector='form') {
-        $this->selector=$selector;
-    }
+    /**
+     * @var
+     */
+    private $view;
 
 
-    public function validator(ValidatorContract $validator, $selector=null) {
-        $selector=is_null($selector)?$this->selector:$selector;
+    public function __construct(ValidatorContract $validator, $selector, $view) {
+
         $this->validator=$validator;
         $this->selector=$selector;
-        return $this;
+        $this->view = $view;
     }
-
-    public function rules( array $rules, array $messages = array(), array $customAttributes = array(), $selector=null)
-    {
-        return $this->validator($this->make($rules,$messages,$customAttributes), $selector);
-    }
-
-    protected function make( array $rules, array $messages = array(), array $customAttributes = array())
-    {
-        $factory=app('Illuminate\Contracts\Validation\Factory');
-        return $factory->make([], $rules, $messages,$customAttributes);
-    }
-
-    public function formRequest($fromRequest, $selector=null) {
-
-        if (is_string($fromRequest)) {
-            $fromRequest = new $fromRequest;
-        }
-
-        return $this->validator($this->make($fromRequest->rules(),$fromRequest->messages()),$selector);
-    }
-
 
     public function render($view=null)
     {
-        $view=is_null($view)?config('jsvalidation.default_view'):$view;
+        $view=is_null($view)?$this->view:$view;
         return view($view, ['validator'=>$this->getViewData()])->render();
     }
+
+
+
+    /**
+     * Get the view data as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getViewData();
+    }
+
+
+    public function __toString()
+    {
+        return $this->render();
+    }
+
+    /**
+     * Gets value from view data
+     *
+     * @param $name
+     * @return mixed
+     * @throws PropertyNotFoundException
+     */
+    public function __get($name)
+    {
+        $data=$this->getViewData();
+        if (array_key_exists($name,$data)) {
+            return $data['name'];
+        } else {
+            throw new PropertyNotFoundException($name, get_class());
+        }
+    }
+
 
     protected function getViewData()
     {
@@ -61,19 +77,4 @@ class JsValidator implements Arrayable {
         return array_merge($data,$this->validator->js());
     }
 
-    public function __toString()
-    {
-        return $this->render();
-    }
-
-
-    /**
-     * Get the instance as an array.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->getViewData();
-    }
 }
