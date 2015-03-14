@@ -17,7 +17,7 @@
 							</ul>
 						</div>
 					@endif
-                    {{ strtotime('2015-05-14') }}
+                    {{ filter_var("htt:111", FILTER_VALIDATE_URL) }}
 					<form class="form-horizontal" role="form" method="POST" action="" id="ddd">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -48,17 +48,17 @@
                                         <p>{{$message}}</p>
                                     </div>
                                 </div>
-                            @elseif ($field=="confirmation")
+                            @elseif ($field=="confirmed_confirmation")
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label">Password</label>
+                                    <label class="col-md-4 control-label">confirmed</label>
                                     <div class="col-md-6">
-                                        <input type="password" class="form-control" name="{{$field}}">
+                                        <input type="password" class="form-control" name="confirmed">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label">Confirm Password</label>
+                                    <label class="col-md-4 control-label">Confirm confirmed</label>
                                     <div class="col-md-6">
-                                        <input type="password" class="form-control" name="{{$field}}_confirmation">
+                                        <input type="password" class="form-control" name="confirmed_confirmation">
                                         <p>{{$message}}</p>
                                     </div>
                                 </div>

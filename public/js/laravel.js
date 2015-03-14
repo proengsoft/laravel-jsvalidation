@@ -14,6 +14,36 @@
  *      alpha_dash: OK
  *      alpha_num: OK
  *      array: OK
+ *      before: OK -revisar-
+ *      beetween: OK revisra espais
+ *      boolean: OK
+ *      confirmed: OK
+ *      date: NO
+ *      dato_forma: NOT
+ *      digits: OK
+ *      different: OK
+ *      digits_between: OK
+ *      email: ok
+ *      exists : ---
+ *      image: ?
+ *      in :OK
+ *      integer: OK
+ *      ip: OK
+ *      max: OK
+ *      mimes: ?
+ *      min: OK
+ *      numeric: OK
+ *      regex: NO
+*       required_*: No
+*       size: OK
+*       size_numeri:OK
+*       string:OK
+*       timezone: OK
+*       url: OK
+*
+
+ *
+ *
 
  *
  *
@@ -122,8 +152,7 @@
          * Validate that an attribute has a matching confirmation.
          */
         $.validator.addMethod("laravelConfirmed", function(value, element, params) {
-            return this.optional(element) ||
-                $.validator.methods.equalTo.call(this, value, element, selector(params[0] + '_confirmation'));
+            return $.validator.methods.equalTo.call(this, value, element, selector(params[0]));
         }, $.validator.format("The field confirmation does not match."));
 
         /**
@@ -166,7 +195,7 @@
      * Validate that an attribute is a boolean.
      */
     $.validator.addMethod("laravelBoolean", function(value, element, params) {
-        var regex= new RegExp("^(?:(true|false|1|0))$",'i').test(value);
+        var regex= new RegExp("^(?:(true|false|1|0))$",'i');
         return this.optional(element) ||  regex.test(value);
     }, $.validator.format("The field must be true or false"));
 
@@ -174,7 +203,7 @@
      * Validate that an attribute is an integer.
      */
     $.validator.addMethod("laravelInteger", function(value, element, params) {
-        var regex= new RegExp("^(?:-?\\d+)$",'i').test(value);
+        var regex= new RegExp("^(?:-?\\d+)$",'i');
         return this.optional(element) ||  regex.test(value);
     }, $.validator.format("The field must be must be a integer."));
 
@@ -320,8 +349,9 @@
          * Validate the size of an attribute is between a set of values.
          */
         $.validator.addMethod("laravelBetween", function(value, element, params) {
+            console.log(getSize(this, element,value) );
             return this.optional(element) ||
-                ( getSize(this, element,value) >= params[0] && getSize(element,value) <= params[1]);
+                ( getSize(this, element,value) >= params[0] && getSize(this,element,value) <= params[1]);
         }, $.validator.format("The field must be between {0} and {1}"));
 
         /**
