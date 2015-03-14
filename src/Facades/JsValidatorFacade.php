@@ -10,5 +10,8 @@ class JsValidatorFacade extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'jsvalidator'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'jsvalidator';
+    }
 }

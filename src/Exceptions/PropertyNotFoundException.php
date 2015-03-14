@@ -2,7 +2,8 @@
 
 use Exception;
 
-class PropertyNotFoundException extends Exception {
+class PropertyNotFoundException extends Exception
+{
 
 
     /**
@@ -17,6 +18,4 @@ class PropertyNotFoundException extends Exception {
         $message="'$property' not found in '$caller'' object";
         parent::__construct($message, 0, $previous);
     }
-
-
 }

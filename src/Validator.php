@@ -9,7 +9,7 @@ use Illuminate\Validation\Validator as BaseValidator;
  * Class Validator
  * @package Proengsoft\JQueryValidation
  */
-class Validator extends BaseValidator {
+class Validator extends BaseValidator
+{
     use JavascriptValidator;
-
 }

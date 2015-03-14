@@ -4,7 +4,8 @@ use Proengsoft\JQueryValidation\Exceptions\FormRequestArgumentException;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Contracts\Validation\Factory as FactoryContract;
 
-class Factory {
+class Factory
+{
 
     /**
      * The application instance.
@@ -42,9 +43,9 @@ class Factory {
      * @param null|string $selector
      * @return \Proengsoft\JQueryValidation\JsValidator
      */
-    public function make( array $rules, array $messages = array(), array $customAttributes = array(), $selector=null)
+    public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector=null)
     {
-        $validator=$this->validator->make([], $rules, $messages,$customAttributes);
+        $validator=$this->validator->make([], $rules, $messages, $customAttributes);
         return $this->createValidator($validator, $selector);
     }
 
@@ -57,18 +58,17 @@ class Factory {
      * @return JsValidator
      * @throws FormRequestArgumentException
      */
-    public function formRequest($formRequest, $selector=null) {
-
-        if (!is_subclass_of($formRequest,"Illuminate\\Foundation\\Http\\FormRequest")) {
+    public function formRequest($formRequest, $selector=null)
+    {
+        if (!is_subclass_of($formRequest, "Illuminate\\Foundation\\Http\\FormRequest")) {
             $className=is_object($formRequest)?get_class($formRequest):(string)$formRequest;
             throw new FormRequestArgumentException($className);
         }
 
         $fromRequest= is_string($formRequest)? new $formRequest:$formRequest;
-        $validator=$this->validator->make([], $fromRequest->rules(),$fromRequest->messages());
+        $validator=$this->validator->make([], $fromRequest->rules(), $fromRequest->messages());
 
-        return $this->createValidator($validator,$selector);
-
+        return $this->createValidator($validator, $selector);
     }
 
     /**
@@ -78,10 +78,9 @@ class Factory {
      * @param null $selector
      * @return JsValidator
      */
-    public function validator(ValidatorContract $validator, $selector=null) {
-
-        return $this->createValidator($validator,$selector);
-
+    public function validator(ValidatorContract $validator, $selector=null)
+    {
+        return $this->createValidator($validator, $selector);
     }
 
 
@@ -93,13 +92,12 @@ class Factory {
      * @param null $view
      * @return JsValidator
      */
-    protected function createValidator(ValidatorContract $validator, $selector=null, $view=null) {
-
+    protected function createValidator(ValidatorContract $validator, $selector=null, $view=null)
+    {
         $selector=$this->getSelector($selector);
         $view=$this->getView($view);
 
         return new JsValidator($validator, $selector, $view);
-
     }
 
     /**
@@ -128,8 +126,5 @@ class Factory {
             return $this->defaults["default_view"];
         }
         return (string)$view;
-
     }
-
-
 }

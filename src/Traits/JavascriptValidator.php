@@ -1,7 +1,7 @@
 <?php namespace Proengsoft\JQueryValidation\Traits;
 
-
-trait JavascriptValidator {
+trait JavascriptValidator
+{
 
     /**
      * Rule thaht disables validation for and attribute
@@ -36,16 +36,16 @@ trait JavascriptValidator {
 
         // We'll spin through each rule, validating the attributes attached to that
         // rule. All enabled rules will be converted.
-        foreach ($this->rules as $attribute => $rules)
-        {
+        foreach ($this->rules as $attribute => $rules) {
             // Check if JS Validation is disabled for this attribute
-            if (!$this->jsValidationEnabled($attribute)) continue;
+            if (!$this->jsValidationEnabled($attribute)) {
+                continue;
+            }
 
             // Convert each rules and messages
-            foreach ($rules as $rule)
-            {
+            foreach ($rules as $rule) {
                 $js_rule[$attribute]=$this->convertRule($attribute, $rule);
-                $jsRules = array_merge($jsRules,$js_rule);
+                $jsRules = array_merge($jsRules, $js_rule);
 
                 $js_message[$attribute]=$this->convertMessage($attribute, $rule);
                 $jsMessages=array_merge($jsMessages, $js_message);
@@ -53,7 +53,6 @@ trait JavascriptValidator {
         }
 
         return array($jsRules,$jsMessages);
-
     }
 
     /**
@@ -64,7 +63,7 @@ trait JavascriptValidator {
      */
     protected function isImplemented($rule)
     {
-        return in_array($rule,$this->implementedRules);
+        return in_array($rule, $this->implementedRules);
     }
 
 
@@ -80,10 +79,11 @@ trait JavascriptValidator {
         list($rule, $parameters) = $this->parseRule($rule);
 
         // Check if rule is implemented
-        if ($rule == '' || !$this->isImplemented($rule)) return [];
+        if ($rule == '' || !$this->isImplemented($rule)) {
+            return [];
+        }
 
         return array("laravel{$rule}"=>$parameters);
-
     }
 
 
@@ -99,26 +99,26 @@ trait JavascriptValidator {
         list($rule, $parameters) = $this->parseRule($rule);
 
         // Check if rule is implemented
-        if ($rule == '' || !$this->isImplemented($rule)) return [];
+        if ($rule == '' || !$this->isImplemented($rule)) {
+            return [];
+        }
 
         $message = $this->getMessage($attribute, $rule);
         $message = $this->doReplacements($message, $attribute, $rule, $parameters);
 
         return array("laravel{$rule}"=>$message);
-
     }
 
 
     /**
      * Check if JS Validation is disabled for attribute
-     * 
+     *
      * @param $attribute
      * @return bool
      */
     public function jsValidationEnabled($attribute)
     {
-        return !$this->hasRule($attribute,$this->disable_js_rule);
-
+        return !$this->hasRule($attribute, $this->disable_js_rule);
     }
 
 
@@ -139,11 +139,10 @@ trait JavascriptValidator {
      */
     public function js()
     {
-        list($jsRules,$jsMessages)=$this->generateJavascriptValidations();
+        list($jsRules, $jsMessages)=$this->generateJavascriptValidations();
         return [
             'rules' => $jsRules,
             'messages' => $jsMessages
         ];
     }
-
 }

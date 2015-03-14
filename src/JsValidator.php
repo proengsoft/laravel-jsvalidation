@@ -4,7 +4,8 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Proengsoft\JQueryValidation\Exceptions\PropertyNotFoundException;
 
-class JsValidator implements Arrayable {
+class JsValidator implements Arrayable
+{
 
     /**
      * Registered validator instance
@@ -32,8 +33,8 @@ class JsValidator implements Arrayable {
      * @param $selector
      * @param $view
      */
-    public function __construct(ValidatorContract $validator, $selector, $view) {
-
+    public function __construct(ValidatorContract $validator, $selector, $view)
+    {
         $this->validator=$validator;
         $this->selector=$selector;
         $this->view = $view;
@@ -84,7 +85,7 @@ class JsValidator implements Arrayable {
     public function __get($name)
     {
         $data=$this->getViewData();
-        if (array_key_exists($name,$data)) {
+        if (array_key_exists($name, $data)) {
             return $data['name'];
         } else {
             throw new PropertyNotFoundException($name, get_class());
@@ -102,7 +103,6 @@ class JsValidator implements Arrayable {
         $data= [
             'selector' => $this->selector
         ];
-        return array_merge($data,$this->validator->js());
+        return array_merge($data, $this->validator->js());
     }
-
 }
