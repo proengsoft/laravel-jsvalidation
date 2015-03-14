@@ -1,7 +1,7 @@
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/moment.phpDateFormat.js')}}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jqueryvalidation/jquery.validate.js')}}"></script>
-<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jqueryvalidation/additional-methods.js')}}"></script>
+<!-- <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jqueryvalidation/additional-methods.js')}}"></script> -->
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/laravel.js')}}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/laravel-date.js')}}"></script>
 <script>

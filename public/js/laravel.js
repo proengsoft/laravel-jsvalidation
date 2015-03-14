@@ -367,12 +367,7 @@
             } else if ($.isArray(value)) {
                 return value.length;
             } else if (element.type == 'file') {
-                //check whether browser fully supports all File API
-                if (window.File && window.FileReader && window.FileList && window.Blob) {
-                    return element.files[0].size;
-                }else{
-                    return true;
-                }
+                return fileinfo(element).size;
             }
 
             return strlen(value);
@@ -390,7 +385,6 @@
          * Validate the size of an attribute is between a set of values.
          */
         $.validator.addMethod("laravelBetween", function(value, element, params) {
-            console.log(getSize(this, element,value) );
             return this.optional(element) ||
                 ( getSize(this, element,value) >= params[0] && getSize(this,element,value) <= params[1]);
         }, $.validator.format("The field must be between {0} and {1}"));
@@ -450,8 +444,8 @@
      */
     $.validator.addMethod("laravelIp", function(value, element, params) {
         return this.optional(element) ||
-            $.validator.methods.ipv4.call(this, value, element, true) ||
-            $.validator.methods.ipv6.call(this, value, element, true)
+            /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i.test(value) ||
+            /^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/i.test(value);
     }, $.validator.format("The :attribute must be a valid IP address."));
 
     /**
