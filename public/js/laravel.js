@@ -9,17 +9,13 @@
  * @test:
  *      accepted: OK
  *      active_url: Falla(http://vegeta/)
- *      after: NO
  *      alpha: OK
  *      alpha_dash: OK
  *      alpha_num: OK
  *      array: OK
- *      before: OK -revisar-
  *      beetween: OK revisra espais
  *      boolean: OK
  *      confirmed: OK
- *      date: NO
- *      dato_forma: NOT
  *      digits: OK
  *      different: OK
  *      digits_between: OK
@@ -33,19 +29,17 @@
  *      mimes: ?
  *      min: OK
  *      numeric: OK
- *      regex: NO
-*       required_*: No
-*       size: OK
-*       size_numeri:OK
-*       string:OK
-*       timezone: OK
-*       url: OK
-*
-
- *
- *
-
- *
+ *      regex: OK
+ *      require_if: OK
+ *      require_with: OK
+ *      required_without: OK
+ *      required_without_all: OK
+ *      require_all: OK
+ *      size: OK
+ *      size_numeric:OK
+ *      string:OK
+ *      timezone: OK
+ *      url: OK
  *
  */
 
@@ -87,48 +81,16 @@
             var selector = [];
             if (!$.isArray(names)) names=[names];
             for (var i=0; i< names.length; i++) {
-                selector.push("[name*='"+names[i]+"']");
+                selector.push("[name='"+names[i]+"']");
             }
             return selector.join();
         }
 
-        /**
-         * Validate that an attribute exists when any other attribute exists.
-         */
-        $.validator.addMethod("laravelRequiredWith", function(value, element, params) {
-            return ! $.validator.methods.require_from_group.call(this, value, element, [1,selector(params)]);
-        }, $.validator.format("The field is required when any of {0} {1} {2} {3} is present."));
-
-        /**
-         * Validate that an attribute exists when all other attribute exists.
-         */
-        $.validator.addMethod("laravelRequiredWithAll", function(value, element, params) {
-            return ! $.validator.methods.require_from_group.call(this, value, element, [params.length,selector(params)]);
-        }, $.validator.format("The field is required when {0} {1} {2} {3} is present."));
-
-        /**
-         * Validate that an attribute exists when any other attribute does not exists.
-         */
-        $.validator.addMethod("laravelRequiredWithout", function(value, element, params) {
-            return  $.validator.methods.require_from_group.call(this, value, element, [1,selector(params)]);
-        }, $.validator.format("The field is required when any of {0} {1} {2} {3} is not present."));
-
-        /**
-         * Validate that an attribute exists when all other attribute does not exists.
-         */
-        $.validator.addMethod("laravelRequiredWithoutAll", function(value, element, params) {
-            return $.validator.methods.require_from_group.call(this, value, element, [params.length,selector(params)]);
-        }, $.validator.format("The field is required when {0} {1} {2} {3} is present."));
-
-        /**
-         * Validate that an attribute exists when another attribute has a given value.
-         */
-        $.validator.addMethod("laravelRequiredIf", function(value, element, params) {
-            // Searching the element to check
+        function getElement(element, name) {
             var $form =  $(element).closest('form');
             var elementCache= {};
             var $el = $form
-                .find(selector(params[0]))
+                .find(selector(name))
                 // .find( "input"+selectorName+", select"+selectorName+", textarea"+selectorName )
                 .not( ":submit, :reset, :image, [readonly]" )
                 .filter( function() {
@@ -139,13 +101,83 @@
                     elementCache[ this.name ] = true;
                     return true;
                 });
-
-            // If check element not found, return false
+            // / If check element not found, return false
             if ($el=='' || $el == 'undefined' || $el.length==0) {
                 return false;
             }
+            return $el;
+        }
 
-            return $el.val()==params[1];
+
+        /**
+         * Validate that an attribute exists when any other attribute exists.
+         */
+        $.validator.addMethod("laravelRequiredWith", function(value, element, params) {
+
+            var validator=this;
+            var required=false;
+
+            $.each(params,function(i,param) {
+                var $el = getElement(element,param);
+                required=required || $el==false || $.validator.methods.required.call(validator, $el.val(),$el[0],true);
+            });
+
+            if (required) {
+                return  $.validator.methods.required.call(this, value, element, true);
+            }
+            return true;
+
+                //return $.validator.methods.require_from_group.call(this, value, element, [1,selector(params)]);
+        }, $.validator.format("The field is required when any of {0} {1} {2} {3} is present."));
+
+
+        /**
+         * Validate that an attribute exists when all other attribute exists.
+         */
+        $.validator.addMethod("laravelRequiredWithAll", function(value, element, params) {
+
+            var validator=this;
+            var required=true;
+
+            $.each(params,function(i,param) {
+                var $el = getElement(element,param);
+                required=required && ($el==false || $.validator.methods.required.call(validator, $el.val(),$el[0],true));
+            });
+
+            if (required) {
+                return  $.validator.methods.required.call(this, value, element, true);
+            }
+            return true;
+
+        }, $.validator.format("The field is required when {0} {1} {2} {3} is present."));
+
+        /**
+         * Validate that an attribute exists when any other attribute does not exists.
+         */
+        $.validator.addMethod("laravelRequiredWithout", function(value, element, params) {
+            return  ! $.validator.methods.laravelRequiredWith.call(this, value, element,params );
+        }, $.validator.format("The field is required when any of {0} {1} {2} {3} is not present."));
+
+        /**
+         * Validate that an attribute exists when all other attribute does not exists.
+         */
+        $.validator.addMethod("laravelRequiredWithoutAll", function(value, element, params) {
+            return  ! $.validator.methods.laravelRequiredWithAll.call(this, value, element,params );
+        }, $.validator.format("The field is required when {0} {1} {2} {3} is present."));
+
+        /**
+         * Validate that an attribute exists when another attribute has a given value.
+         */
+        $.validator.addMethod("laravelRequiredIf", function(value, element, params) {
+            var $el = getElement(element,params[0]);
+            if ($el==false) {
+                return true;
+            } else if ($el.val()==params[1]) {
+                return $.validator.methods.required.call(this, value, element, true);
+            } else {
+                return true;
+            }
+
         }, $.validator.format("The :attribute field is required when {0} is {1}."));
 
         /**
@@ -425,8 +457,8 @@
      * Validate that an attribute is a valid URL.
      */
     $.validator.addMethod("laravelUrl", function(value, element, params) {
-        return this.optional(element) ||
-            $.validator.methods.url.call(this, value, element, true);
+        return this.optional( element ) ||
+            /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test( value );
     }, $.validator.format("The :attribute format is invalid"));
 
     /**
@@ -434,7 +466,7 @@
      */
     $.validator.addMethod("laravelActiveUrl", function(value, element, params) {
         // @todo: Validate that an attribute is an active URL.
-        return this.optional(element) || $.validator.methods.url.call(this, value, element, true);
+        return $.validator.methods.laravelUrl.call(this, value, element, true);
     }, $.validator.format("The :attribute is not a valid URL."));
 
     /**

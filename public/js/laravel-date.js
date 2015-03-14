@@ -5,6 +5,12 @@
  *
  * Copyright (c) 2014 Proengsoft
  * Released under the MIT license
+ *
+ *      after: NO
+ *      before: OK -revisar-
+ *      date: NO
+ *      dato_forma: NOT
+ *
  */
 
 (function( factory ) {

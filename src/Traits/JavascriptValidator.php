@@ -178,6 +178,7 @@ trait JavascriptValidator
         ];
     }
 
+
     protected function jsRuleConfirmed($attribute,$rule, array $parameters,$message)
     {
         $parameters[0]=$attribute;
@@ -185,5 +186,17 @@ trait JavascriptValidator
         $attribute="{$attribute}_confirmation";
 
         return [$attribute,$rule, $parameters,$message];
+    }
+
+    protected function jsRuleRegex($attribute,$rule, array $parameters,$message)
+    {
+        $rule="laravel{$rule}";
+        $regexp='/^\/(.*)\/[gmixXsuUAJ]*$/';
+        if (preg_match($regexp,$parameters[0],$jsExp)) {
+            return [$attribute,$rule, [$jsExp[1]],$message];
+        }
+
+        return [];
+
     }
 }
