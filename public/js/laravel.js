@@ -478,6 +478,13 @@
         return $.validator.methods.laravelUrl.call(this, value, element, true);
     }, $.validator.format("The :attribute is not a valid URL."));
 
+    /**
+     * Validate the MIME type of a file upload attribute is in a set of MIME types.
+     */
+    $.validator.addMethod("laravelImage", function(value, element, params) {
+        return $.validator.methods.laravelMimes.call(this, value, element, ['jpeg', 'png', 'gif', 'bmp', 'svg']);
+    }, $.validator.format("The :attribute must be a file of type: {0}."));
+
 
     /**
      * Validate the MIME type of a file upload attribute is in a set of MIME types.
@@ -517,7 +524,28 @@
      * Validate that an attribute passes a regular expression check.
      */
     $.validator.addMethod("laravelRegex", function(value, element, params) {
-        var regex = new RegExp("^(?:"+params[0]+")$",'i');
+
+        var invalidModifiers=['x','s','u','X','U','A'];
+        var modifiers='';
+        var pattern='';
+
+        // Converting php regular expression
+        var phpReg= new RegExp('^(?:\/)(.*\\\/?[^\/]*|[^\/]*)(?:\/)([gmixXsuUAJ]*)?$');
+        matches=params[0].match(phpReg);
+        if (matches==null) return false;
+
+        // checking modifiers
+        php_modifiers=new Array();
+        if (matches[2]!=undefined) {
+            php_modifiers=matches[2].split('');
+            for (var i=0; i<php_modifiers.length<i ;i++) {
+                if (invalidModifiers.indexOf(php_modifiers[i])!=-1) {
+                    return true;
+                }
+            }
+        }
+
+        var regex = new RegExp("^(?:"+matches[1]+")$",php_modifiers.join());
         return  this.optional(element) || regex.test(value);
 
     }, $.validator.format("The :attribute format is invalid."));

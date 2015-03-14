@@ -188,20 +188,4 @@ trait JavascriptValidator
         return [$attribute,$rule, $parameters,$message];
     }
 
-    protected function jsRuleRegex($attribute,$rule, array $parameters,$message)
-    {
-        $rule="laravel{$rule}";
-        $regexp='/^\/(.*)\/[gmixXsuUAJ]*$/';
-        if (preg_match($regexp,$parameters[0],$jsExp)) {
-            return [$attribute,$rule, [$jsExp[1]],$message];
-        }
-
-        return [];
-    }
-    protected function jsRuleImage($attribute,$rule, array $parameters,$message)
-    {
-        $rule="laravelMimes";
-        return [$attribute,$rule,  array('jpeg', 'png', 'gif', 'bmp', 'svg'), $message];
-    }
-
 }
