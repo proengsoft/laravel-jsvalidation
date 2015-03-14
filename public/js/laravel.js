@@ -8,7 +8,7 @@
  *
  * @test:
  *      accepted: OK
- *      active_url: Falla(http://vegeta/)
+ *      active_url: OK
  *      alpha: OK
  *      alpha_dash: OK
  *      alpha_num: OK
@@ -21,12 +21,12 @@
  *      digits_between: OK
  *      email: ok
  *      exists : ---
- *      image: ?
+ *      image: OK
  *      in :OK
  *      integer: OK
  *      ip: OK
  *      max: OK
- *      mimes: ?
+ *      mimes: OK
  *      min: OK
  *      numeric: OK
  *      regex: OK
@@ -52,6 +52,15 @@
 }(function( $ ) {
 
     var imageMime = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/svg'];
+
+    function fileinfo(fieldObj) {
+        var FileName = fieldObj.value;
+        return {
+            file: FileName,
+            extension: FileName.substr(FileName.lastIndexOf('.') + 1),
+            size:fieldObj.files[0].size / 1024
+        };
+    }
 
     /**
      * "Validate" optional attributes.
@@ -469,14 +478,6 @@
         return $.validator.methods.laravelUrl.call(this, value, element, true);
     }, $.validator.format("The :attribute is not a valid URL."));
 
-    /**
-     * Validate the MIME type of a file is an image MIME type.
-     */
-    $.validator.addMethod("laravelImage", function(value, element, params) {
-        return this.optional(element) ||
-            (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-            imageMime.indexOf(element.files[0].type)!=-1;
-    }, $.validator.format("The :attribute must be an image."));
 
     /**
      * Validate the MIME type of a file upload attribute is in a set of MIME types.
@@ -484,7 +485,7 @@
     $.validator.addMethod("laravelMimes", function(value, element, params) {
         return this.optional(element) ||
             (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-            params.indexOf(element.files[0].type)!=-1;
+            params.indexOf(fileinfo(element).extension)!=-1;
     }, $.validator.format("The :attribute must be a file of type: {0}."));
 
     /**

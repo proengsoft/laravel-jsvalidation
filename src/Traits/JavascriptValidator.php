@@ -197,6 +197,11 @@ trait JavascriptValidator
         }
 
         return [];
-
     }
+    protected function jsRuleImage($attribute,$rule, array $parameters,$message)
+    {
+        $rule="laravelMimes";
+        return [$attribute,$rule,  array('jpeg', 'png', 'gif', 'bmp', 'svg'), $message];
+    }
+
 }
