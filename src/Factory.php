@@ -1,7 +1,5 @@
 <?php namespace Proengsoft\JQueryValidation;
 
-
-use Illuminate\Contracts\Foundation\Application;
 use Proengsoft\JQueryValidation\Exceptions\FormRequestArgumentException;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Contracts\Validation\Factory as FactoryContract;
@@ -15,6 +13,11 @@ class Factory {
      */
     protected $validator;
 
+    /**
+     * Default Config
+     *
+     * @var array
+     */
     protected $defaults;
 
     /**
@@ -30,7 +33,15 @@ class Factory {
     }
 
 
-
+    /**
+     * Creates JsValidator instance based on rules and message arrays
+     *
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
+     * @param null|string $selector
+     * @return \Proengsoft\JQueryValidation\JsValidator
+     */
     public function make( array $rules, array $messages = array(), array $customAttributes = array(), $selector=null)
     {
         $validator=$this->validator->make([], $rules, $messages,$customAttributes);
@@ -38,6 +49,14 @@ class Factory {
     }
 
 
+    /**
+     * Creates JsValidator instance based on FormRequest
+     *
+     * @param $formRequest
+     * @param null $selector
+     * @return JsValidator
+     * @throws FormRequestArgumentException
+     */
     public function formRequest($formRequest, $selector=null) {
 
         if (!is_subclass_of($formRequest,"Illuminate\\Foundation\\Http\\FormRequest")) {
@@ -52,6 +71,13 @@ class Factory {
 
     }
 
+    /**
+     * Creates JsValidator instance based on Validator
+     *
+     * @param ValidatorContract $validator
+     * @param null $selector
+     * @return JsValidator
+     */
     public function validator(ValidatorContract $validator, $selector=null) {
 
         return $this->createValidator($validator,$selector);
@@ -59,7 +85,14 @@ class Factory {
     }
 
 
-
+    /**
+     * Creates JsValidator instance based on Validator
+     *
+     * @param ValidatorContract $validator
+     * @param null $selector
+     * @param null $view
+     * @return JsValidator
+     */
     protected function createValidator(ValidatorContract $validator, $selector=null, $view=null) {
 
         $selector=$this->getSelector($selector);
@@ -69,6 +102,12 @@ class Factory {
 
     }
 
+    /**
+     * Gets the selector or default if is null
+     *
+     * @param null $selector
+     * @return string
+     */
     protected function getSelector($selector=null)
     {
         if (empty($selector)) {
@@ -77,7 +116,13 @@ class Factory {
         return (string)$selector;
     }
 
-    private function getView($view)
+    /**
+     * Gets the view or default if is null
+     *
+     * @param $view
+     * @return string
+     */
+    protected function getView($view)
     {
         if (empty($view)) {
             return $this->defaults["default_view"];

@@ -1,6 +1,5 @@
 <?php namespace Proengsoft\JQueryValidation;
 
-
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Proengsoft\JQueryValidation\Exceptions\PropertyNotFoundException;
@@ -8,18 +7,31 @@ use Proengsoft\JQueryValidation\Exceptions\PropertyNotFoundException;
 class JsValidator implements Arrayable {
 
     /**
-     * @var Validator
+     * Registered validator instance
+     *
+     * @var \Illuminate\Contracts\Validation\Validator
      */
     protected $validator;
 
+    /**
+     * Selector used in javascript generation
+     *
+     * @var string
+     */
     protected $selector ;
 
     /**
+     * View that renders Javascript
+     *
      * @var
      */
     private $view;
 
-
+    /**
+     * @param ValidatorContract $validator
+     * @param $selector
+     * @param $view
+     */
     public function __construct(ValidatorContract $validator, $selector, $view) {
 
         $this->validator=$validator;
@@ -27,6 +39,12 @@ class JsValidator implements Arrayable {
         $this->view = $view;
     }
 
+    /**
+     * Render the specified view with validator data
+     *
+     * @param mixed $view
+     * @return string
+     */
     public function render($view=null)
     {
         $view=is_null($view)?$this->view:$view;
@@ -46,6 +64,11 @@ class JsValidator implements Arrayable {
     }
 
 
+    /**
+     * Get the string resulting of render default view
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->render();
@@ -69,6 +92,11 @@ class JsValidator implements Arrayable {
     }
 
 
+    /**
+     *  Gets view data
+     *
+     * @return array
+     */
     protected function getViewData()
     {
         $data= [

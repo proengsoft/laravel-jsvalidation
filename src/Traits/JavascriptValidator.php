@@ -3,8 +3,18 @@
 
 trait JavascriptValidator {
 
+    /**
+     * Rule thaht disables validation for and attribute
+     *
+     * @var string
+     */
     protected $disable_js_rule='no_js_validation';
 
+    /**
+     * Current implemented rules
+     *
+     * @var array
+     */
     protected $implementedRules=['Accepted', 'ActiveUrl', 'After', 'Alpha', 'AlphaDash',
         'AlphaNum', 'Array', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
         'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Exists', 'Image',
@@ -12,13 +22,11 @@ trait JavascriptValidator {
         'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
         'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'String', 'Timezone', 'Unique', 'Url'];
 
-    protected $jsRules;
-    protected $jsMessages;
-
-
 
     /**
      * Generate Javascript validations
+     *
+     * @return array
      */
     protected function generateJavascriptValidations()
     {
@@ -47,44 +55,18 @@ trait JavascriptValidator {
         return array($jsRules,$jsMessages);
 
     }
-    
+
+    /**
+     * Check if rule is implemented
+     *
+     * @param $rule
+     * @return bool
+     */
     protected function isImplemented($rule)
     {
         return in_array($rule,$this->implementedRules);
     }
 
-
-    /**
-     * Merge additional rules into a given attribute.
-     *
-     * @param  string  $attribute
-     * @param  string|array  $rules
-     * @return void
-     */
-    protected function mergeJsRules($attribute, $rules)
-    {
-        $current = isset($this->jsRules[$attribute]) ? $this->jsRules[$attribute] : [];
-
-        if (!is_array($rules)) $rules=array($rules);
-
-        $this->jsRules[$attribute] = array_merge($current, $rules);
-    }
-
-    /**
-     * Merge additional messages into a given attribute.
-     *
-     * @param  string  $attribute
-     * @param  string|array  $messages
-     * @return void
-     */
-    protected function mergeJsMessages($attribute, $messages)
-    {
-        $current = isset($this->jsMessages[$attribute]) ? $this->jsMessages[$attribute] : [];
-
-        if (!is_array($messages)) $messages=array($messages);
-
-        $this->jsMessages[$attribute] = array_merge($current, $messages);
-    }
 
     /**
      * Convert a given rule using the converter.
@@ -127,7 +109,6 @@ trait JavascriptValidator {
     }
 
 
-
     /**
      * Check if JS Validation is disabled for attribute
      * 
@@ -141,20 +122,28 @@ trait JavascriptValidator {
     }
 
 
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     * @return bool
+     */
     public function validateNoJsValidation($attribute, $value, $parameters)
     {
         return true;
     }
 
+
+    /**
+     * @return array
+     */
     public function js()
     {
         list($jsRules,$jsMessages)=$this->generateJavascriptValidations();
-
         return [
             'rules' => $jsRules,
             'messages' => $jsMessages
         ];
-
     }
 
 }

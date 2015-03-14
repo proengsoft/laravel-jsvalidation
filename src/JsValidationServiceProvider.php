@@ -1,10 +1,9 @@
 <?php namespace Proengsoft\JQueryValidation;
 
 use Illuminate\Support\ServiceProvider;
-
 use Proengsoft\JQueryValidation;
-class JsValidationServiceProvider extends ServiceProvider {
 
+class JsValidationServiceProvider extends ServiceProvider {
 
 
 	/**
@@ -30,7 +29,6 @@ class JsValidationServiceProvider extends ServiceProvider {
 	public function register()
 	{
 
-
 		$this->app->singleton('jsvalidator', function ($app) {
 
             $validator=$app->make('Illuminate\Contracts\Validation\Factory');
@@ -38,9 +36,13 @@ class JsValidationServiceProvider extends ServiceProvider {
 
             return new Factory ($validator, $defaultConfig);
         });
+
 	}
 
 
+    /**
+     * Register Validator resolver
+     */
     protected function bootstrapValidator()
     {
         $this->app['validator']->resolver( function( $translator, $data, $rules, $messages = array(), $customAttributes = array() ) {
@@ -48,6 +50,9 @@ class JsValidationServiceProvider extends ServiceProvider {
         } );
     }
 
+    /**
+     * Configure and publish views
+     */
     protected function bootstrapViews() {
 
         $viewPath = __DIR__.'/../resources/views';
@@ -59,6 +64,9 @@ class JsValidationServiceProvider extends ServiceProvider {
 
     }
 
+    /**
+     * Load and publishes configs
+     */
     protected function bootstrapConfigs() {
 
         $configFile = __DIR__ . '/../config/jsvalidation.php';
@@ -68,6 +76,9 @@ class JsValidationServiceProvider extends ServiceProvider {
 
     }
 
+    /**
+     * Publish public assets
+     */
     protected function publishAssets() {
 
         $this->publishes([
@@ -75,6 +86,5 @@ class JsValidationServiceProvider extends ServiceProvider {
         ], 'public');
 
     }
-
 
 }
