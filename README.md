@@ -22,24 +22,54 @@ This package allows to reuse your Laravel [Validation Rules][], [Messages][], [F
   
 The Javascript validations are made using [JQueryValidation][] and [Moment.js], that are included in the package. 
 
-## Feature overview
+### Feature overview
 
 - Automatic creation of javascript validation based on your [Validation Rules][], [Messages][], [FormRequest][] and [Validators][].
-- Unobtrusive integration, you can use independently of Laravel Form Builder.
-- No Javascript coding required.
+- All Laravel validations supported (except remotes)
+- Uhe package uses bundled [Jquery Validation Plugin](http://jqueryvalidation.org/)  
+- Unobtrusive integration, you can use independently of Laravel Form Builder. and no Javascript coding required.
 - Uses Laravel Localization to translate messages.
 - Can be configured in controllers or views.
-- Integrate with your [Custom Validations]()
-  
+
+ 
+
+## Installation
 
 
-## Install
+Require `proengsoft/laravel-jsvalidation` in composer.json and run `composer update`.
 
-Via Composer
+    {
+        "require": {
+            "laravel/framework": "5.0.*",
+            ...
+            "proengsoft/laravel-jsvalidation": "*"
+        }
+        ...
+    }
 
-``` bash
-$ composer require proengsoft/laravel-jsvalidation
+Composer will download the package. After the package is downloaded, open `/config/app.php` and add the service provider and alias as below:
+
+```php
+    'providers' => array(
+        ...
+        'Proengsoft\JsValidation\JsValidationServiceProvider',
+    ),
 ```
+
+
+```php
+    'alias' => array(
+        ...
+        'JsValidator' => 'Proengsoft\JsValidation\Facades\JsValidatorFacade',
+    ),
+```
+
+
+Also you need to publish configuration file and assets by running the following Artisan commands.
+```php
+$ php artisan vendor:publish proengsoft/laravel-jsvalidation
+```
+
 
 ## Usage
 
