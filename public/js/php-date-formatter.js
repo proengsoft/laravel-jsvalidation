@@ -1,6 +1,6 @@
 /*!
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014
- * @version 1.3.0
+ * @version 1.3.0-patch1
  *
  * Date formatter utility library, that allows you to format date and 
  * time variables or Date objects using PHP DateTime format.
@@ -12,6 +12,10 @@
  *
  * For more JQuery plugins visit http://plugins.krajee.com
  * For more Yii related demos visit http://demos.krajee.com
+ *
+ *
+ *  v. 1.3.0-pacth1 Fixed 'U' pattern [Albert Moreno]
+ *
  */
 var defaultConfig = {
     dateSettings: {
