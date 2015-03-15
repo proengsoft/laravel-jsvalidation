@@ -72,7 +72,12 @@ class JsValidator implements Arrayable
      */
     public function __toString()
     {
-        return $this->render();
+        try {
+            return $this->render();
+        } catch (\Exception $e) {
+            return '';
+        }
+
     }
 
     /**
@@ -86,7 +91,7 @@ class JsValidator implements Arrayable
     {
         $data=$this->getViewData();
         if (array_key_exists($name, $data)) {
-            return $data['name'];
+            return $data[$name];
         } else {
             throw new PropertyNotFoundException($name, get_class());
         }

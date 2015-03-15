@@ -109,7 +109,7 @@ class Factory
     protected function getSelector($selector=null)
     {
         if (empty($selector)) {
-            return $this->defaults["default_form_selector"];
+            return $this->defaults["form_selector"];
         }
         return (string)$selector;
     }
@@ -123,7 +123,7 @@ class Factory
     protected function getView($view)
     {
         if (empty($view)) {
-            return $this->defaults["default_view"];
+            return $this->defaults["view"];
         }
         return (string)$view;
     }

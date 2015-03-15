@@ -1,8 +1,18 @@
-<script type="text/javascript" src="{{ asset('themes/admin/')}}/global/plugins/jquery-validation/js/jquery.validate.min.js"></script>
 <script>
     jQuery(document).ready(function(){
+        jQuery.validator.setDefaults({
+            debug: true
+        });
 
-        $("{{ $validator['selector'] }}").validate({
+        $("<?php echo $validator['selector']; ?>").validate({
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                        .closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+            unhighlight: function (element) { // revert the change done by hightlight
+                $(element)
+                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
+            },
             errorElement: 'span', //default input error message container
             errorClass: 'help-block help-block-error', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
@@ -22,10 +32,8 @@
                 label
                         .closest('.form-group').removeClass('has-error'); // set success class to the control group
             },
-            rules:
-                {!! json_encode($validator['rules']) !!},
-            messages:
-                {!! json_encode($validator['messages']) !!}
+            rules: <?php echo json_encode($validator['rules']); ?> ,
+            messages: <?php echo json_encode($validator['messages']) ?>
         })
     })
 </script>
