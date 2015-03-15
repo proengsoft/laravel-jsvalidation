@@ -17,7 +17,7 @@
 							</ul>
 						</div>
 					@endif
-                    {{ filter_var("htt:111", FILTER_VALIDATE_URL) }}
+
 					<form class="form-horizontal" role="form" method="POST" action="" id="ddd">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -60,6 +60,13 @@
                                     <div class="col-md-6">
                                         <input type="password" class="form-control" name="confirmed_confirmation">
                                         <p>{{$message}}</p>
+                                    </div>
+                                </div>
+                            @elseif ($field=="mimes" || $field=="image")
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">{{$field}}</label>
+                                    <div class="col-md-6">
+                                        <input type="file" class="form-control" name="{{$field}}">
                                     </div>
                                 </div>
                             @else

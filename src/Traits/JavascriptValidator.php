@@ -45,8 +45,10 @@ trait JavascriptValidator
             // Convert each rules and messages
             foreach ($rules as $rule) {
                 list($attribute,$rule, $parameters,$message) = $this->convertValidations($attribute,$rule);
-                $jsRules[$attribute][$rule]=$parameters;
-                $jsMessages[$attribute][$rule]=$message;
+                if ($rule) {
+                    $jsRules[$attribute][$rule]=$parameters;
+                    $jsMessages[$attribute][$rule]=$message;
+                }
                 /*
                 $js_rule[$attribute]=$this->convertRule($attribute, $rule);
                 $jsRules = array_merge($jsRules, $js_rule);
@@ -78,7 +80,7 @@ trait JavascriptValidator
 
         // Check if rule is implemented
         if ($rule == '' || !$this->isImplemented($rule)) {
-            return array($attribute,[],[],[]);
+            return array($attribute,false,false,false);
         }
 
         // Gets the message
@@ -187,5 +189,21 @@ trait JavascriptValidator
 
         return [$attribute,$rule, $parameters,$message];
     }
+
+    protected function jsRuleAfter($attribute,$rule, array $parameters,$message){
+        $rule="laravel{$rule}";
+        return [$attribute,$rule, [strtotime($parameters[0])],$message];
+    }
+
+    protected function jsRuleBefore($attribute,$rule, array $parameters,$message){
+        $rule="laravel{$rule}";
+        return [$attribute,$rule, [strtotime($parameters[0])],$message];
+    }
+    protected function __jsRuleDate($attribute,$rule, array $parameters,$message){
+        $rule="laravel{$rule}";
+        return [$attribute,$rule, [strtotime($parameters[0])],$message];
+    }
+
+
 
 }
