@@ -1,5 +1,5 @@
 <?php
-namespace Proengsoft\JQueryValidation\Facades;
+namespace Proengsoft\JsValidation\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

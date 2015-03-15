@@ -26,13 +26,15 @@
     },
     "autoload": {
         "psr-4": {
-            "Proengsoft\\JQueryValidation\\": "src"
+            "Proengsoft\\JsValidation\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Proengsoft\\JQueryValidation\\Test\\": "tests"
+            "Proengsoft\\JsValidation\\Test\\": "tests"
         }
+    },
+    "scripts": {
     },
     "extra": {
         "branch-alias": {

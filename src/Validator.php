@@ -1,13 +1,13 @@
-<?php namespace Proengsoft\JQueryValidation;
+<?php namespace Proengsoft\JsValidation;
 
-use Proengsoft\JQueryValidation\Traits\JavascriptValidator;
+use Proengsoft\JsValidation\Traits\JavascriptValidator;
 use Illuminate\Validation\Validator as BaseValidator;
 
 /**
  * Extends Laravel Validator to add Javascript Validations
  *
  * Class Validator
- * @package Proengsoft\JQueryValidation
+ * @package Proengsoft\JsValidation
  */
 class Validator extends BaseValidator
 {

@@ -1,4 +1,4 @@
-<?php namespace Proengsoft\JQueryValidation\Exceptions;
+<?php namespace Proengsoft\JsValidation\Exceptions;
 
 use Exception;
 

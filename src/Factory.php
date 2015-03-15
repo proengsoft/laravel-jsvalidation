@@ -1,6 +1,6 @@
-<?php namespace Proengsoft\JQueryValidation;
+<?php namespace Proengsoft\JsValidation;
 
-use Proengsoft\JQueryValidation\Exceptions\FormRequestArgumentException;
+use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Contracts\Validation\Factory as FactoryContract;
 
@@ -41,7 +41,7 @@ class Factory
      * @param array $messages
      * @param array $customAttributes
      * @param null|string $selector
-     * @return \Proengsoft\JQueryValidation\JsValidator
+     * @return \Proengsoft\JsValidation\JsValidator
      */
     public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector=null)
     {

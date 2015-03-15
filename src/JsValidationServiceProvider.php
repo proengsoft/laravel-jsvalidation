@@ -1,7 +1,7 @@
-<?php namespace Proengsoft\JQueryValidation;
+<?php namespace Proengsoft\JsValidation;
 
 use Illuminate\Support\ServiceProvider;
-use Proengsoft\JQueryValidation;
+use Proengsoft\JsValidation;
 
 class JsValidationServiceProvider extends ServiceProvider
 {

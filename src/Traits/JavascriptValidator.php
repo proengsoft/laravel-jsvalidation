@@ -1,4 +1,4 @@
-<?php namespace Proengsoft\JQueryValidation\Traits;
+<?php namespace Proengsoft\JsValidation\Traits;
 
 trait JavascriptValidator
 {

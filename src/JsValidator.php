@@ -1,8 +1,8 @@
-<?php namespace Proengsoft\JQueryValidation;
+<?php namespace Proengsoft\JsValidation;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Proengsoft\JQueryValidation\Exceptions\PropertyNotFoundException;
+use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
 class JsValidator implements Arrayable
 {
