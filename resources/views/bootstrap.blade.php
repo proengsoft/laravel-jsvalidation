@@ -1,12 +1,14 @@
+<!--
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jquery.validate.js')}}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/php-date-formatter.js')}}"></script>
+-->
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
 <script>
     jQuery.validator.setDefaults({
         debug: true
     });
     jQuery(document).ready(function(){
-        console.log($({!! "'".$validator["selector"]."'" !!}));
+
         $({!! "'".$validator["selector"]."'" !!}).validate({
             highlight: function (element) { // hightlight error inputs
                 $(element)

@@ -1,0 +1,8 @@
+{
+  "name": "Laravel Javascript Validation",
+  "dependencies": {
+    "jquery-validation": "~1.13.1",
+    "php-date-formatter": "~1.3.0",
+    "phpjs": "*"
+  }
+}
