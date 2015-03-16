@@ -80,9 +80,7 @@ echo $skeleton->echoPhrase('Hello, League!');
 
 ## Testing
 
-``` bash
-$ phpunit
-```
+The package still has no tests. As soon as possible I will be code it. *Contributions are welcome*
 
 ## Contributing
 
