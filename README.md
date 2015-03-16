@@ -13,7 +13,8 @@
 [Validation Rules]: http://laravel.com/docs/5.0/validation#available-validation-rules
 [Custom Validations]: http://laravel.com/docs/5.0/validation#custom-validation-rules
 [Messages]: http://laravel.com/docs/5.0/validation#error-messages-and-views
-[Moment.js]: http://momentjs.com/
+[Laravel Localization]: http://laravel.com/docs/5.0/localization 
+[Validation]: http://laravel.com/docs/5.0/validation 
 
 ## About
 
@@ -21,6 +22,7 @@ This package allows to reuse your Laravel [Validation Rules][], [Messages][], [F
  referencing it to your defined validations. The messages are loaded from your validators and translated according your Localization preferences.
   
 The Javascript validations are made using [JQueryValidation][], that is compiled into javascript in the package. 
+
 
 ### Feature overview
 
@@ -31,10 +33,8 @@ The Javascript validations are made using [JQueryValidation][], that is compiled
 - Uses Laravel Localization to translate messages.
 - Can be configured in controllers or views.
 
- 
 
 ## Installation
-
 
 Require `proengsoft/laravel-jsvalidation` in composer.json and run `composer update`.
 
@@ -64,8 +64,8 @@ Composer will download the package. After the package is downloaded, open `/conf
     ),
 ```
 
-
 Also you need to publish configuration file and assets by running the following Artisan commands.
+
 ```php
 $ php artisan vendor:publish proengsoft/laravel-jsvalidation
 ```
@@ -73,7 +73,213 @@ $ php artisan vendor:publish proengsoft/laravel-jsvalidation
 
 ## Usage
 
+<a name="basic-usage"></a>
+### Basic Usage
 
+Laravel Javascript Validation ships with a simple, convenient facility for configuring rules error messages via the `JsValidator` facade.
+
+The `JsValidator` created by the *Facade* inherits from [Laravel Validation][], so you can use all methods and procedures that Laravel provides to 
+setup your validations. Also class and rule syntax are the same that Laravel Validation class implements. When the instance is printed in a 
+view the Javascript code needed to validate your form is rendered to the page. 
+
+#### Basic Validator Example
+
+The first argument passed to the `make` method is the validation rules that should be applied to the data. The rule syntax is the same that 
+Laravel `Validation` class.
+
+     $validator = JsValidator::make(
+         [
+            'name' => 'required',
+            'password' => 'required|min:8',
+            'email' => 'required|email|unique:users'
+          ]
+     );
+
+#### Validator Example with all params
+
+Like Laravel `Validation` class, you can customize the messages showed when validation errors occurs. Also you 
+can define what the form will be validated.
+
+     $validator = JsValidator::make(
+         [
+            'name' => 'required',
+            'password' => 'required|min:8',
+            'email' => 'required|email|unique:users'
+          ],
+          [
+            'name' => 'validation.my_custom_lang_message'
+            'password.required' => ':attribute can't be empty'
+            'password.min' => ':attribute should has at least :min chars'
+          ],
+          [
+            'name' => 'Username',
+            'password=> 'Password'
+            'email' => 'E-Mail'
+           ],
+           '#myform'
+     );
+
+The second *(optional)* argument passed to the `make` method is the custom error messages showed when validation fails.
+By default `jsValidator` uses the Laravel messages translated according [Laravel Localization][] settings but if you want 
+you can customize the message for each rule.
+
+The third *(optional)* argument passed to the `make` method is the custom attribute name displayed in error messages.
+
+The last *(optional)* argument passed to the `make` method is the JQuery selector to find the form to validate. By default this
+selector is `form` so, any form will be validated.  You can change the default selector in `config/jsvalidation.php` config file
+
+
+#### Form Request Validation
+
+Yo also can use your [FormRequest][] to create the Javascript validations.
+
+```php
+$validator = JsValidator::formRequest('App\Http\Request\MyFormRequest');
+$validator = JsValidator::formRequest('App\Http\Request\MyFormRequest', '#my-form');
+```
+
+The first parameter is the fully qualified class name or instance of the *FormRequest* that you want to validate.
+
+The second *(optional)* parameter is the JQuery form selector to find the form to validate.
+
+
+### Validating the HTML Forms
+  
+The main goal of this package is the ability to reuse your PHP validation logic to validate forms  via Javascript. If you validate your
+ forms using controller, the simplest way to reuse your validation rules is  tho share yor rules between controllers methods.
+
+If you use [FormRequest][] you could configure your validations directly in the view
+
+
+#### Reusing Validation rules in the controller
+
+This is a basic example of how to reuse your validation rules in the controller .
+
+```php
+namespace App\Http\Controllers;
+
+class PostController extends Controller {
+
+    /**
+     * Define your validation rules in a property in 
+     * the controller to reuse the rules.
+     */
+    protected $validationRules=[
+                'title' => 'required|unique|max:255',
+                'body' => 'required',
+    ];
+    
+    /**
+     * Show the edit form for blog post
+     * We create a JsValidator instance based on shared validation rules
+     * @param  string  $post_id
+     * @return Response
+     */
+    public function edit($post_id)
+    {
+        $validator = JsValidator::make($this->validationRules]);
+        $post = Post::find($post_id);
+    
+        return view('edit_post')->with([
+            'validator' => $validator,
+            'post' => $post
+        ])    
+   
+    }
+    
+    
+    /**
+     * Store the incoming blog post.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function store(Request $request)
+    {
+        $v = Validator::make($request->all(), $this->validationRules]);
+    
+        if ($v->fails())
+        {
+            return redirect()->back()->withErrors($v->errors());
+        }
+    
+        // do store stuff
+    }
+}
+
+ ``` 
+
+In the view you simply should print the *validator* object passed to the view. Remember that this package depends of JQuery and
+you have to include before that *jsvalidation.js*
+ 
+ ```html
+     <div class="container">
+         <div class="row">
+             <div class="col-md-10 col-md-offset-1">
+                 <form class="form-horizontal" role="form" method="POST" action="" id="ddd">
+                     <div class="form-group">
+                         <label class="col-md-4 control-label">Title</label>
+                         <div class="col-md-6">
+                             <input type="text" class="form-control" name="title">
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <label class="col-md-4 control-label">Array</label>
+                         <div class="col-md-6">
+                             <textarea name="body"></textarea>
+                         </div>
+                     </div>
+                 </form>
+             </div>
+         </div>
+     </div>
+     <!-- Scripts -->
+     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+     <!-- Laravel Javascript Validation -->
+     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+     {!! $validator !!}
+  
+ ```
+
+
+#### Reusing Form Request Validations
+
+If you validates the forms using [FormRequest][], you can simply put your validation code in the view.
+
+```php
+namespace App\Http\Requests;
+use App\Http\Requests\Request;
+
+class StoreBlogPostRequest extends Request {
+
+	/**
+	 * Get the validation rules that apply to the request.
+	 *
+	 * @return array
+	 */
+	public function rules()
+	{
+		return [
+           'title' => 'required|unique|max:255',
+           'body' => 'required',
+        ];
+	}
+
+}
+```
+ 
+```html
+    
+     <!-- Scripts -->
+     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+     <!-- Laravel Javascript Validation -->
+     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+     {!! JsValidator::formRequest('App\Http\Request\StoreBlogPostRequest'); !!}
+  
+```
+ 
 
 ## Testing
 
