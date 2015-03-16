@@ -37,7 +37,7 @@ elixir(function(mix) {
             'public/js/jsvalidation'+minSuffix+'.js',
             'resources'
         );
-    
+
         //mix.copy('public/js/jsvalidation'+minSuffix+'.js','../../../public/vendor/jsvalidation/js/jsvalidation'+minSuffix+'.js');
 
 });
