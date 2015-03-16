@@ -1,5 +1,13 @@
+# IDE
 .idea/
+build/
+
+# composer
 vendor
-node_modules
-resources/bower_components
 composer.lock
+
+#node
+node_modules
+
+#bower
+resources/bower_components
