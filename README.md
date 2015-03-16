@@ -92,7 +92,7 @@ If you discover any security related issues, please email a.moreno@proengsoft.co
 
 ## Credits
 
-- [Proengsoft](https://github.com/proengsoft)
+- [Proengsoft](http://www.proengsoft.com/)
 - [Albert Moreno](https://github.com/torrentalle)
 - [All Contributors](../../contributors)
 
