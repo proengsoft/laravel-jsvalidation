@@ -89,7 +89,7 @@ class Factory
      * Creates JsValidator instance based on Validator
      *
      * @param ValidatorContract $validator
-     * @param null $selector
+     * @param string|null $selector
      * @param null $view
      * @return JsValidator
      */
