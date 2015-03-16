@@ -24,6 +24,53 @@ trait JavascriptValidator
 
 
     /**
+     * Get the validation rules.
+     *
+     * @return array
+     */
+    abstract public function getRules();
+
+
+    /**
+     * Extract the rule name and parameters from a rule.
+     *
+     * @param  array|string  $rules
+     * @return array
+     */
+    abstract protected function parseRule($rules);
+
+
+    /**
+     * Get the validation message for an attribute and rule.
+     *
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @return string
+     */
+    abstract protected function getMessage($attribute, $rule);
+
+
+    /**
+     * Replace all error message place-holders with actual values.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array   $parameters
+     * @return string
+     */
+    abstract protected function doReplacements($message, $attribute, $rule, $parameters);
+
+    /**
+     * Determine if the given attribute has a rule in the given set.
+     *
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     * @return bool
+     */
+    abstract protected function hasRule($attribute, $rules);
+
+    /**
      * Generate Javascript validations
      *
      * @return array
@@ -36,7 +83,7 @@ trait JavascriptValidator
 
         // We'll spin through each rule, validating the attributes attached to that
         // rule. All enabled rules will be converted.
-        foreach ($this->rules as $attribute => $rules) {
+        foreach ($this->getRules() as $attribute => $rules) {
             // Check if JS Validation is disabled for this attribute
             if (!$this->jsValidationEnabled($attribute)) {
                 continue;

@@ -77,7 +77,6 @@ class JsValidator implements Arrayable
         } catch (\Exception $e) {
             return '';
         }
-
     }
 
     /**

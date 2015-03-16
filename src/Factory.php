@@ -45,6 +45,7 @@ class Factory
      */
     public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector=null)
     {
+        $selector=(string)$selector;
         $validator=$this->validator->make([], $rules, $messages, $customAttributes);
         return $this->createValidator($validator, $selector);
     }
