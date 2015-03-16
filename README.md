@@ -100,24 +100,26 @@ Laravel `Validation` class.
 Like Laravel `Validation` class, you can customize the messages showed when validation errors occurs. Also you 
 can define what the form will be validated.
 
-     $validator = JsValidator::make(
-         [
-            'name' => 'required',
-            'password' => 'required|min:8',
-            'email' => 'required|email|unique:users'
-          ],
-          [
-            'name' => 'validation.my_custom_lang_message'
-            'password.required' => ':attribute can't be empty'
-            'password.min' => ':attribute should has at least :min chars'
-          ],
-          [
-            'name' => 'Username',
-            'password=> 'Password'
-            'email' => 'E-Mail'
-           ],
-           '#myform'
-     );
+```php
+ $validator = JsValidator::make(
+     [
+        'name' => 'required',
+        'password' => 'required|min:8',
+        'email' => 'required|email|unique:users'
+      ],
+      [
+        'name' => 'validation.my_custom_lang_message'
+        'password.required' => ':attribute can't be empty'
+        'password.min' => ':attribute should has at least :min chars'
+      ],
+      [
+        'name' => 'Username',
+        'password=> 'Password'
+        'email' => 'E-Mail'
+       ],
+       '#myform'
+ );
+```
 
 The second *(optional)* argument passed to the `make` method is the custom error messages showed when validation fails.
 By default `jsValidator` uses the Laravel messages translated according [Laravel Localization][] settings but if you want 
@@ -213,33 +215,33 @@ In the view you simply should print the *validator* object passed to the view. R
 you have to include before that *jsvalidation.js*
  
  ```html
-     <div class="container">
-         <div class="row">
-             <div class="col-md-10 col-md-offset-1">
-                 <form class="form-horizontal" role="form" method="POST" action="" id="ddd">
-                     <div class="form-group">
-                         <label class="col-md-4 control-label">Title</label>
-                         <div class="col-md-6">
-                             <input type="text" class="form-control" name="title">
-                         </div>
+ <div class="container">
+     <div class="row">
+         <div class="col-md-10 col-md-offset-1">
+             <form class="form-horizontal" role="form" method="POST" action="" id="ddd">
+                 <div class="form-group">
+                     <label class="col-md-4 control-label">Title</label>
+                     <div class="col-md-6">
+                         <input type="text" class="form-control" name="title">
                      </div>
-                     <div class="form-group">
-                         <label class="col-md-4 control-label">Array</label>
-                         <div class="col-md-6">
-                             <textarea name="body"></textarea>
-                         </div>
+                 </div>
+                 <div class="form-group">
+                     <label class="col-md-4 control-label">Array</label>
+                     <div class="col-md-6">
+                         <textarea name="body"></textarea>
                      </div>
-                 </form>
-             </div>
+                 </div>
+             </form>
          </div>
      </div>
-     <!-- Scripts -->
-     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
-     <!-- Laravel Javascript Validation -->
-     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-     {!! $validator !!}
-  
+ </div>
+ <!-- Scripts -->
+ <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+ 
+ <!-- Laravel Javascript Validation -->
+ <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+ {!! $validator !!}
  ```
 
 
@@ -270,14 +272,12 @@ class StoreBlogPostRequest extends Request {
 ```
  
 ```html
-    
-     <!-- Scripts -->
-     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
-     <!-- Laravel Javascript Validation -->
-     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-     {!! JsValidator::formRequest('App\Http\Request\StoreBlogPostRequest'); !!}
-  
+ <!-- Scripts -->
+ <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+ <!-- Laravel Javascript Validation -->
+ <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+ {!! JsValidator::formRequest('App\Http\Request\StoreBlogPostRequest'); !!}
 ```
  
 
