@@ -20,7 +20,7 @@
 This package allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to validate forms via Javascript transparently. You can validate forms automatically
  referencing it to your defined validations. The messages are loaded from your validators and translated according your Localization preferences.
   
-The Javascript validations are made using [JQueryValidation][] and [Moment.js], that are included in the package. 
+The Javascript validations are made using [JQueryValidation][], that is compiled into javascript in the package. 
 
 ### Feature overview
 
@@ -73,10 +73,7 @@ $ php artisan vendor:publish proengsoft/laravel-jsvalidation
 
 ## Usage
 
-``` php
-$skeleton = new League\Skeleton();
-echo $skeleton->echoPhrase('Hello, League!');
-```
+
 
 ## Testing
 
