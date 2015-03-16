@@ -30,8 +30,8 @@ class JsValidator implements Arrayable
 
     /**
      * @param ValidatorContract $validator
-     * @param $selector
-     * @param $view
+     * @param string $selector
+     * @param string $view
      */
     public function __construct(ValidatorContract $validator, $selector, $view)
     {
@@ -83,7 +83,7 @@ class JsValidator implements Arrayable
      * Gets value from view data
      *
      * @param $name
-     * @return mixed
+     * @return string
      * @throws PropertyNotFoundException
      */
     public function __get($name)
