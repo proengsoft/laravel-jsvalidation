@@ -104,7 +104,7 @@ class Factory
     /**
      * Gets the selector or default if is null
      *
-     * @param null $selector
+     * @param string $selector
      * @return string
      */
     protected function getSelector($selector=null)
