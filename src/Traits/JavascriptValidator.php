@@ -146,26 +146,6 @@ trait JavascriptValidator
 
 
     /**
-     * Convert a given rule using the converter.
-     *
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @return array
-     */
-    protected function convertRule($attribute, $rule)
-    {
-        list($rule, $parameters) = $this->parseRule($rule);
-
-        // Check if rule is implemented
-        if ($rule == '' || !$this->isImplemented($rule)) {
-            return [];
-        }
-
-        return array("laravel{$rule}"=>$parameters);
-    }
-
-
-    /**
      * Convert the message from given rule using the converter.
      *
      * @param  string  $attribute
@@ -203,12 +183,9 @@ trait JavascriptValidator
     /**
      * Disable Javascript Validations for some attribute
      *
-     * @param $attribute
-     * @param $value
-     * @param $parameters
      * @return bool
      */
-    public function validateNoJsValidation($attribute, $value, $parameters)
+    public function validateNoJsValidation()
     {
         return true;
     }
