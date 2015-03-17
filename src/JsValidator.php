@@ -108,7 +108,7 @@ class JsValidator implements Arrayable
             $data= [
                 'selector' => $this->selector
             ];
-            return array_merge($data, $this->validator->js());
+            return array_merge($data, (array)call_user_func([$this->validator, 'js']));
         }
         return array();
     }
