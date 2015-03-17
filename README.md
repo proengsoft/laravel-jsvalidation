@@ -52,3 +52,4 @@ The Javascript validations are made using [JQueryValidation][], that is compiled
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
