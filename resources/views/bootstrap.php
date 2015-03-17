@@ -1,8 +1,5 @@
 <script>
     jQuery(document).ready(function(){
-        jQuery.validator.setDefaults({
-            debug: <?php echo env('APP_DEBUG')?'true':'false'; ?>
-        });
 
         $("<?php echo $validator['selector']; ?>").validate({
             highlight: function (element) { // hightlight error inputs
