@@ -95,6 +95,7 @@ class Factory
      */
     protected function createValidator(ValidatorContract $validator, $selector=null, $view=null)
     {
+        $view=(string)$view;
         $selector=$this->getSelector($selector);
         $view=$this->getView($view);
 

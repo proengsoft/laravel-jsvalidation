@@ -104,9 +104,12 @@ class JsValidator implements Arrayable
      */
     protected function getViewData()
     {
-        $data= [
-            'selector' => $this->selector
-        ];
-        return array_merge($data, $this->validator->js());
+        if (method_exists($this->validator, 'js')) {
+            $data= [
+                'selector' => $this->selector
+            ];
+            return array_merge($data, $this->validator->js());
+        }
+        return array();
     }
 }
