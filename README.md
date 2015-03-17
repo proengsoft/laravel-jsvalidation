@@ -16,7 +16,9 @@
 [Laravel Localization]: http://laravel.com/docs/5.0/localization 
 [Validation]: http://laravel.com/docs/5.0/validation 
 
-**Laravel Javascript Validation** allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to validate forms via Javascript transparently. You can validate forms automatically
+**Laravel Javascript Validation** allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to validate forms 
+
+ transparently in client side using Javascript. You can validate forms automatically
  referencing it to your defined validations. The messages are loaded from your validators and translated according your Localization preferences.
  
 This package ships with a simple, convenient facility for configuring rules error messages via the `JsValidator` facade.
