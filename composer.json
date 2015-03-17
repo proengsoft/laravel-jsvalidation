@@ -38,10 +38,6 @@
         }
     },
     "scripts": {
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "dev-master"
-        }
     }
+
 }
