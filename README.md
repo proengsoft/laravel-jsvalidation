@@ -7,7 +7,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/proengsoft/laravel-jsvalidation.svg?style=flat-square)](https://scrutinizer-ci.com/g/proengsoft/laravel-jsvalidation)
 [![Total Downloads](https://img.shields.io/packagist/dt/proengsoft/laravel-jsvalidation.svg?style=flat-square)](https://packagist.org/packages/proengsoft/laravel-jsvalidation)
 
-[JQueryValidation]: http://jqueryvalidation.org/
+[JQuery Validation Plugin]: http://jqueryvalidation.org/
 [FormRequest]: http://laravel.com/docs/5.0/validation#form-request-validation
 [Validators]: http://laravel.com/docs/5.0/validation#form-request-validation
 [Validation Rules]: http://laravel.com/docs/5.0/validation#available-validation-rules
@@ -25,7 +25,7 @@ The `JsValidator` created by the *Facade* inherits from [Laravel Validation][], 
 setup your validations. Also class and rule syntax are the same that Laravel Validation class implements. When the instance is printed in a 
 view the Javascript code needed to validate your form is rendered to the page.
 
-The Javascript validations are made using [JQueryValidation][], that is compiled into javascript in the package.
+The Javascript validations are made using [JQuery Validation Plugin][], that is compiled into javascript in the package.
 
 ### Documentation
 
