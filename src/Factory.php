@@ -95,8 +95,7 @@ class Factory
      */
     protected function createValidator(ValidatorContract $validator, $selector=null, $view=null)
     {
-        $view=(string)$view;
-        $selector=$this->getSelector($selector);
+        $selector=$this->getSelector((string)$selector);
         $view=$this->getView($view);
 
         return new JsValidator($validator, $selector, $view);
