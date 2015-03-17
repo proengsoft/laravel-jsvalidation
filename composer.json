@@ -1,14 +1,15 @@
 {
     "name": "proengsoft/laravel-jsvalidation",
     "type": "library",
-    "description": "Validate forms transparently with Javascript reuse your Laravel Validation Rules, Messages, FormRequest and Validators",
+    "description": "Validate forms transparently with Javascript reusing your Laravel Validation Rules, Messages, and FormRequest",
     "keywords": [
         "proengsoft",
         "laravel",
+        "javascript",
         "validator",
         "validation",
-        "proengsoft",
-        "jQuery Validation"
+        "jquery",
+        "form"
     ],
     "homepage": "https://github.com/proengsoft/laravel-jsvalidation",
     "license": "MIT",
