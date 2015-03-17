@@ -38,7 +38,9 @@
         }
     },
     "scripts": {
-        "post-package-update": "php artisan vendor:publish --force --provider='Proengsoft\\JsValidation\\JsValidationServiceProvider' --tag=public"
+      "post-package-cmd": [
+        "php artisan vendor:publish --force --provider='Proengsoft\\JsValidation\\JsValidationServiceProvider' --tag=public"
+      ]
     }
 
 }
