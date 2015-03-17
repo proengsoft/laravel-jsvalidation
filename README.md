@@ -5,7 +5,7 @@
 [![Build Status](https://img.shields.io/travis/proengsoft/laravel-jsvalidation/master.svg?style=flat-square)](https://travis-ci.org/proengsoft/laravel-jsvalidation)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/proengsoft/laravel-jsvalidation.svg?style=flat-square)](https://scrutinizer-ci.com/g/proengsoft/laravel-jsvalidation/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/proengsoft/laravel-jsvalidation.svg?style=flat-square)](https://scrutinizer-ci.com/g/proengsoft/laravel-jsvalidation)
-[![Total Downloads](https://img.shields.io/packagist/dt/league/laravel-jsvalidation.svg?style=flat-square)](https://packagist.org/packages/league/laravel-jsvalidation)
+[![Total Downloads](https://img.shields.io/packagist/dt/proengsoft/laravel-jsvalidation.svg?style=flat-square)](https://packagist.org/packages/proengsoft/laravel-jsvalidation)
 
 [JQueryValidation]: http://jqueryvalidation.org/
 [FormRequest]: http://laravel.com/docs/5.0/validation#form-request-validation
