@@ -1,7 +1,7 @@
 <script>
     jQuery(document).ready(function(){
         jQuery.validator.setDefaults({
-            debug: true
+            debug: <?php env('APP_DEBUG')?'true':'false'; ?>
         });
 
         $("<?php echo $validator['selector']; ?>").validate({

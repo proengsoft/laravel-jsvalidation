@@ -13,5 +13,4 @@ return array(
      */
     'form_selector' => 'form',
 
-
 );
