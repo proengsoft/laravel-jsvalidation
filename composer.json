@@ -1,7 +1,7 @@
 {
     "name": "proengsoft/laravel-jsvalidation",
     "type": "library",
-    "description": "Validate forms with Javascript using your own FormRequest and Validators",
+    "description": "Validate forms transparently with Javascript reuse your Laravel Validation Rules, Messages, FormRequest and Validators",
     "keywords": [
         "proengsoft",
         "laravel",
