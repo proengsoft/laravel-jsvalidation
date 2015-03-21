@@ -53,7 +53,6 @@ class Factory
      */
     public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector=null)
     {
-        $selector=(string)$selector;
         $validator=$this->validator->make([], $rules, $messages, $customAttributes);
         return $this->createValidator($validator, $selector);
     }
@@ -84,7 +83,7 @@ class Factory
      * Creates JsValidator instance based on Validator
      *
      * @param ValidatorContract $validator
-     * @param null $selector
+     * @param string|null $selector
      * @return JsValidator
      */
     public function validator(ValidatorContract $validator, $selector=null)
@@ -98,44 +97,17 @@ class Factory
      *
      * @param ValidatorContract $validator
      * @param string|null $selector
-     * @param null $view
      * @return JsValidator
      */
-    protected function createValidator(ValidatorContract $validator, $selector=null, $view=null)
+    protected function createValidator(ValidatorContract $validator, $selector=null)
     {
-        $selector=$this->getSelector((string)$selector);
-        $view=$this->getView($view);
-
+        if (!empty($selector)) {
+            $this->js->setSelector($selector);
+        }
         $this->js->setValidator($validator);
 
-        return new $this->js;
+        return $this->js;
     }
 
-    /**
-     * Gets the selector or default if is null
-     *
-     * @param string $selector
-     * @return string
-     */
-    protected function getSelector($selector=null)
-    {
-        if (empty($selector)) {
-            return $this->defaults["form_selector"];
-        }
-        return (string)$selector;
-    }
 
-    /**
-     * Gets the view or default if is null
-     *
-     * @param $view
-     * @return string
-     */
-    protected function getView($view)
-    {
-        if (empty($view)) {
-            return $this->defaults["view"];
-        }
-        return (string)$view;
-    }
 }

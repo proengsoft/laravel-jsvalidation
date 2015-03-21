@@ -110,6 +110,8 @@ class JsValidator implements Arrayable
     }
 
 
+
+
     /**
      *  Gets view data
      *
@@ -125,4 +127,14 @@ class JsValidator implements Arrayable
         }
         return array();
     }
+
+    /**
+     * @param string $selector
+     */
+    public function setSelector($selector)
+    {
+        $this->selector = $selector;
+    }
+
+
 }
