@@ -43,7 +43,7 @@ The Javascript validations are made using [JQuery Validation Plugin][], that is 
   - [FormRequest Example](https://github.com/proengsoft/laravel-jsvalidation/wiki/FormRequest-Validation-Example)
 - [Testing](https://github.com/proengsoft/laravel-jsvalidation/wiki/Testing)
 - [Contributing] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Contributing)
-- [Changelog] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/CHANGELOG.md)
+- [ChangeLog] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/CHANGELOG.md)
 - [Security] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Security)
 - [Credits] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Credits)
 - [License] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/LICENSE.md)

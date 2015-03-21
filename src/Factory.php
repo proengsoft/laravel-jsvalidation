@@ -19,18 +19,26 @@ class Factory
      *
      * @var array
      */
-    protected $defaults;
+    //protected $defaults;
+
+    /**
+     * Javascript validator instance
+     *
+     * @var JsValidator
+     */
+    protected $js;
 
     /**
      * Create a new Validator factory instance.
      *
      * @param  \Illuminate\Contracts\Validation\Factory $validator
-     * @param array $defaults
+     * @param  \Proengsoft\JsValidation\JsValidator $js
+     * @internal param array $defaults
      */
-    public function __construct(FactoryContract $validator, array $defaults)
+    public function __construct(FactoryContract $validator, JsValidator $js)
     {
         $this->validator=$validator;
-        $this->defaults=$defaults;
+        $this->js=$js;
     }
 
 
@@ -98,7 +106,9 @@ class Factory
         $selector=$this->getSelector((string)$selector);
         $view=$this->getView($view);
 
-        return new JsValidator($validator, $selector, $view);
+        $this->js->setValidator($validator);
+
+        return new $this->js;
     }
 
     /**

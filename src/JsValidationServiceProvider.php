@@ -29,12 +29,15 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('jsvalidator', function ($app) {
+        $this->app->bind('jsvalidator', function ($app) {
 
-            $validator=$app->make('Illuminate\Contracts\Validation\Factory');
-            $defaultConfig=$app['config']->get('jsvalidation');
+            $selector=$app['config']->get('jsvalidation.selector');
+            $view=$app['config']->get('jsvalidation.view');
 
-            return new Factory($validator, $defaultConfig);
+            $validator=new JsValidator($selector,$view);
+            $validatorFactory=$app->make('Illuminate\Contracts\Validation\Factory');
+
+            return new Factory($validatorFactory, $validator);
         });
     }
 
