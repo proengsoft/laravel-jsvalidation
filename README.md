@@ -31,26 +31,40 @@ The Javascript validations are made using [JQuery Validation Plugin][], that is 
 
 ### Documentation
 
-- [About](https://github.com/proengsoft/laravel-jsvalidation/wiki/Home)
-- [Installation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation)
-- [Configuration](https://github.com/proengsoft/laravel-jsvalidation/wiki/Configuration)
-  - [Settings](https://github.com/proengsoft/laravel-jsvalidation/wiki/Settings)
-  - [Javascript Rendering](https://github.com/proengsoft/laravel-jsvalidation/wiki/Javascript-Rendering)
-  - [Dependencies](https://github.com/proengsoft/laravel-jsvalidation/wiki/Dependencies)
-- [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/wiki/Basic-Usage)
+- [About](Home)
+- [Installation](Installation)
+- [Configuration](Configuration)
+  - [Settings](Settings)
+  - [Javascript Rendering](Javascript-Rendering)
+  - [Dependencies](Dependencies)
+- [Basic Usage](Basic-Usage)
   - [Rulesets](Rulesets)
-  - [Form Requests](https://github.com/proengsoft/laravel-jsvalidation/wiki/Form-Requests)
-- [Validating Forms](https://github.com/proengsoft/laravel-jsvalidation/wiki/Validating-Forms)
-  - [Controller Validation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Controller-Validation)
-  - [FormRequest Validation](https://github.com/proengsoft/laravel-jsvalidation/wiki/FormRequest-Validation)
-- [Facade Reference](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade-Reference)
-- [Testing](https://github.com/proengsoft/laravel-jsvalidation/wiki/Testing)
-- [Contributing] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Contributing)
-- [Security] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Security)
-- [Credits] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Credits)
+  - [Form Requests](Form-Requests)
+- [Validation Examples](Validating-Forms)
+  - [Controller Example](Controller-Validation-Example)
+  - [FormRequest Example](FormRequest-Validation-Example)
+- [Testing](Testing)
+- [Contributing] (Contributing)
+- [Changelog] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/CHANGELOG.md)
+- [Security] (Security)
+- [Credits] (Credits)
 - [License] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/LICENSE.md)
 
+---
 
+### [Facade Reference](Facade)
+
+* [`JsValidator::make()`](Facade#jsvalidatormake) 
+* [`JsValidator::formRequest()`](Facade#jsvalidatorformrequest) 
+* [`JsValidator::validator()`](Facade#jsvalidatorvalidator)
+
+---
+
+### [JsValidator Class](JsValidator-Class)
+ 
+* [`Arrayable interface`](JsValidator-Class#arrayableinterface) 
+* [`render()`](JsValidator-Class#render) 
+* [`__toString()`](JsValidator-Class#tostring) 
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
