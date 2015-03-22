@@ -1,27 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Albert
- * Date: 22/03/2015
- * Time: 2:13
- */
 
 namespace Proengsoft\JsValidation\Test;
-
+use Mockery;
+use Proengsoft\JsValidation\JsValidator;
 
 class JsValidatorTest extends \PHPUnit_Framework_TestCase {
 
-    protected $selector="form";
-    protected $view = "jsvalidation::bootstrap";
+    public $jsValidator;
+    public $mockValidator;
 
     public function setUp()
     {
-
+        $this->mockValidator=Mockery::mock('Illuminate\Contracts\Validation\Validator');
+        $this->jsValidator=new JsValidator('form','jsvalidator::bootstrap');
+        $this->jsValidator->setValidator($this->mockValidator);
     }
 
-    public function testInstance()
+    public function  testRender()
     {
-
+        //$this->assertViewHas('dsdss');
     }
+
 
 }

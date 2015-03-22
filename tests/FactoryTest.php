@@ -1,70 +1,11 @@
 <?php namespace Proengsoft\JsValidation\Test;
 
 use Mockery;
-use Proengsoft\JsValidation\Factory as JsValidationFactory;
 use Proengsoft\JsValidation\Factory;
-use Proengsoft\JsValidation\JsValidator;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase {
 
-    /**
-     * @var Mockery
-     */
-    public $validator;
-    public $validatorContract;
 
-    protected $app;
-
-    protected $rules=['accepted' => 'accepted',
-            'active_url' => 'active_url',
-            'after' => 'after:"14 May"',
-            'after_format' => 'after:"14 May"|date_format:Y-m-d',
-            'alpha' => 'alpha',
-            'alpha_dash' => 'alpha_dash',
-            'alpha_num' => 'alpha_num',
-            'array' => 'array',
-            'before' => 'before:"+2 week"',
-            'before_format' => 'before:"+2 week"|date_format:d/m/Y',
-            'between' => 'between:3,5',
-            'boolean' => 'boolean',
-            'confirmed' => 'confirmed',
-            'date' => 'date',
-            'date_format' => 'date_format:d/m/Y',
-            'different' => 'different:digits',
-            'digits' => 'digits:2',
-            'digits_between' => 'digits_between:3,9',
-            'email' => 'email',
-            'exists' => 'exists:migrations,migration',
-            'image' => 'image',
-            'in' => 'in:A,B,"CD"',
-            'integer' => 'integer',
-            'ip' => 'ip',
-            'max' => 'max:100',
-            'mimes' => 'mimes:png',
-            'min' => 'min:5',
-            'not_in' => 'not_in:Z,Y,"V V"',
-            'numeric' => 'numeric',
-            'regex' => 'regex:/[a-z]+/',
-            'required' => 'required',
-            'required_if' => 'required_if:alpha,aaaa',
-            'required_with' => 'required_with:before,between',
-            'required_with_all' => 'required_with_all:before,between',
-            'required_without' => 'required_without:before,between',
-            'required_without_all' => 'required_without_all:before,between',
-            'same' => 'same:before',
-            'size' => 'size:13',
-            'size_numeric' => 'size:13|numeric',
-            'string' => 'string:value',
-            'timezone' => 'timezone',
-            'unique' => 'unique:migrations,migration',
-            'url' => 'url'];
-
-    public $selector='form';
-    public $messages=[];
-    public $attributes=[];
-
-
-    public $js;
     public $mockedFactory;
     public $mockedValidator;
     public $factory;
@@ -124,7 +65,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     }
 
-
+/*
     public function testFormRequestFromString() {
 
         $mockFormRequest=Mockery::mock('Illuminate\Foundation\Http\FormRequest');
@@ -139,7 +80,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
 
     }
-
+*/
 
     /**
      * @expectedException \Proengsoft\JsValidation\Exceptions\FormRequestArgumentException
