@@ -60,9 +60,9 @@ The Javascript validations are made using [JQuery Validation Plugin][], that is 
 
 ### [JsValidator Class](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class)
  
-* [`Arrayable interface`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class#arrayableinterface) 
-* [`render()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class#render) 
-* [`__toString()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class#tostring) 
+* [`Arrayable interface`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class#arrayable-interface) 
+* [`render()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class#renderview) 
+* [`__toString()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class#__tostring) 
 
 ## License
 
