@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Albert
- * Date: 24/03/2015
- * Time: 0:27
- */
+
 
 namespace Proengsoft\JsValidation\Test\Traits;
 
