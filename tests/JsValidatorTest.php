@@ -3,22 +3,109 @@
 namespace Proengsoft\JsValidation\Test;
 use Mockery;
 use Proengsoft\JsValidation\JsValidator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Contracts\View\Factory;
+
+
+function view() {
+
+
+    return Mockery::mock('Illuminate\Contracts\View');
+}
 
 class JsValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public $jsValidator;
     public $mockValidator;
 
+    public $form = 'form';
+    public $view = 'jsvalidator::bootstrap';
+
     public function setUp()
     {
-        $this->mockValidator=Mockery::mock('Illuminate\Contracts\Validation\Validator');
-        $this->jsValidator=new JsValidator('form','jsvalidator::bootstrap');
+
+        $this->mockValidator=Mockery::mock('Proengsoft\JsValidation\Validator');
+        $this->jsValidator=new JsValidator($this->form,$this->view);
         $this->jsValidator->setValidator($this->mockValidator);
     }
 
-    public function  testRender()
+    public function testRender()
     {
-        //$this->assertViewHas('dsdss');
+
+        $this->mockValidator->shouldReceive('js');
+
+
+        View::shouldReceive('make')
+            ->with('jsvalidator::bootstrap',['validator'=>['selector'=>$this->form]])
+            ->once()
+            ->andReturn(
+                Mockery::mock('Illuminate\Contracts\View\Factory','Illuminate\Contracts\Support\Renderable')
+                    ->shouldReceive('render')
+                    ->once()
+                    ->andReturn('return')
+                    ->getMock());
+
+
+        $txt=$this->jsValidator->render();
+        $this->assertEquals('return',$txt);
+    }
+
+    public function  testToArray()
+    {
+        $this->mockValidator->shouldReceive('js');
+        $expected=['selector'=>$this->form];
+        $viewData=$this->jsValidator->toArray();
+
+        $this->assertEquals($expected,$viewData);
+
+    }
+
+
+    public function testToString()
+    {
+        $this->testRender();
+    }
+
+
+    public function testToStringExceptionCatch()
+    {
+
+        $this->mockValidator->shouldReceive('js');
+
+        View::shouldReceive('make')
+            ->with('jsvalidator::bootstrap',['validator'=>['selector'=>$this->form]])
+            ->once()
+            ->andThrow('\Exception');
+
+        $txt=$this->jsValidator->__toString();
+        $this->assertEquals('',$txt);
+
+    }
+
+    public function testGet()
+    {
+        $this->mockValidator->shouldReceive('js');
+        $this->assertEquals($this->form,$this->jsValidator->selector);
+    }
+
+    /**
+     * @expectedException \Proengsoft\JsValidation\Exceptions\PropertyNotFoundException
+     */
+    public function testGetException()
+    {
+        $this->mockValidator->shouldReceive('js');
+        $test=$this->jsValidator->property_not_found;
+    }
+
+    public function testGetViewDataFails()
+    {
+        $mockValidator=Mockery::mock('Illuminate\Contracts\Validation\Validator');
+        $this->jsValidator->setValidator($mockValidator);
+
+        $expected=[];
+        $viewData=$this->jsValidator->toArray();
+
+        $this->assertEquals($expected,$viewData);
     }
 
 

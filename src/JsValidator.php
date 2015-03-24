@@ -2,7 +2,7 @@
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\View;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
 class JsValidator implements Arrayable
@@ -53,16 +53,18 @@ class JsValidator implements Arrayable
     /**
      * Render the specified view with validator data
      *
-     * @param View|string|null $view
+     * @param \Illuminate\Contracts\View\View|string|null $view
      * @param string|null $selector
      * @return string
      */
     public function render($view=null, $selector=null)
     {
         $view=is_null($view)?$this->view:$view;
-        $this->selector=is_null($selector)?$this->selector:$selector;
+        $this->setSelector(is_null($selector)?$this->selector:$selector);
 
-        return view($view, ['validator'=>$this->getViewData()])->render();
+
+        return View::make($view, ['validator'=>$this->getViewData()])
+            ->render();
     }
 
 

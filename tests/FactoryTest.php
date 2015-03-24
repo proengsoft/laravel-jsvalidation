@@ -50,7 +50,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
     public function testFormRequestFromInstance() {
 
         $mockFormRequest=Mockery::mock('Illuminate\Foundation\Http\FormRequest');
-        $mockFormRequest->shouldReceive('rules')->once()->andReturn([]);
+        $mockFormRequest->shouldReceive('rules')->once()->andReturn(['name'=>'require']);
         $mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
 
         $this->mockedFactory->shouldReceive('make')

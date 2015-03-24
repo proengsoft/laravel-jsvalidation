@@ -8,7 +8,7 @@ trait JavascriptValidator
      *
      * @var string
      */
-    protected $disable_js_rule='no_js_validation';
+    protected $disable_js_rule='NoJsValidation';
 
     /**
      * Current implemented rules
@@ -142,29 +142,6 @@ trait JavascriptValidator
         }
 
         return [$attribute,$rule,$parameters,$message];
-    }
-
-
-    /**
-     * Convert the message from given rule using the converter.
-     *
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @return array
-     */
-    protected function convertMessage($attribute, $rule)
-    {
-        list($rule, $parameters) = $this->parseRule($rule);
-
-        // Check if rule is implemented
-        if ($rule == '' || !$this->isImplemented($rule)) {
-            return [];
-        }
-
-        $message = $this->getMessage($attribute, $rule);
-        $message = $this->doReplacements($message, $attribute, $rule, $parameters);
-
-        return array("laravel{$rule}"=>$message);
     }
 
 
