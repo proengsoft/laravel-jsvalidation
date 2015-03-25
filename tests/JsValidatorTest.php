@@ -23,11 +23,7 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
     public function setUp()
     {
 
-        $this->mockValidator=m::mock('Proengsoft\JsValidation\Validator')
-            ->shouldReceive('js')
-            ->once()
-            ->getMock();
-
+        $this->mockValidator=m::mock('Proengsoft\JsValidation\Validator');
         $this->jsValidator=new JsValidator($this->form,$this->view);
         $this->jsValidator->setValidator($this->mockValidator);
     }
@@ -44,7 +40,7 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testRender()
     {
 
-
+        $this->mockValidator->shouldReceive('js')->once();
 
 
         View::shouldReceive('make')
@@ -66,7 +62,7 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
     {
         $expected=['selector'=>$this->form];
 
-        //$this->mockValidator->shouldReceive('js');
+        $this->mockValidator->shouldReceive('js')->once();
 
         $viewData=$this->jsValidator->toArray();
         $this->assertEquals($expected,$viewData);
@@ -85,7 +81,7 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testToStringExceptionCatch()
     {
 
-        //$this->mockValidator->shouldReceive('js');
+        $this->mockValidator->shouldReceive('js')->once();
 
         View::shouldReceive('make')
             ->with('jsvalidator::bootstrap',['validator'=>['selector'=>$this->form]])
@@ -99,12 +95,16 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testGet()
     {
+        $this->mockValidator->shouldReceive('js')->once();
+
         $this->assertEquals($this->form,$this->jsValidator->selector);
     }
 
 
     public function testGetException()
     {
+        $this->mockValidator->shouldReceive('js')->once();
+        
         try {
             $this->jsValidator->property_not_found;
         }
@@ -120,12 +120,13 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetViewDataFails()
     {
-
-        $expected=['selector'=>'form'];
-
+        unset($this->mockValidator);
+        $this->mockValidator=m::mock('Illuminate\Contracts\Validation\Validator');
         $this->jsValidator->setValidator($this->mockValidator);
 
+        $expected=[];
         $viewData=$this->jsValidator->toArray();
+
         $this->assertEquals($expected,$viewData);
     }
 
