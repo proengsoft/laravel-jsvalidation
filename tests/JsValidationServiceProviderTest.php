@@ -1,12 +1,9 @@
 <?php
 namespace Proengsoft\JsValidation\Test;
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
-use Illuminate\Contracts\Validation\Factory;
-use Proengsoft\JsValidation\JsValidationServiceProvider;
 
 
 
@@ -45,6 +42,7 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
 
         $test=$this;
 
+
         /*
         |------------------------------------------------------------
         | Expectation
@@ -52,53 +50,38 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
         */
 
         // Publishes configurations
-
-        /*
-
-        Config::shouldReceive('get')
-            ->with("$namespace.form_selector")
-            ->atLeast(1)
-            ->andReturn('form');
-
-        Config::shouldReceive('get')
-            ->with("$namespace.view")
-            ->atLeast(1)
-            ->andReturn("$namespace::bootstrap");
-
-        Config::shouldReceive('get')
-            ->with($namespace,[])
-            ->atLeast(1)
-            ->andReturn(array(
-                'view' =>"$namespace::bootstrap",
-                'form_selector' =>'form'
-            ));
-
-           */
-
-        $sp->shouldReceive('mergeConfigFrom')
-            ->once()
-            ->with($configFile, $namespace);
-
-        $sp->shouldReceive('publishes')
-            ->once()
-            ->with([$configFile => "$fakePath/config/jsvalidation.php"], 'config');
+        $this->assertTrue(
+            $sp->shouldReceive('mergeConfigFrom')
+                ->once()
+                ->with($configFile, $namespace)
+                ->andReturn(true) &&
+            $sp->shouldReceive('publishes')
+                ->once()
+                ->with([$configFile => "$fakePath/config/jsvalidation.php"], 'config')
+                ->andReturn(true)
+        );
 
 
         // Register Views
-        $sp->shouldReceive('loadViewsFrom')
-            ->with($viewsPath,'jsvalidation')
-            ->once();
-
-        $sp->shouldReceive('publishes')
-            ->once()
-            ->with([$viewsPath => "$fakePath/resources/views/vendor/jsvalidation"]);
+        $this->assertTrue(
+            $views=$sp->shouldReceive('loadViewsFrom')
+                ->with($viewsPath,'jsvalidation')
+                ->once()
+                ->andReturn(true) &&
+            $sp->shouldReceive('publishes')
+                ->once()
+                ->with([$viewsPath => "$fakePath/resources/views/vendor/jsvalidation"])
+                ->andReturn(true)
+        );
 
 
         // Publishes assets
-        $sp->shouldReceive('publishes')
-            ->once()
-            ->with([$publicPath => "$fakePath/public/vendor/jsvalidation"],"public");
-
+        $this->assertTrue((bool)
+            $sp->shouldReceive('publishes')
+                ->once()
+                ->with([$publicPath => "$fakePath/public/vendor/jsvalidation"],"public")
+                ->andReturn(true)
+        );
 
         // Register Validator
         $app['validator']->shouldReceive('resolver')
@@ -121,6 +104,9 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue(true);
 
+        /**
+         *  Cleanup
+         */
         unset($app);
         unset($sp);
 
@@ -168,6 +154,7 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
                     );
                 }
             );
+
         $app->shouldReceive('make')
             ->once()->andReturnUsing(
                 function($name) use ($test) {
@@ -182,6 +169,10 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
         */
         $sp->register();
 
+
+        /**
+         *  Cleanup
+         */
         unset($sp);
         unset($app);
         unset($test);

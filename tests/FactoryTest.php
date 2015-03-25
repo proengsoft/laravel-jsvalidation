@@ -1,6 +1,7 @@
 <?php namespace Proengsoft\JsValidation\Test;
 
 use Mockery as m;
+use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 use Proengsoft\JsValidation\Factory;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase {
@@ -53,12 +54,14 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testFormRequestFromInstance() {
 
+        $rules=['name'=>'require'];
         $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
-        $mockFormRequest->shouldReceive('rules')->once()->andReturn(['name'=>'require']);
+        $mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
         $mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
 
         $this->mockedFactory->shouldReceive('make')
             ->once()
+            ->with([],$rules,[])
             ->andReturn(
                 m::mock('Illuminate\Contracts\Validation\Validator')
             );
@@ -69,32 +72,22 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     }
 
-/*
-    public function testFormRequestFromString() {
 
-        $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
-
-        $this->mockedFactory->shouldReceive('make')
-            ->once()
-            ->andReturn(
-                m::mock('Illuminate\Contracts\Validation\Validator')
-            );
-
-        $js=$this->factory->formRequest('Proengsoft\JsValidation\Test\Requests\FormRequest');
-        $this->assertInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
-
-    }
-*/
-
-    /**
-     * @expectedException \Proengsoft\JsValidation\Exceptions\FormRequestArgumentException
-     */
     public function testFormRequestException() {
 
-        $mock=m::mock('Object');
+        try {
+            $mock=m::mock('Object');
 
-        $js=$this->factory->formRequest($mock);
-        $this->assertInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
+            $js=$this->factory->formRequest($mock);
+            $this->assertNotInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
+        }
+        catch (FormRequestArgumentException $expected) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $this->fail('An expected exception has not been raised.');
+
 
     }
 

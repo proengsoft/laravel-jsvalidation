@@ -1,10 +1,9 @@
-<?php
+<?php namespace Proengsoft\JsValidation\Test;
 
-namespace Proengsoft\JsValidation\Test;
 use Mockery as m;
+use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 use Proengsoft\JsValidation\JsValidator;
 use Illuminate\Support\Facades\View;
-use Illuminate\Contracts\View\Factory;
 
 
 function view() {
@@ -24,7 +23,11 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
     public function setUp()
     {
 
-        $this->mockValidator=m::mock('Proengsoft\JsValidation\Validator');
+        $this->mockValidator=m::mock('Proengsoft\JsValidation\Validator')
+            ->shouldReceive('js')
+            ->once()
+            ->getMock();
+
         $this->jsValidator=new JsValidator($this->form,$this->view);
         $this->jsValidator->setValidator($this->mockValidator);
     }
@@ -41,14 +44,14 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testRender()
     {
 
-        $this->mockValidator->shouldReceive('js');
+
 
 
         View::shouldReceive('make')
             ->with('jsvalidator::bootstrap',['validator'=>['selector'=>$this->form]])
             ->once()
             ->andReturn(
-                m::mock('Illuminate\Contracts\View\Factory','Illuminate\Contracts\Support\Renderable')
+                m::mock('Illuminate\Contracts\View\Factory')
                     ->shouldReceive('render')
                     ->once()
                     ->andReturn('return')
@@ -61,15 +64,18 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function  testToArray()
     {
-        $this->mockValidator->shouldReceive('js');
         $expected=['selector'=>$this->form];
-        $viewData=$this->jsValidator->toArray();
 
+        //$this->mockValidator->shouldReceive('js');
+
+        $viewData=$this->jsValidator->toArray();
         $this->assertEquals($expected,$viewData);
 
     }
 
-
+    /**
+     * @depends testToArray
+     */
     public function testToString()
     {
         $this->testRender();
@@ -79,7 +85,7 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testToStringExceptionCatch()
     {
 
-        $this->mockValidator->shouldReceive('js');
+        //$this->mockValidator->shouldReceive('js');
 
         View::shouldReceive('make')
             ->with('jsvalidator::bootstrap',['validator'=>['selector'=>$this->form]])
@@ -93,27 +99,33 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testGet()
     {
-        $this->mockValidator->shouldReceive('js');
         $this->assertEquals($this->form,$this->jsValidator->selector);
     }
 
-    /**
-     * @expectedException \Proengsoft\JsValidation\Exceptions\PropertyNotFoundException
-     */
+
     public function testGetException()
     {
-        $this->mockValidator->shouldReceive('js');
-        $test=$this->jsValidator->property_not_found;
+        try {
+            $this->jsValidator->property_not_found;
+        }
+        catch (PropertyNotFoundException $expected) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $this->fail('An expected exception has not been raised.');
+
+
     }
 
     public function testGetViewDataFails()
     {
-        $mockValidator=m::mock('Illuminate\Contracts\Validation\Validator');
-        $this->jsValidator->setValidator($mockValidator);
 
-        $expected=[];
+        $expected=['selector'=>'form'];
+
+        $this->jsValidator->setValidator($this->mockValidator);
+
         $viewData=$this->jsValidator->toArray();
-
         $this->assertEquals($expected,$viewData);
     }
 
