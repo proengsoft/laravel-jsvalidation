@@ -33,7 +33,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testJsValidationEnabled()
     {
         $data=$this->validator->jsValidationEnabled('name');
-        $this->assertTrue($data);
+        $this->assertTrue($data); 
     }
 
 
