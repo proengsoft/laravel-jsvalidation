@@ -33,7 +33,6 @@ class Factory
      *
      * @param  \Illuminate\Contracts\Validation\Factory $validator
      * @param  \Proengsoft\JsValidation\JsValidator $js
-     * @internal param array $defaults
      */
     public function __construct(FactoryContract $validator, JsValidator $js)
     {

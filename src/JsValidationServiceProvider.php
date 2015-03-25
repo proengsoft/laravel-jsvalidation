@@ -1,5 +1,7 @@
 <?php namespace Proengsoft\JsValidation;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Proengsoft\JsValidation;
 
@@ -31,8 +33,8 @@ class JsValidationServiceProvider extends ServiceProvider
     {
         $this->app->bind('jsvalidator', function ($app) {
 
-            $selector=$app['config']->get('jsvalidation.selector');
-            $view=$app['config']->get('jsvalidation.view');
+            $selector=Config::get('jsvalidation.form_selector');
+            $view=Config::get('jsvalidation.view');
 
             $validator=new JsValidator($selector,$view);
             $validatorFactory=$app->make('Illuminate\Contracts\Validation\Factory');
@@ -57,11 +59,11 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     protected function bootstrapViews()
     {
-        $viewPath = __DIR__.'/../resources/views';
+        $viewPath = realpath(__DIR__.'/../resources/views');
 
         $this->loadViewsFrom($viewPath, 'jsvalidation');
         $this->publishes([
-            $viewPath => base_path('resources/views/vendor/jsvalidation'),
+            $viewPath =>$this->app['path.base'].'/resources/views/vendor/jsvalidation',
         ]);
     }
 
@@ -70,10 +72,10 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     protected function bootstrapConfigs()
     {
-        $configFile = __DIR__ . '/../config/jsvalidation.php';
+        $configFile = realpath(__DIR__ . '/../config/jsvalidation.php');
 
         $this->mergeConfigFrom($configFile, 'jsvalidation');
-        $this->publishes([$configFile => config_path('jsvalidation.php')], 'config');
+        $this->publishes([$configFile =>  $this->app['path.config'].'/jsvalidation.php'], 'config');
     }
 
     /**
@@ -82,7 +84,7 @@ class JsValidationServiceProvider extends ServiceProvider
     protected function publishAssets()
     {
         $this->publishes([
-            __DIR__.'/../public' => public_path('vendor/jsvalidation'),
+            realpath(__DIR__.'/../public') => $this->app['path.public'].'/vendor/jsvalidation',
         ], 'public');
     }
 }

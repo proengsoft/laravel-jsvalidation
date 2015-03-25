@@ -1,7 +1,7 @@
 <?php
 
 namespace Proengsoft\JsValidation\Test;
-use Mockery;
+use Mockery as m;
 use Proengsoft\JsValidation\JsValidator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Contracts\View\Factory;
@@ -10,7 +10,7 @@ use Illuminate\Contracts\View\Factory;
 function view() {
 
 
-    return Mockery::mock('Illuminate\Contracts\View');
+    return m::mock('Illuminate\Contracts\View');
 }
 
 class JsValidatorTest extends \PHPUnit_Framework_TestCase {
@@ -24,10 +24,19 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
     public function setUp()
     {
 
-        $this->mockValidator=Mockery::mock('Proengsoft\JsValidation\Validator');
+        $this->mockValidator=m::mock('Proengsoft\JsValidation\Validator');
         $this->jsValidator=new JsValidator($this->form,$this->view);
         $this->jsValidator->setValidator($this->mockValidator);
     }
+
+    public function tearDown()
+    {
+        m::close();
+        unset($this->mockValidator);
+        unset($this->jsValidator);
+
+    }
+
 
     public function testRender()
     {
@@ -39,7 +48,7 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
             ->with('jsvalidator::bootstrap',['validator'=>['selector'=>$this->form]])
             ->once()
             ->andReturn(
-                Mockery::mock('Illuminate\Contracts\View\Factory','Illuminate\Contracts\Support\Renderable')
+                m::mock('Illuminate\Contracts\View\Factory','Illuminate\Contracts\Support\Renderable')
                     ->shouldReceive('render')
                     ->once()
                     ->andReturn('return')
@@ -99,7 +108,7 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetViewDataFails()
     {
-        $mockValidator=Mockery::mock('Illuminate\Contracts\Validation\Validator');
+        $mockValidator=m::mock('Illuminate\Contracts\Validation\Validator');
         $this->jsValidator->setValidator($mockValidator);
 
         $expected=[];

@@ -1,6 +1,6 @@
 <?php namespace Proengsoft\JsValidation\Test;
 
-use Mockery;
+use Mockery as m;
 use Proengsoft\JsValidation\Factory;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase {
@@ -9,19 +9,23 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
     public $mockedFactory;
     public $mockedValidator;
     public $factory;
-    protected $mockedJs;
+    public $mockedJs;
 
 
     public function tearDown()
     {
-        Mockery::close();
+        m::close();
+        unset($this->mockedFactory);
+        unset($this->mockedValidator);
+        unset($this->factory);
+        unset($this->mockedJs);
     }
 
 
     public function setUp() {
 
-        $this->mockedFactory =  Mockery::mock('Illuminate\Contracts\Validation\Factory');
-        $this->mockedJs= Mockery::mock('Proengsoft\JsValidation\JsValidator');
+        $this->mockedFactory =  m::mock('Illuminate\Contracts\Validation\Factory');
+        $this->mockedJs= m::mock('Proengsoft\JsValidation\JsValidator');
         $this->mockedJs->shouldReceive('setValidator');
         $this->factory=new Factory($this->mockedFactory,$this->mockedJs);
 
@@ -36,7 +40,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
             ->once()
             ->with([],$rules,[],[])
             ->andReturn(
-                Mockery::mock('Illuminate\Contracts\Validation\Validator')
+                m::mock('Illuminate\Contracts\Validation\Validator')
             );
         $this->mockedJs->shouldReceive('setSelector')->once()->andReturn('form');
 
@@ -49,14 +53,14 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testFormRequestFromInstance() {
 
-        $mockFormRequest=Mockery::mock('Illuminate\Foundation\Http\FormRequest');
+        $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
         $mockFormRequest->shouldReceive('rules')->once()->andReturn(['name'=>'require']);
         $mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
 
         $this->mockedFactory->shouldReceive('make')
             ->once()
             ->andReturn(
-                Mockery::mock('Illuminate\Contracts\Validation\Validator')
+                m::mock('Illuminate\Contracts\Validation\Validator')
             );
 
         $js=$this->factory->formRequest($mockFormRequest);
@@ -68,12 +72,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 /*
     public function testFormRequestFromString() {
 
-        $mockFormRequest=Mockery::mock('Illuminate\Foundation\Http\FormRequest');
+        $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
 
         $this->mockedFactory->shouldReceive('make')
             ->once()
             ->andReturn(
-                Mockery::mock('Illuminate\Contracts\Validation\Validator')
+                m::mock('Illuminate\Contracts\Validation\Validator')
             );
 
         $js=$this->factory->formRequest('Proengsoft\JsValidation\Test\Requests\FormRequest');
@@ -87,7 +91,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
      */
     public function testFormRequestException() {
 
-        $mock=Mockery::mock('Object');
+        $mock=m::mock('Object');
 
         $js=$this->factory->formRequest($mock);
         $this->assertInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
@@ -96,7 +100,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testValidator()
     {
-        $validator=Mockery::mock('Illuminate\Contracts\Validation\Validator');
+        $validator=m::mock('Illuminate\Contracts\Validation\Validator');
         $js=$this->factory->validator($validator);
         $this->assertInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
 
