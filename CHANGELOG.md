@@ -1,3 +1,12 @@
+## 1.0.2 (2015-03-27)
+
+Features:
+ - Allow disable validations for certain attributes
+ - Unit testing
+
+Bugfixes:
+ - The config key form_selector is not loaded when package boots
+
 ## 1.0.1 (2015-03-17)
 
 Bufixes:
