@@ -19,9 +19,9 @@
 **Laravel Javascript Validation** allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to validate forms transparently in client side **without need to write any Javascript code or use HTML Builder Class**. You can validate forms automatically
  referencing it to your defined validations. The messages are loaded from your validators and translated according your Localization preferences.
  
-This package ships with a simple, convenient facility for configuring rules error messages via the [Facade](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade).
+**All Laravel [Available Validation Rules] (http://laravel.com/docs/5.0/validation#available-validation-rules) are implemented** (except remotes for now)
 
-The [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class) created by the *Facade* inherits from [Laravel Validation](http://laravel.com/docs/5.0/validation), so you can use all methods and procedures that Laravel provides to 
+The [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class) created by the [Facade](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade) inherits from [Laravel Validation](http://laravel.com/docs/5.0/validation), so you can use all methods and procedures that Laravel provides to 
 setup your validations. Also class and rule syntax are the same that Laravel Validation class implements. When the instance is printed in a 
 view the Javascript code needed to validate your form is rendered to the page.
 
