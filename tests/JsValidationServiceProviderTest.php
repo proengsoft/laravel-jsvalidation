@@ -70,7 +70,7 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
                 ->andReturn(true) &&
             $sp->shouldReceive('publishes')
                 ->once()
-                ->with([$viewsPath => "$fakePath/resources/views/vendor/jsvalidation"])
+                ->with([$viewsPath => "$fakePath/resources/views/vendor/jsvalidation"],'views')
                 ->andReturn(true)
         );
 
