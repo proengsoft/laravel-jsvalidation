@@ -72,8 +72,8 @@ class Factory
             throw new FormRequestArgumentException($className);
         }
 
-        $fromRequest= is_string($formRequest)? new $formRequest:$formRequest;
-        $validator=$this->validator->make([], $fromRequest->rules(), $fromRequest->messages());
+        $formRequest= is_string($formRequest)? new $formRequest:$formRequest;
+        $validator=$this->validator->make([], $formRequest->rules(), $formRequest->messages(), $formRequest->attributes());
 
         return $this->createValidator($validator, $selector);
     }
