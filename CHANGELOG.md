@@ -1,3 +1,8 @@
+## 1.0.3 (2015-04-11)
+
+Bugfixes:
+ - Input custom attributes from Requests are not applied.
+
 ## 1.0.2 (2015-03-27)
 
 Features:
