@@ -64,7 +64,7 @@ class JsValidationServiceProvider extends ServiceProvider
         $this->loadViewsFrom($viewPath, 'jsvalidation');
         $this->publishes([
             $viewPath =>$this->app['path.base'].'/resources/views/vendor/jsvalidation',
-        ]);
+        ], 'views');
     }
 
     /**
