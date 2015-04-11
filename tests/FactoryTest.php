@@ -58,10 +58,11 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
         $mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
         $mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
+        $mockFormRequest->shouldReceive('attributes')->once()->andReturn([]);
 
         $this->mockedFactory->shouldReceive('make')
             ->once()
-            ->with([],$rules,[])
+            ->with([],$rules,[],[])
             ->andReturn(
                 m::mock('Illuminate\Contracts\Validation\Validator')
             );
