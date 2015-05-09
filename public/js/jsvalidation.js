@@ -2951,7 +2951,6 @@ $.extend(true, laravelValidation, {
          *  Validate the uniqueness of an attribute value on a given database table.
          */
         $.validator.addMethod("laravelUnique", function(value, element, params) {
-            // @todo: Validate the uniqueness of an attribute value on a given database table.
             return this.optional(element) || true;
         }, $.validator.format("Not implemented"));
 
@@ -2959,7 +2958,6 @@ $.extend(true, laravelValidation, {
          *  Validate the existence of an attribute value in a database table.
          */
         $.validator.addMethod("laravelExists", function(value, element, params) {
-            // @todo: Validate the existence of an attribute value in a database table.
             return this.optional(element) || true;
         }, $.validator.format("Not implemented"));
 
@@ -2992,7 +2990,6 @@ $.extend(true, laravelValidation, {
          * Validate that an attribute is an active URL.
          */
         $.validator.addMethod("laravelActiveUrl", function(value, element, params) {
-            // @todo: Validate that an attribute is an active URL.
             return $.validator.methods.laravelUrl.call(this, value, element, true);
         }, $.validator.format("The :attribute is not a valid URL."));
 
@@ -3100,4 +3097,5 @@ $.extend(true, laravelValidation, {
     }
     
 });
+
 //# sourceMappingURL=jsvalidation.js.map

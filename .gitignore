@@ -10,4 +10,4 @@ composer.lock
 node_modules
 
 #bower
-resources/bower_components
+bower_components

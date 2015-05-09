@@ -13,6 +13,7 @@ var elixir = require('laravel-elixir');
 
 
 var minSuffix='';
+var bowerPath='../bower_components/';
 if (elixir.config.production) {
     minSuffix='.min';
 }
@@ -25,19 +26,19 @@ elixir(function(mix) {
          */
         mix.scripts(
             [
-                'bower_components/jquery-validation/dist/jquery.validate.js',
-                'bower_components/phpjs/functions/strings/strlen.js',
-                'bower_components/phpjs/functions/datetime/strtotime.js',
-                'bower_components/php-date-formatter/js/php-date-formatter.js',
+                bowerPath + 'jquery-validation/dist/jquery.validate.js',
+                bowerPath + 'phpjs/functions/strings/strlen.js',
+                bowerPath + 'phpjs/functions/datetime/strtotime.js',
+                bowerPath + 'php-date-formatter/js/php-date-formatter.js',
                 'assets/js/jsvalidation.js',
                 'assets/js/helpers.js',
                 'assets/js/timezones.js',
                 'assets/js/validations.js'
             ],
-            'public/js/jsvalidation'+minSuffix+'.js',
+            'public/js/jsvalidation' + minSuffix + '.js',
             'resources'
         );
 
-        //mix.copy('public/js/jsvalidation'+minSuffix+'.js','../../../public/vendor/jsvalidation/js/jsvalidation'+minSuffix+'.js');
+        mix.copy('public/js/jsvalidation'+minSuffix+'.js','../../../public/vendor/jsvalidation/js/jsvalidation'+minSuffix+'.js');
 
 });
