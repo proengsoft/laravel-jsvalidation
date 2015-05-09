@@ -74,8 +74,12 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testToString()
     {
-        $this->testRender();
+        $this->mockValidator->shouldReceive('js')->twice();
+
+        $txt=$this->jsValidator->__toString();
+        $this->assertEquals($this->jsValidator->render(),$txt);
     }
+
 
 
     public function testGet()
