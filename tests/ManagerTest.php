@@ -2,7 +2,7 @@
 
 use Mockery as m;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
-use Proengsoft\JsValidation\JsValidator;
+use Proengsoft\JsValidation\Manager;
 use Illuminate\Support\Facades\View;
 
 
@@ -12,7 +12,7 @@ function view() {
     return m::mock('Illuminate\Contracts\View');
 }
 
-class JsValidatorTest extends \PHPUnit_Framework_TestCase {
+class ManagerTest extends \PHPUnit_Framework_TestCase {
 
     public $jsValidator;
     public $mockValidator;
@@ -24,7 +24,7 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
     {
 
         $this->mockValidator=m::mock('Proengsoft\JsValidation\Validator');
-        $this->jsValidator=new JsValidator($this->form,$this->view);
+        $this->jsValidator=new Manager($this->form,$this->view);
         $this->jsValidator->setValidator($this->mockValidator);
     }
 
@@ -77,21 +77,6 @@ class JsValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->testRender();
     }
 
-
-    public function testToStringExceptionCatch()
-    {
-
-        $this->mockValidator->shouldReceive('js')->once();
-
-        View::shouldReceive('make')
-            ->with('jsvalidator::bootstrap',['validator'=>['selector'=>$this->form]])
-            ->once()
-            ->andThrow('\Exception');
-
-        $txt=$this->jsValidator->__toString();
-        $this->assertEquals('',$txt);
-
-    }
 
     public function testGet()
     {

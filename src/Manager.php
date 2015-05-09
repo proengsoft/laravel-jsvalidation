@@ -5,7 +5,7 @@ use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Support\Facades\View;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
-class JsValidator implements Arrayable
+class Manager implements Arrayable
 {
 
     /**
@@ -87,11 +87,7 @@ class JsValidator implements Arrayable
      */
     public function __toString()
     {
-        try {
-            return $this->render();
-        } catch (\Exception $e) {
-            return '';
-        }
+        return $this->render();
     }
 
     /**

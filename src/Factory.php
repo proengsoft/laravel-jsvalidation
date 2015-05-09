@@ -24,7 +24,7 @@ class Factory
     /**
      * Javascript validator instance
      *
-     * @var JsValidator
+     * @var Manager
      */
     protected $js;
 
@@ -32,9 +32,9 @@ class Factory
      * Create a new Validator factory instance.
      *
      * @param  \Illuminate\Contracts\Validation\Factory $validator
-     * @param  \Proengsoft\JsValidation\JsValidator $js
+     * @param  \Proengsoft\JsValidation\Manager $js
      */
-    public function __construct(FactoryContract $validator, JsValidator $js)
+    public function __construct(FactoryContract $validator, Manager $js)
     {
         $this->validator=$validator;
         $this->js=$js;
@@ -48,7 +48,7 @@ class Factory
      * @param array $messages
      * @param array $customAttributes
      * @param null|string $selector
-     * @return \Proengsoft\JsValidation\JsValidator
+     * @return \Proengsoft\JsValidation\Manager
      */
     public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector=null)
     {
@@ -62,7 +62,7 @@ class Factory
      *
      * @param $formRequest
      * @param null $selector
-     * @return JsValidator
+     * @return Manager
      * @throws FormRequestArgumentException
      */
     public function formRequest($formRequest, $selector=null)
@@ -83,7 +83,7 @@ class Factory
      *
      * @param ValidatorContract $validator
      * @param string|null $selector
-     * @return JsValidator
+     * @return Manager
      */
     public function validator(ValidatorContract $validator, $selector=null)
     {
@@ -96,7 +96,7 @@ class Factory
      *
      * @param ValidatorContract $validator
      * @param string|null $selector
-     * @return JsValidator
+     * @return Manager
      */
     protected function createValidator(ValidatorContract $validator, $selector=null)
     {

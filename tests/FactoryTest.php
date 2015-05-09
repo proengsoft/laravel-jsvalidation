@@ -26,7 +26,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
     public function setUp() {
 
         $this->mockedFactory =  m::mock('Illuminate\Contracts\Validation\Factory');
-        $this->mockedJs= m::mock('Proengsoft\JsValidation\JsValidator');
+        $this->mockedJs= m::mock('Proengsoft\JsValidation\Manager');
         $this->mockedJs->shouldReceive('setValidator');
         $this->factory=new Factory($this->mockedFactory,$this->mockedJs);
 
@@ -47,7 +47,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
         $js=$this->factory->make($rules,[],[],'form');
 
-        $this->assertInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
+        $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
 
     }
 
@@ -69,7 +69,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
         $js=$this->factory->formRequest($mockFormRequest);
 
-        $this->assertInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
+        $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
 
     }
 
@@ -80,7 +80,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
             $mock=m::mock('Object');
 
             $js=$this->factory->formRequest($mock);
-            $this->assertNotInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
+            $this->assertNotInstanceOf('Proengsoft\JsValidation\Manager',$js);
         }
         catch (FormRequestArgumentException $expected) {
             $this->assertTrue(true);
@@ -96,7 +96,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
     {
         $validator=m::mock('Illuminate\Contracts\Validation\Validator');
         $js=$this->factory->validator($validator);
-        $this->assertInstanceOf('Proengsoft\JsValidation\JsValidator',$js);
+        $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
 
     }
 
