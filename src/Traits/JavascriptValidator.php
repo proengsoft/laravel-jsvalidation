@@ -1,5 +1,7 @@
 <?php namespace Proengsoft\JsValidation\Traits;
 
+use Illuminate\Support\Facades\Crypt;
+
 trait JavascriptValidator
 {
 
@@ -116,12 +118,12 @@ trait JavascriptValidator
 
     /**
      * @param $attribute
-     * @param $rule
+     * @param $source
      * @return array
      */
-    protected function convertValidations($attribute, $rule)
+    protected function convertValidations($attribute, $source)
     {
-        list($rule, $parameters) = $this->parseRule($rule);
+        list($rule, $parameters) = $this->parseRule($source);
 
         // Check if rule is implemented
         if ($rule == '' || !$this->isImplemented($rule)) {
@@ -202,7 +204,7 @@ trait JavascriptValidator
     }
 
     /**
-     * Parse datetime format
+     * Returns Javascript parameters for After rule
      *
      * @param $attribute
      * @param $rule
@@ -217,7 +219,7 @@ trait JavascriptValidator
     }
 
     /**
-     * Parse datetime format
+     * Returns Javascript parameters for Before rule
      *
      * @param $attribute
      * @param $rule
@@ -230,4 +232,52 @@ trait JavascriptValidator
         $rule="laravel{$rule}";
         return [$attribute,$rule, [strtotime($parameters[0])],$message];
     }
+
+    /**
+     * Returns Javascript parameters for ActiveUrl rule
+     *
+     * @param $attribute
+     * @param $rule
+     * @param array $parameters
+     * @param $message
+     * @return array
+     */
+    protected function jsRuleActiveUrl($attribute, $rule, array $parameters, $message)
+    {
+        return $this->jsRemoteRule($attribute, $rule, $parameters,$message);
+    }
+
+    /**
+     * Returns Javascript parameters for remote validated rules
+     *
+     * @param $attribute
+     * @param $rule
+     * @param array $parameters
+     * @param $message
+     * @return array
+     */
+    protected function jsRemoteRule($attribute, $rule, array $parameters, $message)
+    {
+        $newRule = "jsValidationRemote";
+        $params = [
+            $rule,
+            $this->jsHashRule($rule, $parameters)
+        ];
+
+        return [$attribute,$newRule, $params, $message];
+    }
+
+
+    protected function jsHashRule($rule, $parameters, $check=null)
+    {
+        return Crypt::encrypt(sha1(serialize([$rule, $parameters])));
+    }
+
+    protected function jsCheckHash($rule, $parameters, $check)
+    {
+        return Crypt::decrypt($check) == sha1(serialize([$rule, $parameters]));
+    }
+
+
+
 }
