@@ -2784,14 +2784,32 @@ $.extend(true, laravelValidation, {
          * Validate that an attribute exists when any other attribute does not exists.
          */
         $.validator.addMethod("laravelRequiredWithout", function(value, element, params) {
-            return  ! $.validator.methods.laravelRequiredWith.call(this, value, element,params );
+            var validator=this,
+                required=false;
+            $.each(params,function(i,param) {
+                var $el = helpers.getElement(element,param);
+                required=required || $el==false || !$.validator.methods.required.call(validator, $el.val(),$el[0],true);
+            });
+            if (required) {
+                return  $.validator.methods.required.call(this, value, element, true);
+            }
+            return true;
         }, $.validator.format("The field is required when any of {0} {1} {2} {3} is not present."));
 
         /**
          * Validate that an attribute exists when all other attribute does not exists.
          */
         $.validator.addMethod("laravelRequiredWithoutAll", function(value, element, params) {
-            return  ! $.validator.methods.laravelRequiredWithAll.call(this, value, element,params );
+            var validator=this,
+                required=true;
+            $.each(params,function(i,param) {
+                var $el = helpers.getElement(element,param);
+                required=required && ($el==false || !$.validator.methods.required.call(validator, $el.val(),$el[0],true));
+            });
+            if (required) {
+                return  $.validator.methods.required.call(this, value, element, true);
+            }
+            return true;
         }, $.validator.format("The field is required when {0} {1} {2} {3} is present."));
 
         /**
