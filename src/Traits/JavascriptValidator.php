@@ -188,7 +188,8 @@ trait JavascriptValidator
     protected function doJsReplacements($message, $attribute, $rule, $parameters)
     {
 
-        if (isset($this->replacers[snake_case($rule)]) || !method_exists($this, $replacer = "jsReplace{$rule}"))
+        if ( (property_exists($this,'replacers') && isset($this->replacers[snake_case($rule)]))
+            || !method_exists($this, $replacer = "jsReplace{$rule}"))
         {
             $message = $this->doReplacements($message, $attribute, $rule, $parameters);
         }
@@ -242,6 +243,10 @@ trait JavascriptValidator
 
     public function jsReplaceRequiredIf($message, $attribute, $rule, $parameters)
     {
+        unset($attribute);
+        unset($rule);
+
+        $data = array();
         $data[$parameters[0]]=$parameters[1];
 
         $parameters[1] = $this->getDisplayableValue($parameters[0], array_get($data, $parameters[0]));
