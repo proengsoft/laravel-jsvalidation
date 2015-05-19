@@ -56,7 +56,7 @@ trait JavascriptValidator
      * @param  string  $message
      * @param  string  $attribute
      * @param  string  $rule
-     * @param  array   $parameters
+     * @param  string   $parameters
      * @return string
      */
     abstract protected function doReplacements($message, $attribute, $rule, $parameters);
