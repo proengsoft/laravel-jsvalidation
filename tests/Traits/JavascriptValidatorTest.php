@@ -144,5 +144,62 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testNotUniqueRuleName()
+    {
+        $rule=[
+            'name'=>'required_if:field1,value1|required_if:field2,value2',
+            'field1'=>''
+        ];
+        $message=['name.required_if'=>'The :attribute field is required when :other is :value.'];
+        $expected=array(
+            'rules' => array(
+                'name'=> [
+                    'laravelRequiredIf'=>array('field1','value1'),
+                    'laravelRequiredIf_1'=>array('field2','value2'),
+                ]
+            ),
+            'messages'=>array(
+                'name'=> [
+                    'laravelRequiredIf'=>'The  field is required when  is .',
+                    'laravelRequiredIf_1'=>'The  field is required when  is .'
+                ]
+            )
+        );
+        
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->js();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
+    public function testUniqueRuleName()
+    {
+        $rule=['name'=>'required_if:field1,value1'];
+        $message=['name.required_if'=>'The :attribute field is required when :other is :value.'];
+        $expected=array(
+            'rules' => array(
+                'name'=> [
+                    'laravelRequiredIf'=>array('field1','value1'),
+                ]
+            ),
+            'messages'=>array(
+                'name'=> [
+                    'laravelRequiredIf'=>'The  field is required when  is .',
+                ]
+            )
+        );
+
+        //$rules=['name'=>'required_if:field1,value1|required_if:field2,value2'];
+        //$messages=['name'=>'required_if:field1,value1|required_if:field2,value2'];
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->js();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
+
 
 }
