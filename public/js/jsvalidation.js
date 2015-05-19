@@ -2093,7 +2093,7 @@ var laravelValidation  = {
             }
         });
     }
-    
+
 };
 
 $(function() {
