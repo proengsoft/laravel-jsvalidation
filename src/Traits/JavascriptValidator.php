@@ -22,7 +22,8 @@ trait JavascriptValidator
         'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Exists', 'Image',
         'In', 'Integer', 'Ip', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
         'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
-        'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'String', 'Timezone', 'Unique', 'Url'];
+        'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'String',
+        'Sometimes','Timezone', 'Unique', 'Url'];
 
 
     /**
@@ -112,7 +113,8 @@ trait JavascriptValidator
             foreach ($rules as $rule) {
                 list($attribute, $rule, $parameters, $message) = $this->convertValidations($attribute, $rule);
                 if ($rule) {
-                    $rule=empty($jsRules[$attribute])?$rule:$this->uniqueRuleName($rule, array_keys($jsRules[$attribute]));
+                    $currentRules=empty($jsRules[$attribute])? [] :array_keys($jsRules[$attribute]);
+                    $rule=$this->uniqueRuleName($rule, $currentRules);
                     $jsRules[$attribute][$rule]=$parameters;
                     $jsMessages[$attribute][$rule]=$message;
                 }
@@ -333,10 +335,11 @@ trait JavascriptValidator
      */
     protected function jsRemoteRule($attribute, $rule, array $parameters, $message)
     {
-        $newRule = "jsValidationRemote";
+        $newRule = 'jsValidationRemote';
+        $token=Crypt::encrypt(csrf_token());
         $params = [
-            $rule,
-            $this->jsHashRule($rule, $parameters)
+            $attribute,
+            $token
         ];
 
         return [$attribute,$newRule, $params, $message];

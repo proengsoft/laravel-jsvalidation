@@ -298,7 +298,9 @@ $.extend(true, laravelValidation, {
          * Validate that an attribute is an active URL.
          */
         $.validator.addMethod("laravelActiveUrl", function(value, element, params) {
+
             return $.validator.methods.laravelUrl.call(this, value, element, true);
+
         }, $.validator.format("The :attribute is not a valid URL."));
 
         /**
@@ -402,6 +404,26 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelTimezone", function(value, element, params) {
             return this.optional(element) || helpers.isTimezone(value);
         }, $.validator.format("The :attribute is not a valid date"));
+
+        /**
+         * Validate remote rule via AJAX
+          */
+        $.validator.addMethod("jsValidationRemote", function(value, element, params) {
+
+            if (this.optional(element)) {
+                return true;
+            }
+
+            var attribute=params[0];
+            var url = params[1];
+            var token = params[2];
+            var rule='ActiveUrl';
+            var options=false;
+
+            var remote = helpers.laravelRemote(url, attribute, value, rule, options, token);
+            return $.validator.methods.remote.call(this, value, element, remote );
+        }, $.validator.format("The :attribute is not a valid URL."));
+
     }
     
 });
