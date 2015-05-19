@@ -93,6 +93,7 @@ trait JavascriptValidator
             foreach ($rules as $rule) {
                 list($attribute, $rule, $parameters, $message) = $this->convertValidations($attribute, $rule);
                 if ($rule) {
+                    $rule=empty($jsRules[$attribute])?$rule:$this->uniqueRuleName($rule, array_keys($jsRules[$attribute]));
                     $jsRules[$attribute][$rule]=$parameters;
                     $jsMessages[$attribute][$rule]=$message;
                 }
@@ -100,6 +101,17 @@ trait JavascriptValidator
         }
 
         return array($jsRules,$jsMessages);
+    }
+
+    protected function uniqueRuleName($name, $rules)
+    {
+        if (!in_array($name,$rules)) return $name;
+
+        $count=0;
+        foreach ($rules as $rule) {
+            if ($rule==$name || starts_with($rule,$name.'_')) $count++;
+        }
+        return $name.'_'.$count;
     }
 
     /**
