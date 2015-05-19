@@ -56,7 +56,7 @@ trait JavascriptValidator
      * @param  string  $message
      * @param  string  $attribute
      * @param  string  $rule
-     * @param  array   $parameters
+     * @param  string   $parameters
      * @return string
      */
     abstract protected function doReplacements($message, $attribute, $rule, $parameters);
@@ -69,6 +69,23 @@ trait JavascriptValidator
      * @return bool
      */
     abstract protected function hasRule($attribute, $rules);
+
+    /**
+     * Get the displayable name of the value.
+     *
+     * @param  string  $attribute
+     * @param  mixed   $value
+     * @return string
+     */
+    abstract public function getDisplayableValue($attribute, $value);
+
+    /**
+     * Get the displayable name of the attribute.
+     *
+     * @param  string  $attribute
+     * @return string
+     */
+    abstract protected function getAttribute($attribute);
 
     /**
      * Generate Javascript validations
@@ -93,6 +110,7 @@ trait JavascriptValidator
             foreach ($rules as $rule) {
                 list($attribute, $rule, $parameters, $message) = $this->convertValidations($attribute, $rule);
                 if ($rule) {
+                    $rule=empty($jsRules[$attribute])?$rule:$this->uniqueRuleName($rule, array_keys($jsRules[$attribute]));
                     $jsRules[$attribute][$rule]=$parameters;
                     $jsMessages[$attribute][$rule]=$message;
                 }
@@ -100,6 +118,17 @@ trait JavascriptValidator
         }
 
         return array($jsRules,$jsMessages);
+    }
+
+    protected function uniqueRuleName($name, $rules)
+    {
+        if (!in_array($name,$rules)) return $name;
+
+        $count=0;
+        foreach ($rules as $rule) {
+            if ($rule==$name || starts_with($rule,$name.'_')) $count++;
+        }
+        return $name.'_'.$count;
     }
 
     /**
@@ -115,6 +144,8 @@ trait JavascriptValidator
 
 
     /**
+     * Make Laravel Validations compatible with JQuery Validation Plugin
+     *
      * @param $attribute
      * @param $rule
      * @return array
@@ -130,7 +161,7 @@ trait JavascriptValidator
 
         // Gets the message
         $message = $this->getMessage($attribute, $rule);
-        $message = $this->doReplacements($message, $attribute, $rule, $parameters);
+        $message = $this->doJsReplacements($message, $attribute, $rule, $parameters);
 
         // call the convert function if is defined
         $method="jsRule{$rule}";
@@ -142,6 +173,32 @@ trait JavascriptValidator
         }
 
         return [$attribute,$rule,$parameters,$message];
+    }
+
+
+    /**
+     *  Replace javascript error message place-holders with actual values.
+     *
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param string $parameters
+     * @return mixed
+     */
+    protected function doJsReplacements($message, $attribute, $rule, $parameters)
+    {
+
+        if (isset($this->replacers[snake_case($rule)]) || !method_exists($this, $replacer = "jsReplace{$rule}"))
+        {
+            $message = $this->doReplacements($message, $attribute, $rule, $parameters);
+        }
+        elseif (method_exists($this, $replacer = "jsReplace{$rule}"))
+        {
+            $message = str_replace(':attribute', $this->getAttribute($attribute), $message);
+            $message = $this->$replacer($message, $attribute, $rule, $parameters);
+        }
+
+        return $message;
     }
 
 
@@ -180,6 +237,19 @@ trait JavascriptValidator
             'rules' => $jsRules,
             'messages' => $jsMessages
         ];
+    }
+
+
+    public function jsReplaceRequiredIf($message, $attribute, $rule, $parameters)
+    {
+        $data[$parameters[0]]=$parameters[1];
+
+        $parameters[1] = $this->getDisplayableValue($parameters[0], array_get($data, $parameters[0]));
+
+        $parameters[0] = $this->getAttribute($parameters[0]);
+
+        return str_replace(array(':other', ':value'), $parameters, $message);
+
     }
 
 
