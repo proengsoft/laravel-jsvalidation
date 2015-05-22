@@ -26,6 +26,8 @@ trait JavascriptValidator
         'Sometimes','Timezone', 'Unique', 'Url'];
 
 
+    protected $remoteRules = ['active_url','exists'];
+
     /**
      * Get the validation rules.
      *
@@ -144,6 +146,18 @@ trait JavascriptValidator
     protected function isImplemented($rule)
     {
         return in_array($rule, $this->implementedRules);
+    }
+
+
+    /**
+     * Check if rule must be validated remotely
+     *
+     * @param $rule
+     * @return bool
+     */
+    protected function isRemoteRule($rule)
+    {
+        return in_array($rule,$this->remoteRules);
     }
 
 
@@ -343,17 +357,6 @@ trait JavascriptValidator
         ];
 
         return [$attribute,$newRule, $params, $message];
-    }
-
-
-    protected function jsHashRule($rule, $parameters, $check=null)
-    {
-        return Crypt::encrypt(sha1(serialize([$rule, $parameters])));
-    }
-
-    protected function jsCheckHash($rule, $parameters, $check)
-    {
-        return Crypt::decrypt($check) == sha1(serialize([$rule, $parameters]));
     }
 
 

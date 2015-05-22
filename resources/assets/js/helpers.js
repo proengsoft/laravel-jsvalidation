@@ -212,10 +212,7 @@ $.extend(true, laravelValidation, {
                     }
                 },
                 data: {
-                    _jsvalidation: {
-                        attribute: attribute,
-                        value: value
-                    }
+                    _jsvalidation: attribute
                 }
             };
         }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
+use \Illuminate\Contracts\Foundation\Application;
 use Proengsoft\JsValidation;
 
 class JsValidationServiceProvider extends ServiceProvider
@@ -30,12 +31,12 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('jsvalidator', function ($app) {
+        $this->app->bind('jsvalidator', function (Application $app) {
 
             $selector=Config::get('jsvalidation.form_selector');
             $view=Config::get('jsvalidation.view');
 
-            $validator=new JsValidator($selector,$view);
+            $validator=new Manager($selector,$view);
             $validatorFactory=$app->make('Illuminate\Contracts\Validation\Factory');
 
             return new Factory($validatorFactory, $validator);

@@ -413,14 +413,10 @@ $.extend(true, laravelValidation, {
             if (this.optional(element)) {
                 return true;
             }
-
             var attribute=params[0];
-            var url = params[1];
-            var token = params[2];
-            var rule='ActiveUrl';
-            var options=false;
+            var token = params[1];
 
-            var remote = helpers.laravelRemote(url, attribute, value, rule, options, token);
+            var remote = helpers.laravelRemote(element, attribute, value, token);
             return $.validator.methods.remote.call(this, value, element, remote );
         }, $.validator.format("The :attribute is not a valid URL."));
 
