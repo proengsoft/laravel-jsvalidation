@@ -3,6 +3,7 @@
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 use Proengsoft\JsValidation\Traits\JavascriptValidator;
 use Illuminate\Validation\Validator as BaseValidator;
 
@@ -29,7 +30,7 @@ class Validator extends BaseValidator
         if (!empty($this->data['_jsvalidation']))
         {
             throw new HttpResponseException(
-                $this->jsValidationRemote($this->data['_jsvalidation'])
+                $this->passesRemote($this->data['_jsvalidation'])
             );
         }
 
@@ -42,7 +43,7 @@ class Validator extends BaseValidator
         foreach ($this->rules as $attr=>$rules) {
             if ($attr == $attribute) {
                 foreach ($rules as $i=>$rule) {
-                    if (!$this->isRemoteRule($rule)) {
+                    if (!$this->isRemoteRule(Str::studly($rule))) {
                         unset($this->rules[$attr][$i]);
                     }
                 }
@@ -53,8 +54,11 @@ class Validator extends BaseValidator
     }
 
 
-    protected function jsValidationRemote($attribute)
+
+
+    public function passesRemote($attribute)
     {
+
         $message=null;
         $this->setRemoteValidationData($attribute);
         if (parent::passes()) {
@@ -64,6 +68,7 @@ class Validator extends BaseValidator
         }
 
         return new JsonResponse($message, 200);
+
     }
 
 

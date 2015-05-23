@@ -26,7 +26,7 @@ trait JavascriptValidator
         'Sometimes','Timezone', 'Unique', 'Url'];
 
 
-    protected $remoteRules = ['active_url','exists'];
+    protected $remoteRules = ['ActiveUrl','Exists'];
 
     /**
      * Get the validation rules.
