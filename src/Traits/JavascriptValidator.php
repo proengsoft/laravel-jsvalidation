@@ -128,7 +128,7 @@ trait JavascriptValidator
 
     protected function uniqueRuleName($name, $rules)
     {
-        if (!in_array($name,$rules)) return $name;
+        if (!in_array($name,$rules) || $name == 'jsValidationRemote') return $name;
 
         $count=0;
         foreach ($rules as $rule) {
