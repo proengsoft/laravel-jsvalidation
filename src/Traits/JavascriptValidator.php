@@ -106,6 +106,7 @@ trait JavascriptValidator
         // We'll spin through each rule, validating the attributes attached to that
         // rule. All enabled rules will be converted.
         foreach ($this->getRules() as $attribute => $rules) {
+
             // Check if JS Validation is disabled for this attribute
             if (!$this->jsValidationEnabled($attribute)) {
                 continue;

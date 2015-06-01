@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Proengsoft\JsValidation\Test\Traits;
+namespace Proengsoft\JsValidation\Test;
 
 use Proengsoft\JsValidation\Validator;
 
 
-class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase {
+class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public $validator;
     public $translator;
@@ -168,6 +168,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase {
         
         $validator=new Validator($this->translator, [], $rule,$message);
         $data=$validator->js();
+        //dd($data);
 
         $this->assertEquals($expected,$data);
 

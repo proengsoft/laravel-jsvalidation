@@ -17,6 +17,7 @@ var laravelValidation  = {
         this.overrideCheck();
         // Register validations methods
         this.methods();
+
     },
 
 
@@ -25,7 +26,20 @@ var laravelValidation  = {
      */
     overrideCheck: function() {
 
+
         $.extend( $.validator.prototype, {
+
+            remote: function () {
+                clearTimeout(timer);
+
+                var args = arguments;
+                timer = setTimeout(function() {
+                    $.validator.methods._remote.apply(this, args);
+                }.bind(this), 500);
+
+                return true;
+            },
+
 
             check: function( element ) {
                 element = this.validationTargetFor( this.clean( element ) );

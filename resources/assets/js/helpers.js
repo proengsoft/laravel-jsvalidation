@@ -215,7 +215,9 @@ $.extend(true, laravelValidation, {
                     _jsvalidation: attribute
                 }
             };
-        }
+        },
+
+
 
     }
 });

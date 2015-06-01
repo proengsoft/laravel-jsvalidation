@@ -408,16 +408,23 @@ $.extend(true, laravelValidation, {
         /**
          * Validate remote rule via AJAX
           */
+        var jsRemoteTimer=0;
         $.validator.addMethod("jsValidationRemote", function(value, element, params) {
 
             if (this.optional(element)) {
                 return true;
             }
-            var attribute=params[0];
-            var token = params[1];
 
-            var remote = helpers.laravelRemote(element, attribute, value, token);
-            return $.validator.methods.remote.call(this, value, element, remote );
+            clearTimeout(jsRemoteTimer);
+            jsRemoteTimer = setTimeout(function() {
+                var attribute=params[0];
+                var token = params[1];
+                var remote = helpers.laravelRemote(element, attribute, value, token);
+                return $.validator.methods.remote.call(this, value, element, remote );
+            }.bind(this), 250);
+
+            return true;
+
         }, $.validator.format("The :attribute is not a valid URL."));
 
     }

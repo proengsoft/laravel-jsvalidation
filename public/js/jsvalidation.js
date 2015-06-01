@@ -2028,6 +2028,7 @@ var laravelValidation  = {
         this.overrideCheck();
         // Register validations methods
         this.methods();
+
     },
 
 
@@ -2036,7 +2037,20 @@ var laravelValidation  = {
      */
     overrideCheck: function() {
 
+        
         $.extend( $.validator.prototype, {
+
+            remote: function () {
+                clearTimeout(timer);
+
+                var args = arguments;
+                timer = setTimeout(function() {
+                    $.validator.methods._remote.apply(this, args);
+                }.bind(this), 500);
+
+                return true;
+            },
+
 
             check: function( element ) {
                 element = this.validationTargetFor( this.clean( element ) );
@@ -2316,7 +2330,9 @@ $.extend(true, laravelValidation, {
                     _jsvalidation: attribute
                 }
             };
-        }
+        },
+
+
 
     }
 });
@@ -3211,16 +3227,23 @@ $.extend(true, laravelValidation, {
         /**
          * Validate remote rule via AJAX
           */
+        var jsRemoteTimer=0;
         $.validator.addMethod("jsValidationRemote", function(value, element, params) {
 
             if (this.optional(element)) {
                 return true;
             }
-            var attribute=params[0];
-            var token = params[1];
 
-            var remote = helpers.laravelRemote(element, attribute, value, token);
-            return $.validator.methods.remote.call(this, value, element, remote );
+            clearTimeout(jsRemoteTimer);
+            jsRemoteTimer = setTimeout(function() {
+                var attribute=params[0];
+                var token = params[1];
+                var remote = helpers.laravelRemote(element, attribute, value, token);
+                return $.validator.methods.remote.call(this, value, element, remote );
+            }.bind(this), 250);
+
+            return true;
+
         }, $.validator.format("The :attribute is not a valid URL."));
 
     }
