@@ -130,11 +130,22 @@ class Manager implements Arrayable
     }
 
     /**
+     * Set the form selector to validate
+     *
      * @param string $selector
      */
     public function setSelector($selector)
     {
         $this->selector = $selector;
+    }
+
+
+    public function sometimes($attribute)
+    {
+        $attribute=(array)$attribute;
+        foreach ($attribute as $attr) {
+            $this->validator->sometimes($attr,'sometimes', function() {return true;});
+        }
     }
 
 
