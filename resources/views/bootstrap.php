@@ -14,6 +14,19 @@
             errorClass: 'help-block help-block-error', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
             ignore: "",  // validate all fields including form hidden input
+            <?php if(Config::get('jsvalidation.focus_on_error')): ?>
+            invalidHandler: function(form, validator) {
+
+                if (!validator.numberOfInvalids())
+                    return;
+
+                $('html, body').animate({
+                    scrollTop: $(validator.errorList[0].element).offset().top
+                }, <?php echo Config::get('jsvalidation.duration_animate') ?>);
+                $(validator.errorList[0].element).focus();
+
+            },
+            <?php endif; ?>
             errorPlacement: function(error, element) {
                 if (element.attr("type") == "radio") {
                     error.insertAfter(element.parents('div').find('.radio-list'));
