@@ -44,7 +44,7 @@
             },
             success: function (label) {
                 label
-                        .closest('.form-group, .checkbox').removeClass('has-error'); // set success class to the control group
+                        .closest('.form-group, .checkbox').removeClass('has-error').addClass('has-success'); // set success class to the control group
             },
             rules: <?php echo json_encode($validator['rules']); ?> ,
             messages: <?php echo json_encode($validator['messages']) ?>
