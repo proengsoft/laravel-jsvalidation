@@ -96,6 +96,9 @@ $.extend($.fn, {
 					}
 					return handle();
 				} else {
+					$.event.trigger({
+						type: "laravel-jsvalidation:failedValidation"
+					});
 					validator.focusInvalid();
 					return false;
 				}
