@@ -481,7 +481,20 @@ $.extend( $.validator, {
 		},
 
 		numberOfInvalids: function() {
-			return this.objectLength( this.invalid );
+			var numberOfInvalids = this.objectLength( this.invalid );
+
+			if (numberOfInvalids > 0)
+			{
+				$.event.trigger({
+					type: "laravel-jsvalidation:failedValidation"
+				});
+			}
+			else
+			{
+				$.event.trigger({
+					type: "laravel-jsvalidation:passedValidation"
+				});
+			}
 		},
 
 		objectLength: function( obj ) {
