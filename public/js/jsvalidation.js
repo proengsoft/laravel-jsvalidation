@@ -495,6 +495,8 @@ $.extend( $.validator, {
 					type: "laravel-jsvalidation:passedValidation"
 				});
 			}
+
+			return numberOfInvalids;
 		},
 
 		objectLength: function( obj ) {
