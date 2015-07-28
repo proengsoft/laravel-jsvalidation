@@ -28,23 +28,7 @@
             },
             <?php endif; ?>
             errorPlacement: function(error, element) {
-                if( element.is('select') && element.hasClass('select2-hidden-accessible')) {
-                    element.parent().append(error);
-                } else {
-                    if (element.attr("type") == "radio") {
-                        error.insertAfter(element.parents('div').find('.radio-list'));
-                    }
-                   else if (element.attr("type") == "checkbox") {
-                        error.insertAfter(element.parents('label'));
-                    }
-                    else {
-                        if(element.parent('.input-group').length) {
-                            error.insertAfter(element.parent());
-                        } else {
-                            error.insertAfter(element);
-                        }
-                    }
-                }
+               element.parents('div.has-error').append(error);
             },
             success: function (label) {
                 label
