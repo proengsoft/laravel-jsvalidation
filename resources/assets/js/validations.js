@@ -204,7 +204,7 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelDigitsBetween", function(value, element, params) {
             return this.optional(element) ||
                 ($.validator.methods.number.call(this, value, element, true)
-                && value.length>=params[0] && value.length<=params[1]);
+                && value.length>=parseFloat(params[0]) && value.length<=parseFloat(params[1]));
         }, $.validator.format("The field must be beetwen {0} and {1} digits."));
 
         /**
@@ -220,7 +220,7 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelBetween", function(value, element, params) {
             return this.optional(element) ||
-                ( helpers.getSize(this, element,value) >= params[0] && helpers.getSize(this,element,value) <= params[1]);
+                ( helpers.getSize(this, element,value) >= parseFloat(params[0]) && helpers.getSize(this,element,value) <= parseFloat(params[1]));
         }, $.validator.format("The field must be between {0} and {1}"));
 
         /**
@@ -228,7 +228,7 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelMin", function(value, element, params) {
             return this.optional(element) ||
-                helpers.getSize(this, element,value) >= params[0];
+                helpers.getSize(this, element,value) >= parseFloat(params[0]);
         }, $.validator.format("The field must be at least {0}"));
 
         /**
@@ -236,7 +236,7 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelMax", function(value, element, params) {
             return this.optional(element) ||
-                helpers.getSize(this, element,value) <= params[0];
+                helpers.getSize(this, element,value) <= parseFloat(params[0]);
         }, $.validator.format("The field may not be greater than {0}"));
 
         /**
