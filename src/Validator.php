@@ -53,7 +53,7 @@ class Validator extends BaseValidator
     public function passes()
     {
 
-        if ($this->isRemoteValidation())
+        if ($this->isRemoteValidationRequest())
         {
             $message = $this->passesRemote($this->data['_jsvalidation']);
             throw new HttpResponseException(
@@ -79,7 +79,7 @@ class Validator extends BaseValidator
     }
 
 
-    protected function isRemoteValidation()
+    protected function isRemoteValidationRequest()
     {
         return !empty($this->data['_jsvalidation']);
     }
@@ -203,7 +203,7 @@ class Validator extends BaseValidator
             if (method_exists($this, "jsRule{$rule}")) {
                 list($attribute, $rule, $parameters, $message) = $this->$method($attribute, $rule, $parameters,
                     $message);
-            } elseif ($this->isRemoteRule($rawRule,$attribute)){
+            } elseif ($this->isRemoteRule($rule,$attribute)){
                 list($attribute, $rule, $parameters, $message) = $this->jsRemoteRule($attribute, $rule, $parameters,
                     $message);
             } else {
@@ -289,8 +289,22 @@ class Validator extends BaseValidator
      */
     protected function isImplemented($rule)
     {
-        return in_array($rule, $this->implementedRules);
+
+        if (!is_callable([$this,$rule])) {
+            return $this->ruleIsExtension($rule);
+        }
+        return true;
+
     }
+
+
+    protected function ruleIsExtension($rule)
+    {
+        $rule=snake_case($rule);
+        $keys = array_map('snake_case', array_keys($this->extensions));
+        return in_array($rule, array_keys($this->extensions));
+    }
+
 
 
     /**
@@ -302,11 +316,18 @@ class Validator extends BaseValidator
      */
     protected function isRemoteRule($rule, $attribute=null)
     {
+        if (!in_array($rule,['ActiveUrl','Exists', 'Unique']))
+        {
+            return $this->ruleIsExtension($rule);
+        }
+
+        return true;
+        /*
         $parsedRule=$this->parseRule($rule);
 
         return is_array($rule) || in_array($parsedRule[0],['ActiveUrl','Exists', 'Unique']) ||
         ( !empty($this->remoteRules[$attribute]) && in_array($rule,$this->remoteRules[$attribute]));
-
+        */
     }
 
 
