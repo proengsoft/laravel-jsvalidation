@@ -317,7 +317,7 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelMimes", function(value, element, params) {
             return this.optional(element) ||
                 (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-                params.indexOf(helpers.fileinfo(element).extension)!=-1;
+                params.indexOf(helpers.fileinfo(element).extension.toLowerCase())!=-1;
         }, $.validator.format("The :attribute must be a file of type: {0}."));
 
         /**
