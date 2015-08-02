@@ -2037,7 +2037,7 @@ var laravelValidation  = {
      */
     overrideCheck: function() {
 
-        
+
         $.extend( $.validator.prototype, {
 
             remote: function () {
@@ -2238,7 +2238,7 @@ $.extend(true, laravelValidation, {
         getSize: function getSize(obj, element, value) {
 
             if (this.hasNumericRules(element) && /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value)) {
-                return value;
+                return parseFloat(value);
             } else if ($.isArray(value)) {
                 return value.length;
             } else if (element.type == 'file') {
@@ -3023,7 +3023,7 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelDigitsBetween", function(value, element, params) {
             return this.optional(element) ||
                 ($.validator.methods.number.call(this, value, element, true)
-                && value.length>=params[0] && value.length<=params[1]);
+                && value.length>=parseFloat(params[0]) && value.length<=parseFloat(params[1]));
         }, $.validator.format("The field must be beetwen {0} and {1} digits."));
 
         /**
@@ -3039,7 +3039,7 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelBetween", function(value, element, params) {
             return this.optional(element) ||
-                ( helpers.getSize(this, element,value) >= params[0] && helpers.getSize(this,element,value) <= params[1]);
+                ( helpers.getSize(this, element,value) >= parseFloat(params[0]) && helpers.getSize(this,element,value) <= parseFloat(params[1]));
         }, $.validator.format("The field must be between {0} and {1}"));
 
         /**
@@ -3047,7 +3047,7 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelMin", function(value, element, params) {
             return this.optional(element) ||
-                helpers.getSize(this, element,value) >= params[0];
+                helpers.getSize(this, element,value) >= parseFloat(params[0]);
         }, $.validator.format("The field must be at least {0}"));
 
         /**
@@ -3055,7 +3055,7 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelMax", function(value, element, params) {
             return this.optional(element) ||
-                helpers.getSize(this, element,value) <= params[0];
+                helpers.getSize(this, element,value) <= parseFloat(params[0]);
         }, $.validator.format("The field may not be greater than {0}"));
 
         /**
@@ -3136,7 +3136,7 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelMimes", function(value, element, params) {
             return this.optional(element) ||
                 (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-                params.indexOf(helpers.fileinfo(element).extension)!=-1;
+                params.indexOf(helpers.fileinfo(element).extension.toLowerCase())!=-1;
         }, $.validator.format("The :attribute must be a file of type: {0}."));
 
         /**

@@ -400,6 +400,21 @@ class Validator extends BaseValidator
         return [$attribute,$rule, [strtotime($parameters[0])],$message];
     }
 
+    /**
+     * Validate the MIME type of a file upload attribute is in a set of MIME types.
+     *
+     * @param  string  $attribute
+     * @param  mixed  $rule
+     * @param  array   $parameters
+     * @param $message
+     * @return array
+     */
+    protected function jsRuleMimes($attribute, $rule, array $parameters, $message)
+    {
+        $rule="laravel{$rule}";
+        $parameters = array_map('strtolower', $parameters);
+        return [$attribute,$rule, $parameters,$message];
+    }
 
     /**
      * Returns Javascript parameters for ActiveUrl rule

@@ -123,7 +123,7 @@ $.extend(true, laravelValidation, {
         getSize: function getSize(obj, element, value) {
 
             if (this.hasNumericRules(element) && /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value)) {
-                return value;
+                return parseFloat(value);
             } else if ($.isArray(value)) {
                 return value.length;
             } else if (element.type == 'file') {
