@@ -1,5 +1,7 @@
 <?php namespace Proengsoft\JsValidation;
 
+use Proengsoft\JsValidation\Traits\ValidateRemote;
+use Proengsoft\JsValidation\Traits\JavascriptValidations;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Crypt;
@@ -15,10 +17,10 @@ use Illuminate\Validation\Validator as BaseValidator;
  */
 class Validator extends BaseValidator
 {
+    use JavascriptValidations;
 
     const JSVALIDATION_DISABLE = 'NoJsValidation';
     const JSVALIDATION_REMOTE = 'jsValidationRemote';
-
 
 
     /**
@@ -60,17 +62,6 @@ class Validator extends BaseValidator
 
 
     /**
-     * Disable Javascript Validations for some attribute
-     *
-     * @return bool
-     */
-    public function validateNoJsValidation()
-    {
-        return true;
-    }
-
-
-    /**
      * Sets data for validate remote rules
      *
      * @param $attribute
@@ -90,6 +81,18 @@ class Validator extends BaseValidator
             }
         }
     }
+
+
+    /**
+     * Disable Javascript Validations for some attribute
+     *
+     * @return bool
+     */
+    public function validateNoJsValidation()
+    {
+        return true;
+    }
+
 
 
     /**
@@ -145,8 +148,7 @@ class Validator extends BaseValidator
             list($rule, $parameters) = $this->parseRule($rawRule);
 
             // Check if rule is implemented
-            if (empty($rule) || !$this->isImplemented($rule)) {
-                //return array($attribute,false,false,false);
+            if (!$this->isImplemented($rule)) {
                 continue;
             }
 
@@ -168,7 +170,7 @@ class Validator extends BaseValidator
     }
 
 
-    
+
     /**
      * Return parsed Javascript Rule
      *
@@ -326,93 +328,6 @@ class Validator extends BaseValidator
             'rules' => $jsRules,
             'messages' => $jsMessages
         ];
-    }
-
-
-    /**
-     * Replace javascript error message place-holders in RequiredIf with actual values.
-     *
-     * @param $message
-     * @param $attribute
-     * @param $rule
-     * @param $parameters
-     * @return mixed
-     */
-    public function jsReplaceRequiredIf($message, $attribute, $rule, $parameters)
-    {
-        unset($attribute);
-        unset($rule);
-
-        $data = array();
-        $data[$parameters[0]]=$parameters[1];
-
-        $parameters[1] = $this->getDisplayableValue($parameters[0], array_get($data, $parameters[0]));
-        $parameters[0] = $this->getAttribute($parameters[0]);
-
-        return str_replace(array(':other', ':value'), $parameters, $message);
-    }
-
-
-    /**
-     * Confirmed rule is applied to confirmed attribute
-     *
-     * @param $attribute
-     * @param $rule
-     * @param array $parameters
-     * @return array
-     */
-    protected function jsRuleConfirmed($attribute, $rule, array $parameters)
-    {
-        $parameters[0]=$attribute;
-        $rule="laravel{$rule}";
-        $attribute="{$attribute}_confirmation";
-
-        return [$attribute,$rule, $parameters];
-    }
-
-
-    /**
-     * Returns Javascript parameters for After rule
-     *
-     * @param $attribute
-     * @param $rule
-     * @param array $parameters
-     * @return array
-     */
-    protected function jsRuleAfter($attribute, $rule, array $parameters)
-    {
-        $rule="laravel{$rule}";
-        return [$attribute,$rule, [strtotime($parameters[0])]];
-    }
-
-
-    /**
-     * Returns Javascript parameters for Before rule
-     *
-     * @param $attribute
-     * @param $rule
-     * @param array $parameters
-     * @return array
-     */
-    protected function jsRuleBefore($attribute, $rule, array $parameters)
-    {
-        $rule="laravel{$rule}";
-        return [$attribute,$rule, [strtotime($parameters[0])]];
-    }
-
-    /**
-     * Validate the MIME type of a file upload attribute is in a set of MIME types.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $rule
-     * @param  array   $parameters
-     * @return array
-     */
-    protected function jsRuleMimes($attribute, $rule, array $parameters)
-    {
-        $rule="laravel{$rule}";
-        $parameters = array_map('strtolower', $parameters);
-        return [$attribute,$rule, $parameters];
     }
 
 
