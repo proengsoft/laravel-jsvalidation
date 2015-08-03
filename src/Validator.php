@@ -154,15 +154,7 @@ class Validator extends BaseValidator
             $message = $this->getJsMessage($attribute, $rule, $parameters);
 
             // call the convert function if is defined
-            $method="jsRule{$rule}";
-            if (method_exists($this, "jsRule{$rule}")) {
-                list($attribute, $rule, $jsParams) = $this->$method($attribute, $rule, $parameters);
-            } elseif ($this->isRemoteRule($rule)){
-                list($attribute, $rule, $jsParams) = $this->jsRemoteRule($attribute);
-            } else {
-                $rule="laravel{$rule}";
-                $jsParams=$parameters;
-            }
+            list($attribute, $rule, $jsParams)= $this->getJsRule($attribute, $rule, $parameters);
 
             // Rule name must be unique
             $rule = $this->jsParseRuleName($rule, $jsRules);
@@ -171,13 +163,33 @@ class Validator extends BaseValidator
             $jsMessages[$rule]=$message;
         }
 
-
-        foreach ($jsMessages as $rule=>$parameters) {
-
-        }
-
         return [$attribute, $jsRules, $jsMessages];
 
+    }
+
+
+    
+    /**
+     * Return parsed Javascript Rule
+     *
+     * @param string $attribute
+     * @param string $rule
+     * @param array $parameters
+     * @return array
+     */
+    protected function getJsRule($attribute, $rule, $parameters) {
+
+        $method="jsRule{$rule}";
+
+        if (method_exists($this, "jsRule{$rule}")) {
+            list($attribute, $rule, $parameters) = $this->$method($attribute, $rule, $parameters);
+        } elseif ($this->isRemoteRule($rule)){
+            list($attribute, $rule, $parameters) = $this->jsRemoteRule($attribute);
+        } else {
+            $rule="laravel{$rule}";
+        }
+
+        return [$attribute, $rule, $parameters];
     }
 
 
