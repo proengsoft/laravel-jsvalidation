@@ -31,10 +31,17 @@ class Validator extends BaseValidator
 
         if ($this->isRemoteValidationRequest())
         {
-            $message = $this->passesRemote($this->data['_jsvalidation']);
+            $this->setRemoteValidationData($this->data['_jsvalidation']);
+            if (parent::passes()) {
+                $message=true;
+            } else {
+                $message=$this->messages()->get($this->data['_jsvalidation']);
+            }
+
             throw new HttpResponseException(
                 new JsonResponse($message, 200)
             );
+
         }
 
         return parent::passes();
@@ -82,25 +89,6 @@ class Validator extends BaseValidator
                 unset($this->rules[$attr]);
             }
         }
-    }
-
-
-    /**
-     * Determine if the data passes the remote validation rules.
-     *
-     * @param $attribute
-     * @return bool
-     */
-    protected function passesRemote($attribute)
-    {
-        $this->setRemoteValidationData($attribute);
-
-        if (parent::passes()) {
-            return true;
-        } else {
-            return $this->messages()->get($attribute);
-        }
-
     }
 
 
@@ -163,7 +151,6 @@ class Validator extends BaseValidator
             }
 
             // Gets the message
-            //$message = $this->getMessage($attribute, $rule);
             $message = $this->getJsMessage($attribute, $rule, $parameters);
 
             // call the convert function if is defined
@@ -222,7 +209,7 @@ class Validator extends BaseValidator
      *
      * @param string $attribute
      * @param string $rule
-     * @param string $parameters
+     * @param array $parameters
      * @return mixed
      */
     protected function getJsMessage( $attribute, $rule, $parameters)
@@ -268,7 +255,7 @@ class Validator extends BaseValidator
     /**
      * Check if rule is implemented
      *
-     * @param $rule
+     * @param string $rule
      * @return bool
      */
     protected function isImplemented($rule)
@@ -301,7 +288,7 @@ class Validator extends BaseValidator
     /**
      * Check if rule must be validated remotely
      *
-     * @param $rule
+     * @param string $rule
      * @return bool
      */
     protected function isRemoteRule($rule)
