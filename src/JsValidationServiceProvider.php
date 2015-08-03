@@ -88,3 +88,4 @@ class JsValidationServiceProvider extends ServiceProvider
         ], 'public');
     }
 }
+

@@ -140,13 +140,4 @@ class Manager implements Arrayable
     }
 
 
-    public function sometimes($attribute)
-    {
-        $attribute=(array)$attribute;
-        foreach ($attribute as $attr) {
-            $this->validator->sometimes($attr,'sometimes', function() {return true;});
-        }
-    }
-
-
 }
