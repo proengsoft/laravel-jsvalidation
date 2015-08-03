@@ -3,10 +3,8 @@
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Str;
-use Proengsoft\JsValidation\Traits\JavascriptValidator;
 use Illuminate\Validation\Validator as BaseValidator;
+
 
 /**
  * Extends Laravel Validator to add Javascript Validations
@@ -16,33 +14,10 @@ use Illuminate\Validation\Validator as BaseValidator;
  */
 class Validator extends BaseValidator
 {
-    //use JavascriptValidator;
-
-    //protected $disable_js_rule='NoJsValidation';
 
     const JSVALIDATION_DISABLE = 'NoJsValidation';
     const JSVALIDATION_REMOTE = 'jsValidationRemote';
 
-
-    /**
-     * Current implemented rules
-     *
-     * @var array
-     */
-    protected $implementedRules=['Accepted', 'ActiveUrl', 'After', 'Alpha', 'AlphaDash',
-        'AlphaNum', 'Array', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
-        'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Exists', 'Image',
-        'In', 'Integer', 'Ip', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
-        'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
-        'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'String',
-        'Sometimes','Timezone', 'Unique', 'Url'];
-
-    /**
-     * Rules validated via Ajax
-     *
-     * @var array
-     */
-    protected $remoteRules = array();
 
 
     /**
@@ -64,21 +39,12 @@ class Validator extends BaseValidator
         return parent::passes();
     }
 
+
     /**
-     * Add conditions to a given field based on a Closure.
+     *  Check if Request must be validated by JsValidation
      *
-     * @param  string  $attribute
-     * @param  string|array  $rules
-     * @param  callable  $callback
-     * @return void
+     * @return bool
      */
-    public function sometimes($attribute, $rules, callable $callback)
-    {
-        $this->remoteRules[$attribute][]=$rules;
-        parent::sometimes($attribute, $rules, $callback);
-    }
-
-
     protected function isRemoteValidationRequest()
     {
         return !empty($this->data['_jsvalidation']);
@@ -107,7 +73,7 @@ class Validator extends BaseValidator
             if ($attr == $attribute) {
                 foreach ($rules as $i=>$rule) {
                     $parsedRule=$this->parseRule($rule);
-                    if (!$this->isRemoteRule($parsedRule[0], $attribute)) {
+                    if (!$this->isRemoteRule($parsedRule[0])) {
                         unset($this->rules[$attr][$i]);
                     }
                 }
@@ -121,6 +87,7 @@ class Validator extends BaseValidator
     /**
      * Determine if the data passes the remote validation rules.
      *
+     * @param $attribute
      * @return bool
      */
     protected function passesRemote($attribute)
@@ -149,14 +116,16 @@ class Validator extends BaseValidator
 
         // We'll spin through each rule, validating the attributes attached to that
         // rule. All enabled rules will be converted.
-        foreach ($this->rules as $attribute => $rules) {
+        foreach ($this->rules as $attribute => $rawRules) {
             // Check if JS Validation is disabled for this attribute
             if (!$this->jsValidationEnabled($attribute)) {
                 continue;
             }
 
             // Convert each rules and messages
-            list($attribute, $rules, $messages)=$this->jsConvertRules($attribute,$rules);
+            $rawAttribute=$attribute;
+            list($attribute, $rules, $messages)=$this->jsConvertRules($attribute,$rawRules);
+            //$messages=$this->jsConvertMessages($attribute,$rules);
 
             if (!empty($rules))
             {
@@ -195,26 +164,30 @@ class Validator extends BaseValidator
             }
 
             // Gets the message
-            $message = $this->getMessage($attribute, $rule);
-            $message = $this->jsDoReplacements($message, $attribute, $rule, $parameters);
+            //$message = $this->getMessage($attribute, $rule);
+            $message = $this->getJsMessage($attribute, $rule, $parameters);
 
             // call the convert function if is defined
             $method="jsRule{$rule}";
             if (method_exists($this, "jsRule{$rule}")) {
-                list($attribute, $rule, $parameters, $message) = $this->$method($attribute, $rule, $parameters,
-                    $message);
-            } elseif ($this->isRemoteRule($rule,$attribute)){
-                list($attribute, $rule, $parameters, $message) = $this->jsRemoteRule($attribute, $rule, $parameters,
-                    $message);
+                list($attribute, $rule, $jsParams) = $this->$method($attribute, $rule, $parameters);
+            } elseif ($this->isRemoteRule($rule)){
+                list($attribute, $rule, $jsParams) = $this->jsRemoteRule($attribute);
             } else {
                 $rule="laravel{$rule}";
+                $jsParams=$parameters;
             }
 
             // Rule name must be unique
             $rule = $this->jsParseRuleName($rule, $jsRules);
 
-            $jsRules[$rule]=$parameters;
+            $jsRules[$rule]=$jsParams;
             $jsMessages[$rule]=$message;
+        }
+
+
+        foreach ($jsMessages as $rule=>$parameters) {
+
         }
 
         return [$attribute, $jsRules, $jsMessages];
@@ -226,6 +199,7 @@ class Validator extends BaseValidator
      * Returns parsed rule name for use in javascript
      *
      * @param $name
+     * @param $rules
      * @return string
      */
     protected function jsParseRuleName($name, $rules)
@@ -247,14 +221,25 @@ class Validator extends BaseValidator
     /**
      *  Replace javascript error message place-holders with actual values.
      *
-     * @param string $message
      * @param string $attribute
      * @param string $rule
      * @param string $parameters
      * @return mixed
      */
-    protected function jsDoReplacements($message, $attribute, $rule, $parameters)
+    protected function getJsMessage( $attribute, $rule, $parameters)
     {
+        // @todo find more elegant solution to set the attribute file type
+        $prevFiles=$this->files;
+        if ($this->hasRule($attribute, array('Mimes','Image')))
+        {
+            if (!array_key_exists($attribute, $this->files)) {
+                $this->files[$attribute]=false;
+            }
+        }
+
+        $message = $this->getMessage($attribute, $rule);
+        $this->files=$prevFiles;
+
 
         if ( isset($this->replacers[snake_case($rule)]) || !method_exists($this, $replacer = "jsReplace{$rule}"))
         {
@@ -290,7 +275,8 @@ class Validator extends BaseValidator
     protected function isImplemented($rule)
     {
 
-        if (!is_callable([$this,$rule])) {
+        $method="validate{$rule}";
+        if (!method_exists($this,$method)) {
             return $this->ruleIsExtension($rule);
         }
         return true;
@@ -298,10 +284,16 @@ class Validator extends BaseValidator
     }
 
 
+
+    /**
+     * Check if rule is extension
+     *
+     * @param $rule
+     * @return bool
+     */
     protected function ruleIsExtension($rule)
     {
         $rule=snake_case($rule);
-        $keys = array_map('snake_case', array_keys($this->extensions));
         return in_array($rule, array_keys($this->extensions));
     }
 
@@ -311,10 +303,9 @@ class Validator extends BaseValidator
      * Check if rule must be validated remotely
      *
      * @param $rule
-     * @param $attribute
      * @return bool
      */
-    protected function isRemoteRule($rule, $attribute=null)
+    protected function isRemoteRule($rule)
     {
         if (!in_array($rule,['ActiveUrl','Exists', 'Unique']))
         {
@@ -322,14 +313,7 @@ class Validator extends BaseValidator
         }
 
         return true;
-        /*
-        $parsedRule=$this->parseRule($rule);
-
-        return is_array($rule) || in_array($parsedRule[0],['ActiveUrl','Exists', 'Unique']) ||
-        ( !empty($this->remoteRules[$attribute]) && in_array($rule,$this->remoteRules[$attribute]));
-        */
     }
-
 
 
     /**
@@ -377,16 +361,15 @@ class Validator extends BaseValidator
      * @param $attribute
      * @param $rule
      * @param array $parameters
-     * @param $message
      * @return array
      */
-    protected function jsRuleConfirmed($attribute, $rule, array $parameters, $message)
+    protected function jsRuleConfirmed($attribute, $rule, array $parameters)
     {
         $parameters[0]=$attribute;
         $rule="laravel{$rule}";
         $attribute="{$attribute}_confirmation";
 
-        return [$attribute,$rule, $parameters,$message];
+        return [$attribute,$rule, $parameters];
     }
 
 
@@ -396,13 +379,12 @@ class Validator extends BaseValidator
      * @param $attribute
      * @param $rule
      * @param array $parameters
-     * @param $message
      * @return array
      */
-    protected function jsRuleAfter($attribute, $rule, array $parameters, $message)
+    protected function jsRuleAfter($attribute, $rule, array $parameters)
     {
         $rule="laravel{$rule}";
-        return [$attribute,$rule, [strtotime($parameters[0])],$message];
+        return [$attribute,$rule, [strtotime($parameters[0])]];
     }
 
 
@@ -412,13 +394,12 @@ class Validator extends BaseValidator
      * @param $attribute
      * @param $rule
      * @param array $parameters
-     * @param $message
      * @return array
      */
-    protected function jsRuleBefore($attribute, $rule, array $parameters, $message)
+    protected function jsRuleBefore($attribute, $rule, array $parameters)
     {
         $rule="laravel{$rule}";
-        return [$attribute,$rule, [strtotime($parameters[0])],$message];
+        return [$attribute,$rule, [strtotime($parameters[0])]];
     }
 
     /**
@@ -427,71 +408,24 @@ class Validator extends BaseValidator
      * @param  string  $attribute
      * @param  mixed  $rule
      * @param  array   $parameters
-     * @param $message
      * @return array
      */
-    protected function jsRuleMimes($attribute, $rule, array $parameters, $message)
+    protected function jsRuleMimes($attribute, $rule, array $parameters)
     {
         $rule="laravel{$rule}";
         $parameters = array_map('strtolower', $parameters);
-        return [$attribute,$rule, $parameters,$message];
-    }
-
-    /**
-     * Returns Javascript parameters for ActiveUrl rule
-     *
-     * @param $attribute
-     * @param $rule
-     * @param array $parameters
-     * @param $message
-     * @return array
-     *
-    protected function jsRuleActiveUrl($attribute, $rule, array $parameters, $message)
-    {
-        return $this->jsRemoteRule($attribute, $rule, $parameters,$message);
+        return [$attribute,$rule, $parameters];
     }
 
 
-    /**
-     * Returns Javascript parameters for Unique rule
-     *
-     * @param $attribute
-     * @param $rule
-     * @param array $parameters
-     * @param $message
-     * @return array
-     *
-    protected function jsRuleUnique($attribute, $rule, array $parameters, $message)
-    {
-        return $this->jsRemoteRule($attribute, $rule, $parameters,$message);
-    }
-
-
-    /**
-     * Returns Javascript parameters for Unique rule
-     *
-     * @param $attribute
-     * @param $rule
-     * @param array $parameters
-     * @param $message
-     * @return array
-     *
-    protected function jsRuleExists($attribute, $rule, array $parameters, $message)
-    {
-        return $this->jsRemoteRule($attribute, $rule, $parameters,$message);
-    }
-    */
 
     /**
      * Returns Javascript parameters for remote validated rules
      *
      * @param $attribute
-     * @param $rule
-     * @param array $parameters
-     * @param $message
      * @return array
      */
-    protected function jsRemoteRule($attribute, $rule, array $parameters, $message)
+    protected function jsRemoteRule($attribute)
     {
         $newRule = 'jsValidationRemote';
         $token=Crypt::encrypt(csrf_token());
@@ -500,7 +434,7 @@ class Validator extends BaseValidator
             $token
         ];
 
-        return [$attribute,$newRule, $params, $message];
+        return [$attribute,$newRule, $params];
     }
 
 

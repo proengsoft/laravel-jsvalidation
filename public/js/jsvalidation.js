@@ -2242,7 +2242,7 @@ $.extend(true, laravelValidation, {
             } else if ($.isArray(value)) {
                 return value.length;
             } else if (element.type == 'file') {
-                return this.fileinfo(element).size;
+                return Math.ceil(this.fileinfo(element).size);
             }
 
             return this.strlen(value);
