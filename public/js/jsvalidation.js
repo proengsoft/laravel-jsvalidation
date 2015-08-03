@@ -2863,8 +2863,16 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWith", function(value, element, params) {
             var validator=this,
                 required=false;
+            var onfocusout=this.settings.onfocusout;
             $.each(params,function(i,param) {
                 var $el = helpers.getElement(element,param);
+
+                if ($el != false && onfocusout ) {
+                    $el.unbind( ".validate-laravelRequiredWith" ).bind( "blur.validate-laravelRequiredWith", function() {
+                        $( element ).valid();
+                    });
+                }
+
                 required=required || $el==false || $.validator.methods.required.call(validator, $el.val(),$el[0],true);
             });
             if (required) {
@@ -2879,8 +2887,14 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWithAll", function(value, element, params) {
             var validator=this,
                 required=true;
+            var onfocusout=this.settings.onfocusout;
             $.each(params,function(i,param) {
                 var $el = helpers.getElement(element,param);
+                if ($el != false && onfocusout ) {
+                    $el.unbind( ".validate-laravelRequiredWithAll" ).bind( "blur.validate-laravelRequiredWithAll", function() {
+                        $( element ).valid();
+                    });
+                }
                 required=required && ($el==false || $.validator.methods.required.call(validator, $el.val(),$el[0],true));
             });
             if (required) {
@@ -2895,8 +2909,14 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWithout", function(value, element, params) {
             var validator=this,
                 required=false;
+            var onfocusout=this.settings.onfocusout;
             $.each(params,function(i,param) {
                 var $el = helpers.getElement(element,param);
+                if ($el != false && onfocusout ) {
+                    $el.unbind( ".validate-laravelRequiredWithout" ).bind( "blur.validate-laravelRequiredWithout", function() {
+                        $( element ).valid();
+                    });
+                }
                 required=required || $el==false || !$.validator.methods.required.call(validator, $el.val(),$el[0],true);
             });
             if (required) {
@@ -2911,8 +2931,14 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWithoutAll", function(value, element, params) {
             var validator=this,
                 required=true;
+            var onfocusout=this.settings.onfocusout;
             $.each(params,function(i,param) {
                 var $el = helpers.getElement(element,param);
+                if ($el != false && onfocusout ) {
+                    $el.unbind( ".validate-laravelRequiredWithoutAll" ).bind( "blur.validate-laravelRequiredWithoutAll", function() {
+                        $( element ).valid();
+                    });
+                }
                 required=required && ($el==false || !$.validator.methods.required.call(validator, $el.val(),$el[0],true));
             });
             if (required) {
@@ -2926,9 +2952,15 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelRequiredIf", function(value, element, params) {
             var $el = helpers.getElement(element,params[0]);
-            if ($el==false) {
-                return true;
-            } else if ($el.val()==params[1]) {
+            if ($el==false) return true;
+
+            if ( this.settings.onfocusout ) {
+                $el.unbind( ".validate-laravelRequiredIf" ).bind( "blur.validate-laravelRequiredIf", function() {
+                    $( element ).valid();
+                });
+            }
+
+            if ($el.val()==params[1]) {
                 return $.validator.methods.required.call(this, value, element, true);
             } else {
                 return true;
