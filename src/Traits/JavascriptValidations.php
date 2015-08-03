@@ -4,6 +4,13 @@ trait JavascriptValidations
 {
 
     /**
+     * Get the validation rules.
+     * @return array
+     */
+    public abstract function getRules();
+
+
+    /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
      *
      * @param $message
@@ -56,7 +63,13 @@ trait JavascriptValidations
     protected function jsRuleAfter($attribute, $rule, array $parameters)
     {
         $rule="laravel{$rule}";
-        return [$attribute,$rule, [strtotime($parameters[0])]];
+
+        if ( ! ($date = strtotime($parameters[0])))
+        {
+            $date=in_array($parameters[0],array_keys($this->getRules()))?$parameters[0]:'false';
+        }
+
+        return [$attribute,$rule, [$date]];
     }
 
 
@@ -71,7 +84,14 @@ trait JavascriptValidations
     protected function jsRuleBefore($attribute, $rule, array $parameters)
     {
         $rule="laravel{$rule}";
-        return [$attribute,$rule, [strtotime($parameters[0])]];
+
+        if ( ! ($date = strtotime($parameters[0])))
+        {
+            $rules=$this->getRules();
+            $date=in_array($parameters[0],array_keys($this->getRules()))?$parameters[0]:'false';
+        }
+
+        return [$attribute,$rule, [$date]];
     }
 
     /**

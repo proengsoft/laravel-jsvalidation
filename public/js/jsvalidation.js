@@ -3205,17 +3205,43 @@ $.extend(true, laravelValidation, {
          * Validate the date is before a given date.
          */
         $.validator.addMethod("laravelBefore", function(value, element, params) {
+
+            var timeCompare=parseFloat(params[0]);
+            if (isNaN(timeCompare)) {
+                var $target=helpers.getElement(element,params[0]);
+                timeCompare=helpers.parseTime($target.val(), $target[0]);
+                if ( this.settings.onfocusout ) {
+                    $target.unbind( ".validate-laravelBefore" ).bind( "blur.validate-laravelBefore", function() {
+                        $( element ).valid();
+                    });
+                }
+            }
+
             var timeValue=helpers.parseTime(value, element);
-            return this.optional(element) || (timeValue !=false && timeValue < params[0]);
+            return this.optional(element) || (timeValue !=false && timeValue < timeCompare);
+
         }, $.validator.format("The :attribute must be a date before {0}."));
 
         /**
          * Validate the date is after a given date.
          */
         $.validator.addMethod("laravelAfter", function(value, element, params) {
+
+
+            var timeCompare=parseFloat(params[0]);
+            if (isNaN(timeCompare)) {
+                var $target=helpers.getElement(element,params[0]);
+                timeCompare=helpers.parseTime($target.val(), $target[0]);
+                if ( this.settings.onfocusout ) {
+                    $target.unbind( ".validate-laravelAfter" ).bind( "blur.validate-laravelAfter", function() {
+                        $( element ).valid();
+                    });
+                }
+            }
             var timeValue=helpers.parseTime(value, element);
-            return this.optional(element) || (timeValue !=false && timeValue > params[0]);
+            return this.optional(element) || (timeValue !=false && timeValue > timeCompare);
         }, $.validator.format("The :attribute must be a date after {0}."));
+
 
         /**
          * Validate that an attribute is a valid date.
