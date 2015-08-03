@@ -9,6 +9,25 @@ trait JavascriptValidations
      */
     public abstract function getRules();
 
+    /**
+     * Get the displayable name of the value.
+     *
+     * @param  string  $attribute
+     * @param  mixed   $value
+     * @return string
+     */
+    public abstract function getDisplayableValue($attribute, $value);
+
+
+    /**
+     * Get the displayable name of the attribute.
+     *
+     * @param  string  $attribute
+     * @return string
+     */
+    protected abstract function getAttribute($attribute);
+
+
 
     /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
@@ -87,7 +106,6 @@ trait JavascriptValidations
 
         if ( ! ($date = strtotime($parameters[0])))
         {
-            $rules=$this->getRules();
             $date=in_array($parameters[0],array_keys($this->getRules()))?$parameters[0]:'false';
         }
 
