@@ -27,7 +27,8 @@
         "illuminate/validation": "~5.0",
         "illuminate/contracts": "~5.0",
         "illuminate/view": "~5.0",
-        "illuminate/config": "~5.0"
+        "illuminate/config": "~5.0",
+        "illuminate/http": "~5.0"
 
     },
     "require-dev": {
