@@ -94,7 +94,6 @@ class Validator extends BaseValidator
     }
 
 
-
     /**
      * Generate Javascript validations
      *
@@ -228,6 +227,34 @@ class Validator extends BaseValidator
      */
     protected function getJsMessage( $attribute, $rule, $parameters)
     {
+
+        $message = $this->getTypeMessage($attribute, $rule);
+
+        if ( isset($this->replacers[snake_case($rule)]) )
+        {
+            $message = $this->doReplacements($message, $attribute, $rule, $parameters);
+        }
+        elseif (method_exists($this, $replacer = "jsReplace{$rule}"))
+        {
+            $message = str_replace(':attribute', $this->getAttribute($attribute), $message);
+            $message = $this->$replacer($message, $attribute, $rule, $parameters);
+        } else {
+            $message = $this->doReplacements($message, $attribute, $rule, $parameters);
+        }
+
+        return $message;
+    }
+
+
+    /**
+     * Get the message considering the data type
+     *
+     * @param string $attribute
+     * @param string $rule
+     * @return string
+     */
+    private function getTypeMessage($attribute, $rule) {
+
         // @todo find more elegant solution to set the attribute file type
         $prevFiles=$this->files;
         if ($this->hasRule($attribute, array('Mimes','Image')))
@@ -240,16 +267,6 @@ class Validator extends BaseValidator
         $message = $this->getMessage($attribute, $rule);
         $this->files=$prevFiles;
 
-
-        if ( isset($this->replacers[snake_case($rule)]) || !method_exists($this, $replacer = "jsReplace{$rule}"))
-        {
-            $message = $this->doReplacements($message, $attribute, $rule, $parameters);
-        }
-        elseif (method_exists($this, $replacer = "jsReplace{$rule}"))
-        {
-            $message = str_replace(':attribute', $this->getAttribute($attribute), $message);
-            $message = $this->$replacer($message, $attribute, $rule, $parameters);
-        }
         return $message;
     }
 
@@ -274,6 +291,7 @@ class Validator extends BaseValidator
      */
     protected function isImplemented($rule)
     {
+        if (empty($rule)) return false;
 
         $method="validate{$rule}";
         if (!method_exists($this,$method)) {
