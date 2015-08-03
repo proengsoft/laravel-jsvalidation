@@ -1,10 +1,16 @@
-<?php
+<?php namespace Proengsoft\JsValidation\Test;
 
-
-namespace Proengsoft\JsValidation\Test;
-
+use Illuminate\Http\Exception\HttpResponseException;
+use Mockery as m;
+use Illuminate\Foundation\Testing\TestCase;
 use Proengsoft\JsValidation\Validator;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 
+
+function csrf_token() {
+    return 'dsdsds';
+}
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
@@ -12,8 +18,10 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     public $translator;
 
 
+
     public function setUp()
     {
+
 
         $this->translator = \Mockery::instanceMock('Symfony\Component\Translation\TranslatorInterface')
             ->shouldReceive('trans')
@@ -28,6 +36,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
         $this->validator= new Validator($this->translator, $data, $rules,$messages ,$customAttributes);
     }
+
 
 
     public function testJsValidationEnabled()
@@ -61,6 +70,25 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($expected,$data);
 
     }
+
+
+    public function testJsRemote() {
+
+        $rule=['name'=>'active_url'];
+        $message=['name.active_url'=>'active url'];
+        $expected=array(
+            'rules' => array('name'=>['jsValidationRemote'=>['name','encrypted token']]),
+            'messages'=>array('name'=>['jsValidationRemote'=>'active url'])
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        Session::shouldReceive('token')->once();
+        Crypt::shouldReceive('encrypt')->once()->andReturn('encrypted token');
+        $data=$validator->js();
+
+        $this->assertEquals($expected,$data);
+    }
+
 
 
     public function testNotImplementedRules()
@@ -201,6 +229,107 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testMimes(){
+
+        $rule=['name'=>'mimes:TXT'];
+        $message=['name.mimes'=>'Mime TXT'];
+        $expected=array(
+            'rules' => array(
+                'name'=> ['laravelMimes'=>array('txt')]
+            ),
+            'messages'=>array(
+                'name'=> ['laravelMimes'=>'Mime TXT']
+            )
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->js();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
+
+    public function  testPassesRemoteOk()
+    {
+
+        $messages = [
+            'name.active_url'=>'active_url',
+        ];
+        $data = ['_jsvalidation'=>'name','name'=>'http://www.google.com'];
+        $rules = ['name'=>'active_url|required'];
+
+
+        $expected=array(
+            'rules' => array('name'=>['laravelRequired'=>[]]),
+            'messages' =>  array('name'=>['laravelRequired'=>'name required']),
+        );
+        $validator=new Validator($this->translator, $data, $rules,$messages);
+
+        try {
+            $validator->passes();
+
+        } catch (HttpResponseException $ex) {
+            $response=$ex->getResponse();
+            $this->assertEquals(200,$response->getStatusCode());
+            $this->assertEquals('true',$response->getContent());
+        }
+
+    }
+
+    public function testPassesRemoteFail()
+    {
+
+        $messages = [
+            'other.required'=>'other required',
+            'name.active_url'=>'active_url',
+        ];
+        $data = ['_jsvalidation'=>'name','name'=>'http://this-url-must-fail'];
+        $rules = ['name'=>'active_url','other'=>'required'];
+
+
+        $expected=array(
+            'rules' => array('name'=>['laravelRequired'=>[]]),
+            'messages' =>  array('name'=>['laravelRequired'=>'name required']),
+        );
+        $validator=new Validator($this->translator, $data, $rules,$messages);
+
+        try {
+            $validator->passes();
+
+        } catch (HttpResponseException $ex) {
+            $response=$ex->getResponse();
+            $this->assertEquals(200,$response->getStatusCode());
+            $this->assertJsonStringEqualsJsonString(json_encode(["active_url"]),$response->getContent());
+        }
+
+
+
+    }
+
+
+
+
+    public function  testPassesWithoutRemote()
+    {
+
+        $messages = [
+            'name.required'=>'name required',
+        ];
+        $data = [];
+        $rules = ['name'=>'required', 'novalidate'=>'no_js_validation'];
+
+
+        $expected=array(
+            'rules' => array('name'=>['laravelRequired'=>[]]),
+            'messages' =>  array('name'=>['laravelRequired'=>'name required']),
+        );
+        $validator=new Validator($this->translator, [], $rules,$messages);
+
+        $data=$this->validator->passes();
+
+
+    }
 
 
 }

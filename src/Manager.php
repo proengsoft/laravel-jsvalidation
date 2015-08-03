@@ -62,7 +62,6 @@ class Manager implements Arrayable
         $view=is_null($view)?$this->view:$view;
         $this->setSelector(is_null($selector)?$this->selector:$selector);
 
-
         return View::make($view, ['validator'=>$this->getViewData()])
             ->render();
     }

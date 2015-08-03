@@ -3,6 +3,7 @@
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Validator as BaseValidator;
 
 
@@ -123,9 +124,7 @@ class Validator extends BaseValidator
             }
 
             // Convert each rules and messages
-            $rawAttribute=$attribute;
             list($attribute, $rules, $messages)=$this->jsConvertRules($attribute,$rawRules);
-            //$messages=$this->jsConvertMessages($attribute,$rules);
 
             if (!empty($rules))
             {
@@ -428,7 +427,9 @@ class Validator extends BaseValidator
     protected function jsRemoteRule($attribute)
     {
         $newRule = 'jsValidationRemote';
-        $token=Crypt::encrypt(csrf_token());
+
+        $token= Session::token();
+        $token=Crypt::encrypt($token);
         $params = [
             $attribute,
             $token
