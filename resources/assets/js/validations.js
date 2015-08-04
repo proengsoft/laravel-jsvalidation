@@ -44,8 +44,16 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWith", function(value, element, params) {
             var validator=this,
                 required=false;
+            var onfocusout=this.settings.onfocusout;
             $.each(params,function(i,param) {
                 var $el = helpers.getElement(element,param);
+
+                if ($el != false && onfocusout ) {
+                    $el.unbind( ".validate-laravelRequiredWith" ).bind( "blur.validate-laravelRequiredWith", function() {
+                        $( element ).valid();
+                    });
+                }
+
                 required=required || $el==false || $.validator.methods.required.call(validator, $el.val(),$el[0],true);
             });
             if (required) {
@@ -60,8 +68,14 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWithAll", function(value, element, params) {
             var validator=this,
                 required=true;
+            var onfocusout=this.settings.onfocusout;
             $.each(params,function(i,param) {
                 var $el = helpers.getElement(element,param);
+                if ($el != false && onfocusout ) {
+                    $el.unbind( ".validate-laravelRequiredWithAll" ).bind( "blur.validate-laravelRequiredWithAll", function() {
+                        $( element ).valid();
+                    });
+                }
                 required=required && ($el==false || $.validator.methods.required.call(validator, $el.val(),$el[0],true));
             });
             if (required) {
@@ -76,8 +90,14 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWithout", function(value, element, params) {
             var validator=this,
                 required=false;
+            var onfocusout=this.settings.onfocusout;
             $.each(params,function(i,param) {
                 var $el = helpers.getElement(element,param);
+                if ($el != false && onfocusout ) {
+                    $el.unbind( ".validate-laravelRequiredWithout" ).bind( "blur.validate-laravelRequiredWithout", function() {
+                        $( element ).valid();
+                    });
+                }
                 required=required || $el==false || !$.validator.methods.required.call(validator, $el.val(),$el[0],true);
             });
             if (required) {
@@ -92,8 +112,14 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWithoutAll", function(value, element, params) {
             var validator=this,
                 required=true;
+            var onfocusout=this.settings.onfocusout;
             $.each(params,function(i,param) {
                 var $el = helpers.getElement(element,param);
+                if ($el != false && onfocusout ) {
+                    $el.unbind( ".validate-laravelRequiredWithoutAll" ).bind( "blur.validate-laravelRequiredWithoutAll", function() {
+                        $( element ).valid();
+                    });
+                }
                 required=required && ($el==false || !$.validator.methods.required.call(validator, $el.val(),$el[0],true));
             });
             if (required) {
@@ -107,9 +133,15 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelRequiredIf", function(value, element, params) {
             var $el = helpers.getElement(element,params[0]);
-            if ($el==false) {
-                return true;
-            } else if ($el.val()==params[1]) {
+            if ($el==false) return true;
+
+            if ( this.settings.onfocusout ) {
+                $el.unbind( ".validate-laravelRequiredIf" ).bind( "blur.validate-laravelRequiredIf", function() {
+                    $( element ).valid();
+                });
+            }
+
+            if ($el.val()==params[1]) {
                 return $.validator.methods.required.call(this, value, element, true);
             } else {
                 return true;
@@ -204,7 +236,7 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelDigitsBetween", function(value, element, params) {
             return this.optional(element) ||
                 ($.validator.methods.number.call(this, value, element, true)
-                && value.length>=params[0] && value.length<=params[1]);
+                && value.length>=parseFloat(params[0]) && value.length<=parseFloat(params[1]));
         }, $.validator.format("The field must be beetwen {0} and {1} digits."));
 
         /**
@@ -220,7 +252,7 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelBetween", function(value, element, params) {
             return this.optional(element) ||
-                ( helpers.getSize(this, element,value) >= params[0] && helpers.getSize(this,element,value) <= params[1]);
+                ( helpers.getSize(this, element,value) >= parseFloat(params[0]) && helpers.getSize(this,element,value) <= parseFloat(params[1]));
         }, $.validator.format("The field must be between {0} and {1}"));
 
         /**
@@ -228,7 +260,7 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelMin", function(value, element, params) {
             return this.optional(element) ||
-                helpers.getSize(this, element,value) >= params[0];
+                helpers.getSize(this, element,value) >= parseFloat(params[0]);
         }, $.validator.format("The field must be at least {0}"));
 
         /**
@@ -236,7 +268,7 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelMax", function(value, element, params) {
             return this.optional(element) ||
-                helpers.getSize(this, element,value) <= params[0];
+                helpers.getSize(this, element,value) <= parseFloat(params[0]);
         }, $.validator.format("The field may not be greater than {0}"));
 
         /**
@@ -290,15 +322,17 @@ $.extend(true, laravelValidation, {
          * Validate that an attribute is a valid URL.
          */
         $.validator.addMethod("laravelUrl", function(value, element, params) {
-            return this.optional( element ) ||
-                /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test( value );
+            return this.optional(element) ||
+                $.validator.methods.url.call(this, value, element, true);
         }, $.validator.format("The :attribute format is invalid"));
 
         /**
          * Validate that an attribute is an active URL.
          */
         $.validator.addMethod("laravelActiveUrl", function(value, element, params) {
+
             return $.validator.methods.laravelUrl.call(this, value, element, true);
+
         }, $.validator.format("The :attribute is not a valid URL."));
 
         /**
@@ -315,7 +349,7 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelMimes", function(value, element, params) {
             return this.optional(element) ||
                 (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-                params.indexOf(helpers.fileinfo(element).extension)!=-1;
+                params.indexOf(helpers.fileinfo(element).extension.toLowerCase())!=-1;
         }, $.validator.format("The :attribute must be a file of type: {0}."));
 
         /**
@@ -384,17 +418,43 @@ $.extend(true, laravelValidation, {
          * Validate the date is before a given date.
          */
         $.validator.addMethod("laravelBefore", function(value, element, params) {
+
+            var timeCompare=parseFloat(params[0]);
+            if (isNaN(timeCompare)) {
+                var $target=helpers.getElement(element,params[0]);
+                timeCompare=helpers.parseTime($target.val(), $target[0]);
+                if ( this.settings.onfocusout ) {
+                    $target.unbind( ".validate-laravelBefore" ).bind( "blur.validate-laravelBefore", function() {
+                        $( element ).valid();
+                    });
+                }
+            }
+
             var timeValue=helpers.parseTime(value, element);
-            return this.optional(element) || (timeValue !=false && timeValue < params[0]);
+            return this.optional(element) || (timeValue !=false && timeValue < timeCompare);
+
         }, $.validator.format("The :attribute must be a date before {0}."));
 
         /**
          * Validate the date is after a given date.
          */
         $.validator.addMethod("laravelAfter", function(value, element, params) {
+
+
+            var timeCompare=parseFloat(params[0]);
+            if (isNaN(timeCompare)) {
+                var $target=helpers.getElement(element,params[0]);
+                timeCompare=helpers.parseTime($target.val(), $target[0]);
+                if ( this.settings.onfocusout ) {
+                    $target.unbind( ".validate-laravelAfter" ).bind( "blur.validate-laravelAfter", function() {
+                        $( element ).valid();
+                    });
+                }
+            }
             var timeValue=helpers.parseTime(value, element);
-            return this.optional(element) || (timeValue !=false && timeValue > params[0]);
+            return this.optional(element) || (timeValue !=false && timeValue > timeCompare);
         }, $.validator.format("The :attribute must be a date after {0}."));
+
 
         /**
          * Validate that an attribute is a valid date.
@@ -402,6 +462,29 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelTimezone", function(value, element, params) {
             return this.optional(element) || helpers.isTimezone(value);
         }, $.validator.format("The :attribute is not a valid date"));
+
+        /**
+         * Validate remote rule via AJAX
+          */
+        var jsRemoteTimer=0;
+        $.validator.addMethod("jsValidationRemote", function(value, element, params) {
+
+            if (this.optional(element)) {
+                return true;
+            }
+
+            clearTimeout(jsRemoteTimer);
+            jsRemoteTimer = setTimeout(function() {
+                var attribute=params[0];
+                var token = params[1];
+                var remote = helpers.laravelRemote(element, attribute, value, token);
+                return $.validator.methods.remote.call(this, value, element, remote );
+            }.bind(this), 250);
+
+            return true;
+
+        }, $.validator.format("The :attribute is not a valid URL."));
+
     }
     
 });

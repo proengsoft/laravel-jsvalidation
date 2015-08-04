@@ -1,18 +1,16 @@
-<?php namespace Proengsoft\JsValidation;
+<?php
+
+namespace Proengsoft\JsValidation;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use \Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Foundation\Application;
 use Proengsoft\JsValidation;
 
 class JsValidationServiceProvider extends ServiceProvider
 {
-
-
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -26,26 +24,23 @@ class JsValidationServiceProvider extends ServiceProvider
 
     /**
      * Register the application services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->app->bind('jsvalidator', function (Application $app) {
 
-            $selector=Config::get('jsvalidation.form_selector');
-            $view=Config::get('jsvalidation.view');
+            $selector = Config::get('jsvalidation.form_selector');
+            $view = Config::get('jsvalidation.view');
 
-            $validator=new Manager($selector,$view);
-            $validatorFactory=$app->make('Illuminate\Contracts\Validation\Factory');
+            $validator = new Manager($selector, $view);
+            $validatorFactory = $app->make('Illuminate\Contracts\Validation\Factory');
 
             return new Factory($validatorFactory, $validator);
         });
     }
 
-
     /**
-     * Register Validator resolver
+     * Register Validator resolver.
      */
     protected function bootstrapValidator()
     {
@@ -55,7 +50,7 @@ class JsValidationServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure and publish views
+     * Configure and publish views.
      */
     protected function bootstrapViews()
     {
@@ -63,23 +58,23 @@ class JsValidationServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom($viewPath, 'jsvalidation');
         $this->publishes([
-            $viewPath =>$this->app['path.base'].'/resources/views/vendor/jsvalidation',
+            $viewPath => $this->app['path.base'].'/resources/views/vendor/jsvalidation',
         ], 'views');
     }
 
     /**
-     * Load and publishes configs
+     * Load and publishes configs.
      */
     protected function bootstrapConfigs()
     {
-        $configFile = realpath(__DIR__ . '/../config/jsvalidation.php');
+        $configFile = realpath(__DIR__.'/../config/jsvalidation.php');
 
         $this->mergeConfigFrom($configFile, 'jsvalidation');
-        $this->publishes([$configFile =>  $this->app['path.config'].'/jsvalidation.php'], 'config');
+        $this->publishes([$configFile => $this->app['path.config'].'/jsvalidation.php'], 'config');
     }
 
     /**
-     * Publish public assets
+     * Publish public assets.
      */
     protected function publishAssets()
     {
