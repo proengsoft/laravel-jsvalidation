@@ -1,6 +1,7 @@
 <?php namespace Proengsoft\JsValidation;
 
-use Proengsoft\JsValidation\Traits\JavascriptValidations;
+use Proengsoft\JsValidation\Traits\RemoteValidation;
+use Proengsoft\JsValidation\Traits\JavascriptRules;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Validator as BaseValidator;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class Validator extends BaseValidator
 {
-    use JavascriptValidations;
+    use JavascriptRules,RemoteValidation;
 
     const JSVALIDATION_DISABLE = 'NoJsValidation';
     const JSVALIDATION_REMOTE = 'jsValidationRemote';
@@ -31,56 +32,12 @@ class Validator extends BaseValidator
 
         if ($this->isRemoteValidationRequest())
         {
-            if ($this->setRemoteValidationData($this->data['_jsvalidation'])) {
-                $message=parent::passes()?true:$this->messages()->get($this->data['_jsvalidation']);
-                throw new HttpResponseException(
-                    new JsonResponse($message, 200)
-                );
-            } else {
-                throw new BadRequestHttpException("Bad request");
-            }
+            $this->validateJsRemoteRequest($this->data['_jsvalidation'],[$this,'parent::passes']);
         }
 
         return parent::passes();
     }
 
-
-    /**
-     *  Check if Request must be validated by JsValidation
-     *
-     * @return bool
-     */
-    protected function isRemoteValidationRequest()
-    {
-        return !empty($this->data['_jsvalidation']);
-    }
-
-
-    /**
-     * Sets data for validate remote rules
-     *
-     * @param $attribute
-     * @return bool
-     */
-    protected function setRemoteValidationData($attribute)
-    {
-        if ( ! array_key_exists($attribute, $this->rules))
-        {
-            $this->rules=array();
-            return false;
-        }
-
-        $this->rules=array($attribute=>$this->rules[$attribute]);
-
-        foreach ($this->rules[$attribute] as $i=>$rule) {
-            $parsedRule=$this->parseRule($rule);
-            if (!$this->isRemoteRule($parsedRule[0])) {
-                unset($this->rules[$attribute][$i]);
-            }
-        }
-
-        return !empty($this->rules[$attribute]);
-    }
 
 
     /**
@@ -289,42 +246,10 @@ class Validator extends BaseValidator
 
         $method="validate{$rule}";
         if (!method_exists($this,$method)) {
-            return $this->ruleIsExtension($rule);
+            return in_array(snake_case($rule), array_keys($this->extensions));
         }
         return true;
 
-    }
-
-
-
-    /**
-     * Check if rule is extension
-     *
-     * @param $rule
-     * @return bool
-     */
-    protected function ruleIsExtension($rule)
-    {
-        $rule=snake_case($rule);
-        return in_array($rule, array_keys($this->extensions));
-    }
-
-
-
-    /**
-     * Check if rule must be validated remotely
-     *
-     * @param string $rule
-     * @return bool
-     */
-    protected function isRemoteRule($rule)
-    {
-        if (!in_array($rule,['ActiveUrl','Exists', 'Unique']))
-        {
-            return $this->ruleIsExtension($rule);
-        }
-
-        return true;
     }
 
 
