@@ -1,9 +1,9 @@
 /*!
- * jQuery Validation Plugin v1.13.1
+ * jQuery Validation Plugin v1.14.0
  *
  * http://jqueryvalidation.org/
  *
- * Copyright (c) 2014 Jörn Zaefferer
+ * Copyright (c) 2015 Jörn Zaefferer
  * Released under the MIT license
  */
 (function( factory ) {
@@ -40,23 +40,24 @@ $.extend($.fn, {
 
 		if ( validator.settings.onsubmit ) {
 
-			this.validateDelegate( ":submit", "click", function( event ) {
+			this.on( "click.validate", ":submit", function( event ) {
 				if ( validator.settings.submitHandler ) {
 					validator.submitButton = event.target;
 				}
+
 				// allow suppressing validation by adding a cancel class to the submit button
-				if ( $( event.target ).hasClass( "cancel" ) ) {
+				if ( $( this ).hasClass( "cancel" ) ) {
 					validator.cancelSubmit = true;
 				}
 
 				// allow suppressing validation by adding the html5 formnovalidate attribute to the submit button
-				if ( $( event.target ).attr( "formnovalidate" ) !== undefined ) {
+				if ( $( this ).attr( "formnovalidate" ) !== undefined ) {
 					validator.cancelSubmit = true;
 				}
 			});
 
 			// validate the form on submit
-			this.submit( function( event ) {
+			this.on( "submit.validate", function( event ) {
 				if ( validator.settings.debug ) {
 					// prevent form submit to be able to see console output
 					event.preventDefault();
@@ -106,29 +107,23 @@ $.extend($.fn, {
 	},
 	// http://jqueryvalidation.org/valid/
 	valid: function() {
-		var valid, validator;
+		var valid, validator, errorList;
 
 		if ( $( this[ 0 ] ).is( "form" ) ) {
 			valid = this.validate().form();
 		} else {
+			errorList = [];
 			valid = true;
 			validator = $( this[ 0 ].form ).validate();
 			this.each( function() {
 				valid = validator.element( this ) && valid;
+				errorList = errorList.concat( validator.errorList );
 			});
+			validator.errorList = errorList;
 		}
 		return valid;
 	},
-	// attributes: space separated list of attributes to retrieve and remove
-	removeAttrs: function( attributes ) {
-		var result = {},
-			$element = this;
-		$.each( attributes.split( /\s/ ), function( index, value ) {
-			result[ value ] = $element.attr( value );
-			$element.removeAttr( value );
-		});
-		return result;
-	},
+
 	// http://jqueryvalidation.org/rules/
 	rules: function( command, argument ) {
 		var element = this[ 0 ],
@@ -272,7 +267,26 @@ $.extend( $.validator, {
 			}
 		},
 		onkeyup: function( element, event ) {
-			if ( event.which === 9 && this.elementValue( element ) === "" ) {
+			// Avoid revalidate the field when pressing one of the following keys
+			// Shift       => 16
+			// Ctrl        => 17
+			// Alt         => 18
+			// Caps lock   => 20
+			// End         => 35
+			// Home        => 36
+			// Left arrow  => 37
+			// Up arrow    => 38
+			// Right arrow => 39
+			// Down arrow  => 40
+			// Insert      => 45
+			// Num lock    => 144
+			// AltGr key   => 225
+			var excludedKeys = [
+				16, 17, 18, 20, 35, 36, 37,
+				38, 39, 40, 45, 144, 225
+			];
+
+			if ( event.which === 9 && this.elementValue( element ) === "" || $.inArray( event.keyCode, excludedKeys ) !== -1 ) {
 				return;
 			} else if ( element.name in this.submitted || element === this.lastElement ) {
 				this.element( element );
@@ -359,26 +373,26 @@ $.extend( $.validator, {
 			});
 
 			function delegate( event ) {
-				var validator = $.data( this[ 0 ].form, "validator" ),
+				var validator = $.data( this.form, "validator" ),
 					eventType = "on" + event.type.replace( /^validate/, "" ),
 					settings = validator.settings;
-				if ( settings[ eventType ] && !this.is( settings.ignore ) ) {
-					settings[ eventType ].call( validator, this[ 0 ], event );
+				if ( settings[ eventType ] && !$( this ).is( settings.ignore ) ) {
+					settings[ eventType ].call( validator, this, event );
 				}
 			}
+
 			$( this.currentForm )
-				.validateDelegate( ":text, [type='password'], [type='file'], select, textarea, " +
-					"[type='number'], [type='search'] ,[type='tel'], [type='url'], " +
-					"[type='email'], [type='datetime'], [type='date'], [type='month'], " +
-					"[type='week'], [type='time'], [type='datetime-local'], " +
-					"[type='range'], [type='color'], [type='radio'], [type='checkbox']",
-					"focusin focusout keyup", delegate)
+				.on( "focusin.validate focusout.validate keyup.validate",
+					":text, [type='password'], [type='file'], select, textarea, [type='number'], [type='search'], " +
+					"[type='tel'], [type='url'], [type='email'], [type='datetime'], [type='date'], [type='month'], " +
+					"[type='week'], [type='time'], [type='datetime-local'], [type='range'], [type='color'], " +
+					"[type='radio'], [type='checkbox']", delegate)
 				// Support: Chrome, oldIE
 				// "select" is provided as event.target when clicking a option
-				.validateDelegate("select, option, [type='radio'], [type='checkbox']", "click", delegate);
+				.on("click.validate", "select, option, [type='radio'], [type='checkbox']", delegate);
 
 			if ( this.settings.invalidHandler ) {
-				$( this.currentForm ).bind( "invalid-form.validate", this.settings.invalidHandler );
+				$( this.currentForm ).on( "invalid-form.validate", this.settings.invalidHandler );
 			}
 
 			// Add aria-required to any Static/Data/Class required fields before first validation
@@ -471,10 +485,18 @@ $.extend( $.validator, {
 			this.lastElement = null;
 			this.prepareForm();
 			this.hideErrors();
-			this.elements()
-					.removeClass( this.settings.errorClass )
-					.removeData( "previousValue" )
-					.removeAttr( "aria-invalid" );
+			var i, elements = this.elements()
+				.removeData( "previousValue" )
+				.removeAttr( "aria-invalid" );
+
+			if ( this.settings.unhighlight ) {
+				for ( i = 0; elements[ i ]; i++ ) {
+					this.settings.unhighlight.call( this, elements[ i ],
+						this.settings.errorClass, "" );
+				}
+			} else {
+				elements.removeClass( this.settings.errorClass );
+			}
 		},
 
 		numberOfInvalids: function() {
@@ -536,7 +558,7 @@ $.extend( $.validator, {
 			// select all valid inputs inside the form (no submit or reset buttons)
 			return $( this.currentForm )
 			.find( "input, select, textarea" )
-			.not( ":submit, :reset, :image, [disabled], [readonly]" )
+			.not( ":submit, :reset, :image, :disabled" )
 			.not( this.settings.ignore )
 			.filter( function() {
 				if ( !this.name && validator.settings.debug && window.console ) {
@@ -587,7 +609,7 @@ $.extend( $.validator, {
 				type = element.type;
 
 			if ( type === "radio" || type === "checkbox" ) {
-				return $( "input[name='" + element.name + "']:checked" ).val();
+				return this.findByName( element.name ).filter(":checked").val();
 			} else if ( type === "number" && typeof element.validity !== "undefined" ) {
 				return element.validity.badInput ? false : $element.val();
 			}
@@ -637,6 +659,10 @@ $.extend( $.validator, {
 					if ( this.settings.debug && window.console ) {
 						console.log( "Exception occurred when checking element " + element.id + ", check the '" + rule.method + "' method.", e );
 					}
+					if ( e instanceof TypeError ) {
+						e.message += ".  Exception occurred when checking element " + element.id + ", check the '" + rule.method + "' method.";
+					}
+
 					throw e;
 				}
 			}
@@ -786,7 +812,7 @@ $.extend( $.validator, {
 					// If the element is not a child of an associated label, then it's necessary
 					// to explicitly apply aria-describedby
 
-					errorID = error.attr( "id" ).replace( /(:|\.|\[|\])/g, "\\$1");
+					errorID = error.attr( "id" ).replace( /(:|\.|\[|\]|\$)/g, "\\$1");
 					// Respect existing non-error aria-describedby
 					if ( !describedBy ) {
 						describedBy = errorID;
@@ -918,6 +944,15 @@ $.extend( $.validator, {
 				valid: true,
 				message: this.defaultMessage( element, "remote" )
 			});
+		},
+
+		// cleans up all forms and elements, removes validator-specific events
+		destroy: function() {
+			this.resetForm();
+
+			$( this.currentForm )
+				.off( ".validate" )
+				.removeData( "validator" );
 		}
 
 	},
@@ -955,6 +990,29 @@ $.extend( $.validator, {
 		return rules;
 	},
 
+	normalizeAttributeRule: function( rules, type, method, value ) {
+
+		// convert the value to a number for number inputs, and for text for backwards compability
+		// allows type="date" and others to be compared as strings
+		if ( /min|max/.test( method ) && ( type === null || /number|range|text/.test( type ) ) ) {
+			value = Number( value );
+
+			// Support Opera Mini, which returns NaN for undefined minlength
+			if ( isNaN( value ) ) {
+				value = undefined;
+			}
+		}
+
+		if ( value || value === 0 ) {
+			rules[ method ] = value;
+		} else if ( type === method && type !== "range" ) {
+
+			// exception: the jquery validate 'range' method
+			// does not test for the html5 'range' type
+			rules[ method ] = true;
+		}
+	},
+
 	attributeRules: function( element ) {
 		var rules = {},
 			$element = $( element ),
@@ -966,30 +1024,20 @@ $.extend( $.validator, {
 			// support for <input required> in both html5 and older browsers
 			if ( method === "required" ) {
 				value = element.getAttribute( method );
+
 				// Some browsers return an empty string for the required attribute
 				// and non-HTML5 browsers might have required="" markup
 				if ( value === "" ) {
 					value = true;
 				}
+
 				// force non-HTML5 browsers to return bool
 				value = !!value;
 			} else {
 				value = $element.attr( method );
 			}
 
-			// convert the value to a number for number inputs, and for text for backwards compability
-			// allows type="date" and others to be compared as strings
-			if ( /min|max/.test( method ) && ( type === null || /number|range|text/.test( type ) ) ) {
-				value = Number( value );
-			}
-
-			if ( value || value === 0 ) {
-				rules[ method ] = value;
-			} else if ( type === method && type !== "range" ) {
-				// exception: the jquery validate 'range' method
-				// does not test for the html5 'range' type
-				rules[ method ] = true;
-			}
+			this.normalizeAttributeRule( rules, type, method, value );
 		}
 
 		// maxlength may be returned as -1, 2147483647 ( IE ) and 524288 ( safari ) for text inputs
@@ -1001,13 +1049,14 @@ $.extend( $.validator, {
 	},
 
 	dataRules: function( element ) {
-		var method, value,
-			rules = {}, $element = $( element );
+		var rules = {},
+			$element = $( element ),
+			type = element.getAttribute( "type" ),
+			method, value;
+
 		for ( method in $.validator.methods ) {
 			value = $element.data( "rule" + method.charAt( 0 ).toUpperCase() + method.substring( 1 ).toLowerCase() );
-			if ( value !== undefined ) {
-				rules[ method ] = value;
-			}
+			this.normalizeAttributeRule( rules, type, method, value );
 		}
 		return rules;
 	},
@@ -1125,12 +1174,12 @@ $.extend( $.validator, {
 			if ( this.checkable( element ) ) {
 				return this.getLength( value, element ) > 0;
 			}
-			return $.trim( value ).length > 0;
+			return value.length > 0;
 		},
 
 		// http://jqueryvalidation.org/email-method/
 		email: function( value, element ) {
-			// From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
+			// From https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address
 			// Retrieved 2014-01-14
 			// If you have a problem with this implementation, report a bug against the above spec
 			// Or use custom methods to implement your own email validation
@@ -1139,8 +1188,12 @@ $.extend( $.validator, {
 
 		// http://jqueryvalidation.org/url-method/
 		url: function( value, element ) {
-			// contributed by Scott Gonzalez: http://projects.scottsplayground.com/iri/
-			return this.optional( element ) || /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test( value );
+
+			// Copyright (c) 2010-2013 Diego Perini, MIT licensed
+			// https://gist.github.com/dperini/729294
+			// see also https://mathiasbynens.be/demo/url-regex
+			// modified to allow protocol-relative URLs
+			return this.optional( element ) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test( value );
 		},
 
 		// http://jqueryvalidation.org/date-method/
@@ -1155,7 +1208,7 @@ $.extend( $.validator, {
 
 		// http://jqueryvalidation.org/number-method/
 		number: function( value, element ) {
-			return this.optional( element ) || /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test( value );
+			return this.optional( element ) || /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test( value );
 		},
 
 		// http://jqueryvalidation.org/digits-method/
@@ -1164,7 +1217,7 @@ $.extend( $.validator, {
 		},
 
 		// http://jqueryvalidation.org/creditcard-method/
-		// based on http://en.wikipedia.org/wiki/Luhn/
+		// based on http://en.wikipedia.org/wiki/Luhn_algorithm
 		creditcard: function( value, element ) {
 			if ( this.optional( element ) ) {
 				return "dependency-mismatch";
@@ -1240,7 +1293,7 @@ $.extend( $.validator, {
 			// TODO find a way to bind the event just once, avoiding the unbind-rebind overhead
 			var target = $( param );
 			if ( this.settings.onfocusout ) {
-				target.unbind( ".validate-equalTo" ).bind( "blur.validate-equalTo", function() {
+				target.off( ".validate-equalTo" ).on( "blur.validate-equalTo", function() {
 					$( element ).valid();
 				});
 			}
@@ -1274,7 +1327,6 @@ $.extend( $.validator, {
 			data = {};
 			data[ element.name ] = value;
 			$.ajax( $.extend( true, {
-				url: param,
 				mode: "abort",
 				port: "validate" + element.name,
 				dataType: "json",
@@ -1305,14 +1357,9 @@ $.extend( $.validator, {
 			}, param ) );
 			return "pending";
 		}
-
 	}
 
 });
-
-$.format = function deprecated() {
-	throw "$.format has been deprecated. Please use $.validator.format instead.";
-};
 
 // ajax mode: abort
 // usage: $.ajax({ mode: "abort"[, port: "uniqueport"]});
@@ -1348,20 +1395,6 @@ if ( $.ajaxPrefilter ) {
 	};
 }
 
-// provides delegate(type: String, delegate: Selector, handler: Callback) plugin for easier event delegation
-// handler is only called when $(event.target).is(delegate), in the scope of the jquery-object for event.target
-
-$.extend($.fn, {
-	validateDelegate: function( delegate, type, handler ) {
-		return this.bind(type, function( event ) {
-			var target = $(event.target);
-			if ( target.is(delegate) ) {
-				return handler.apply(target, arguments);
-			}
-		});
-	}
-});
-
 }));
 function strlen(string) {
   //  discuss at: http://phpjs.org/functions/strlen/
@@ -1386,11 +1419,11 @@ function strlen(string) {
     lgth = 0;
 
   if (!this.php_js || !this.php_js.ini || !this.php_js.ini['unicode.semantics'] || this.php_js.ini[
-    'unicode.semantics'].local_value.toLowerCase() !== 'on') {
+      'unicode.semantics'].local_value.toLowerCase() !== 'on') {
     return string.length;
   }
 
-  var getWholeChar = function (str, i) {
+  var getWholeChar = function(str, i) {
     var code = str.charCodeAt(i);
     var next = '',
       prev = '';
@@ -1441,6 +1474,7 @@ function strtotime(text, now) {
   //    input by: David
   // bugfixed by: Wagner B. Soares
   // bugfixed by: Artur Tchernychev
+  // bugfixed by: Stephan Bösch-Plepelits (http://github.com/plepe)
   //        note: Examples all have a fixed timestamp to prevent tests to fail because of variable time(zones)
   //   example 1: strtotime('+1 day', 1129633200);
   //   returns 1: 1129719600
@@ -1450,6 +1484,12 @@ function strtotime(text, now) {
   //   returns 3: 1127041200
   //   example 4: strtotime('2009-05-04 08:30:00 GMT');
   //   returns 4: 1241425800
+  //   example 5: strtotime('2009-05-04 08:30:00+00');
+  //   returns 5: 1241425800
+  //   example 6: strtotime('2009-05-04 08:30:00+02:00');
+  //   returns 6: 1241418600
+  //   example 7: strtotime('2009-05-04T08:30:00Z');
+  //   returns 7: 1241425800
 
   var parsed, match, today, year, date, days, ranges, len, times, regex, i, fail = false;
 
@@ -1475,126 +1515,116 @@ function strtotime(text, now) {
   if (match && match[2] === match[4]) {
     if (match[1] > 1901) {
       switch (match[2]) {
-      case '-':
-        {
-          // YYYY-M-D
-          if (match[3] > 12 || match[5] > 31) {
-            return fail;
-          }
-
-          return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-        }
-      case '.':
-        {
-          // YYYY.M.D is not parsed by strtotime()
+      case '-': {
+        // YYYY-M-D
+        if (match[3] > 12 || match[5] > 31) {
           return fail;
         }
-      case '/':
-        {
-          // YYYY/M/D
-          if (match[3] > 12 || match[5] > 31) {
-            return fail;
-          }
 
-          return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+        return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
+          match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+      }
+      case '.': {
+        // YYYY.M.D is not parsed by strtotime()
+        return fail;
+      }
+      case '/': {
+        // YYYY/M/D
+        if (match[3] > 12 || match[5] > 31) {
+          return fail;
         }
+
+        return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
+          match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+      }
       }
     } else if (match[5] > 1901) {
       switch (match[2]) {
-      case '-':
-        {
-          // D-M-YYYY
-          if (match[3] > 12 || match[1] > 31) {
-            return fail;
-          }
-
-          return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+      case '-': {
+        // D-M-YYYY
+        if (match[3] > 12 || match[1] > 31) {
+          return fail;
         }
-      case '.':
-        {
-          // D.M.YYYY
-          if (match[3] > 12 || match[1] > 31) {
-            return fail;
-          }
 
-          return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+        return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
+          match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+      }
+      case '.': {
+        // D.M.YYYY
+        if (match[3] > 12 || match[1] > 31) {
+          return fail;
         }
-      case '/':
-        {
-          // M/D/YYYY
-          if (match[1] > 12 || match[3] > 31) {
-            return fail;
-          }
 
-          return new Date(match[5], parseInt(match[1], 10) - 1, match[3],
-            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+        return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
+          match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+      }
+      case '/': {
+        // M/D/YYYY
+        if (match[1] > 12 || match[3] > 31) {
+          return fail;
         }
+
+        return new Date(match[5], parseInt(match[1], 10) - 1, match[3],
+          match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+      }
       }
     } else {
       switch (match[2]) {
-      case '-':
-        {
-          // YY-M-D
-          if (match[3] > 12 || match[5] > 31 || (match[1] < 70 && match[1] > 38)) {
-            return fail;
-          }
-
-          year = match[1] >= 0 && match[1] <= 38 ? +match[1] + 2000 : match[1];
-          return new Date(year, parseInt(match[3], 10) - 1, match[5],
-            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-        }
-      case '.':
-        {
-          // D.M.YY or H.MM.SS
-          if (match[5] >= 70) {
-            // D.M.YY
-            if (match[3] > 12 || match[1] > 31) {
-              return fail;
-            }
-
-            return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-              match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-          }
-          if (match[5] < 60 && !match[6]) {
-            // H.MM.SS
-            if (match[1] > 23 || match[3] > 59) {
-              return fail;
-            }
-
-            today = new Date();
-            return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-              match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
-          }
-
-          // invalid format, cannot be parsed
+      case '-': {
+        // YY-M-D
+        if (match[3] > 12 || match[5] > 31 || (match[1] < 70 && match[1] > 38)) {
           return fail;
         }
-      case '/':
-        {
-          // M/D/YY
-          if (match[1] > 12 || match[3] > 31 || (match[5] < 70 && match[5] > 38)) {
+
+        year = match[1] >= 0 && match[1] <= 38 ? +match[1] + 2000 : match[1];
+        return new Date(year, parseInt(match[3], 10) - 1, match[5],
+          match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+      }
+      case '.': {
+        // D.M.YY or H.MM.SS
+        if (match[5] >= 70) {
+          // D.M.YY
+          if (match[3] > 12 || match[1] > 31) {
             return fail;
           }
 
-          year = match[5] >= 0 && match[5] <= 38 ? +match[5] + 2000 : match[5];
-          return new Date(year, parseInt(match[1], 10) - 1, match[3],
+          return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
             match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
         }
-      case ':':
-        {
-          // HH:MM:SS
-          if (match[1] > 23 || match[3] > 59 || match[5] > 59) {
+        if (match[5] < 60 && !match[6]) {
+          // H.MM.SS
+          if (match[1] > 23 || match[3] > 59) {
             return fail;
           }
 
           today = new Date();
           return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-            match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
+            match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
         }
+
+        // invalid format, cannot be parsed
+        return fail;
+      }
+      case '/': {
+        // M/D/YY
+        if (match[1] > 12 || match[3] > 31 || (match[5] < 70 && match[5] > 38)) {
+          return fail;
+        }
+
+        year = match[5] >= 0 && match[5] <= 38 ? +match[5] + 2000 : match[5];
+        return new Date(year, parseInt(match[1], 10) - 1, match[3],
+          match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+      }
+      case ':': {
+        // HH:MM:SS
+        if (match[1] > 23 || match[3] > 59 || match[5] > 59) {
+          return fail;
+        }
+
+        today = new Date();
+        return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
+          match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
+      }
       }
     }
   }
@@ -1607,24 +1637,44 @@ function strtotime(text, now) {
   if (!isNaN(parsed = Date.parse(text))) {
     return parsed / 1000 | 0;
   }
+  // Browsers != Chrome have problems parsing ISO 8601 date strings, as they do
+  // not accept lower case characters, space, or shortened time zones.
+  // Therefore, fix these problems and try again.
+  // Examples:
+  //   2015-04-15 20:33:59+02
+  //   2015-04-15 20:33:59z
+  //   2015-04-15t20:33:59+02:00
+  if (match = text.match(
+      /^([0-9]{4}-[0-9]{2}-[0-9]{2})[ t]([0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?)([\+-][0-9]{2}(:[0-9]{2})?|z)/)) {
+    // fix time zone information
+    if (match[4] == 'z') {
+      match[4] = 'Z';
+    } else if (match[4].match(/^([\+-][0-9]{2})$/)) {
+      match[4] = match[4] + ':00';
+    }
+
+    if (!isNaN(parsed = Date.parse(match[1] + 'T' + match[2] + match[4]))) {
+      return parsed / 1000 | 0;
+    }
+  }
 
   date = now ? new Date(now * 1000) : new Date();
   days = {
-    'sun': 0,
-    'mon': 1,
-    'tue': 2,
-    'wed': 3,
-    'thu': 4,
-    'fri': 5,
-    'sat': 6
+    'sun' : 0,
+    'mon' : 1,
+    'tue' : 2,
+    'wed' : 3,
+    'thu' : 4,
+    'fri' : 5,
+    'sat' : 6
   };
   ranges = {
-    'yea': 'FullYear',
-    'mon': 'Month',
-    'day': 'Date',
-    'hou': 'Hours',
-    'min': 'Minutes',
-    'sec': 'Seconds'
+    'yea' : 'FullYear',
+    'mon' : 'Month',
+    'day' : 'Date',
+    'hou' : 'Hours',
+    'min' : 'Minutes',
+    'sec' : 'Seconds'
   };
 
   function lastNext(type, range, modifier) {
@@ -1697,8 +1747,8 @@ function strtotime(text, now) {
   return (date.getTime() / 1000);
 }
 /*!
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014
- * @version 1.3.0
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
+ * @version 1.3.1
  *
  * Date formatter utility library, that allows you to format date and 
  * time variables or Date objects using PHP DateTime format.
@@ -1889,7 +1939,6 @@ DateFormatter.prototype = {
                         break;
                     case 2:
                         var year = vDate.getFullYear();
-
                         if (vParts[i].length < 4) {
                             vDate.setFullYear(parseInt(year.toString().substr(0, 4 - vParts[i].length) + vParts[i]));
                             vDigit = vParts[i].length;
@@ -1972,7 +2021,7 @@ DateFormatter.prototype = {
                             vDateStr += vDate.getFullYear();
                             break;
                         case 'y':
-                            vDateStr += vDate.getFullYear().substr(2);
+                            vDateStr += vDate.getFullYear().toString().substr(2);
                             break;
                         case 'g':
                             vDateStr += (vDate.getHours() % 12) + 1;
@@ -1997,7 +2046,7 @@ DateFormatter.prototype = {
                             vDateStr += ((vDate.getSeconds() <= 9) ? '0' : '') + vDate.getSeconds();
                             break;
                         case 'U':
-                            vDateStr += vDate.getMilliseconds() / 1000;
+                            vDateStr += vDate.getTime() / 1000;
                             break;
                     }
 
@@ -2009,6 +2058,7 @@ DateFormatter.prototype = {
         }
     }
 };
+
 /*!
  * Laravel Javascript Validation
  *
