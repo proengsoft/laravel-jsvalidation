@@ -1,6 +1,5 @@
 <?php namespace Proengsoft\JsValidation;
 
-use Proengsoft\JsValidation\Traits\ValidateRemote;
 use Proengsoft\JsValidation\Traits\JavascriptValidations;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
@@ -101,31 +100,30 @@ class Validator extends BaseValidator
      */
     protected function generateJavascriptValidations()
     {
-        // Reinitializing arrays
-        $jsRules=[];
-        $jsMessages=[];
 
-        // We'll spin through each rule, validating the attributes attached to that
-        // rule. All enabled rules will be converted.
-        foreach ($this->rules as $attribute => $rawRules) {
-            // Check if JS Validation is disabled for this attribute
-            if (!$this->jsValidationEnabled($attribute)) {
-                continue;
-            }
+        // Check if JS Validation is disabled for this attribute
+        $validatableRules=array_filter($this->rules,[$this,'jsValidationEnabled'],ARRAY_FILTER_USE_KEY );
 
-            // Convert each rules and messages
-            list($attribute, $rules, $messages)=$this->jsConvertRules($attribute,$rawRules);
+        // Convert each rules and messages
+        $convertedRules=array_map([$this,'jsConvertRules'],array_keys($validatableRules), $validatableRules);
 
-            if (!empty($rules))
-            {
-                $jsRules[$attribute]=array();
-                $jsMessages[$attribute]=array();
-                $jsRules[$attribute]=array_merge($jsRules[$attribute], $rules);
-                $jsMessages[$attribute]=array_merge($jsMessages[$attribute], $messages);
-            }
+        // Filter empty rules
+        $convertedRules=array_filter($convertedRules, function ($v) {
+            return !empty($v[1]);
+        } );
 
-        }
+        // Format output
+        $initial=array([],[]);
+        list ($jsRules, $jsMessages) = array_reduce($convertedRules,function($result, $item){
+            $attribute=$item[0];
+            $result[0][$attribute]=(empty($result[0][$attribute]))?array():$result[0][$attribute];
+            $result[1][$attribute]=(empty($result[1][$attribute]))?array():$result[1][$attribute];
+            $result[0][$attribute]=array_merge($result[0][$attribute], $item[1]);
+            $result[1][$attribute]=array_merge($result[1][$attribute], $item[2]);
+            return $result;
+        },$initial);
 
+        // return value
         return array($jsRules,$jsMessages);
     }
 

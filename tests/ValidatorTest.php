@@ -72,6 +72,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
 
+
     public function testJsRemote() {
 
         $rule=['name'=>'active_url'];
@@ -90,6 +91,32 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
 
+    public function testJsRemoteCustomRule() {
+
+        $rule=['name'=>'foo'];
+        $message=['name.foo'=>'custom rule %replace%'];
+        $expected=array(
+            'rules' => array('name'=>['jsValidationRemote'=>['name','encrypted token']]),
+            'messages'=>array('name'=>['jsValidationRemote'=>'custom rule -replaced text-'])
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+
+        $validator->addExtension('foo', function($attribute, $value, $parameters) {
+            return $value == 'foo';
+        });
+
+        $validator->addReplacer('foo', function($message, $attribute, $rule, $parameters) {
+            return str_replace('%replace%','-replaced text-',$message);
+        });
+
+
+        Session::shouldReceive('token')->once();
+        Crypt::shouldReceive('encrypt')->once()->andReturn('encrypted token');
+        $data=$validator->js();
+
+        $this->assertEquals($expected,$data);
+    }
 
     public function testNotImplementedRules()
     {
@@ -132,14 +159,29 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testAfter(){
 
         $mayDay="May 4, 1886";
-        $rule=['name'=>'after:"'.$mayDay.'"'];
-        $message=['name.after'=>'May Day'];
+
+        $rule=[
+            'date'=>'after:"'.$mayDay.'"',
+            'other_date'=>'after:date',
+            'other'=>'after:not_exists',
+        ];
+        $message=[
+            'date.after'=>'May Day',
+            'other_date.after'=>'After May Day',
+            'other.after'=>'other invalid'
+        ];
+
+
         $expected=array(
             'rules' => array(
-                'name'=> ['laravelAfter'=>array(strtotime($mayDay))]
+                'date'=> ['laravelAfter'=>array(strtotime($mayDay))],
+                'other_date'=> ['laravelAfter'=>array("date")],
+                'other'=> ['laravelAfter'=>array("false")],
             ),
             'messages'=>array(
-                'name'=> ['laravelAfter'=>'May Day']
+                'date'=> ['laravelAfter'=>'May Day'],
+                'other_date'=> ['laravelAfter'=>'After May Day'],
+                'other'=> ['laravelAfter'=>'other invalid'],
             )
         );
 
@@ -154,14 +196,28 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testBefore(){
 
         $mayDay="May 4, 1886";
-        $rule=['name'=>'before:"'.$mayDay.'"'];
-        $message=['name.before'=>'May Day'];
+        $rule=[
+            'date'=>'before:"'.$mayDay.'"',
+            'other_date'=>'before:date',
+            'other'=>'before:not_exists',
+        ];
+        $message=[
+            'date.before'=>'May Day',
+            'other_date.before'=>'Before May Day',
+            'other.before'=>'other invalid'
+        ];
+
+
         $expected=array(
             'rules' => array(
-                'name'=> ['laravelBefore'=>array(strtotime($mayDay))]
+                'date'=> ['laravelBefore'=>array(strtotime($mayDay))],
+                'other_date'=> ['laravelBefore'=>array("date")],
+                'other'=> ['laravelBefore'=>array("false")],
             ),
             'messages'=>array(
-                'name'=> ['laravelBefore'=>'May Day']
+                'date'=> ['laravelBefore'=>'May Day'],
+                'other_date'=> ['laravelBefore'=>'Before May Day'],
+                'other'=> ['laravelBefore'=>'other invalid'],
             )
         );
 
