@@ -102,7 +102,8 @@ class Validator extends BaseValidator
     {
 
         // Check if JS Validation is disabled for this attribute
-        $validatableRules=array_filter($this->rules,[$this,'jsValidationEnabled'],ARRAY_FILTER_USE_KEY );
+        $validatableAttributes=array_filter(array_keys($this->rules),[$this,'jsValidationEnabled']);
+        $validatableRules=array_intersect_key ($this->rules, array_flip($validatableAttributes));
 
         // Convert each rules and messages
         $convertedRules=array_map([$this,'jsConvertRules'],array_keys($validatableRules), $validatableRules);
