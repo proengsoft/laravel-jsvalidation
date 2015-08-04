@@ -3,9 +3,8 @@
 use Proengsoft\JsValidation\Traits\JavascriptValidations;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Validator as BaseValidator;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 
 /**
@@ -32,17 +31,14 @@ class Validator extends BaseValidator
 
         if ($this->isRemoteValidationRequest())
         {
-            $this->setRemoteValidationData($this->data['_jsvalidation']);
-            if (parent::passes()) {
-                $message=true;
+            if ($this->setRemoteValidationData($this->data['_jsvalidation'])) {
+                $message=parent::passes()?true:$this->messages()->get($this->data['_jsvalidation']);
+                throw new HttpResponseException(
+                    new JsonResponse($message, 200)
+                );
             } else {
-                $message=$this->messages()->get($this->data['_jsvalidation']);
+                throw new BadRequestHttpException("Bad request");
             }
-
-            throw new HttpResponseException(
-                new JsonResponse($message, 200)
-            );
-
         }
 
         return parent::passes();
@@ -64,21 +60,29 @@ class Validator extends BaseValidator
      * Sets data for validate remote rules
      *
      * @param $attribute
+     * @return bool
      */
     protected function setRemoteValidationData($attribute)
     {
-        foreach ($this->rules as $attr=>$rules) {
-            if ($attr == $attribute) {
-                foreach ($rules as $i=>$rule) {
-                    $parsedRule=$this->parseRule($rule);
-                    if (!$this->isRemoteRule($parsedRule[0])) {
-                        unset($this->rules[$attr][$i]);
-                    }
-                }
-            } else {
-                unset($this->rules[$attr]);
+        if ( ! array_key_exists($attribute, $this->rules))
+        {
+            $this->rules=array();
+            return false;
+        }
+
+        $rules=$this->rules[$attribute];
+        $this->rules=array();
+        $this->rules[$attribute]=$rules;
+
+        foreach ($rules as $i=>$rule) {
+            $parsedRule=$this->parseRule($rule);
+            if (!$this->isRemoteRule($parsedRule[0])) {
+                unset($this->rules[$attribute][$i]);
             }
         }
+
+        return !empty($this->rules[$attribute]);
+
     }
 
 
@@ -339,28 +343,6 @@ class Validator extends BaseValidator
             'rules' => $jsRules,
             'messages' => $jsMessages
         ];
-    }
-
-
-
-    /**
-     * Returns Javascript parameters for remote validated rules
-     *
-     * @param $attribute
-     * @return array
-     */
-    protected function jsRemoteRule($attribute)
-    {
-        $newRule = 'jsValidationRemote';
-
-        $token= Session::token();
-        $token=Crypt::encrypt($token);
-        $params = [
-            $attribute,
-            $token
-        ];
-
-        return [$attribute,$newRule, $params];
     }
 
 

@@ -1,5 +1,9 @@
 <?php namespace Proengsoft\JsValidation\Traits;
 
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
+
+
 trait JavascriptValidations
 {
 
@@ -126,5 +130,29 @@ trait JavascriptValidations
         $parameters = array_map('strtolower', $parameters);
         return [$attribute,$rule, $parameters];
     }
+
+
+
+    /**
+     * Returns Javascript parameters for remote validated rules
+     *
+     * @param $attribute
+     * @return array
+     */
+    protected function jsRemoteRule($attribute)
+    {
+        $newRule = 'jsValidationRemote';
+
+        $token= Session::token();
+        $token=Crypt::encrypt($token);
+        $params = [
+            $attribute,
+            $token
+        ];
+
+        return [$attribute,$newRule, $params];
+    }
+
+
 
 }

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\TestCase;
 use Proengsoft\JsValidation\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 
 function csrf_token() {
@@ -316,10 +317,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $rules = ['name'=>'active_url|required'];
 
 
-        $expected=array(
-            'rules' => array('name'=>['laravelRequired'=>[]]),
-            'messages' =>  array('name'=>['laravelRequired'=>'name required']),
-        );
         $validator=new Validator($this->translator, $data, $rules,$messages);
 
         try {
@@ -330,6 +327,32 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             $this->assertEquals(200,$response->getStatusCode());
             $this->assertEquals('true',$response->getContent());
         }
+
+    }
+
+
+    public function testRemoteInvalid()
+    {
+
+        $messages = [
+            'other.required'=>'other required',
+            'name.active_url'=>'active_url',
+        ];
+        $data = ['_jsvalidation'=>'badname','name'=>'http://www.google.com'];
+        $rules = ['name'=>'active_url','other'=>'required'];
+
+
+        $validator=new Validator($this->translator, $data, $rules,$messages);
+
+        try {
+            $validator->passes();
+
+        } catch (BadRequestHttpException $ex) {
+            $this->assertEquals(400,$ex->getStatusCode());
+            $this->assertEquals("Bad request",$ex->getMessage());
+        }
+
+
 
     }
 
