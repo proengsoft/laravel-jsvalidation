@@ -113,19 +113,23 @@ class Validator extends BaseValidator
             return !empty($v[1]);
         } );
 
-        // Format output
-        $initial=array([],[]);
-        list ($jsRules, $jsMessages) = array_reduce($convertedRules,function($result, $item){
+        $jsRules=$this->prepareJsValidations($convertedRules, 1);
+        $jsMessages=$this->prepareJsValidations($convertedRules, 2);
+
+        return array($jsRules,$jsMessages);
+    }
+
+
+    private function prepareJsValidations($rules, $context)
+    {
+        $initial=array();
+        return array_reduce($rules,function($result, $item) use ($context){
             $attribute=$item[0];
-            $result[0][$attribute]=(empty($result[0][$attribute]))?array():$result[0][$attribute];
-            $result[1][$attribute]=(empty($result[1][$attribute]))?array():$result[1][$attribute];
-            $result[0][$attribute]=array_merge($result[0][$attribute], $item[1]);
-            $result[1][$attribute]=array_merge($result[1][$attribute], $item[2]);
+            $result[$attribute]=(empty($result[$attribute]))?array():$result[$attribute];
+            $result[$attribute]=array_merge($result[$attribute], $item[$context]);
             return $result;
         },$initial);
 
-        // return value
-        return array($jsRules,$jsMessages);
     }
 
 
