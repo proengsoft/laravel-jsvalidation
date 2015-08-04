@@ -70,11 +70,9 @@ class Validator extends BaseValidator
             return false;
         }
 
-        $rules=$this->rules[$attribute];
-        $this->rules=array();
-        $this->rules[$attribute]=$rules;
+        $this->rules=array($attribute=>$this->rules[$attribute]);
 
-        foreach ($rules as $i=>$rule) {
+        foreach ($this->rules[$attribute] as $i=>$rule) {
             $parsedRule=$this->parseRule($rule);
             if (!$this->isRemoteRule($parsedRule[0])) {
                 unset($this->rules[$attribute][$i]);
@@ -82,7 +80,6 @@ class Validator extends BaseValidator
         }
 
         return !empty($this->rules[$attribute]);
-
     }
 
 
