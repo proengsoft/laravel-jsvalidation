@@ -148,27 +148,17 @@ class Validator extends BaseValidator
         foreach ($rules as $rawRule) {
 
             list($rule, $parameters) = $this->parseRule($rawRule);
+            if (!$this->isImplemented($rule)) continue;
 
-            // Check if rule is implemented
-            if (!$this->isImplemented($rule)) {
-                continue;
-            }
-
-            // Gets the message
             $message = $this->getJsMessage($attribute, $rule, $parameters);
-
-            // call the convert function if is defined
             list($attribute, $rule, $jsParams)= $this->getJsRule($attribute, $rule, $parameters);
 
-            // Rule name must be unique
             $rule = $this->jsParseRuleName($rule, $jsRules);
-
             $jsRules[$rule]=$jsParams;
             $jsMessages[$rule]=$message;
         }
 
         return [$attribute, $jsRules, $jsMessages];
-
     }
 
 
