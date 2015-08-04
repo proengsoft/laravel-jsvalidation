@@ -2,10 +2,7 @@
 
 use Proengsoft\JsValidation\Traits\RemoteValidation;
 use Proengsoft\JsValidation\Traits\JavascriptRules;
-use Illuminate\Http\Exception\HttpResponseException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Validator as BaseValidator;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 
 /**
@@ -32,7 +29,7 @@ class Validator extends BaseValidator
 
         if ($this->isRemoteValidationRequest())
         {
-            $this->validateJsRemoteRequest($this->data['_jsvalidation'],[$this,'parent::passes']);
+            return $this->validateJsRemoteRequest($this->data['_jsvalidation'],[$this,'parent::passes']);
         }
 
         return parent::passes();
@@ -78,6 +75,13 @@ class Validator extends BaseValidator
     }
 
 
+    /**
+     *  Prepare the rules and messages to be parsed with Javascript
+     *
+     * @param $rules
+     * @param $context
+     * @return mixed
+     */
     private function prepareJsValidations($rules, $context)
     {
         $initial=array();

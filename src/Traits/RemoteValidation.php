@@ -65,6 +65,7 @@ trait RemoteValidation
      *
      * @param $attribute
      * @param $callable
+     * @return bool
      */
     protected function validateJsRemoteRequest($attribute, $callable)
     {
@@ -78,8 +79,8 @@ trait RemoteValidation
         }
 
         throw new HttpResponseException(
-            new JsonResponse($message, 200))
-        ;
+            new JsonResponse($message, 200));
+
     }
 
 
