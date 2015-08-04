@@ -210,7 +210,7 @@ class Validator extends BaseValidator
      */
     private function getTypeMessage($attribute, $rule) {
 
-        // @todo find more elegant solution to set the attribute file type
+        // find more elegant solution to set the attribute file type
         $prevFiles=$this->files;
         if ($this->hasRule($attribute, array('Mimes','Image')))
         {
