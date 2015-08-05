@@ -132,20 +132,18 @@ $.extend(true, laravelValidation, {
          * Validate that an attribute exists when another attribute has a given value.
          */
         $.validator.addMethod("laravelRequiredIf", function(value, element, params) {
-            var $el = helpers.getElement(element,params[0]);
-            if ($el==false) return true;
 
-            if ( this.settings.onfocusout ) {
-                $el.unbind( ".validate-laravelRequiredIf" ).bind( "blur.validate-laravelRequiredIf", function() {
-                    $( element ).valid();
-                });
-            }
+            var el = helpers.getElement(element,params[0]);
+            if (el==false) return true;
 
-            if ($el.val()==params[1]) {
+            var val=this.elementValue(el[0]);
+
+            if (val==params[1]) {
                 return $.validator.methods.required.call(this, value, element, true);
             } else {
                 return true;
             }
+
 
         }, $.validator.format("The :attribute field is required when {0} is {1}."));
 
