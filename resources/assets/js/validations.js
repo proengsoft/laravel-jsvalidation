@@ -398,7 +398,9 @@ $.extend(true, laravelValidation, {
             // Converting php regular expression
             var phpReg= new RegExp('^(?:\/)(.*\\\/?[^\/]*|[^\/]*)(?:\/)([gmixXsuUAJ]*)?$');
             var matches=params[0].match(phpReg);
-            if (matches==null) return false;
+            if (matches==null) {
+                return false;
+            }
             // checking modifiers
             var php_modifiers=[];
             if (matches[2]!=undefined) {

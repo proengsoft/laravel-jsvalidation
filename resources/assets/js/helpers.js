@@ -38,7 +38,9 @@ $.extend(true, laravelValidation, {
          */
         selector: function (names) {
             var selector = [];
-            if (!$.isArray(names)) names = [names];
+            if (!$.isArray(names))  {
+                names = [names];
+            }
             for (var i = 0; i < names.length; i++) {
                 selector.push("[name='" + names[i] + "']");
             }
