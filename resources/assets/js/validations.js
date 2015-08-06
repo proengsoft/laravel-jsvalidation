@@ -44,17 +44,17 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWith", function(value, element, params) {
             var validator=this,
                 required=false;
-            var onfocusout=this.settings.onfocusout;
+            var currentObject=this;
             $.each(params,function(i,param) {
-                var $el = helpers.getElement(element,param);
-
-                if ($el != false && onfocusout ) {
-                    $el.unbind( ".validate-laravelRequiredWith" ).bind( "blur.validate-laravelRequiredWith", function() {
+                var el=currentObject.findByName(param);
+                if (el[0]!=undefined && currentObject.settings.onfocusout) {
+                    el.unbind( ".validate-laravelRequiredWith" ).bind( "blur.validate-laravelRequiredWith", function() {
                         $( element ).valid();
                     });
                 }
-
-                required=required || $el==false || $.validator.methods.required.call(validator, $el.val(),$el[0],true);
+                var currentValue=currentObject.elementValue(el[0]);
+                required=required ||  el[0]==undefined
+                    || $.validator.methods.required.call(validator,currentValue,el[0],true);
             });
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
@@ -68,15 +68,17 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWithAll", function(value, element, params) {
             var validator=this,
                 required=true;
-            var onfocusout=this.settings.onfocusout;
+            var currentObject=this;
             $.each(params,function(i,param) {
-                var $el = helpers.getElement(element,param);
-                if ($el != false && onfocusout ) {
-                    $el.unbind( ".validate-laravelRequiredWithAll" ).bind( "blur.validate-laravelRequiredWithAll", function() {
+                var el=currentObject.findByName(param);
+                if (el[0]!=undefined && currentObject.settings.onfocusout) {
+                    el.unbind( ".validate-laravelRequiredWithAll" ).bind( "blur.validate-laravelRequiredWithAll", function() {
                         $( element ).valid();
                     });
                 }
-                required=required && ($el==false || $.validator.methods.required.call(validator, $el.val(),$el[0],true));
+                var currentValue=currentObject.elementValue(el[0]);
+                required = required &&
+                    (  el[0]==undefined || $.validator.methods.required.call(validator, currentValue, el[0],true));
             });
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
@@ -90,15 +92,17 @@ $.extend(true, laravelValidation, {
         $.validator.addMethod("laravelRequiredWithout", function(value, element, params) {
             var validator=this,
                 required=false;
-            var onfocusout=this.settings.onfocusout;
+            var currentObject=this;
             $.each(params,function(i,param) {
-                var $el = helpers.getElement(element,param);
-                if ($el != false && onfocusout ) {
-                    $el.unbind( ".validate-laravelRequiredWithout" ).bind( "blur.validate-laravelRequiredWithout", function() {
+                var el=currentObject.findByName(param);
+                if (el[0]!=undefined && currentObject.settings.onfocusout) {
+                    el.unbind( ".validate-laravelRequiredWithout" ).bind( "blur.validate-laravelRequiredWithout", function() {
                         $( element ).valid();
                     });
                 }
-                required=required || $el==false || !$.validator.methods.required.call(validator, $el.val(),$el[0],true);
+                var currentValue=currentObject.elementValue(el[0]);
+                required=required || el[0]==undefined
+                    || !$.validator.methods.required.call(validator, currentValue,el[0],true);
             });
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
@@ -111,21 +115,24 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelRequiredWithoutAll", function(value, element, params) {
             var validator=this,
-                required=true;
-            var onfocusout=this.settings.onfocusout;
-            $.each(params,function(i,param) {
-                var $el = helpers.getElement(element,param);
-                if ($el != false && onfocusout ) {
-                    $el.unbind( ".validate-laravelRequiredWithoutAll" ).bind( "blur.validate-laravelRequiredWithoutAll", function() {
+                required=true,
+                currentObject=this;
+            $.each(params,function(i, param) {
+                var el=currentObject.findByName(param);
+                if (el[0]!=undefined && currentObject.settings.onfocusout) {
+                    el.unbind( ".validate-laravelRequiredWithoutAll" ).bind( "blur.validate-laravelRequiredWithoutAll", function() {
                         $( element ).valid();
                     });
                 }
-                required=required && ($el==false || !$.validator.methods.required.call(validator, $el.val(),$el[0],true));
+                var currentValue=currentObject.elementValue(el[0]);
+                required = required &&
+                    (el[0]==undefined|| !$.validator.methods.required.call(validator, currentValue,el[0],true));
             });
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
             return true;
+
         }, $.validator.format("The field is required when {0} {1} {2} {3} is present."));
 
         /**
@@ -133,12 +140,20 @@ $.extend(true, laravelValidation, {
          */
         $.validator.addMethod("laravelRequiredIf", function(value, element, params) {
 
-            var el = helpers.getElement(element,params[0]);
-            if (el==false) return true;
+            var el=this.findByName(params[0]);
+            if (el[0]==undefined) {
+                return true;
+            }
+            if ( this.settings.onfocusout ) {
+                el.unbind( ".validate-laravelRequiredIf" ).bind( "blur.validate-laravelRequiredIf", function() {
+                    $( element ).valid();
+                });
+            }
 
-            var val=this.elementValue(el[0]);
+            var val=String(this.elementValue(el[0]));
+            var data=params.slice(1);
 
-            if (val==params[1]) {
+            if ($.inArray(val,data)!== -1) {
                 return $.validator.methods.required.call(this, value, element, true);
             } else {
                 return true;
@@ -419,10 +434,13 @@ $.extend(true, laravelValidation, {
 
             var timeCompare=parseFloat(params[0]);
             if (isNaN(timeCompare)) {
-                var $target=helpers.getElement(element,params[0]);
-                timeCompare=helpers.parseTime($target.val(), $target[0]);
+                var el=this.findByName(params[0]);
+                if (el[0]==undefined) {
+                    return false;
+                }
+                timeCompare= helpers.parseTime(this.elementValue(el[0]), el[0]);
                 if ( this.settings.onfocusout ) {
-                    $target.unbind( ".validate-laravelBefore" ).bind( "blur.validate-laravelBefore", function() {
+                    el.unbind( ".validate-laravelBefore" ).bind( "blur.validate-laravelBefore", function() {
                         $( element ).valid();
                     });
                 }
@@ -437,20 +455,23 @@ $.extend(true, laravelValidation, {
          * Validate the date is after a given date.
          */
         $.validator.addMethod("laravelAfter", function(value, element, params) {
-
-
             var timeCompare=parseFloat(params[0]);
             if (isNaN(timeCompare)) {
-                var $target=helpers.getElement(element,params[0]);
-                timeCompare=helpers.parseTime($target.val(), $target[0]);
+                var el=this.findByName(params[0]);
+                if (el[0]==undefined) {
+                    return false;
+                }
+                timeCompare= helpers.parseTime(this.elementValue(el[0]), el[0]);
                 if ( this.settings.onfocusout ) {
-                    $target.unbind( ".validate-laravelAfter" ).bind( "blur.validate-laravelAfter", function() {
+                    el.unbind( ".validate-laravelAfter" ).bind( "blur.validate-laravelAfter", function() {
                         $( element ).valid();
                     });
                 }
             }
+
             var timeValue=helpers.parseTime(value, element);
             return this.optional(element) || (timeValue !=false && timeValue > timeCompare);
+
         }, $.validator.format("The :attribute must be a date after {0}."));
 
 

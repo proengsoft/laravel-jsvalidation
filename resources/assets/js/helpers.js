@@ -47,38 +47,6 @@ $.extend(true, laravelValidation, {
 
 
         /**
-         * Gets the specified form element
-         *
-         * @param element
-         * @param name
-         * @returns {*}
-         */
-        getElement: function getElement(element, name) {
-
-            var $form = $(element).closest('form');
-            var elementCache = {};
-
-            var $el = $form
-                .find(this.selector(name))
-                // .find( "input"+selectorName+", select"+selectorName+", textarea"+selectorName )
-                .not(":submit, :reset, :image, [readonly]")
-                .filter(function () {
-                    // select only the first element for each name
-                    if (this.name in elementCache) {
-                        return false;
-                    }
-                    elementCache[this.name] = true;
-                    return true;
-                });
-            // / If check element not found, return false
-            if ($el == '' || $el == 'undefined' || $el.length == 0) {
-                return false;
-            }
-            return $el;
-        },
-
-
-        /**
          * Check if element has numeric rules
          *
          * @param element
