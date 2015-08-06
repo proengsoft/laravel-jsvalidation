@@ -51,15 +51,15 @@ class Validator extends BaseValidator
     {
 
         // Check if JS Validation is disabled for this attribute
-        $validatableAttributes = array_filter(array_keys($this->rules), [$this, 'jsValidationEnabled']);
-        $validatableRules = array_intersect_key($this->rules, array_flip($validatableAttributes));
+        $vAttributes = array_filter(array_keys($this->rules), [$this, 'jsValidationEnabled']);
+        $vRules = array_intersect_key($this->rules, array_flip($vAttributes));
 
         // Convert each rules and messages
-        $convertedRules = array_map([$this, 'jsConvertRules'], array_keys($validatableRules), $validatableRules);
+        $convertedRules = array_map([$this, 'jsConvertRules'], array_keys($vRules), $vRules);
 
         // Filter empty rules
-        $convertedRules = array_filter($convertedRules, function ($v) {
-            return !empty($v[1]);
+        $convertedRules = array_filter($convertedRules, function ($value) {
+            return !empty($value[1]);
         });
 
         $jsRules = $this->prepareJsValidations($convertedRules, 1);
@@ -256,7 +256,7 @@ class Validator extends BaseValidator
      *
      * @return array
      */
-    public function js()
+    public function validationData()
     {
         list($jsRules, $jsMessages) = $this->generateJavascriptValidations();
 
@@ -264,5 +264,16 @@ class Validator extends BaseValidator
             'rules' => $jsRules,
             'messages' => $jsMessages,
         ];
+    }
+
+    /**
+     * Returns view data to render javascript.
+     * @deprecated use validationData() instead
+     *
+     * @return array
+     */
+    public function js()
+    {
+        return $this->validationData();
     }
 }
