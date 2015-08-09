@@ -329,6 +329,24 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testMimes(){
+
+        $rule=['name'=>'mimes:TXT'];
+        $message=['name.mimes'=>'Mime TXT'];
+        $expected=array(
+            'rules' => array(
+                'name'=> ['laravelValidation'=>[['Mimes',array('TXT'),'Mime TXT',false]]]
+            ),
+            'messages'=>array()
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->js();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
 
     public function  testPassesWithoutRemote()
     {

@@ -2,9 +2,9 @@
 
 namespace Proengsoft\JsValidation;
 
+use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Traits\RemoteValidation;
 use Proengsoft\JsValidation\Traits\JavascriptRules;
-use Illuminate\Validation\Validator as BaseValidator;
 
 /**
  * Extends Laravel Validator to add Javascript Validations.
@@ -83,6 +83,7 @@ class Validator extends BaseValidator
     protected function jsConvertRules($attribute, $rules)
     {
         $jsRules = [];
+        $jsAttribute = $attribute;
 
         foreach ($rules as $rawRule) {
             list($rule, $parameters) = $this->parseRule($rawRule);
