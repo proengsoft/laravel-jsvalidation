@@ -62,6 +62,17 @@ trait RemoteValidation
     abstract protected function parseRule($rules);
 
     /**
+     * Return parsed Javascript Rule.
+     *
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
+     *
+     * @return array
+     */
+    abstract protected function getJsRule($attribute, $rule, $parameters);
+
+    /**
      * Validate remote Javascript Validations.
      *
      * @param $attribute
@@ -114,8 +125,9 @@ trait RemoteValidation
         $rules = $this->getRules()[$attribute];
 
         foreach ($rules as $i => $rule) {
-            $parsedRule = $this->parseRule($rule);
-            if (!$this->isRemoteRule($parsedRule[0])) {
+            list($rule, $parameters) = $this->parseRule($rule);
+            $jsRule = $this->getJsRule($attribute, $rule, $parameters);
+            if ($jsRule [1]!=='laravelValidationRemote') {
                 unset($rules[$i]);
             }
         }
@@ -134,8 +146,10 @@ trait RemoteValidation
      */
     protected function isRemoteRule($rule)
     {
+
         if (!in_array($rule, ['ActiveUrl', 'Exists', 'Unique'])) {
-            return in_array(snake_case($rule), array_keys($this->getExtensions()));
+            return in_array(snake_case($rule), array_keys($this->getExtensions()))
+                && !method_exists($this,"jsRule{$rule}");
         }
 
         return true;

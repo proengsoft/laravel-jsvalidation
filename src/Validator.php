@@ -16,7 +16,7 @@ class Validator extends BaseValidator
     use JavascriptRules,RemoteValidation;
 
     const JSVALIDATION_DISABLE = 'NoJsValidation';
-    const JSVALIDATION_REMOTE = 'jsValidationRemote';
+
 
     /**
      * Determine if the data passes the validation rules.
@@ -59,35 +59,21 @@ class Validator extends BaseValidator
 
         // Filter empty rules
         $convertedRules = array_filter($convertedRules, function ($value) {
-            return !empty($value[1]);
+            return !empty($value['rules']);
         });
 
-        $jsRules = $this->prepareJsValidations($convertedRules, 1);
-        $jsMessages = $this->prepareJsValidations($convertedRules, 2);
-
-        return array($jsRules,$jsMessages);
-    }
-
-    /**
-     *  Prepare the rules and messages to be parsed with Javascript.
-     *
-     * @param $rules
-     * @param $context
-     *
-     * @return mixed
-     */
-    private function prepareJsValidations($rules, $context)
-    {
-        $initial = array();
-
-        return array_reduce($rules, function ($result, $item) use ($context) {
-            $attribute = $item[0];
+        // Format results
+        return array_reduce($convertedRules, function ($result, $item)  {
+            $attribute = $item['attribute'];
+            $rule=$item['rules'];
             $result[$attribute] = (empty($result[$attribute])) ? array() : $result[$attribute];
-            $result[$attribute] = array_merge($result[$attribute], $item[$context]);
+            $result[$attribute] = array_merge($result[$attribute], $rule);
 
             return $result;
-        }, $initial);
+        }, array());
+
     }
+
 
     /**
      * Make Laravel Validations compatible with JQuery Validation Plugin.
@@ -100,23 +86,24 @@ class Validator extends BaseValidator
     protected function jsConvertRules($attribute, $rules)
     {
         $jsRules = [];
-        $jsMessages = [];
 
         foreach ($rules as $rawRule) {
             list($rule, $parameters) = $this->parseRule($rawRule);
-            if (!$this->isImplemented($rule)) {
-                continue;
+            list($attribute, $jsRule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
+            if ($jsRule) {
+                $jsRules[$jsRule][] = array(
+                    $rule, $jsParams,
+                    $this->getJsMessage($attribute, $rule, $parameters),
+                    $this->isImplicit($rule)
+                );
+
             }
-
-            $message = $this->getJsMessage($attribute, $rule, $parameters);
-            list($attribute, $rule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
-
-            $rule = $this->jsParseRuleName($rule, $jsRules);
-            $jsRules[$rule] = $jsParams;
-            $jsMessages[$rule] = $message;
         }
 
-        return [$attribute, $jsRules, $jsMessages];
+        return array(
+            'attribute'=>$attribute,
+            'rules'=>$jsRules
+        );
     }
 
     /**
@@ -131,54 +118,34 @@ class Validator extends BaseValidator
     protected function getJsRule($attribute, $rule, $parameters)
     {
         $method = "jsRule{$rule}";
+        $jsRule=false;
 
-        if (method_exists($this, "jsRule{$rule}")) {
-            list($attribute, $rule, $parameters) = $this->$method($attribute, $rule, $parameters);
-        } elseif ($this->isRemoteRule($rule)) {
-            list($attribute, $rule, $parameters) = $this->jsRemoteRule($attribute);
-        } else {
-            $rule = "laravel{$rule}";
+        if ($this->isRemoteRule($rule)) {
+            list($attribute, $parameters) = $this->jsRemoteRule($attribute);
+            $jsRule="laravelValidationRemote";
+        } elseif(method_exists($this, $method)) {
+            list($attribute, $parameters) = $this->$method($attribute, $parameters);
+            $jsRule="laravelValidation";
+        } elseif (method_exists($this, "validate{$rule}")) {
+            $jsRule = "laravelValidation";
         }
 
-        return [$attribute, $rule, $parameters];
+        return [$attribute, $jsRule, $parameters];
     }
 
-    /**
-     * Returns parsed rule name for use in javascript.
-     *
-     * @param $name
-     * @param $rules
-     *
-     * @return string
-     */
-    protected function jsParseRuleName($name, $rules)
-    {
-        $count = 0;
-        $ruleName = $name;
-
-        if ($name == self::JSVALIDATION_REMOTE) {
-            return $name;
-        }
-
-        while (array_key_exists($ruleName, $rules)) {
-            ++$count;
-            $ruleName = $name.'_'.$count;
-        }
-
-        return $ruleName;
-    }
 
     /**
      *  Replace javascript error message place-holders with actual values.
      *
      * @param string $attribute
      * @param string $rule
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return mixed
      */
     protected function getJsMessage($attribute, $rule, $parameters)
     {
+
         $message = $this->getTypeMessage($attribute, $rule);
 
         if (isset($this->replacers[snake_case($rule)])) {
@@ -203,7 +170,6 @@ class Validator extends BaseValidator
      */
     private function getTypeMessage($attribute, $rule)
     {
-
         // find more elegant solution to set the attribute file type
         $prevFiles = $this->files;
         if ($this->hasRule($attribute, array('Mimes', 'Image'))) {
@@ -211,7 +177,6 @@ class Validator extends BaseValidator
                 $this->files[$attribute] = false;
             }
         }
-
         $message = $this->getMessage($attribute, $rule);
         $this->files = $prevFiles;
 
@@ -230,26 +195,6 @@ class Validator extends BaseValidator
         return !$this->hasRule($attribute, self::JSVALIDATION_DISABLE);
     }
 
-    /**
-     * Check if rule is implemented.
-     *
-     * @param string $rule
-     *
-     * @return bool
-     */
-    protected function isImplemented($rule)
-    {
-        if (empty($rule)) {
-            return false;
-        }
-
-        $method = "validate{$rule}";
-        if (!method_exists($this, $method)) {
-            return in_array(snake_case($rule), array_keys($this->extensions));
-        }
-
-        return true;
-    }
 
     /**
      * Returns view data to render javascript.
@@ -258,10 +203,11 @@ class Validator extends BaseValidator
      */
     public function validationData()
     {
-        list($jsRules, $jsMessages) = $this->generateJavascriptValidations();
+        $jsMessages=array();
+        $jsValidations= $this->generateJavascriptValidations();
 
         return [
-            'rules' => $jsRules,
+            'rules' => $jsValidations,
             'messages' => $jsMessages,
         ];
     }
@@ -277,3 +223,4 @@ class Validator extends BaseValidator
         return $this->validationData();
     }
 }
+

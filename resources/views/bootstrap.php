@@ -28,6 +28,7 @@
             },
             <?php endif; ?>
             errorPlacement: function(error, element) {
+
                 if (element.attr("type") == "radio") {
                     error.insertAfter(element.parents('div').find('.radio-list'));
                 }

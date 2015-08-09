@@ -61,76 +61,86 @@ trait JavascriptRules
      * Confirmed rule is applied to confirmed attribute.
      *
      * @param $attribute
-     * @param $rule
      * @param array $parameters
      *
      * @return array
      */
-    protected function jsRuleConfirmed($attribute, $rule, array $parameters)
+    protected function jsRuleConfirmed($attribute, array $parameters)
     {
         $parameters[0] = $attribute;
-        $rule = "laravel{$rule}";
         $attribute = "{$attribute}_confirmation";
 
-        return [$attribute,$rule, $parameters];
+        return [$attribute, $parameters];
     }
 
     /**
      * Returns Javascript parameters for After rule.
      *
      * @param $attribute
-     * @param $rule
      * @param array $parameters
      *
      * @return array
      */
-    protected function jsRuleAfter($attribute, $rule, array $parameters)
+    protected function jsRuleAfter($attribute, array $parameters)
     {
-        $rule = "laravel{$rule}";
-
         if (!($date = strtotime($parameters[0]))) {
             $date = in_array($parameters[0], array_keys($this->getRules())) ? $parameters[0] : 'false';
         }
 
-        return [$attribute,$rule, [$date]];
+        return [$attribute, [$date]];
     }
 
     /**
      * Returns Javascript parameters for Before rule.
      *
      * @param $attribute
-     * @param $rule
      * @param array $parameters
      *
      * @return array
      */
-    protected function jsRuleBefore($attribute, $rule, array $parameters)
+    protected function jsRuleBefore($attribute, array $parameters)
     {
-        $rule = "laravel{$rule}";
-
         if (!($date = strtotime($parameters[0]))) {
             $date = in_array($parameters[0], array_keys($this->getRules())) ? $parameters[0] : 'false';
         }
 
-        return [$attribute,$rule, [$date]];
+        return [$attribute, [$date]];
+    }
+
+
+    /**
+     * Validate that an attribute is an active URL.
+     *
+     * @param  string  $attribute
+     * @return array
+     */
+    protected function jsRuleActiveUrl($attribute)
+    {
+        return $this->jsRemoteRule($attribute);
     }
 
     /**
-     * Validate the MIME type of a file upload attribute is in a set of MIME types.
+     * Validate the uniqueness of an attribute value on a given database table.
      *
-     * @param string $attribute
-     * @param mixed  $rule
-     * @param array  $parameters
-     *
+     * @param  string  $attribute
      * @return array
      */
-    protected function jsRuleMimes($attribute, $rule, array $parameters)
+    protected function jsRuleUnique($attribute)
     {
-        $rule = "laravel{$rule}";
-        $parameters = array_map('strtolower', $parameters);
-
-        return [$attribute,$rule, $parameters];
+        return $this->jsRemoteRule($attribute);
     }
+
+    /**
+     * Validate the existence of an attribute value in a database table.
+     *
+     * @param  string  $attribute
+     * @return array
+     */
+    protected function jsRuleExists($attribute)
+    {
+        return $this->jsRemoteRule($attribute);
+    }
+
 
     /**
      * Returns Javascript parameters for remote validated rules.
@@ -139,9 +149,8 @@ trait JavascriptRules
      *
      * @return array
      */
-    protected function jsRemoteRule($attribute)
+    private function jsRemoteRule($attribute)
     {
-        $newRule = 'jsValidationRemote';
 
         $token = Session::token();
         $token = Crypt::encrypt($token);
@@ -150,6 +159,7 @@ trait JavascriptRules
             $token,
         ];
 
-        return [$attribute,$newRule, $params];
+        return [$attribute, $params];
     }
+
 }

@@ -2068,95 +2068,169 @@ DateFormatter.prototype = {
  * Released under the MIT license
  */
 
-var laravelValidation  = {
+var laravelValidation;
+laravelValidation = {
+
+    implicitRules: ['Confirmed'],
 
     /**
      * Initialize laravel validations
      */
-    init: function() {
-        // Override check method
-        this.overrideCheck();
+    init: function () {
         // Register validations methods
-        this.methods();
+        this.setupValidations();
 
     },
 
 
-    /**
-     * Overrides chek funtion from jQueryValidation
-     */
-    overrideCheck: function() {
+    setupValidations: function () {
+        $.validator.addMethod("Foo", function (value, element, params) {
+            console.log(params);
+            return value==="foo";
+        },"");
+        /**
+         * Create JQueryValidation check to validate Laravel rules
+         */
+
+        $.validator.addMethod("laravelValidation", function (value, element, params) {
+            var validator = this;
+            var validated = true;
+
+            // put Implicit rules in front
+            var rules=[];
+            $.each(params, function (i, param) {
+                if (param[3] || laravelValidation.implicitRules.indexOf(param[0])!== -1) {
+                    rules.unshift(param);
+                } else {
+                    rules.push(param);
+                }
+            });
+
+            $.each(rules, function (i, param) {
+                var implicit = param[3] || laravelValidation.implicitRules.indexOf(param[0])!== -1;
+                var rule = param[0],
+                    arguments = param[1],
+                    message = param[2];
+
+                if ( !implicit && validator.optional( element ) ) {
+                    validated="dependency-mismatch";
+                    return false;
+                }
 
 
-        $.extend( $.validator.prototype, {
-
-            remote: function () {
-                clearTimeout(timer);
-
-                var args = arguments;
-                timer = setTimeout(function() {
-                    $.validator.methods._remote.apply(this, args);
-                }.bind(this), 500);
-
-                return true;
-            },
-
-
-            check: function( element ) {
-                element = this.validationTargetFor( this.clean( element ) );
-
-                var rules = $( element ).rules(),
-                    rulesCount = $.map( rules, function( n, i ) {
-                        return i;
-                    }).length,
-                    dependencyMismatch = false,
-                    val = this.elementValue( element ),
-                    result, method, rule;
-
-                for ( method in rules ) {
-                    rule = { method: method, parameters: rules[ method ] };
-                    try {
-                        var methodToCall=this.normalizeMethod(method);
-                        result = $.validator.methods[ methodToCall ].call( this, val, element, rule.parameters );
-
-                        // if a method indicates that the field is optional and therefore valid,
-                        // don't mark it as valid when there are no other rules
-                        if ( result === "dependency-mismatch" && rulesCount === 1 ) {
-                            dependencyMismatch = true;
-                            continue;
-                        }
-                        dependencyMismatch = false;
-
-                        if ( result === "pending" ) {
-                            this.toHide = this.toHide.not( this.errorsFor( element ) );
-                            return;
-                        }
-
-                        if ( !result ) {
-                            this.formatAndAdd( element, rule );
-                            return false;
-                        }
-                    } catch ( e ) {
-                        if ( this.settings.debug && window.console ) {
-                            console.log( "Exception occurred when checking element " + element.id + ", check the '" + rule.method + "' method.", e );
-                        }
-                        throw e;
+                if (laravelValidation.methods[rule]!==undefined) {
+                    validated = laravelValidation.methods[rule].call(validator, value, element, arguments);
+                } else if($.validator.methods[rule]!==undefined) {
+                    validated = $.validator.methods[rule].call(validator, value, element, arguments);
+                } else {
+                    validated=false;
+                }
+                //console.log(method);
+                //validated = method.call(validator, value, element, arguments);
+                if (validated !== true) {
+                    if (!validator.settings.messages[ element.name ] ) {
+                        validator.settings.messages[ element.name ] = {};
                     }
+                    validator.settings.messages[element.name].laravelValidation= message;
+                    return false;
                 }
-                if ( dependencyMismatch ) {
-                    return;
-                }
-                if ( this.objectLength( rules ) ) {
-                    this.successList.push( element );
-                }
-                return true;
-            },
 
-            normalizeMethod: function (method) {
-                return method.replace(/_\d+$/, '');
+            });
+
+            return validated;
+
+        }, "");
+
+
+        /**
+         * Create JQueryValidation check to validate Remote Laravel rules
+         */
+
+        $.validator.addMethod("laravelValidationRemote", function (value, element, params) {
+
+            var implicit = false,
+                check = params[0][1],
+                attribute = check[0],
+                token = check[1];
+
+            $.each(params, function (i, parameters) {
+                implicit = implicit || parameters[3];
+            });
+
+
+            if ( !implicit && this.optional( element ) ) {
+                return "dependency-mismatch";
             }
-        });
+
+            var previous = this.previousValue( element ),
+                validator, data;
+
+            if (!this.settings.messages[ element.name ] ) {
+                this.settings.messages[ element.name ] = {};
+            }
+            previous.originalMessage = this.settings.messages[ element.name ].laravelValidationRemote;
+            this.settings.messages[ element.name ].laravelValidationRemote = previous.message;
+
+            var param = typeof param === "string" && { url: param } || param;
+
+            if ( previous.old === value ) {
+                return previous.valid;
+            }
+
+            previous.old = value;
+            validator = this;
+            this.startRequest( element );
+            data = {};
+            data[ element.name ] = value;
+            data['_jsvalidation']= attribute;
+
+            $.ajax( $.extend( true, {
+                mode: "abort",
+                port: "validate" + element.name,
+                dataType: "json",
+                data: data,
+                context: validator.currentForm,
+                url: $(validator.currentForm).attr('action'),
+                type: $(validator.currentForm).attr('method'),
+
+                beforeSend: function (xhr) {
+                    if ($(validator.currentForm).attr('method').toLowerCase() != 'get' && token) {
+                        return xhr.setRequestHeader('X-XSRF-TOKEN', token);
+                    }
+                },
+
+                success: function( response ) {
+                    var valid = response === true || response === "true",
+                        errors, message, submitted;
+
+                    validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
+
+                    if ( valid ) {
+                        submitted = validator.formSubmitted;
+                        validator.prepareElement( element );
+                        validator.formSubmitted = submitted;
+                        validator.successList.push( element );
+                        delete validator.invalid[ element.name ];
+                        validator.showErrors();
+                    } else {
+                        errors = {};
+                        message = response || validator.defaultMessage( element, "remote" );
+                        errors[ element.name ] = previous.message = $.isFunction( message ) ? message( value ) : message[0];
+                        validator.invalid[ element.name ] = true;
+                        validator.showErrors( errors );
+                    }
+                    validator.showErrors(validator.errorMap);
+                    previous.valid = valid;
+                    validator.stopRequest( element, valid );
+                }
+            }, param ) );
+            return "pending";
+
+
+        }, "");
+
     }
+
 
 };
 
@@ -2203,7 +2277,9 @@ $.extend(true, laravelValidation, {
          */
         selector: function (names) {
             var selector = [];
-            if (!$.isArray(names)) names = [names];
+            if (!$.isArray(names))  {
+                names = [names];
+            }
             for (var i = 0; i < names.length; i++) {
                 selector.push("[name='" + names[i] + "']");
             }
@@ -2268,6 +2344,30 @@ $.extend(true, laravelValidation, {
 
 
         /**
+         * Return specified rule from element
+         *
+         * @param rule
+         * @param element
+         * @returns object
+         */
+        getLaravelValidation: function(rule, element) {
+
+            var found = undefined;
+            $.each($.validator.staticRules(element), function(key, rules) {
+                if (key=="laravelValidation") {
+                    $.each(rules, function (i, value) {
+                        if (value[0]===rule) {
+                            found=value;
+                        }
+                    });
+                }
+            });
+
+            return found;
+        },
+
+
+        /**
          * Return he timestamp of value passed using format or default format in element*
          *
          * @param value
@@ -2280,8 +2380,9 @@ $.extend(true, laravelValidation, {
             var fmt = new DateFormatter();
 
             if ($.type(format) == 'object') {
-                if ('laravelDateFormat' in $.validator.staticRules(format)) {
-                    format = $.validator.staticRules(format).laravelDateFormat[0];
+                var dateRule=this.getLaravelValidation('DateFormat', format)
+                if (dateRule!= undefined) {
+                    format = dateRule[1][0];
                 } else {
                     format = null;
                 }
@@ -2299,7 +2400,6 @@ $.extend(true, laravelValidation, {
             return timeValue;
         },
 
-
         /**
          * Returns Unix timestamp based on PHP function strototime
          * http://php.net/manual/es/function.strtotime.php
@@ -2314,41 +2414,22 @@ $.extend(true, laravelValidation, {
         },
 
 
-        /**
-         * Check if the specified timezone is valid
-         *
-         * @param value
-         * @returns {boolean}
-         */
-        isTimezone: function (value) {
-            var timezones = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Africa/Algiers", "Africa/Asmara", "Africa/Bamako", "Africa/Bangui", "Africa/Banjul", "Africa/Bissau", "Africa/Blantyre", "Africa/Brazzaville", "Africa/Bujumbura", "Africa/Cairo", "Africa/Casablanca", "Africa/Ceuta", "Africa/Conakry", "Africa/Dakar", "Africa/Dar_es_Salaam", "Africa/Djibouti", "Africa/Douala", "Africa/El_Aaiun", "Africa/Freetown", "Africa/Gaborone", "Africa/Harare", "Africa/Johannesburg", "Africa/Juba", "Africa/Kampala", "Africa/Khartoum", "Africa/Kigali", "Africa/Kinshasa", "Africa/Lagos", "Africa/Libreville", "Africa/Lome", "Africa/Luanda", "Africa/Lubumbashi", "Africa/Lusaka", "Africa/Malabo", "Africa/Maputo", "Africa/Maseru", "Africa/Mbabane", "Africa/Mogadishu", "Africa/Monrovia", "Africa/Nairobi", "Africa/Ndjamena", "Africa/Niamey", "Africa/Nouakchott", "Africa/Ouagadougou", "Africa/Porto-Novo", "Africa/Sao_Tome", "Africa/Tripoli", "Africa/Tunis", "Africa/Windhoek", "America/Adak", "America/Anchorage", "America/Anguilla", "America/Antigua", "America/Araguaina", "America/Argentina/Buenos_Aires", "America/Argentina/Catamarca", "America/Argentina/Cordoba", "America/Argentina/Jujuy", "America/Argentina/La_Rioja", "America/Argentina/Mendoza", "America/Argentina/Rio_Gallegos", "America/Argentina/Salta", "America/Argentina/San_Juan", "America/Argentina/San_Luis", "America/Argentina/Tucuman", "America/Argentina/Ushuaia", "America/Aruba", "America/Asuncion", "America/Atikokan", "America/Bahia", "America/Bahia_Banderas", "America/Barbados", "America/Belem", "America/Belize", "America/Blanc-Sablon", "America/Boa_Vista", "America/Bogota", "America/Boise", "America/Cambridge_Bay", "America/Campo_Grande", "America/Cancun", "America/Caracas", "America/Cayenne", "America/Cayman", "America/Chicago", "America/Chihuahua", "America/Costa_Rica", "America/Creston", "America/Cuiaba", "America/Curacao", "America/Danmarkshavn", "America/Dawson", "America/Dawson_Creek", "America/Denver", "America/Detroit", "America/Dominica", "America/Edmonton", "America/Eirunepe", "America/El_Salvador", "America/Fortaleza", "America/Glace_Bay", "America/Godthab", "America/Goose_Bay", "America/Grand_Turk", "America/Grenada", "America/Guadeloupe", "America/Guatemala", "America/Guayaquil", "America/Guyana", "America/Halifax", "America/Havana", "America/Hermosillo", "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo", "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay", "America/Indiana/Vincennes", "America/Indiana/Winamac", "America/Inuvik", "America/Iqaluit", "America/Jamaica", "America/Juneau", "America/Kentucky/Louisville", "America/Kentucky/Monticello", "America/Kralendijk", "America/La_Paz", "America/Lima", "America/Los_Angeles", "America/Lower_Princes", "America/Maceio", "America/Managua", "America/Manaus", "America/Marigot", "America/Martinique", "America/Matamoros", "America/Mazatlan", "America/Menominee", "America/Merida", "America/Metlakatla", "America/Mexico_City", "America/Miquelon", "America/Moncton", "America/Monterrey", "America/Montevideo", "America/Montserrat", "America/Nassau", "America/New_York", "America/Nipigon", "America/Nome", "America/Noronha", "America/North_Dakota/Beulah", "America/North_Dakota/Center", "America/North_Dakota/New_Salem", "America/Ojinaga", "America/Panama", "America/Pangnirtung", "America/Paramaribo", "America/Phoenix", "America/Port-au-Prince", "America/Port_of_Spain", "America/Porto_Velho", "America/Puerto_Rico", "America/Rainy_River", "America/Rankin_Inlet", "America/Recife", "America/Regina", "America/Resolute", "America/Rio_Branco", "America/Santa_Isabel", "America/Santarem", "America/Santiago", "America/Santo_Domingo", "America/Sao_Paulo", "America/Scoresbysund", "America/Sitka", "America/St_Barthelemy", "America/St_Johns", "America/St_Kitts", "America/St_Lucia", "America/St_Thomas", "America/St_Vincent", "America/Swift_Current", "America/Tegucigalpa", "America/Thule", "America/Thunder_Bay", "America/Tijuana", "America/Toronto", "America/Tortola", "America/Vancouver", "America/Whitehorse", "America/Winnipeg", "America/Yakutat", "America/Yellowknife", "Antarctica/Casey", "Antarctica/Davis", "Antarctica/DumontDUrville", "Antarctica/Macquarie", "Antarctica/Mawson", "Antarctica/McMurdo", "Antarctica/Palmer", "Antarctica/Rothera", "Antarctica/Syowa", "Antarctica/Troll", "Antarctica/Vostok", "Arctic/Longyearbyen", "Asia/Aden", "Asia/Almaty", "Asia/Amman", "Asia/Anadyr", "Asia/Aqtau", "Asia/Aqtobe", "Asia/Ashgabat", "Asia/Baghdad", "Asia/Bahrain", "Asia/Baku", "Asia/Bangkok", "Asia/Beirut", "Asia/Bishkek", "Asia/Brunei", "Asia/Choibalsan", "Asia/Chongqing", "Asia/Colombo", "Asia/Damascus", "Asia/Dhaka", "Asia/Dili", "Asia/Dubai", "Asia/Dushanbe", "Asia/Gaza", "Asia/Harbin", "Asia/Hebron", "Asia/Ho_Chi_Minh", "Asia/Hong_Kong", "Asia/Hovd", "Asia/Irkutsk", "Asia/Jakarta", "Asia/Jayapura", "Asia/Jerusalem", "Asia/Kabul", "Asia/Kamchatka", "Asia/Karachi", "Asia/Kashgar", "Asia/Kathmandu", "Asia/Khandyga", "Asia/Kolkata", "Asia/Krasnoyarsk", "Asia/Kuala_Lumpur", "Asia/Kuching", "Asia/Kuwait", "Asia/Macau", "Asia/Magadan", "Asia/Makassar", "Asia/Manila", "Asia/Muscat", "Asia/Nicosia", "Asia/Novokuznetsk", "Asia/Novosibirsk", "Asia/Omsk", "Asia/Oral", "Asia/Phnom_Penh", "Asia/Pontianak", "Asia/Pyongyang", "Asia/Qatar", "Asia/Qyzylorda", "Asia/Rangoon", "Asia/Riyadh", "Asia/Sakhalin", "Asia/Samarkand", "Asia/Seoul", "Asia/Shanghai", "Asia/Singapore", "Asia/Taipei", "Asia/Tashkent", "Asia/Tbilisi", "Asia/Tehran", "Asia/Thimphu", "Asia/Tokyo", "Asia/Ulaanbaatar", "Asia/Urumqi", "Asia/Ust-Nera", "Asia/Vientiane", "Asia/Vladivostok", "Asia/Yakutsk", "Asia/Yekaterinburg", "Asia/Yerevan", "Atlantic/Azores", "Atlantic/Bermuda", "Atlantic/Canary", "Atlantic/Cape_Verde", "Atlantic/Faroe", "Atlantic/Madeira", "Atlantic/Reykjavik", "Atlantic/South_Georgia", "Atlantic/St_Helena", "Atlantic/Stanley", "Australia/Adelaide", "Australia/Brisbane", "Australia/Broken_Hill", "Australia/Currie", "Australia/Darwin", "Australia/Eucla", "Australia/Hobart", "Australia/Lindeman", "Australia/Lord_Howe", "Australia/Melbourne", "Australia/Perth", "Australia/Sydney", "Europe/Amsterdam", "Europe/Andorra", "Europe/Athens", "Europe/Belgrade", "Europe/Berlin", "Europe/Bratislava", "Europe/Brussels", "Europe/Bucharest", "Europe/Budapest", "Europe/Busingen", "Europe/Chisinau", "Europe/Copenhagen", "Europe/Dublin", "Europe/Gibraltar", "Europe/Guernsey", "Europe/Helsinki", "Europe/Isle_of_Man", "Europe/Istanbul", "Europe/Jersey", "Europe/Kaliningrad", "Europe/Kiev", "Europe/Lisbon", "Europe/Ljubljana", "Europe/London", "Europe/Luxembourg", "Europe/Madrid", "Europe/Malta", "Europe/Mariehamn", "Europe/Minsk", "Europe/Monaco", "Europe/Moscow", "Europe/Oslo", "Europe/Paris", "Europe/Podgorica", "Europe/Prague", "Europe/Riga", "Europe/Rome", "Europe/Samara", "Europe/San_Marino", "Europe/Sarajevo", "Europe/Simferopol", "Europe/Skopje", "Europe/Sofia", "Europe/Stockholm", "Europe/Tallinn", "Europe/Tirane", "Europe/Uzhgorod", "Europe/Vaduz", "Europe/Vatican", "Europe/Vienna", "Europe/Vilnius", "Europe/Volgograd", "Europe/Warsaw", "Europe/Zagreb", "Europe/Zaporozhye", "Europe/Zurich", "Indian/Antananarivo", "Indian/Chagos", "Indian/Christmas", "Indian/Cocos", "Indian/Comoro", "Indian/Kerguelen", "Indian/Mahe", "Indian/Maldives", "Indian/Mauritius", "Indian/Mayotte", "Indian/Reunion", "Pacific/Apia", "Pacific/Auckland", "Pacific/Chatham", "Pacific/Chuuk", "Pacific/Easter", "Pacific/Efate", "Pacific/Enderbury", "Pacific/Fakaofo", "Pacific/Fiji", "Pacific/Funafuti", "Pacific/Galapagos", "Pacific/Gambier", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Honolulu", "Pacific/Johnston", "Pacific/Kiritimati", "Pacific/Kosrae", "Pacific/Kwajalein", "Pacific/Majuro", "Pacific/Marquesas", "Pacific/Midway", "Pacific/Nauru", "Pacific/Niue", "Pacific/Norfolk", "Pacific/Noumea", "Pacific/Pago_Pago", "Pacific/Palau", "Pacific/Pitcairn", "Pacific/Pohnpei", "Pacific/Port_Moresby", "Pacific/Rarotonga", "Pacific/Saipan", "Pacific/Tahiti", "Pacific/Tarawa", "Pacific/Tongatapu", "Pacific/Wake", "Pacific/Wallis", "UTC"];
-            return timezones.indexOf(value) != -1;
-        },
+        dependentElement: function(validator, element, name) {
 
-
-        laravelRemote: function (element, attribute, value, token) {
-
-            var $form = $(element).closest('form');
-            var url=$form.attr('action');
-            var method  = $form.attr('method');
-
-            if (method.toLowerCase()=='get') {
-                token = false;
+            var el=validator.findByName(name);
+            if (el[0]==undefined) {
+                return true;
+            }
+            if ( validator.settings.onfocusout ) {
+                el.off( ".validate-laravelValidation" )
+                    .off("blur.validate-laravelValidation-"+element.name)
+                    .on( "blur.validate-laravelValidation-"+element.name, function() {
+                        $( element ).valid();
+                    });
             }
 
-            return {
-                url: url,
-                type: method,
-                beforeSend: function (xhr) {
-                    if (token) {
-                        return xhr.setRequestHeader('X-XSRF-TOKEN', token);
-                    }
-                },
-                data: {
-                    _jsvalidation: attribute
-                }
-            };
-        },
+            return el[0];
+        }
 
 
 
@@ -2849,145 +2930,130 @@ $.extend(true, laravelValidation, {
 
 $.extend(true, laravelValidation, {
 
-    methods: function(){
-        
-        var helpers=laravelValidation.helpers;
-        
+    methods:{
+
+        helpers: laravelValidation.helpers,
+
+        jsRemoteTimer:0,
+
+
         /**
          * "Validate" optional attributes.
          * Always returns true, just lets us put sometimes in rules.*
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelSometimes", function(value, element, params) {
+        Sometimes: function() {
             return true;
-        }, $.validator.format(""));
+        },
+
 
         /**
          * Validate the given attribute is filled if it is present.
          */
-        $.validator.addMethod("laravelFilled", function(value, element, params) {
+        Filled: function(value, element) {
             return $.validator.methods.required.call(this, value, element, true);
-        }, $.validator.format("The field is required"));
+        },
+
 
         /**
          *Validate that a required attribute exists.
          */
-        $.validator.addMethod("laravelRequired", function(value, element, params) {
+        Required: function(value, element) {
             return $.validator.methods.required.call(this, value, element, true);
-        }, $.validator.format("The field is required."));
+        },
 
         /**
          * Validate that an attribute exists when any other attribute exists.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelRequiredWith", function(value, element, params) {
+        RequiredWith: function(value, element, params) {
             var validator=this,
                 required=false;
             var currentObject=this;
             $.each(params,function(i,param) {
-                var el=currentObject.findByName(param);
-                if (el[0]!=undefined && currentObject.settings.onfocusout) {
-                    el.unbind( ".validate-laravelRequiredWith" ).bind( "blur.validate-laravelRequiredWith", function() {
-                        $( element ).valid();
-                    });
-                }
-                var currentValue=currentObject.elementValue(el[0]);
-                required=required ||  el[0]==undefined
-                    || $.validator.methods.required.call(validator,currentValue,el[0],true);
+                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
+                var currentValue=currentObject.elementValue(target);
+                required=required ||  target===false
+                    || $.validator.methods.required.call(validator,currentValue,target,true);
             });
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
             return true;
-        }, $.validator.format("The field is required when any of {0} {1} {2} {3} is present."));
+        },
 
         /**
          * Validate that an attribute exists when all other attribute exists.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelRequiredWithAll", function(value, element, params) {
+        RequiredWithAll: function(value, element, params) {
             var validator=this,
                 required=true;
             var currentObject=this;
             $.each(params,function(i,param) {
-                var el=currentObject.findByName(param);
-                if (el[0]!=undefined && currentObject.settings.onfocusout) {
-                    el.unbind( ".validate-laravelRequiredWithAll" ).bind( "blur.validate-laravelRequiredWithAll", function() {
-                        $( element ).valid();
-                    });
-                }
-                var currentValue=currentObject.elementValue(el[0]);
+                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
+                var currentValue=currentObject.elementValue(target);
                 required = required &&
-                    (  el[0]==undefined || $.validator.methods.required.call(validator, currentValue, el[0],true));
+                    (  target===false || $.validator.methods.required.call(validator, currentValue,target,true));
             });
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
             return true;
-        }, $.validator.format("The field is required when {0} {1} {2} {3} is present."));
+        },
+
 
         /**
          * Validate that an attribute exists when any other attribute does not exists.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelRequiredWithout", function(value, element, params) {
+        RequiredWithout: function(value, element, params) {
             var validator=this,
                 required=false;
             var currentObject=this;
             $.each(params,function(i,param) {
-                var el=currentObject.findByName(param);
-                if (el[0]!=undefined && currentObject.settings.onfocusout) {
-                    el.unbind( ".validate-laravelRequiredWithout" ).bind( "blur.validate-laravelRequiredWithout", function() {
-                        $( element ).valid();
-                    });
-                }
-                var currentValue=currentObject.elementValue(el[0]);
-                required=required || el[0]==undefined
-                    || !$.validator.methods.required.call(validator, currentValue,el[0],true);
+                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
+                var currentValue=currentObject.elementValue(target);
+                required=required || target===false
+                     || !$.validator.methods.required.call(validator, currentValue,target,true);
             });
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
             return true;
-        }, $.validator.format("The field is required when any of {0} {1} {2} {3} is not present."));
+        },
+
 
         /**
          * Validate that an attribute exists when all other attribute does not exists.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelRequiredWithoutAll", function(value, element, params) {
+        RequiredWithoutAll: function(value, element, params) {
             var validator=this,
                 required=true,
                 currentObject=this;
             $.each(params,function(i, param) {
-                var el=currentObject.findByName(param);
-                if (el[0]!=undefined && currentObject.settings.onfocusout) {
-                    el.unbind( ".validate-laravelRequiredWithoutAll" ).bind( "blur.validate-laravelRequiredWithoutAll", function() {
-                        $( element ).valid();
-                    });
-                }
-                var currentValue=currentObject.elementValue(el[0]);
+                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
+                var currentValue=currentObject.elementValue(target);
                 required = required &&
-                    (el[0]==undefined|| !$.validator.methods.required.call(validator, currentValue,el[0],true));
+                    (target===false|| !$.validator.methods.required.call(validator, currentValue,target,true));
             });
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
             return true;
 
-        }, $.validator.format("The field is required when {0} {1} {2} {3} is present."));
+        },
+
 
         /**
          * Validate that an attribute exists when another attribute has a given value.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelRequiredIf", function(value, element, params) {
+        RequiredIf: function(value, element, params) {
 
-            var el=this.findByName(params[0]);
-            if (el[0]==undefined) {
-                return true;
-            }
-            if ( this.settings.onfocusout ) {
-                el.unbind( ".validate-laravelRequiredIf" ).bind( "blur.validate-laravelRequiredIf", function() {
-                    $( element ).valid();
-                });
-            }
-
-            var val=String(this.elementValue(el[0]));
+            var target=laravelValidation.helpers.dependentElement(this, element, params[0]);
+            var val=String(this.elementValue(target));
             var data=params.slice(1);
 
             if ($.inArray(val,data)!== -1) {
@@ -2996,246 +3062,231 @@ $.extend(true, laravelValidation, {
                 return true;
             }
 
+        },
 
-        }, $.validator.format("The :attribute field is required when {0} is {1}."));
 
         /**
          * Validate that an attribute has a matching confirmation.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelConfirmed", function(value, element, params) {
-            return $.validator.methods.equalTo.call(this, value, element, helpers.selector(params[0]));
-        }, $.validator.format("The field confirmation does not match."));
+        Confirmed: function(value, element, params) {
+            return laravelValidation.methods.Same.call(this,value, element, params);
+        },
 
         /**
          * Validate that two attributes match.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelSame", function(value, element, params) {
-            return this.optional(element) ||
-                $.validator.methods.equalTo.call(this, value, element, helpers.selector(params));
-        }, $.validator.format("The field must match with {0}"));
+        Same: function(value, element, params) {
+            var target=laravelValidation.helpers.dependentElement(this, element, params[0]);
+            var targetValue=String(this.elementValue(target));
+            return value == targetValue;
+        },
 
         /**
          * Validate that an attribute is different from another attribute.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelDifferent", function(value, element, params) {
-            return this.optional(element) ||
-                ! $.validator.methods.equalTo.call(this, value, element, helpers.selector(params));
-        }, $.validator.format("The field and {0} must be different."));
+        Different: function(value, element, params) {
+            return ! laravelValidation.methods.Same.call(this,value, element, params);
+        },
 
         /**
          * Validate that an attribute was "accepted".
          * This validation rule implies the attribute is "required".
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelAccepted", function(value, element, params) {
+        Accepted: function(value) {
             var regex = new RegExp("^(?:(yes|on|1|true))$",'i');
             return regex.test(value);
-        }, $.validator.format("The field must be accepted."));
+        },
 
         /**
          * Validate that an attribute is an array.
          */
-        $.validator.addMethod("laravelArray", function(value, element, params) {
-            return this.optional(element) ||
-                $.isArray(value);
-        }, $.validator.format("The :attribute must be an array."));
+        Array: function(value) {
+            return $.isArray(value);
+        },
 
         /**
          * Validate that an attribute is a boolean.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelBoolean", function(value, element, params) {
+        Boolean: function(value) {
             var regex= new RegExp("^(?:(true|false|1|0))$",'i');
-            return this.optional(element) ||  regex.test(value);
-        }, $.validator.format("The field must be true or false"));
+            return  regex.test(value);
+        },
 
         /**
          * Validate that an attribute is an integer.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelInteger", function(value, element, params) {
+        Integer: function(value) {
             var regex= new RegExp("^(?:-?\\d+)$",'i');
-            return this.optional(element) ||  regex.test(value);
-        }, $.validator.format("The field must be must be a integer."));
+            return  regex.test(value);
+        },
 
         /**
          * Validate that an attribute is numeric.
          */
-        $.validator.addMethod("laravelNumeric", function(value, element, params) {
-            return this.optional(element) ||
-                $.validator.methods.number.call(this, value, element, true);
-        }, $.validator.format("The field must be must be a number."));
+        Numeric: function(value, element) {
+            return $.validator.methods.number.call(this, value, element, true);
+        },
 
         /**
          * Validate that an attribute is a string.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelString", function(value, element, params) {
-            return this.optional(element) ||
-                typeof value == 'string';
-        }, $.validator.format("The field must be string"));
+        String: function(value) {
+            return typeof value === 'string';
+        },
 
         /**
          * The field under validation must be numeric and must have an exact length of value.
          */
-        $.validator.addMethod("laravelDigits", function(value, element, params) {
-            return this.optional(element) ||
-                ($.validator.methods.number.call(this, value, element, true)
+        Digits: function(value, element, params) {
+            return ($.validator.methods.number.call(this, value, element, true)
                 && value.length==params);
-        }, $.validator.format("The field must be {0} digits."));
+        },
 
         /**
          * The field under validation must have a length between the given min and max.
          */
-        $.validator.addMethod("laravelDigitsBetween", function(value, element, params) {
-            return this.optional(element) ||
-                ($.validator.methods.number.call(this, value, element, true)
+        DigitsBetween: function(value, element, params) {
+            return ($.validator.methods.number.call(this, value, element, true)
                 && value.length>=parseFloat(params[0]) && value.length<=parseFloat(params[1]));
-        }, $.validator.format("The field must be beetwen {0} and {1} digits."));
+        },
 
         /**
          * Validate the size of an attribute.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelSize", function(value, element, params) {
-            return this.optional(element) ||
-                helpers.getSize(this, element,value) == params[0];
-        }, $.validator.format("The field must be {0}"));
+        Size: function(value, element, params) {
+            return laravelValidation.helpers.getSize(this, element,value) == params[0];
+        },
 
         /**
          * Validate the size of an attribute is between a set of values.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelBetween", function(value, element, params) {
-            return this.optional(element) ||
-                ( helpers.getSize(this, element,value) >= parseFloat(params[0]) && helpers.getSize(this,element,value) <= parseFloat(params[1]));
-        }, $.validator.format("The field must be between {0} and {1}"));
+        Between: function(value, element, params) {
+            return ( laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]) && laravelValidation.helpers.getSize(this,element,value) <= parseFloat(params[1]));
+        },
 
         /**
          * Validate the size of an attribute is greater than a minimum value.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelMin", function(value, element, params) {
-            return this.optional(element) ||
-                helpers.getSize(this, element,value) >= parseFloat(params[0]);
-        }, $.validator.format("The field must be at least {0}"));
+        Min: function(value, element, params) {
+            return laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]);
+        },
 
         /**
          * Validate the size of an attribute is less than a maximum value.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelMax", function(value, element, params) {
-            return this.optional(element) ||
-                helpers.getSize(this, element,value) <= parseFloat(params[0]);
-        }, $.validator.format("The field may not be greater than {0}"));
+        Max: function(value, element, params) {
+            return laravelValidation.helpers.getSize(this, element,value) <= parseFloat(params[0]);
+        },
 
         /**
          *  Validate an attribute is contained within a list of values.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelIn", function(value, element, params) {
-            return this.optional(element) ||
-                params.indexOf(value.toString()) != -1;
-        }, $.validator.format("The selected :attribute is invalid"));
+        In: function(value, element, params) {
+            return params.indexOf(value.toString()) != -1;
+        },
 
         /**
          *  Validate an attribute is not contained within a list of values.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelNotIn", function(value, element, params) {
-            return this.optional(element) ||
-                params.indexOf(value.toString()) == -1;
-        }, $.validator.format("The selected :attribute is invalid"));
+        NotIn: function(value, element, params) {
+            return params.indexOf(value.toString()) == -1;
+        },
 
-        /**
-         *  Validate the uniqueness of an attribute value on a given database table.
-         */
-        $.validator.addMethod("laravelUnique", function(value, element, params) {
-            return this.optional(element) || true;
-        }, $.validator.format("Not implemented"));
-
-        /**
-         *  Validate the existence of an attribute value in a database table.
-         */
-        $.validator.addMethod("laravelExists", function(value, element, params) {
-            return this.optional(element) || true;
-        }, $.validator.format("Not implemented"));
 
         /**
          *  Validate that an attribute is a valid IP.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelIp", function(value, element, params) {
-            return this.optional(element) ||
-                /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i.test(value) ||
+        Ip: function(value) {
+            return /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i.test(value) ||
                 /^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/i.test(value);
-        }, $.validator.format("The :attribute must be a valid IP address."));
+        },
 
         /**
          *  Validate that an attribute is a valid e-mail address.
          */
-        $.validator.addMethod("laravelEmail", function(value, element, params) {
-            return this.optional(element) ||
-                $.validator.methods.email.call(this, value, element, true);
-        }, $.validator.format("The :attribute must be a valid email address."));
+        Email: function(value, element) {
+            return $.validator.methods.email.call(this, value, element, true);
+        },
 
         /**
          * Validate that an attribute is a valid URL.
          */
-        $.validator.addMethod("laravelUrl", function(value, element, params) {
-            return this.optional(element) ||
-                $.validator.methods.url.call(this, value, element, true);
-        }, $.validator.format("The :attribute format is invalid"));
+        Url: function(value, element) {
+            return $.validator.methods.url.call(this, value, element, true);
+        },
 
         /**
-         * Validate that an attribute is an active URL.
+         * Validate the MIME type of a file upload attribute is in a set of MIME types.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelActiveUrl", function(value, element, params) {
-
-            return $.validator.methods.laravelUrl.call(this, value, element, true);
-
-        }, $.validator.format("The :attribute is not a valid URL."));
+        Mimes: function(value, element, params) {
+            var lowerParams = $.map(params, String.toLowerCase);
+            return (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
+                lowerParams.indexOf(laravelValidation.helpers.fileinfo(element).extension.toLowerCase())!=-1;
+        },
 
         /**
          * Validate the MIME type of a file upload attribute is in a set of MIME types.
          */
-        $.validator.addMethod("laravelImage", function(value, element, params) {
-            return $.validator.methods.laravelMimes.call(this, value, element, ['jpg', 'png', 'gif', 'bmp', 'svg']);
-        }, $.validator.format("The :attribute must be a file of type: {0}."));
+        Image: function(value, element) {
+            return laravelValidation.methods.Mimes.call(this, value, element, ['jpg', 'png', 'gif', 'bmp', 'svg']);
+        },
 
-
-        /**
-         * Validate the MIME type of a file upload attribute is in a set of MIME types.
-         */
-        $.validator.addMethod("laravelMimes", function(value, element, params) {
-            return this.optional(element) ||
-                (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-                params.indexOf(helpers.fileinfo(element).extension.toLowerCase())!=-1;
-        }, $.validator.format("The :attribute must be a file of type: {0}."));
 
         /**
          * Validate that an attribute contains only alphabetic characters.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelAlpha", function(value, element, params) {
+        Alpha: function(value) {
             var regex = new RegExp("^(?:^[a-z]+$)$",'i');
-            return this.optional(element) || regex.test(value);
+            return  regex.test(value);
 
-        }, $.validator.format("The :attribute may only contain letters."));
+        },
 
         /**
          * Validate that an attribute contains only alpha-numeric characters.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelAlphaNum", function(value, element, params) {
+        AlphaNum: function(value) {
             var regex = new RegExp("^(?:^[a-z0-9]+$)$",'i');
-            return  this.optional(element) || regex.test(value);
-        }, $.validator.format("The :attribute may only contain letters and numbers."));
+            return   regex.test(value);
+        },
 
         /**
          * Validate that an attribute contains only alphabetic characters.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelAlphaDash", function(value, element, params) {
+        AlphaDash: function(value) {
             var regex = new RegExp("^(?:^[\\w\\-_]+$)$",'i');
-            return  this.optional(element) || regex.test(value);
-        }, $.validator.format("The :attribute may only contain letters, numbers, and dashes."));
+            return   regex.test(value);
+        },
 
         /**
          * Validate that an attribute passes a regular expression check.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelRegex", function(value, element, params) {
+        Regex: function(value, element, params) {
             var invalidModifiers=['x','s','u','X','U','A'];
             // Converting php regular expression
             var phpReg= new RegExp('^(?:\/)(.*\\\/?[^\/]*|[^\/]*)(?:\/)([gmixXsuUAJ]*)?$');
             var matches=params[0].match(phpReg);
-            if (matches==null) return false;
+            if (matches==null) {
+                return false;
+            }
             // checking modifiers
             var php_modifiers=[];
             if (matches[2]!=undefined) {
@@ -3247,102 +3298,70 @@ $.extend(true, laravelValidation, {
                 }
             }
             var regex = new RegExp("^(?:"+matches[1]+")$",php_modifiers.join());
-            return  this.optional(element) || regex.test(value);
-        }, $.validator.format("The :attribute format is invalid."));
+            return   regex.test(value);
+        },
 
         /**
          * Validate that an attribute is a valid date.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelDate", function(value, element, params) {
-            return this.optional(element) ||(helpers.strtotime(value)!=false);
-        }, $.validator.format("The :attribute is not a valid date"));
+        Date: function(value) {
+            return (laravelValidation.helpers.strtotime(value)!=false);
+        },
 
         /**
          * Validate that an attribute matches a date format.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelDateFormat", function(value, element, params) {
-            return this.optional(element) || helpers.parseTime(value,params[0])!=false;
-        }, $.validator.format("The :attribute does not match the format {0)"));
+        DateFormat: function(value, element, params) {
+            return  laravelValidation.helpers.parseTime(value,params[0])!=false;
+        },
 
         /**
          * Validate the date is before a given date.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelBefore", function(value, element, params) {
+        Before: function(value, element, params) {
 
-            var timeCompare=parseFloat(params[0]);
+            var timeCompare=parseFloat(params);
             if (isNaN(timeCompare)) {
-                var el=this.findByName(params[0]);
-                if (el[0]==undefined) {
-                    return false;
-                }
-                timeCompare= helpers.parseTime(this.elementValue(el[0]), el[0]);
-                if ( this.settings.onfocusout ) {
-                    el.unbind( ".validate-laravelBefore" ).bind( "blur.validate-laravelBefore", function() {
-                        $( element ).valid();
-                    });
-                }
+                var target=laravelValidation.helpers.dependentElement(this, element, params);
+                timeCompare= laravelValidation.helpers.parseTime(this.elementValue(target), target);
             }
 
-            var timeValue=helpers.parseTime(value, element);
-            return this.optional(element) || (timeValue !=false && timeValue < timeCompare);
+            var timeValue=laravelValidation.helpers.parseTime(value, element);
+            return  (timeValue !=false && timeValue < timeCompare);
 
-        }, $.validator.format("The :attribute must be a date before {0}."));
+        },
 
         /**
          * Validate the date is after a given date.
+         * @return {boolean}
          */
-        $.validator.addMethod("laravelAfter", function(value, element, params) {
-            var timeCompare=parseFloat(params[0]);
+        After: function(value, element, params) {
+            var timeCompare=parseFloat(params);
             if (isNaN(timeCompare)) {
-                var el=this.findByName(params[0]);
-                if (el[0]==undefined) {
-                    return false;
-                }
-                timeCompare= helpers.parseTime(this.elementValue(el[0]), el[0]);
-                if ( this.settings.onfocusout ) {
-                    el.unbind( ".validate-laravelAfter" ).bind( "blur.validate-laravelAfter", function() {
-                        $( element ).valid();
-                    });
-                }
+                var target=laravelValidation.helpers.dependentElement(this, element, params);
+                timeCompare= laravelValidation.helpers.parseTime(this.elementValue(target), target);
             }
 
-            var timeValue=helpers.parseTime(value, element);
-            return this.optional(element) || (timeValue !=false && timeValue > timeCompare);
+            var timeValue=laravelValidation.helpers.parseTime(value, element);
+            return  (timeValue !=false && timeValue > timeCompare);
 
-        }, $.validator.format("The :attribute must be a date after {0}."));
+        },
 
 
         /**
          * Validate that an attribute is a valid date.
          */
-        $.validator.addMethod("laravelTimezone", function(value, element, params) {
-            return this.optional(element) || helpers.isTimezone(value);
-        }, $.validator.format("The :attribute is not a valid date"));
+        Timezone: function(value) {
+            return  laravelValidation.helpers.isTimezone(value);
+        }
 
-        /**
-         * Validate remote rule via AJAX
-          */
-        var jsRemoteTimer=0;
-        $.validator.addMethod("jsValidationRemote", function(value, element, params) {
-
-            if (this.optional(element)) {
-                return true;
-            }
-
-            clearTimeout(jsRemoteTimer);
-            jsRemoteTimer = setTimeout(function() {
-                var attribute=params[0];
-                var token = params[1];
-                var remote = helpers.laravelRemote(element, attribute, value, token);
-                return $.validator.methods.remote.call(this, value, element, remote );
-            }.bind(this), 250);
-
-            return true;
-
-        }, $.validator.format("The :attribute is not a valid URL."));
 
     }
     
 });
+
 
 //# sourceMappingURL=jsvalidation.js.map
