@@ -109,40 +109,6 @@ trait JavascriptRules
 
 
     /**
-     * Validate that an attribute is an active URL.
-     *
-     * @param  string  $attribute
-     * @return array
-     */
-    protected function jsRuleActiveUrl($attribute)
-    {
-        return $this->jsRemoteRule($attribute);
-    }
-
-    /**
-     * Validate the uniqueness of an attribute value on a given database table.
-     *
-     * @param  string  $attribute
-     * @return array
-     */
-    protected function jsRuleUnique($attribute)
-    {
-        return $this->jsRemoteRule($attribute);
-    }
-
-    /**
-     * Validate the existence of an attribute value in a database table.
-     *
-     * @param  string  $attribute
-     * @return array
-     */
-    protected function jsRuleExists($attribute)
-    {
-        return $this->jsRemoteRule($attribute);
-    }
-
-
-    /**
      * Returns Javascript parameters for remote validated rules.
      *
      * @param $attribute
@@ -151,7 +117,6 @@ trait JavascriptRules
      */
     private function jsRemoteRule($attribute)
     {
-
         $token = Session::token();
         $token = Crypt::encrypt($token);
         $params = [

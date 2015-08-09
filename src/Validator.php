@@ -89,7 +89,7 @@ class Validator extends BaseValidator
 
         foreach ($rules as $rawRule) {
             list($rule, $parameters) = $this->parseRule($rawRule);
-            list($attribute, $jsRule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
+            list($jsAttribute, $jsRule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
             if ($jsRule) {
                 $jsRules[$jsRule][] = array(
                     $rule, $jsParams,
@@ -101,7 +101,7 @@ class Validator extends BaseValidator
         }
 
         return array(
-            'attribute'=>$attribute,
+            'attribute'=>$jsAttribute,
             'rules'=>$jsRules
         );
     }
@@ -177,6 +177,7 @@ class Validator extends BaseValidator
                 $this->files[$attribute] = false;
             }
         }
+
         $message = $this->getMessage($attribute, $rule);
         $this->files = $prevFiles;
 
@@ -214,6 +215,7 @@ class Validator extends BaseValidator
 
     /**
      * Returns view data to render javascript.
+     *
      * @deprecated use validationData() instead
      *
      * @return array

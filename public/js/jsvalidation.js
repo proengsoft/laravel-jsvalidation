@@ -2084,10 +2084,7 @@ laravelValidation = {
 
 
     setupValidations: function () {
-        $.validator.addMethod("Foo", function (value, element, params) {
-            console.log(params);
-            return value==="foo";
-        },"");
+
         /**
          * Create JQueryValidation check to validate Laravel rules
          */
