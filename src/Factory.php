@@ -31,7 +31,7 @@ class Factory
     public function __construct(FactoryContract $validator, Manager $manager)
     {
         $this->validator = $validator;
-        $this->manager= $manager;
+        $this->manager = $manager;
     }
 
     /**

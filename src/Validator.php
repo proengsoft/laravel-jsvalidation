@@ -17,7 +17,6 @@ class Validator extends BaseValidator
 
     const JSVALIDATION_DISABLE = 'NoJsValidation';
 
-
     /**
      * Determine if the data passes the validation rules.
      *
@@ -63,17 +62,15 @@ class Validator extends BaseValidator
         });
 
         // Format results
-        return array_reduce($convertedRules, function ($result, $item)  {
+        return array_reduce($convertedRules, function ($result, $item) {
             $attribute = $item['attribute'];
-            $rule=$item['rules'];
+            $rule = $item['rules'];
             $result[$attribute] = (empty($result[$attribute])) ? array() : $result[$attribute];
             $result[$attribute] = array_merge($result[$attribute], $rule);
 
             return $result;
         }, array());
-
     }
-
 
     /**
      * Make Laravel Validations compatible with JQuery Validation Plugin.
@@ -94,15 +91,14 @@ class Validator extends BaseValidator
                 $jsRules[$jsRule][] = array(
                     $rule, $jsParams,
                     $this->getJsMessage($attribute, $rule, $parameters),
-                    $this->isImplicit($rule)
+                    $this->isImplicit($rule),
                 );
-
             }
         }
 
         return array(
-            'attribute'=>$jsAttribute,
-            'rules'=>$jsRules
+            'attribute' => $jsAttribute,
+            'rules' => $jsRules,
         );
     }
 
@@ -118,34 +114,32 @@ class Validator extends BaseValidator
     protected function getJsRule($attribute, $rule, $parameters)
     {
         $method = "jsRule{$rule}";
-        $jsRule=false;
+        $jsRule = false;
 
         if ($this->isRemoteRule($rule)) {
             list($attribute, $parameters) = $this->jsRemoteRule($attribute);
-            $jsRule="laravelValidationRemote";
-        } elseif(method_exists($this, $method)) {
+            $jsRule = 'laravelValidationRemote';
+        } elseif (method_exists($this, $method)) {
             list($attribute, $parameters) = $this->$method($attribute, $parameters);
-            $jsRule="laravelValidation";
+            $jsRule = 'laravelValidation';
         } elseif (method_exists($this, "validate{$rule}")) {
-            $jsRule = "laravelValidation";
+            $jsRule = 'laravelValidation';
         }
 
         return [$attribute, $jsRule, $parameters];
     }
-
 
     /**
      *  Replace javascript error message place-holders with actual values.
      *
      * @param string $attribute
      * @param string $rule
-     * @param array $parameters
+     * @param array  $parameters
      *
      * @return mixed
      */
     protected function getJsMessage($attribute, $rule, $parameters)
     {
-
         $message = $this->getTypeMessage($attribute, $rule);
 
         if (isset($this->replacers[snake_case($rule)])) {
@@ -196,7 +190,6 @@ class Validator extends BaseValidator
         return !$this->hasRule($attribute, self::JSVALIDATION_DISABLE);
     }
 
-
     /**
      * Returns view data to render javascript.
      *
@@ -204,8 +197,8 @@ class Validator extends BaseValidator
      */
     public function validationData()
     {
-        $jsMessages=array();
-        $jsValidations= $this->generateJavascriptValidations();
+        $jsMessages = array();
+        $jsValidations = $this->generateJavascriptValidations();
 
         return [
             'rules' => $jsValidations,
@@ -225,4 +218,3 @@ class Validator extends BaseValidator
         return $this->validationData();
     }
 }
-

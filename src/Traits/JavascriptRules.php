@@ -107,7 +107,6 @@ trait JavascriptRules
         return [$attribute, [$date]];
     }
 
-
     /**
      * Returns Javascript parameters for remote validated rules.
      *
@@ -126,5 +125,4 @@ trait JavascriptRules
 
         return [$attribute, $params];
     }
-
 }

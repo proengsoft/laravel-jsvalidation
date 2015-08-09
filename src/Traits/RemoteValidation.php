@@ -127,7 +127,7 @@ trait RemoteValidation
         foreach ($rules as $i => $rule) {
             list($rule, $parameters) = $this->parseRule($rule);
             $jsRule = $this->getJsRule($attribute, $rule, $parameters);
-            if ($jsRule [1]!=='laravelValidationRemote') {
+            if ($jsRule [1] !== 'laravelValidationRemote') {
                 unset($rules[$i]);
             }
         }
@@ -146,10 +146,9 @@ trait RemoteValidation
      */
     protected function isRemoteRule($rule)
     {
-
         if (!in_array($rule, ['ActiveUrl', 'Exists', 'Unique'])) {
             return in_array(snake_case($rule), array_keys($this->getExtensions()))
-                && !method_exists($this,"jsRule{$rule}");
+                && !method_exists($this, "jsRule{$rule}");
         }
 
         return true;
