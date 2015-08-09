@@ -40,7 +40,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
     public function testRender()
     {
 
-        $this->mockValidator->shouldReceive('js')->once();
+        $this->mockValidator->shouldReceive('validationData')->once();
 
 
         View::shouldReceive('make')
@@ -62,7 +62,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
     {
         $expected=['selector'=>$this->form];
 
-        $this->mockValidator->shouldReceive('js')->once();
+        $this->mockValidator->shouldReceive('validationData')->once();
 
         $viewData=$this->jsValidator->toArray();
         $this->assertEquals($expected,$viewData);
@@ -74,7 +74,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testToString()
     {
-        $this->mockValidator->shouldReceive('js')->twice();
+        $this->mockValidator->shouldReceive('validationData')->twice();
 
         $txt=$this->jsValidator->__toString();
         $this->assertEquals($this->jsValidator->render(),$txt);
@@ -84,7 +84,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGet()
     {
-        $this->mockValidator->shouldReceive('js')->once();
+        $this->mockValidator->shouldReceive('validationData')->once();
 
         $this->assertEquals($this->form,$this->jsValidator->selector);
     }
@@ -92,7 +92,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetException()
     {
-        $this->mockValidator->shouldReceive('js')->once();
+        $this->mockValidator->shouldReceive('validationData')->once();
         
         try {
             $this->jsValidator->property_not_found;

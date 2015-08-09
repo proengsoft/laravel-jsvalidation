@@ -113,12 +113,12 @@ class Manager implements Arrayable
      */
     protected function getViewData()
     {
-        if (method_exists($this->validator, 'js')) {
+        if (method_exists($this->validator, 'validationData')) {
             $data = [
                 'selector' => $this->selector,
             ];
 
-            return array_merge($data, (array) call_user_func([$this->validator, 'js']));
+            return array_merge($data, (array) call_user_func([$this->validator, 'validationData']));
         }
 
         return array();

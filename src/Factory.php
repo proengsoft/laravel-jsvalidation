@@ -16,29 +16,22 @@ class Factory
     protected $validator;
 
     /**
-     * Default Config.
-     *
-     * @var array
-     */
-    //protected $defaults;
-
-    /**
      * Javascript validator instance.
      *
      * @var Manager
      */
-    protected $js;
+    protected $manager;
 
     /**
      * Create a new Validator factory instance.
      *
      * @param \Illuminate\Contracts\Validation\Factory $validator
-     * @param \Proengsoft\JsValidation\Manager         $js
+     * @param \Proengsoft\JsValidation\Manager         $manager
      */
-    public function __construct(FactoryContract $validator, Manager $js)
+    public function __construct(FactoryContract $validator, Manager $manager)
     {
         $this->validator = $validator;
-        $this->js = $js;
+        $this->manager = $manager;
     }
 
     /**
@@ -70,7 +63,7 @@ class Factory
      */
     public function formRequest($formRequest, $selector = null)
     {
-        if (!is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
+        if (!is_subclass_of($formRequest,  'Illuminate\\Foundation\\Http\\FormRequest')) {
             $className = is_object($formRequest) ? get_class($formRequest) : (string) $formRequest;
             throw new FormRequestArgumentException($className);
         }
@@ -105,10 +98,10 @@ class Factory
     protected function createValidator(ValidatorContract $validator, $selector = null)
     {
         if (!empty($selector)) {
-            $this->js->setSelector($selector);
+            $this->manager->setSelector($selector);
         }
-        $this->js->setValidator($validator);
+        $this->manager->setValidator($validator);
 
-        return $this->js;
+        return $this->manager;
     }
 }

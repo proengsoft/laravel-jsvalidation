@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Exception\HttpResponseException;
 use Mockery as m;
-use Illuminate\Foundation\Testing\TestCase;
 use Proengsoft\JsValidation\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
@@ -23,7 +22,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     public function setUp()
     {
 
-
         $this->translator = \Mockery::instanceMock('Symfony\Component\Translation\TranslatorInterface')
             ->shouldReceive('trans')
             ->getMock();
@@ -36,6 +34,12 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $customAttributes = [];
 
         $this->validator= new Validator($this->translator, $data, $rules,$messages ,$customAttributes);
+    }
+
+    public function tearDown(){
+        m::close();
+        unset($this->validator);
+        unset($this->translator);
     }
 
 
@@ -60,33 +64,33 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
 
-    public function testJs() {
+    public function testValidationData() {
 
         $expected=array(
-            'rules' => array('name'=>['laravelRequired'=>[]]),
-            'messages' =>  array('name'=>['laravelRequired'=>'name required']),
+            'rules' => array('name'=>['laravelValidation'=>[['Required',[],'name required',true]]]),
+            'messages' =>  array(),
         );
 
-        $data=$this->validator->js();
+        $data=$this->validator->validationData();
         $this->assertEquals($expected,$data);
 
     }
 
 
 
-    public function testJsRemote() {
+    public function testValidationDataRemote() {
 
         $rule=['name'=>'active_url'];
         $message=['name.active_url'=>'active url'];
         $expected=array(
-            'rules' => array('name'=>['jsValidationRemote'=>['name','encrypted token']]),
-            'messages'=>array('name'=>['jsValidationRemote'=>'active url'])
+            'rules' => array('name'=>['laravelValidationRemote'=>[['ActiveUrl',['name','encrypted token'],'active url',false]]]),
+            'messages'=>array()
         );
 
         $validator=new Validator($this->translator, [], $rule,$message);
         Session::shouldReceive('token')->once();
         Crypt::shouldReceive('encrypt')->once()->andReturn('encrypted token');
-        $data=$validator->js();
+        $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
     }
@@ -97,8 +101,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $rule=['name'=>'foo'];
         $message=['name.foo'=>'custom rule %replace%'];
         $expected=array(
-            'rules' => array('name'=>['jsValidationRemote'=>['name','encrypted token']]),
-            'messages'=>array('name'=>['jsValidationRemote'=>'custom rule -replaced text-'])
+            'rules' => array('name'=>['laravelValidationRemote'=>[['Foo',['name','encrypted token'],'custom rule -replaced text-',false]]]),
+            'messages'=>array()
         );
 
         $validator=new Validator($this->translator, [], $rule,$message);
@@ -114,7 +118,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
         Session::shouldReceive('token')->once();
         Crypt::shouldReceive('encrypt')->once()->andReturn('encrypted token');
-        $data=$validator->js();
+        $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
     }
@@ -129,7 +133,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         );
 
         $validator=new Validator($this->translator, [], $rule,$message);
-        $data=$validator->js();
+        $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
 
@@ -139,18 +143,18 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testJsRuleConfirmed(){
 
         $rule=['name'=>'confirmed'];
+        //$message=['name.confirmed'=>'name confirmed'];
         $message=['name.confirmed'=>'name confirmed'];
         $expected=array(
             'rules' => array(
-                'name_confirmation'=> ['laravelConfirmed'=>array('name')]
+                'name_confirmation'=> ['laravelValidation'=>[['Confirmed',['name'],'name confirmed',false]]],
             ),
-            'messages'=>array(
-                'name_confirmation'=> ['laravelConfirmed'=>'name confirmed']
-            )
+            'messages'=>array()
         );
 
         $validator=new Validator($this->translator, [], $rule,$message);
-        $data=$validator->js();
+        $data=$validator->validationData();
+
 
         $this->assertEquals($expected,$data);
 
@@ -175,19 +179,15 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
         $expected=array(
             'rules' => array(
-                'date'=> ['laravelAfter'=>array(strtotime($mayDay))],
-                'other_date'=> ['laravelAfter'=>array("date")],
-                'other'=> ['laravelAfter'=>array("false")],
+                'date'=> ['laravelValidation'=>[['After',[strtotime($mayDay)],'May Day',false]]],
+                'other_date'=> ['laravelValidation'=>[['After',["date"],'After May Day',false]]],
+                'other'=> ['laravelValidation'=>[['After',["false"],"other invalid",false]]],
             ),
-            'messages'=>array(
-                'date'=> ['laravelAfter'=>'May Day'],
-                'other_date'=> ['laravelAfter'=>'After May Day'],
-                'other'=> ['laravelAfter'=>'other invalid'],
-            )
+            'messages'=>array()
         );
 
         $validator=new Validator($this->translator, [], $rule,$message);
-        $data=$validator->js();
+        $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
 
@@ -211,96 +211,15 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
         $expected=array(
             'rules' => array(
-                'date'=> ['laravelBefore'=>array(strtotime($mayDay))],
-                'other_date'=> ['laravelBefore'=>array("date")],
-                'other'=> ['laravelBefore'=>array("false")],
+                'date'=> ['laravelValidation'=>[['Before',[strtotime($mayDay)],'May Day',false]]],
+                'other_date'=> ['laravelValidation'=>[['Before',["date"],'Before May Day',false]]],
+                'other'=> ['laravelValidation'=>[['Before',["false"],"other invalid",false]]],
             ),
-            'messages'=>array(
-                'date'=> ['laravelBefore'=>'May Day'],
-                'other_date'=> ['laravelBefore'=>'Before May Day'],
-                'other'=> ['laravelBefore'=>'other invalid'],
-            )
+            'messages'=>array()
         );
 
         $validator=new Validator($this->translator, [], $rule,$message);
-        $data=$validator->js();
-
-        $this->assertEquals($expected,$data);
-
-    }
-
-    public function testNotUniqueRuleName()
-    {
-        $rule=[
-            'name'=>'required_if:field1,value1|required_if:field2,value2',
-            'field1'=>''
-        ];
-        $message=['name.required_if'=>'The :attribute field is required when :other is :value.'];
-        $expected=array(
-            'rules' => array(
-                'name'=> [
-                    'laravelRequiredIf'=>array('field1','value1'),
-                    'laravelRequiredIf_1'=>array('field2','value2'),
-                ]
-            ),
-            'messages'=>array(
-                'name'=> [
-                    'laravelRequiredIf'=>'The  field is required when  is .',
-                    'laravelRequiredIf_1'=>'The  field is required when  is .'
-                ]
-            )
-        );
-        
-        $validator=new Validator($this->translator, [], $rule,$message);
-        $data=$validator->js();
-        //dd($data);
-
-        $this->assertEquals($expected,$data);
-
-    }
-
-    public function testUniqueRuleName()
-    {
-        $rule=['name'=>'required_if:field1,value1'];
-        $message=['name.required_if'=>'The :attribute field is required when :other is :value.'];
-        $expected=array(
-            'rules' => array(
-                'name'=> [
-                    'laravelRequiredIf'=>array('field1','value1'),
-                ]
-            ),
-            'messages'=>array(
-                'name'=> [
-                    'laravelRequiredIf'=>'The  field is required when  is .',
-                ]
-            )
-        );
-
-        //$rules=['name'=>'required_if:field1,value1|required_if:field2,value2'];
-        //$messages=['name'=>'required_if:field1,value1|required_if:field2,value2'];
-
-        $validator=new Validator($this->translator, [], $rule,$message);
-        $data=$validator->js();
-
-        $this->assertEquals($expected,$data);
-
-    }
-
-    public function testMimes(){
-
-        $rule=['name'=>'mimes:TXT'];
-        $message=['name.mimes'=>'Mime TXT'];
-        $expected=array(
-            'rules' => array(
-                'name'=> ['laravelMimes'=>array('txt')]
-            ),
-            'messages'=>array(
-                'name'=> ['laravelMimes'=>'Mime TXT']
-            )
-        );
-
-        $validator=new Validator($this->translator, [], $rule,$message);
-        $data=$validator->js();
+        $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
 
@@ -387,6 +306,46 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
 
+    public function testRequiredIfReplacement()
+    {
+        $rule=['name'=>'required_if:field1,value1'];
+        $message=['name.required_if'=>'The :attribute field is required when :other is :value.'];
+        $expected=array(
+            'rules' => array(
+                'name'=> [
+                    'laravelValidation'=>[['RequiredIf',array('field1','value1'),'The  field is required when  is .',true]],
+                ]
+            ),
+            'messages'=>array()
+        );
+
+        //$rules=['name'=>'required_if:field1,value1|required_if:field2,value2'];
+        //$messages=['name'=>'required_if:field1,value1|required_if:field2,value2'];
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->validationData();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
+    public function testMimes(){
+
+        $rule=['name'=>'mimes:TXT'];
+        $message=['name.mimes'=>'Mime TXT'];
+        $expected=array(
+            'rules' => array(
+                'name'=> ['laravelValidation'=>[['Mimes',array('TXT'),'Mime TXT',false]]]
+            ),
+            'messages'=>array()
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->js();
+
+        $this->assertEquals($expected,$data);
+
+    }
 
 
     public function  testPassesWithoutRemote()
