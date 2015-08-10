@@ -341,7 +341,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         );
 
         $validator=new Validator($this->translator, [], $rule,$message);
-        $data=$validator->js();
+        $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
 

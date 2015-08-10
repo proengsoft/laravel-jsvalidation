@@ -203,15 +203,5 @@ class Validator extends BaseValidator
         ];
     }
 
-    /**
-     * Returns view data to render javascript.
-     *
-     * @deprecated use validationData() instead
-     *
-     * @return array
-     */
-    public function js()
-    {
-        return $this->validationData();
-    }
+
 }
