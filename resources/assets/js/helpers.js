@@ -95,12 +95,12 @@ $.extend(true, laravelValidation, {
             if (this.hasNumericRules(element) && /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value)) {
                 return parseFloat(value);
             } else if ($.isArray(value)) {
-                return value.length;
-            } else if (element.type == 'file') {
-                return Math.ceil(this.fileinfo(element).size);
+                return parseFloat(value.length);
+            } else if (element.type === 'file') {
+                return parseFloat(Math.ceil(this.fileinfo(element).size));
             }
 
-            return this.strlen(value);
+            return parseFloat(this.strlen(value));
         },
 
 
@@ -115,7 +115,7 @@ $.extend(true, laravelValidation, {
 
             var found = undefined;
             $.each($.validator.staticRules(element), function(key, rules) {
-                if (key=="laravelValidation") {
+                if (key==="laravelValidation") {
                     $.each(rules, function (i, value) {
                         if (value[0]===rule) {
                             found=value;
@@ -140,9 +140,9 @@ $.extend(true, laravelValidation, {
             var timeValue = false;
             var fmt = new DateFormatter();
 
-            if ($.type(format) == 'object') {
+            if ($.type(format) === 'object') {
                 var dateRule=this.getLaravelValidation('DateFormat', format)
-                if (dateRule!= undefined) {
+                if (dateRule !== undefined) {
                     format = dateRule[1][0];
                 } else {
                     format = null;
@@ -178,7 +178,7 @@ $.extend(true, laravelValidation, {
         dependentElement: function(validator, element, name) {
 
             var el=validator.findByName(name);
-            if (el[0]==undefined) {
+            if (el[0]===undefined) {
                 return true;
             }
             if ( validator.settings.onfocusout ) {

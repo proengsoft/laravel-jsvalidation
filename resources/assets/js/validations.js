@@ -161,8 +161,8 @@ $.extend(true, laravelValidation, {
          */
         Same: function(value, element, params) {
             var target=laravelValidation.helpers.dependentElement(this, element, params[0]);
-            var targetValue=String(this.elementValue(target));
-            return value == targetValue;
+            var targetValue=this.elementValue(target);
+            return String(value) === String(targetValue);
         },
 
         /**
@@ -228,7 +228,7 @@ $.extend(true, laravelValidation, {
          */
         Digits: function(value, element, params) {
             return ($.validator.methods.number.call(this, value, element, true)
-                && value.length==params);
+                && value.length===parseInt(params));
         },
 
         /**
@@ -244,7 +244,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Size: function(value, element, params) {
-            return laravelValidation.helpers.getSize(this, element,value) == params[0];
+            return laravelValidation.helpers.getSize(this, element,value) === parseFloat(params[0]);
         },
 
         /**
@@ -276,7 +276,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         In: function(value, element, params) {
-            return params.indexOf(value.toString()) != -1;
+            return params.indexOf(value.toString()) !== -1;
         },
 
         /**
@@ -284,7 +284,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         NotIn: function(value, element, params) {
-            return params.indexOf(value.toString()) == -1;
+            return params.indexOf(value.toString()) === -1;
         },
 
 
@@ -318,7 +318,7 @@ $.extend(true, laravelValidation, {
         Mimes: function(value, element, params) {
             var lowerParams = $.map(params, String.toLowerCase);
             return (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-                lowerParams.indexOf(laravelValidation.helpers.fileinfo(element).extension.toLowerCase())!=-1;
+                lowerParams.indexOf(laravelValidation.helpers.fileinfo(element).extension.toLowerCase())!==-1;
         },
 
         /**
@@ -371,10 +371,10 @@ $.extend(true, laravelValidation, {
             }
             // checking modifiers
             var php_modifiers=[];
-            if (matches[2]!=undefined) {
+            if (matches[2]!==undefined) {
                 php_modifiers=matches[2].split('');
                 for (var i=0; i<php_modifiers.length<i ;i++) {
-                    if (invalidModifiers.indexOf(php_modifiers[i])!=-1) {
+                    if (invalidModifiers.indexOf(php_modifiers[i])!==-1) {
                         return true;
                     }
                 }
@@ -388,7 +388,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Date: function(value) {
-            return (laravelValidation.helpers.strtotime(value)!=false);
+            return (laravelValidation.helpers.strtotime(value)!==false);
         },
 
         /**
@@ -396,7 +396,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         DateFormat: function(value, element, params) {
-            return  laravelValidation.helpers.parseTime(value,params[0])!=false;
+            return  laravelValidation.helpers.parseTime(value,params[0])!==false;
         },
 
         /**
@@ -412,7 +412,7 @@ $.extend(true, laravelValidation, {
             }
 
             var timeValue=laravelValidation.helpers.parseTime(value, element);
-            return  (timeValue !=false && timeValue < timeCompare);
+            return  (timeValue !==false && timeValue < timeCompare);
 
         },
 
@@ -428,7 +428,7 @@ $.extend(true, laravelValidation, {
             }
 
             var timeValue=laravelValidation.helpers.parseTime(value, element);
-            return  (timeValue !=false && timeValue > timeCompare);
+            return  (timeValue !==false && timeValue > timeCompare);
 
         },
 
