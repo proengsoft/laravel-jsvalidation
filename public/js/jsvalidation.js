@@ -2105,9 +2105,8 @@ laravelValidation = {
 
             $.each(rules, function (i, param) {
                 var implicit = param[3] || laravelValidation.implicitRules.indexOf(param[0])!== -1;
-                var rule = param[0],
-                    arguments = param[1],
-                    message = param[2];
+                var rule = param[0];
+                var message = param[2];
 
                 if ( !implicit && validator.optional( element ) ) {
                     validated="dependency-mismatch";
@@ -2116,14 +2115,13 @@ laravelValidation = {
 
 
                 if (laravelValidation.methods[rule]!==undefined) {
-                    validated = laravelValidation.methods[rule].call(validator, value, element, arguments);
+                    validated = laravelValidation.methods[rule].call(validator, value, element, param[1]);
                 } else if($.validator.methods[rule]!==undefined) {
-                    validated = $.validator.methods[rule].call(validator, value, element, arguments);
+                    validated = $.validator.methods[rule].call(validator, value, element, param[1]);
                 } else {
                     validated=false;
                 }
-                //console.log(method);
-                //validated = method.call(validator, value, element, arguments);
+
                 if (validated !== true) {
                     if (!validator.settings.messages[ element.name ] ) {
                         validator.settings.messages[ element.name ] = {};
@@ -2191,7 +2189,7 @@ laravelValidation = {
                 type: $(validator.currentForm).attr('method'),
 
                 beforeSend: function (xhr) {
-                    if ($(validator.currentForm).attr('method').toLowerCase() != 'get' && token) {
+                    if ($(validator.currentForm).attr('method').toLowerCase() !== 'get' && token) {
                         return xhr.setRequestHeader('X-XSRF-TOKEN', token);
                     }
                 },
@@ -2331,12 +2329,12 @@ $.extend(true, laravelValidation, {
             if (this.hasNumericRules(element) && /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value)) {
                 return parseFloat(value);
             } else if ($.isArray(value)) {
-                return value.length;
-            } else if (element.type == 'file') {
-                return Math.ceil(this.fileinfo(element).size);
+                return parseFloat(value.length);
+            } else if (element.type === 'file') {
+                return parseFloat(Math.ceil(this.fileinfo(element).size));
             }
 
-            return this.strlen(value);
+            return parseFloat(this.strlen(value));
         },
 
 
@@ -2351,7 +2349,7 @@ $.extend(true, laravelValidation, {
 
             var found = undefined;
             $.each($.validator.staticRules(element), function(key, rules) {
-                if (key=="laravelValidation") {
+                if (key==="laravelValidation") {
                     $.each(rules, function (i, value) {
                         if (value[0]===rule) {
                             found=value;
@@ -2376,9 +2374,9 @@ $.extend(true, laravelValidation, {
             var timeValue = false;
             var fmt = new DateFormatter();
 
-            if ($.type(format) == 'object') {
+            if ($.type(format) === 'object') {
                 var dateRule=this.getLaravelValidation('DateFormat', format)
-                if (dateRule!= undefined) {
+                if (dateRule !== undefined) {
                     format = dateRule[1][0];
                 } else {
                     format = null;
@@ -2414,7 +2412,7 @@ $.extend(true, laravelValidation, {
         dependentElement: function(validator, element, name) {
 
             var el=validator.findByName(name);
-            if (el[0]==undefined) {
+            if (el[0]===undefined) {
                 return true;
             }
             if ( validator.settings.onfocusout ) {
@@ -2906,7 +2904,7 @@ $.extend(true, laravelValidation, {
                 city=tzparts[1].toLowerCase();
             }
 
-            return (continent in timezones && ( timezones[continent].length==0 || timezones[continent].indexOf(city)!=-1))
+            return (continent in timezones && ( timezones[continent].length===0 || timezones[continent].indexOf(city)!==-1))
 
         }
     }
@@ -3076,8 +3074,8 @@ $.extend(true, laravelValidation, {
          */
         Same: function(value, element, params) {
             var target=laravelValidation.helpers.dependentElement(this, element, params[0]);
-            var targetValue=String(this.elementValue(target));
-            return value == targetValue;
+            var targetValue=this.elementValue(target);
+            return String(value) === String(targetValue);
         },
 
         /**
@@ -3143,7 +3141,7 @@ $.extend(true, laravelValidation, {
          */
         Digits: function(value, element, params) {
             return ($.validator.methods.number.call(this, value, element, true)
-                && value.length==params);
+                && value.length===parseInt(params));
         },
 
         /**
@@ -3159,7 +3157,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Size: function(value, element, params) {
-            return laravelValidation.helpers.getSize(this, element,value) == params[0];
+            return laravelValidation.helpers.getSize(this, element,value) === parseFloat(params[0]);
         },
 
         /**
@@ -3191,7 +3189,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         In: function(value, element, params) {
-            return params.indexOf(value.toString()) != -1;
+            return params.indexOf(value.toString()) !== -1;
         },
 
         /**
@@ -3199,7 +3197,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         NotIn: function(value, element, params) {
-            return params.indexOf(value.toString()) == -1;
+            return params.indexOf(value.toString()) === -1;
         },
 
 
@@ -3233,7 +3231,7 @@ $.extend(true, laravelValidation, {
         Mimes: function(value, element, params) {
             var lowerParams = $.map(params, String.toLowerCase);
             return (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-                lowerParams.indexOf(laravelValidation.helpers.fileinfo(element).extension.toLowerCase())!=-1;
+                lowerParams.indexOf(laravelValidation.helpers.fileinfo(element).extension.toLowerCase())!==-1;
         },
 
         /**
@@ -3286,10 +3284,10 @@ $.extend(true, laravelValidation, {
             }
             // checking modifiers
             var php_modifiers=[];
-            if (matches[2]!=undefined) {
+            if (matches[2]!==undefined) {
                 php_modifiers=matches[2].split('');
                 for (var i=0; i<php_modifiers.length<i ;i++) {
-                    if (invalidModifiers.indexOf(php_modifiers[i])!=-1) {
+                    if (invalidModifiers.indexOf(php_modifiers[i])!==-1) {
                         return true;
                     }
                 }
@@ -3303,7 +3301,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Date: function(value) {
-            return (laravelValidation.helpers.strtotime(value)!=false);
+            return (laravelValidation.helpers.strtotime(value)!==false);
         },
 
         /**
@@ -3311,7 +3309,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         DateFormat: function(value, element, params) {
-            return  laravelValidation.helpers.parseTime(value,params[0])!=false;
+            return  laravelValidation.helpers.parseTime(value,params[0])!==false;
         },
 
         /**
@@ -3327,7 +3325,7 @@ $.extend(true, laravelValidation, {
             }
 
             var timeValue=laravelValidation.helpers.parseTime(value, element);
-            return  (timeValue !=false && timeValue < timeCompare);
+            return  (timeValue !==false && timeValue < timeCompare);
 
         },
 
@@ -3343,7 +3341,7 @@ $.extend(true, laravelValidation, {
             }
 
             var timeValue=laravelValidation.helpers.parseTime(value, element);
-            return  (timeValue !=false && timeValue > timeCompare);
+            return  (timeValue !==false && timeValue > timeCompare);
 
         },
 

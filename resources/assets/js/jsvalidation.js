@@ -44,9 +44,8 @@ laravelValidation = {
 
             $.each(rules, function (i, param) {
                 var implicit = param[3] || laravelValidation.implicitRules.indexOf(param[0])!== -1;
-                var rule = param[0],
-                    arguments = param[1],
-                    message = param[2];
+                var rule = param[0];
+                var message = param[2];
 
                 if ( !implicit && validator.optional( element ) ) {
                     validated="dependency-mismatch";
@@ -55,14 +54,13 @@ laravelValidation = {
 
 
                 if (laravelValidation.methods[rule]!==undefined) {
-                    validated = laravelValidation.methods[rule].call(validator, value, element, arguments);
+                    validated = laravelValidation.methods[rule].call(validator, value, element, param[1]);
                 } else if($.validator.methods[rule]!==undefined) {
-                    validated = $.validator.methods[rule].call(validator, value, element, arguments);
+                    validated = $.validator.methods[rule].call(validator, value, element, param[1]);
                 } else {
                     validated=false;
                 }
-                //console.log(method);
-                //validated = method.call(validator, value, element, arguments);
+
                 if (validated !== true) {
                     if (!validator.settings.messages[ element.name ] ) {
                         validator.settings.messages[ element.name ] = {};
@@ -130,7 +128,7 @@ laravelValidation = {
                 type: $(validator.currentForm).attr('method'),
 
                 beforeSend: function (xhr) {
-                    if ($(validator.currentForm).attr('method').toLowerCase() != 'get' && token) {
+                    if ($(validator.currentForm).attr('method').toLowerCase() !== 'get' && token) {
                         return xhr.setRequestHeader('X-XSRF-TOKEN', token);
                     }
                 },

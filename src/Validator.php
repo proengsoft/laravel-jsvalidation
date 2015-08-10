@@ -48,7 +48,6 @@ class Validator extends BaseValidator
      */
     protected function generateJavascriptValidations()
     {
-
         // Check if JS Validation is disabled for this attribute
         $vAttributes = array_filter(array_keys($this->rules), [$this, 'jsValidationEnabled']);
         $vRules = array_intersect_key($this->rules, array_flip($vAttributes));
@@ -56,18 +55,15 @@ class Validator extends BaseValidator
         // Convert each rules and messages
         $convertedRules = array_map([$this, 'jsConvertRules'], array_keys($vRules), $vRules);
 
-        // Filter empty rules
         $convertedRules = array_filter($convertedRules, function ($value) {
             return !empty($value['rules']);
         });
-
         // Format results
         return array_reduce($convertedRules, function ($result, $item) {
             $attribute = $item['attribute'];
             $rule = $item['rules'];
             $result[$attribute] = (empty($result[$attribute])) ? array() : $result[$attribute];
             $result[$attribute] = array_merge($result[$attribute], $rule);
-
             return $result;
         }, array());
     }
@@ -207,15 +203,5 @@ class Validator extends BaseValidator
         ];
     }
 
-    /**
-     * Returns view data to render javascript.
-     *
-     * @deprecated use validationData() instead
-     *
-     * @return array
-     */
-    public function js()
-    {
-        return $this->validationData();
-    }
+
 }

@@ -118,12 +118,10 @@ trait RemoteValidation
     {
         if (!array_key_exists($attribute, $this->getRules())) {
             $this->setRules(array());
-
             return false;
         }
 
         $rules = $this->getRules()[$attribute];
-
         foreach ($rules as $i => $rule) {
             list($rule, $parameters) = $this->parseRule($rule);
             $jsRule = $this->getJsRule($attribute, $rule, $parameters);
@@ -131,7 +129,6 @@ trait RemoteValidation
                 unset($rules[$i]);
             }
         }
-
         $this->setRules([$attribute => $rules]);
 
         return !empty($this->getRules()[$attribute]);
