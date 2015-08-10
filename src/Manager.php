@@ -60,10 +60,10 @@ class Manager implements Arrayable
      */
     public function render($view = null, $selector = null)
     {
-        $view = is_null($view) ? $this->view : $view;
-        $this->setSelector(is_null($selector) ? $this->selector : $selector);
+        $this->view($view );
+        $this->selector($selector);
 
-        return View::make($view, ['validator' => $this->getViewData()])
+        return View::make($this->view, ['validator' => $this->getViewData()])
             ->render();
     }
 
@@ -126,11 +126,34 @@ class Manager implements Arrayable
 
     /**
      * Set the form selector to validate.
-     *
      * @param string $selector
+     * @deprecated
      */
     public function setSelector($selector)
     {
         $this->selector = $selector;
     }
+
+    /**
+     * Set the form selector to validate.
+     * @param string $selector
+     * @return Manager
+     */
+    public function selector($selector)
+    {
+        $this->selector = is_null($selector) ? $this->selector : $selector;
+        return $this;
+    }
+
+    /**
+     * Set the view to render Javascript Validations.
+     * @param string $view
+     * @return Manager
+     */
+    public function view($view)
+    {
+        $this->view = is_null($view) ? $this->view : $view;
+        return $this;
+    }
 }
+

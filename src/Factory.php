@@ -97,9 +97,8 @@ class Factory
      */
     protected function createValidator(ValidatorContract $validator, $selector = null)
     {
-        if (!empty($selector)) {
-            $this->manager->setSelector($selector);
-        }
+
+        $this->manager->selector($selector);
         $this->manager->setValidator($validator);
 
         return $this->manager;
