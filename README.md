@@ -24,7 +24,7 @@
 [Unique](http://laravel.com/docs/5.1/validation#rule-unique), [Exists](http://laravel.com/docs/5.1/validation#rule-exists) and [Custom Validation Rules][]
 are validated automatically via Ajax.
 
-The [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class) created by the [Facade](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade) inherits from [Laravel Validation](http://laravel.com/docs/5.0/validation), so you can use all methods and procedures that Laravel provides to 
+The [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference) created by the [Facade](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade) inherits from [Laravel Validation](http://laravel.com/docs/5.0/validation), so you can use all methods and procedures that Laravel provides to
 setup your validations. Also class and rule syntax are the same that Laravel Validation class implements. When the instance is printed in a 
 view the Javascript code needed to validate your form is rendered to the page.
 
