@@ -38,6 +38,9 @@
         "psr-4": {
             "Proengsoft\\JsValidation\\": "src"
         }
+    },
+    "suggest": {
+        "proengsoft/laravel-jsvalidation@1.1.~": "Allows validate ActiveURL, Exists, Unique and custom extensions"
     }
 
 }
