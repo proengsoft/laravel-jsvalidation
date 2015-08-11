@@ -8,18 +8,21 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/proengsoft/laravel-jsvalidation.svg?style=flat-square)](https://packagist.org/packages/proengsoft/laravel-jsvalidation)
 
 [JQuery Validation Plugin]: http://jqueryvalidation.org/
-[FormRequest]: http://laravel.com/docs/5.0/validation#form-request-validation
-[Validators]: http://laravel.com/docs/5.0/validation#form-request-validation
-[Validation Rules]: http://laravel.com/docs/5.0/validation#available-validation-rules
-[Custom Validations]: http://laravel.com/docs/5.0/validation#custom-validation-rules
-[Messages]: http://laravel.com/docs/5.0/validation#error-messages-and-views
-[Laravel Localization]: http://laravel.com/docs/5.0/localization 
-[Validation]: http://laravel.com/docs/5.0/validation 
+[FormRequest]: http://laravel.com/docs/5.1/validation#form-request-validation
+[Validators]: http://laravel.com/docs/5.1/validation#form-request-validation
+[Validation Rules]: http://laravel.com/docs/5.1/validation#available-validation-rules
+[Custom Validations]: http://laravel.com/docs/5.1/validation#custom-validation-rules
+[Messages]: http://laravel.com/docs/5.1/validation#error-messages-and-views
+[Laravel Localization]: http://laravel.com/docs/5.1/localization
+[Validation]: http://laravel.com/docs/5.1/validation
+[Custom Validation Rules]: http://laravel.com/docs/5.1/validation#custom-validation-rules
 
 **Laravel Javascript Validation** allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to validate forms transparently in client side **without need to write any Javascript code or use HTML Builder Class**. You can validate forms automatically
  referencing it to your defined validations. The messages are loaded from your validators and translated according your Localization preferences.
  
-**All Laravel [Available Validation Rules] (http://laravel.com/docs/5.0/validation#available-validation-rules) are implemented** (except remotes for now)
+**All Laravel [Validation Rules][]  and [Custom Validation Rules[] are supported**. [ActiveURL](http://laravel.com/docs/5.1/validation#rule-active-url),
+[Unique](http://laravel.com/docs/5.1/validation#rule-unique), [Exists](http://laravel.com/docs/5.1/validation#rule-exists) and [Custom Validation Rules][]
+are validated automatically via Ajax.
 
 The [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class) created by the [Facade](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade) inherits from [Laravel Validation](http://laravel.com/docs/5.0/validation), so you can use all methods and procedures that Laravel provides to 
 setup your validations. Also class and rule syntax are the same that Laravel Validation class implements. When the instance is printed in a 
@@ -31,12 +34,13 @@ The Javascript validations are made using [JQuery Validation Plugin][], that is 
 
 - [About](https://github.com/proengsoft/laravel-jsvalidation/wiki/Home)
 - [Installation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation)
+  - [Upgrade] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation#upgrade-from-previous-versions)
 - [Configuration](https://github.com/proengsoft/laravel-jsvalidation/wiki/Configuration)
   - [Settings](https://github.com/proengsoft/laravel-jsvalidation/wiki/Settings)
   - [Javascript Rendering](https://github.com/proengsoft/laravel-jsvalidation/wiki/Javascript-Rendering)
   - [Dependencies](https://github.com/proengsoft/laravel-jsvalidation/wiki/Dependencies)
 - [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/wiki/Basic-Usage)
-  - [Rulesets](https://github.com/proengsoft/laravel-jsvalidation/wiki/Rulesets)
+  - [Laravel Rules](https://github.com/proengsoft/laravel-jsvalidation/wiki/Rules)
   - [Form Requests](https://github.com/proengsoft/laravel-jsvalidation/wiki/Form-Requests)
 - [Validation Examples](https://github.com/proengsoft/laravel-jsvalidation/wiki/Validating-Forms)
   - [Controller Example](https://github.com/proengsoft/laravel-jsvalidation/wiki/Controller-Validation-Example)
@@ -58,11 +62,13 @@ The Javascript validations are made using [JQuery Validation Plugin][], that is 
 
 ---
 
-### [JsValidator Class](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class)
+### [JsValidator Reference](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference)
  
-* [`Arrayable interface`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class#arrayable-interface) 
-* [`render()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class#renderview) 
-* [`__toString()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Class#__tostring) 
+* [`selector()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#selectorselector)
+* [`view()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#viewview)
+* [`render()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#renderview-selector)
+* [`Arrayable interface`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#arrayable-interface)
+* [`__toString()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#__tostring)
 
 ## License
 
