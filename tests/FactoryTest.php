@@ -4,6 +4,15 @@ use Mockery as m;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 use Proengsoft\JsValidation\Factory;
 
+
+class FakeFormRequest extends \Illuminate\Foundation\Http\FormRequest
+{
+    public function rules(){return ['name'=>'require'];}
+    public function messages(){return [];}
+
+}
+
+
 class FactoryTest extends \PHPUnit_Framework_TestCase {
 
 
@@ -11,6 +20,10 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
     public $mockedValidator;
     public $factory;
     public $mockedJs;
+    /**
+     * @var m\Mock
+     */
+    public  $mockedRequest;
 
 
     public function tearDown()
@@ -20,6 +33,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         unset($this->mockedValidator);
         unset($this->factory);
         unset($this->mockedJs);
+        unset($this->mockedRequest);
     }
 
 
@@ -27,8 +41,10 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
         $this->mockedFactory =  m::mock('Illuminate\Contracts\Validation\Factory');
         $this->mockedJs= m::mock('Proengsoft\JsValidation\Manager');
+        $this->mockedRequest= m::mock('Illuminate\Http\Request');
         $this->mockedJs->shouldReceive('setValidator');
-        $this->factory=new Factory($this->mockedFactory,$this->mockedJs);
+        $this->mockedRequest->shouldReceive('all')->andReturn([]);
+        $this->factory=new Factory($this->mockedFactory,$this->mockedJs,$this->mockedRequest);
 
     }
 
@@ -70,6 +86,54 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
 
         $js=$this->factory->formRequest($mockFormRequest);
+
+        $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
+
+    }
+
+
+    public function testFormRequestFromClassName() {
+
+        $rules=['name'=>'require'];
+        $formRequest='Proengsoft\JsValidation\Test\FakeFormRequest';
+        $mockSession=m::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface');
+        //$mockedRequest= m::mock('Illuminate\Http\Request');
+        //$mockQuery=m::mock('Symfony\Component\HttpFoundation\ParameterBag')->shouldReceive('all')->andReturn([])->getMock();;
+        $this->mockedRequest->query =m::mock()->shouldReceive('all')->andReturn([])->getMock();
+        $this->mockedRequest->attributes =m::mock()->shouldReceive('all')->andReturn([])->getMock();
+        $this->mockedRequest->cookies =m::mock()->shouldReceive('all')->andReturn([])->getMock();
+        $this->mockedRequest->server =m::mock()->shouldReceive('all')->andReturn([])->getMock();
+        $this->mockedRequest
+            ->shouldReceive('all')->andReturn([])
+            ->shouldReceive('getContent')->andReturn('')
+            ->shouldReceive('getSession')->andReturn($mockSession)
+            ->shouldReceive('setSession')->with($mockSession)
+            ->shouldReceive('getUserResolver')->andReturn(function(){})
+            ->shouldReceive('setUserResolver')
+            ->shouldReceive('getRouteResolver')->andReturn(function(){})
+            ->shouldReceive('setRouteResolver');
+
+        $this->mockedRequest->request = $this->mockedRequest;
+
+
+
+
+        //$mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
+        //$mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
+        //$mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
+        //$mockFormRequest->shouldReceive('attributes')->once()->andReturn([]);
+        $this->mockedJs->shouldReceive('selector')->once()->andReturn('form');
+
+
+        $this->mockedFactory->shouldReceive('make')
+            ->once()
+            ->with([],$rules,[],[])
+            ->andReturn(
+                m::mock('Illuminate\Contracts\Validation\Validator')
+            );
+
+        //$factory=new Factory($this->mockedFactory,$this->mockedJs,$mockedRequest);
+        $js=$this->factory->formRequest($formRequest);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
 
