@@ -60,7 +60,7 @@ class Manager implements Arrayable
      */
     public function render($view = null, $selector = null)
     {
-        $this->view($view );
+        $this->view($view);
         $this->selector($selector);
 
         return View::make($this->view, ['validator' => $this->getViewData()])
@@ -92,9 +92,9 @@ class Manager implements Arrayable
      *
      * @param $name
      *
-     * @return string
-     *
      * @throws PropertyNotFoundException
+     *
+     * @return string
      */
     public function __get($name)
     {
@@ -121,12 +121,14 @@ class Manager implements Arrayable
             return array_merge($data, (array) call_user_func([$this->validator, 'validationData']));
         }
 
-        return array();
+        return [];
     }
 
     /**
      * Set the form selector to validate.
+     *
      * @param string $selector
+     *
      * @deprecated
      */
     public function setSelector($selector)
@@ -136,24 +138,29 @@ class Manager implements Arrayable
 
     /**
      * Set the form selector to validate.
+     *
      * @param string $selector
+     *
      * @return Manager
      */
     public function selector($selector)
     {
         $this->selector = is_null($selector) ? $this->selector : $selector;
+
         return $this;
     }
 
     /**
      * Set the view to render Javascript Validations.
+     *
      * @param string|null $view
+     *
      * @return Manager
      */
     public function view($view)
     {
         $this->view = is_null($view) ? $this->view : $view;
+
         return $this;
     }
 }
-

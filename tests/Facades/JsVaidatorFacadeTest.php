@@ -1,35 +1,35 @@
-<?php namespace Proengsoft\JsValidation\Test\Facades;
+<?php
+
+namespace Proengsoft\JsValidation\Test\Facades;
 
 use Mockery as m;
 use Proengsoft\JsValidation\Facades\JsValidatorFacade;
 
-class JsValidatorFacadeTest extends \PHPUnit_Framework_TestCase {
-
+class JsVaidatorFacadeTest extends \PHPUnit_Framework_TestCase
+{
     /**
-     * Calls Mockery::close
+     * Calls Mockery::close.
      */
     public function tearDown()
     {
         m::close();
     }
 
-
-    function testGetFacadeAccessor()
+    public function testGetFacadeAccessor()
     {
         /*
         |------------------------------------------------------------
         | Set
         |------------------------------------------------------------
         */
-        $app['jsvalidator']=[];
+        $app['jsvalidator'] = [];
 
         /*
         |------------------------------------------------------------
         | Expectation
         |------------------------------------------------------------
         */
-        $expected=[];
-
+        $expected = [];
 
         /*
         |------------------------------------------------------------
@@ -37,11 +37,11 @@ class JsValidatorFacadeTest extends \PHPUnit_Framework_TestCase {
         |------------------------------------------------------------
         */
 
-        $facade=new JsValidatorFacade();
+        $facade = new JsValidatorFacade();
         $facade->setFacadeApplication($app);
-        $data=$facade->getFacadeRoot();
+        $data = $facade->getFacadeRoot();
 
-        $this->assertEquals($expected,$data);
+        $this->assertEquals($expected, $data);
 
         /*
         |------------------------------------------------------------
@@ -51,8 +51,5 @@ class JsValidatorFacadeTest extends \PHPUnit_Framework_TestCase {
         $facade->setFacadeApplication(null);
         unset($app);
         unset($facade);
-
-
     }
-
 }

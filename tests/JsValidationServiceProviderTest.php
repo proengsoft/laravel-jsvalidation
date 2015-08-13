@@ -1,4 +1,5 @@
 <?php
+
 namespace Proengsoft\JsValidation\Test;
 
 use Illuminate\Support\Facades\Config;
@@ -6,12 +7,10 @@ use Illuminate\Support\Facades\Request;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-
-
-class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
-
+class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase
+{
     /**
-     * Calls Mockery::close
+     * Calls Mockery::close.
      */
     public function tearDown()
     {
@@ -25,24 +24,22 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
         | Set
         |------------------------------------------------------------
         */
-        $namespace='jsvalidation';
-        $fakePath=realpath('./');
-        $configFile =realpath( __DIR__ . '/../config/jsvalidation.php');
-        $viewsPath =realpath( __DIR__ . '/../resources/views');
-        $publicPath=realpath( __DIR__ . '/../public');
+        $namespace = 'jsvalidation';
+        $fakePath = realpath('./');
+        $configFile = realpath(__DIR__.'/../config/jsvalidation.php');
+        $viewsPath = realpath(__DIR__.'/../resources/views');
+        $publicPath = realpath(__DIR__.'/../public');
 
+        $app['config'] = [];
+        $app['path.base'] = $fakePath;
+        $app['path.public'] = $fakePath.'/public';
+        $app['path.config'] = $fakePath.'/config';
 
-        $app['config']=[];
-        $app['path.base']=$fakePath;
-        $app['path.public']=$fakePath.'/public';
-        $app['path.config']=$fakePath.'/config';
-
-        $app['validator']=m::mock('Illuminate\Contracts\Validation\Factory');
-        $sp = m::mock('Proengsoft\JsValidation\JsValidationServiceProvider[publishes,loadViewsFrom,mergeConfigFrom]',[$app])
+        $app['validator'] = m::mock('Illuminate\Contracts\Validation\Factory');
+        $sp = m::mock('Proengsoft\JsValidation\JsValidationServiceProvider[publishes,loadViewsFrom,mergeConfigFrom]', [$app])
             ->shouldAllowMockingProtectedMethods();
 
-        $test=$this;
-
+        $test = $this;
 
         /*
         |------------------------------------------------------------
@@ -62,38 +59,34 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
                 ->andReturn(true)
         );
 
-
         // Register Views
         $this->assertTrue(
-            $views=$sp->shouldReceive('loadViewsFrom')
-                ->with($viewsPath,'jsvalidation')
+            $views = $sp->shouldReceive('loadViewsFrom')
+                ->with($viewsPath, 'jsvalidation')
                 ->once()
                 ->andReturn(true) &&
             $sp->shouldReceive('publishes')
                 ->once()
-                ->with([$viewsPath => "$fakePath/resources/views/vendor/jsvalidation"],'views')
+                ->with([$viewsPath => "$fakePath/resources/views/vendor/jsvalidation"], 'views')
                 ->andReturn(true)
         );
-
 
         // Publishes assets
         $this->assertTrue((bool)
             $sp->shouldReceive('publishes')
                 ->once()
-                ->with([$publicPath => "$fakePath/public/vendor/jsvalidation"],"public")
+                ->with([$publicPath => "$fakePath/public/vendor/jsvalidation"], 'public')
                 ->andReturn(true)
         );
 
         // Register Validator
         $app['validator']->shouldReceive('resolver')
             ->once()
-            ->andReturnUsing(function($c) use ($test) {
-                $test->assertInstanceOf('Proengsoft\JsValidation\Validator',$c(m::mock('Symfony\Component\Translation\TranslatorInterface'),[],[],[]));
+            ->andReturnUsing(function ($c) use ($test) {
+                $test->assertInstanceOf('Proengsoft\JsValidation\Validator', $c(m::mock('Symfony\Component\Translation\TranslatorInterface'), [], [], []));
             });
 
-
         // Boot
-
 
         /*
         |------------------------------------------------------------
@@ -101,30 +94,29 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
         |------------------------------------------------------------
         */
 
-        $result=$sp->boot();
+        $result = $sp->boot();
 
         $this->assertTrue(true);
 
-        /**
+        /*
          *  Cleanup
          */
         unset($app);
         unset($sp);
-
     }
 
-
-    public function testRegister() {
+    public function testRegister()
+    {
 
         /*
         |------------------------------------------------------------
         | Set
         |------------------------------------------------------------
         */
-        $namespace="jsvalidation";
+        $namespace = 'jsvalidation';
         $test = $this;
-        $app=m::mock('\Illuminate\Contracts\Foundation\Application');
-        $request=m::mock('Illuminate\Http\Request');
+        $app = m::mock('\Illuminate\Contracts\Foundation\Application');
+        $request = m::mock('Illuminate\Http\Request');
         $sp = m::mock('Proengsoft\JsValidation\JsValidationServiceProvider[]', [$app])->shouldAllowMockingProtectedMethods();
         /*
         |------------------------------------------------------------
@@ -162,8 +154,9 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
 
         $app->shouldReceive('make')
             ->once()->andReturnUsing(
-                function($name) use ($test) {
-                    $test->assertEquals('Illuminate\Contracts\Validation\Factory',$name);
+                function ($name) use ($test) {
+                    $test->assertEquals('Illuminate\Contracts\Validation\Factory', $name);
+
                     return m::mock('Illuminate\Contracts\Validation\Factory');
                 }
             );
@@ -174,8 +167,7 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
         */
         $sp->register();
 
-
-        /**
+        /*
          *  Cleanup
          */
         unset($sp);
@@ -183,6 +175,4 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
         unset($test);
         unset($request);
     }
-
-
 }

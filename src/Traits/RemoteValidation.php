@@ -117,7 +117,8 @@ trait RemoteValidation
     protected function setRemoteValidationData($attribute)
     {
         if (!array_key_exists($attribute, $this->getRules())) {
-            $this->setRules(array());
+            $this->setRules([]);
+
             return false;
         }
 
