@@ -36,7 +36,7 @@ class JsValidationServiceProvider extends ServiceProvider
             $validator = new Manager($selector, $view);
             $validatorFactory = $app->make('Illuminate\Contracts\Validation\Factory');
 
-            return new Factory($validatorFactory, $validator, Request::instance());
+            return new Factory($validatorFactory, $validator, $app);
         });
     }
 

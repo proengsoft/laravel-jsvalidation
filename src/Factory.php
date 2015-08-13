@@ -2,6 +2,7 @@
 
 namespace Proengsoft\JsValidation;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
@@ -31,17 +32,23 @@ class Factory
     protected  $request;
 
     /**
+     *  Current Application Container
+     * @var Application
+     */
+    protected  $container;
+
+    /**
      * Create a new Validator factory instance.
      *
      * @param \Illuminate\Contracts\Validation\Factory $validator
      * @param \Proengsoft\JsValidation\Manager $manager
-     * @param Request $request
+     * @param Application $app
      */
-    public function __construct(FactoryContract $validator, Manager $manager, Request $request)
+    public function __construct(FactoryContract $validator, Manager $manager, Application $app)
     {
         $this->validator = $validator;
         $this->manager = $manager;
-        $this->request = $request;
+        $this->container = $app;
     }
 
     /**
@@ -97,27 +104,19 @@ class Factory
      */
     protected function createFormRequest($class)
     {
-        /**
-         * @var $formRequest FormRequest
-         */
         $formRequest=new $class();
+        $request=$this->container->offsetGet('request');
 
-        $formRequest->initialize(
-            $this->request->query->all(),
-            $this->request->request->all(),
-            $this->request->attributes->all(),
-            $this->request->cookies->all(),
-            array(),
-            $this->request->server->all(),
-            $this->request->getContent()
+        $formRequest->initialize($request->query->all(), $request->request->all(), $request->attributes->all(),
+            $request->cookies->all(), array(), $request->server->all(), $request->getContent()
         );
 
-        if ($session = $this->request->getSession())
+        if ($session = $request->getSession())
         {
             $formRequest->setSession($session);
         }
-        $formRequest->setUserResolver($this->request->getUserResolver());
-        $formRequest->setRouteResolver($this->request->getRouteResolver());
+        $formRequest->setUserResolver($request->getUserResolver());
+        $formRequest->setRouteResolver($request->getRouteResolver());
 
         return $formRequest;
     }

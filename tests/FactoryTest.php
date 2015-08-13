@@ -34,6 +34,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
     public $mockedValidator;
     public $factory;
     public $mockedJs;
+    public $mockedApp;
     /**
      * @var m\Mock
      */
@@ -48,17 +49,19 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         unset($this->factory);
         unset($this->mockedJs);
         unset($this->mockedRequest);
+        unset($this->mockedApp);
     }
 
 
     public function setUp() {
 
+        $this->mockedApp=m::mock('\Illuminate\Contracts\Foundation\Application');
         $this->mockedFactory =  m::mock('Illuminate\Contracts\Validation\Factory');
         $this->mockedJs= m::mock('Proengsoft\JsValidation\Manager');
         $this->mockedRequest= m::mock('Illuminate\Http\Request');
         $this->mockedJs->shouldReceive('setValidator');
         $this->mockedRequest->shouldReceive('all')->andReturn([]);
-        $this->factory=new Factory($this->mockedFactory,$this->mockedJs,$this->mockedRequest);
+        $this->factory=new Factory($this->mockedFactory,$this->mockedJs,$this->mockedApp);
 
     }
 
@@ -128,6 +131,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('setRouteResolver');
 
         $this->mockedRequest->request = $this->mockedRequest;
+        $this->mockedApp->shouldReceive('offsetGet')->with('request')->andReturn($this->mockedRequest);
 
 
 
