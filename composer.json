@@ -28,13 +28,13 @@
         "illuminate/contracts": "~5.0",
         "illuminate/view": "~5.0",
         "illuminate/config": "~5.0",
-        "illuminate/http": "~5.0"
+        "illuminate/http": "~5.0",
+        "illuminate/foundation": "~5.0",
 
     },
     "require-dev": {
         "phpunit/phpunit" : "4.*",
-        "mockery/mockery":"0.9.*",
-        "laravel/framework":"~5.0"
+        "mockery/mockery":"0.9.*"
     },
     "autoload": {
         "psr-4": {
