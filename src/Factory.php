@@ -2,9 +2,9 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Contracts\Validation\Factory as FactoryContract;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Validation\Factory as FactoryContract;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
@@ -26,23 +26,25 @@ class Factory
     protected $manager;
 
     /**
-     *  Current Request
+     *  Current Request.
+     *
      * @var Request
      */
-    protected  $request;
+    protected $request;
 
     /**
-     *  Current Application Container
+     *  Current Application Container.
+     *
      * @var Application
      */
-    protected  $container;
+    protected $container;
 
     /**
      * Create a new Validator factory instance.
      *
      * @param \Illuminate\Contracts\Validation\Factory $validator
-     * @param \Proengsoft\JsValidation\Manager $manager
-     * @param Application $app
+     * @param \Proengsoft\JsValidation\Manager         $manager
+     * @param Application                              $app
      */
     public function __construct(FactoryContract $validator, Manager $manager, Application $app)
     {
@@ -61,7 +63,7 @@ class Factory
      *
      * @return \Proengsoft\JsValidation\Manager
      */
-    public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector = null)
+    public function make(array $rules, array $messages = [], array $customAttributes = [], $selector = null)
     {
         $validator = $this->validator->make([], $rules, $messages, $customAttributes);
 
@@ -74,13 +76,13 @@ class Factory
      * @param $formRequest
      * @param null $selector
      *
-     * @return Manager
-     *
      * @throws FormRequestArgumentException
+     *
+     * @return Manager
      */
     public function formRequest($formRequest, $selector = null)
     {
-        if (!is_subclass_of($formRequest,  'Illuminate\\Foundation\\Http\\FormRequest')) {
+        if (!is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
             $className = is_object($formRequest) ? get_class($formRequest) : (string) $formRequest;
             throw new FormRequestArgumentException($className);
         }
@@ -89,30 +91,28 @@ class Factory
             $formRequest = $this->createFormRequest($formRequest);
         }
 
-
         $validator = $this->validator->make([], $formRequest->rules(), $formRequest->messages(), $formRequest->attributes());
 
         return $this->createValidator($validator, $selector);
     }
 
-
     /**
-     *  Creates and initializes an Form Request instance
+     *  Creates and initializes an Form Request instance.
      *
      * @param $class
+     *
      * @return FormRequest
      */
     protected function createFormRequest($class)
     {
-        $formRequest=new $class();
-        $request=$this->container->offsetGet('request');
+        $formRequest = new $class();
+        $request = $this->container->offsetGet('request');
 
         $formRequest->initialize($request->query->all(), $request->request->all(), $request->attributes->all(),
-            $request->cookies->all(), array(), $request->server->all(), $request->getContent()
+            $request->cookies->all(), [], $request->server->all(), $request->getContent()
         );
 
-        if ($session = $request->getSession())
-        {
+        if ($session = $request->getSession()) {
             $formRequest->setSession($session);
         }
         $formRequest->setUserResolver($request->getUserResolver());
@@ -144,7 +144,6 @@ class Factory
      */
     protected function createValidator(ValidatorContract $validator, $selector = null)
     {
-
         $this->manager->selector($selector);
         $this->manager->setValidator($validator);
 

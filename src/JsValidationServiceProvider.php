@@ -44,7 +44,7 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     protected function bootstrapValidator()
     {
-        $this->app['validator']->resolver(function ($translator, $data, $rules, $messages = array(), $customAttributes = array()) {
+        $this->app['validator']->resolver(function ($translator, $data, $rules, $messages = [], $customAttributes = []) {
             return new Validator($translator, $data, $rules, $messages, $customAttributes);
         });
     }

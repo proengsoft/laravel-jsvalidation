@@ -48,13 +48,13 @@ trait JavascriptRules
         unset($attribute);
         unset($rule);
 
-        $data = array();
+        $data = [];
         $data[$parameters[0]] = $parameters[1];
 
         $parameters[1] = $this->getDisplayableValue($parameters[0], array_get($data, $parameters[0]));
         $parameters[0] = $this->getAttribute($parameters[0]);
 
-        return str_replace(array(':other', ':value'), $parameters, $message);
+        return str_replace([':other', ':value'], $parameters, $message);
     }
 
     /**

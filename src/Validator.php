@@ -3,8 +3,8 @@
 namespace Proengsoft\JsValidation;
 
 use Illuminate\Validation\Validator as BaseValidator;
-use Proengsoft\JsValidation\Traits\RemoteValidation;
 use Proengsoft\JsValidation\Traits\JavascriptRules;
+use Proengsoft\JsValidation\Traits\RemoteValidation;
 
 /**
  * Extends Laravel Validator to add Javascript Validations.
@@ -62,10 +62,11 @@ class Validator extends BaseValidator
         return array_reduce($convertedRules, function ($result, $item) {
             $attribute = $item['attribute'];
             $rule = $item['rules'];
-            $result[$attribute] = (empty($result[$attribute])) ? array() : $result[$attribute];
+            $result[$attribute] = (empty($result[$attribute])) ? [] : $result[$attribute];
             $result[$attribute] = array_merge($result[$attribute], $rule);
+
             return $result;
-        }, array());
+        }, []);
     }
 
     /**
@@ -85,18 +86,18 @@ class Validator extends BaseValidator
             list($rule, $parameters) = $this->parseRule($rawRule);
             list($jsAttribute, $jsRule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
             if ($jsRule) {
-                $jsRules[$jsRule][] = array(
+                $jsRules[$jsRule][] = [
                     $rule, $jsParams,
                     $this->getJsMessage($attribute, $rule, $parameters),
                     $this->isImplicit($rule),
-                );
+                ];
             }
         }
 
-        return array(
+        return [
             'attribute' => $jsAttribute,
-            'rules' => $jsRules,
-        );
+            'rules'     => $jsRules,
+        ];
     }
 
     /**
@@ -163,7 +164,7 @@ class Validator extends BaseValidator
     {
         // find more elegant solution to set the attribute file type
         $prevFiles = $this->files;
-        if ($this->hasRule($attribute, array('Mimes', 'Image'))) {
+        if ($this->hasRule($attribute, ['Mimes', 'Image'])) {
             if (!array_key_exists($attribute, $this->files)) {
                 $this->files[$attribute] = false;
             }
@@ -194,14 +195,12 @@ class Validator extends BaseValidator
      */
     public function validationData()
     {
-        $jsMessages = array();
+        $jsMessages = [];
         $jsValidations = $this->generateJavascriptValidations();
 
         return [
-            'rules' => $jsValidations,
+            'rules'    => $jsValidations,
             'messages' => $jsMessages,
         ];
     }
-
-
 }
