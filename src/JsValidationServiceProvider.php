@@ -2,10 +2,9 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\ServiceProvider;
 use Proengsoft\JsValidation;
 
 class JsValidationServiceProvider extends ServiceProvider
