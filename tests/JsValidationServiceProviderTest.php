@@ -2,6 +2,7 @@
 namespace Proengsoft\JsValidation\Test;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
@@ -123,6 +124,7 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
         $namespace="jsvalidation";
         $test = $this;
         $app=m::mock('\Illuminate\Contracts\Foundation\Application');
+        $request=m::mock('Illuminate\Http\Request');
         $sp = m::mock('Proengsoft\JsValidation\JsValidationServiceProvider[]', [$app])->shouldAllowMockingProtectedMethods();
         /*
         |------------------------------------------------------------
@@ -139,6 +141,9 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
             ->with("$namespace.view")
             ->atLeast(1)
             ->andReturn("$namespace::bootstrap");
+
+        Request::shouldReceive('instance')
+            ->andReturn($request);
 
         $app->shouldReceive('bind')
             ->once()->andReturnUsing(
@@ -176,6 +181,7 @@ class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase {
         unset($sp);
         unset($app);
         unset($test);
+        unset($request);
     }
 
 
