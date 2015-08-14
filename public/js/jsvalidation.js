@@ -3069,8 +3069,10 @@ $.extend(true, laravelValidation, {
          */
         Same: function(value, element, params) {
             var target=laravelValidation.helpers.dependentElement(this, element, params[0]);
-            var targetValue=this.elementValue(target);
-            return String(value) === String(targetValue);
+            if (target!==undefined) {
+                return String(value) === String(this.elementValue(target));
+            }
+            return false;
         },
 
         /**
