@@ -181,7 +181,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'rules' => array(
                 'date'=> ['laravelValidation'=>[['After',[strtotime($mayDay)],'May Day',false]]],
                 'other_date'=> ['laravelValidation'=>[['After',["date"],'After May Day',false]]],
-                'other'=> ['laravelValidation'=>[['After',["false"],"other invalid",false]]],
+                'other'=> ['laravelValidation'=>[['After',["not_exists"],"other invalid",false]]],
             ),
             'messages'=>array()
         );
@@ -213,7 +213,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'rules' => array(
                 'date'=> ['laravelValidation'=>[['Before',[strtotime($mayDay)],'May Day',false]]],
                 'other_date'=> ['laravelValidation'=>[['Before',["date"],'Before May Day',false]]],
-                'other'=> ['laravelValidation'=>[['Before',["false"],"other invalid",false]]],
+                'other'=> ['laravelValidation'=>[['Before',["not_exists"],"other invalid",false]]],
             ),
             'messages'=>array()
         );

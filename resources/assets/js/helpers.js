@@ -178,10 +178,8 @@ $.extend(true, laravelValidation, {
         dependentElement: function(validator, element, name) {
 
             var el=validator.findByName(name);
-            if (el[0]===undefined) {
-                return true;
-            }
-            if ( validator.settings.onfocusout ) {
+
+            if ( el[0]!==undefined  && validator.settings.onfocusout ) {
                 el.off( ".validate-laravelValidation" )
                     .off("blur.validate-laravelValidation-"+element.name)
                     .on( "blur.validate-laravelValidation-"+element.name, function() {

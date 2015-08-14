@@ -52,12 +52,20 @@ $.extend(true, laravelValidation, {
             var validator=this,
                 required=false;
             var currentObject=this;
+
             $.each(params,function(i,param) {
-                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
-                var currentValue=currentObject.elementValue(target);
-                required=required ||  target===false
-                    || $.validator.methods.required.call(validator,currentValue,target,true);
+                var target=laravelValidation.helpers.dependentElement(
+                    currentObject, element, param
+                );
+                required=required || (
+                    target!==undefined &&
+                    $.validator.methods.required.call(
+                        validator,
+                        currentObject.elementValue(target),
+                        target,true
+                    ));
             });
+
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
@@ -72,12 +80,20 @@ $.extend(true, laravelValidation, {
             var validator=this,
                 required=true;
             var currentObject=this;
+
             $.each(params,function(i,param) {
-                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
-                var currentValue=currentObject.elementValue(target);
-                required = required &&
-                    (  target===false || $.validator.methods.required.call(validator, currentValue,target,true));
+                var target=laravelValidation.helpers.dependentElement(
+                    currentObject, element, param
+                );
+                required = required && (
+                      target!==undefined &&
+                      $.validator.methods.required.call(
+                          validator,
+                          currentObject.elementValue(target),
+                          target,true
+                      ));
             });
+
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
@@ -93,12 +109,20 @@ $.extend(true, laravelValidation, {
             var validator=this,
                 required=false;
             var currentObject=this;
+
             $.each(params,function(i,param) {
-                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
-                var currentValue=currentObject.elementValue(target);
-                required=required || target===false
-                     || !$.validator.methods.required.call(validator, currentValue,target,true);
+                var target=laravelValidation.helpers.dependentElement(
+                    currentObject, element, param
+                );
+                required = required ||
+                    target===undefined||
+                    !$.validator.methods.required.call(
+                        validator,
+                        currentObject.elementValue(target),
+                        target,true
+                    );
             });
+
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
@@ -114,12 +138,20 @@ $.extend(true, laravelValidation, {
             var validator=this,
                 required=true,
                 currentObject=this;
+
             $.each(params,function(i, param) {
-                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
-                var currentValue=currentObject.elementValue(target);
-                required = required &&
-                    (target===false|| !$.validator.methods.required.call(validator, currentValue,target,true));
+                var target=laravelValidation.helpers.dependentElement(
+                    currentObject, element, param
+                );
+                required = required && (
+                    target===undefined ||
+                    !$.validator.methods.required.call(
+                        validator,
+                        currentObject.elementValue(target),
+                        target,true
+                    ));
             });
+
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
@@ -134,15 +166,21 @@ $.extend(true, laravelValidation, {
          */
         RequiredIf: function(value, element, params) {
 
-            var target=laravelValidation.helpers.dependentElement(this, element, params[0]);
-            var val=String(this.elementValue(target));
-            var data=params.slice(1);
+            var target=laravelValidation.helpers.dependentElement(
+                this, element, params[0]
+            );
 
-            if ($.inArray(val,data)!== -1) {
-                return $.validator.methods.required.call(this, value, element, true);
-            } else {
-                return true;
+            if (target!==undefined) {
+                var val=String(this.elementValue(target));
+                var data=params.slice(1);
+                if ($.inArray(val,data)!== -1) {
+                    return $.validator.methods.required.call(
+                        this, value, element, true
+                    );
+                }
             }
+
+            return true;
 
         },
 
@@ -160,9 +198,15 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Same: function(value, element, params) {
-            var target=laravelValidation.helpers.dependentElement(this, element, params[0]);
-            var targetValue=this.elementValue(target);
-            return String(value) === String(targetValue);
+
+            var target=laravelValidation.helpers.dependentElement(
+                this, element, params[0]
+            );
+
+            if (target!==undefined) {
+                return String(value) === String(this.elementValue(target));
+            }
+            return false;
         },
 
         /**
@@ -408,6 +452,9 @@ $.extend(true, laravelValidation, {
             var timeCompare=parseFloat(params);
             if (isNaN(timeCompare)) {
                 var target=laravelValidation.helpers.dependentElement(this, element, params);
+                if (target===undefined) {
+                    return false;
+                }
                 timeCompare= laravelValidation.helpers.parseTime(this.elementValue(target), target);
             }
 
@@ -424,6 +471,9 @@ $.extend(true, laravelValidation, {
             var timeCompare=parseFloat(params);
             if (isNaN(timeCompare)) {
                 var target=laravelValidation.helpers.dependentElement(this, element, params);
+                if (target===undefined) {
+                    return false;
+                }
                 timeCompare= laravelValidation.helpers.parseTime(this.elementValue(target), target);
             }
 
