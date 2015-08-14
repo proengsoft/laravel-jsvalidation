@@ -2414,9 +2414,19 @@ $.extend(true, laravelValidation, {
             var el=validator.findByName(name);
 
             if ( el[0]!==undefined  && validator.settings.onfocusout ) {
+                console.log(el[0].type);
+                var event = "blur";
+                if (el[0].tagName === 'SELECT' ||
+                    el[0].tagName === 'OPTION' ||
+                    el[0].type === 'checkbox' ||
+                    el[0].type === 'radio'
+                ) {
+                    event = "click";
+                }
+
                 el.off( ".validate-laravelValidation" )
-                    .off("blur.validate-laravelValidation-"+element.name)
-                    .on( "blur.validate-laravelValidation-"+element.name, function() {
+                    .off(event+".validate-laravelValidation-"+element.name)
+                    .on( event+".validate-laravelValidation-"+element.name, function() {
                         $( element ).valid();
                     });
             }
@@ -3085,7 +3095,9 @@ $.extend(true, laravelValidation, {
                 var val=String(this.elementValue(target));
                 var data=params.slice(1);
                 if ($.inArray(val,data)!== -1) {
-                    return $.validator.methods.required.call(this, value, element, true);
+                    return $.validator.methods.required.call(
+                        this, value, element, true
+                    );
                 }
             }
 
