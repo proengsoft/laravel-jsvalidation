@@ -174,7 +174,9 @@ $.extend(true, laravelValidation, {
                 var val=String(this.elementValue(target));
                 var data=params.slice(1);
                 if ($.inArray(val,data)!== -1) {
-                    return $.validator.methods.required.call(this, value, element, true);
+                    return $.validator.methods.required.call(
+                        this, value, element, true
+                    );
                 }
             }
 
