@@ -2963,11 +2963,20 @@ $.extend(true, laravelValidation, {
             var validator=this,
                 required=false;
             var currentObject=this;
+
             $.each(params,function(i,param) {
-                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
-                required=required || ( target!==undefined &&
-                    $.validator.methods.required.call(validator,currentObject.elementValue(target),target,true));
+                var target=laravelValidation.helpers.dependentElement(
+                    currentObject, element, param
+                );
+                required=required || (
+                    target!==undefined &&
+                    $.validator.methods.required.call(
+                        validator,
+                        currentObject.elementValue(target),
+                        target,true
+                    ));
             });
+
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
@@ -2982,11 +2991,20 @@ $.extend(true, laravelValidation, {
             var validator=this,
                 required=true;
             var currentObject=this;
+
             $.each(params,function(i,param) {
-                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
-                  required = required && (  target!==undefined &&
-                      $.validator.methods.required.call(validator, currentObject.elementValue(target),target,true));
+                var target=laravelValidation.helpers.dependentElement(
+                    currentObject, element, param
+                );
+                required = required && (
+                      target!==undefined &&
+                      $.validator.methods.required.call(
+                          validator,
+                          currentObject.elementValue(target),
+                          target,true
+                      ));
             });
+
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
@@ -3002,11 +3020,20 @@ $.extend(true, laravelValidation, {
             var validator=this,
                 required=false;
             var currentObject=this;
+
             $.each(params,function(i,param) {
-                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
-                required=required || target===undefined
-                     || !$.validator.methods.required.call(validator, currentObject.elementValue(target),target,true);
+                var target=laravelValidation.helpers.dependentElement(
+                    currentObject, element, param
+                );
+                required = required ||
+                    target===undefined||
+                    !$.validator.methods.required.call(
+                        validator,
+                        currentObject.elementValue(target),
+                        target,true
+                    );
             });
+
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
@@ -3022,11 +3049,20 @@ $.extend(true, laravelValidation, {
             var validator=this,
                 required=true,
                 currentObject=this;
+
             $.each(params,function(i, param) {
-                var target=laravelValidation.helpers.dependentElement(currentObject, element, param);
-                required = required && (target===undefined ||
-                    !$.validator.methods.required.call(validator, currentObject.elementValue(target),target,true));
+                var target=laravelValidation.helpers.dependentElement(
+                    currentObject, element, param
+                );
+                required = required && (
+                    target===undefined ||
+                    !$.validator.methods.required.call(
+                        validator,
+                        currentObject.elementValue(target),
+                        target,true
+                    ));
             });
+
             if (required) {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
@@ -3041,7 +3077,9 @@ $.extend(true, laravelValidation, {
          */
         RequiredIf: function(value, element, params) {
 
-            var target=laravelValidation.helpers.dependentElement(this, element, params[0]);
+            var target=laravelValidation.helpers.dependentElement(
+                this, element, params[0]
+            );
 
             if (target!==undefined) {
                 var val=String(this.elementValue(target));
@@ -3050,6 +3088,7 @@ $.extend(true, laravelValidation, {
                     return $.validator.methods.required.call(this, value, element, true);
                 }
             }
+
             return true;
 
         },
@@ -3068,7 +3107,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Same: function(value, element, params) {
-            var target=laravelValidation.helpers.dependentElement(this, element, params[0]);
+
+            var target=laravelValidation.helpers.dependentElement(
+                this, element, params[0]
+            );
+
             if (target!==undefined) {
                 return String(value) === String(this.elementValue(target));
             }
