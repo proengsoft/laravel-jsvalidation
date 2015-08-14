@@ -180,9 +180,19 @@ $.extend(true, laravelValidation, {
             var el=validator.findByName(name);
 
             if ( el[0]!==undefined  && validator.settings.onfocusout ) {
-                el.off( ".validate-laravelValidation" )
-                    .off("blur.validate-laravelValidation-"+element.name)
-                    .on( "blur.validate-laravelValidation-"+element.name, function() {
+                var event = 'blur';
+                if (el[0].tagName === 'SELECT' ||
+                    el[0].tagName === 'OPTION' ||
+                    el[0].type === 'checkbox' ||
+                    el[0].type === 'radio'
+                ) {
+                    event = 'click';
+                }
+
+                var ruleName = '.validate-laravelValidation';
+                el.off( ruleName )
+                    .off(event + ruleName + '-' + element.name)
+                    .on( event + ruleName + '-' + element.name, function() {
                         $( element ).valid();
                     });
             }

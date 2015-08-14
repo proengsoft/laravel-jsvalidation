@@ -1,3 +1,12 @@
+## 1.1.1 (2015-8-15)
+
+Bugfixes:
+
+ - Issues resolved:
+     - Rules that depends from other rules they are not validated in some cases. #44
+     - Route Model Binding Form Request Validation Error. #47
+
+
 ## 1.1.0 (2015-08-11)
 
 Features:
@@ -8,7 +17,8 @@ Features:
 
 Bugfixes:
 
- - Issues resolved: #14, #17, #26, #29, #38, #39
+ - Issues resolved:
+   -  Some bugs resolved: #14, #17, #26, #29, #38, #39
 
 
 ## 1.0.5 (2015-06-13)
