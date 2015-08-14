@@ -186,7 +186,7 @@ $.extend(true, laravelValidation, {
                     el[0].type === 'checkbox' ||
                     el[0].type === 'radio'
                 ) {
-                    event = "click";
+                    event = 'click';
                 }
 
                 var ruleName = '.validate-laravelValidation';
