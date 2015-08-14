@@ -2414,19 +2414,19 @@ $.extend(true, laravelValidation, {
             var el=validator.findByName(name);
 
             if ( el[0]!==undefined  && validator.settings.onfocusout ) {
-                console.log(el[0].type);
-                var event = "blur";
+                var event = 'blur';
                 if (el[0].tagName === 'SELECT' ||
                     el[0].tagName === 'OPTION' ||
                     el[0].type === 'checkbox' ||
                     el[0].type === 'radio'
                 ) {
-                    event = "click";
+                    event = 'click';
                 }
 
-                el.off( ".validate-laravelValidation" )
-                    .off(event+".validate-laravelValidation-"+element.name)
-                    .on( event+".validate-laravelValidation-"+element.name, function() {
+                var ruleName = '.validate-laravelValidation';
+                el.off( ruleName )
+                    .off(event + ruleName + '-' + element.name)
+                    .on( event + ruleName + '-' + element.name, function() {
                         $( element ).valid();
                     });
             }
