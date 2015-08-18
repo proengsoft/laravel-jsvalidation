@@ -48,26 +48,17 @@ class Validator extends BaseValidator
      */
     protected function generateJavascriptValidations()
     {
-        // Check if JS Validation is disabled for this attribute
-        $vAttributes = array_filter(array_keys($this->rules), [$this, 'jsValidationEnabled']);
-        $vRules = array_intersect_key($this->rules, array_flip($vAttributes));
+        $jsValidations = array();
 
-        // Convert each rules and messages
-        $convertedRules = array_map([$this, 'jsConvertRules'], array_keys($vRules), $vRules);
+        foreach ($this->rules as $attribute=>$rules)
+        {
+            $newRules=$this->jsConvertRules($attribute,$rules);
+            $jsValidations = array_merge($jsValidations, $newRules);
+        }
 
-        $convertedRules = array_filter($convertedRules, function ($value) {
-            return !empty($value['rules']);
-        });
-        // Format results
-        return array_reduce($convertedRules, function ($result, $item) {
-            $attribute = $item['attribute'];
-            $rule = $item['rules'];
-            $result[$attribute] = (empty($result[$attribute])) ? array() : $result[$attribute];
-            $result[$attribute] = array_merge($result[$attribute], $rule);
-            return $result;
-        }, array());
+        return $jsValidations;
     }
-
+    
     /**
      * Make Laravel Validations compatible with JQuery Validation Plugin.
      *
@@ -78,14 +69,19 @@ class Validator extends BaseValidator
      */
     protected function jsConvertRules($attribute, $rules)
     {
+
+        if (!$this->jsValidationEnabled($attribute))
+        {
+            return array();
+        }
+
         $jsRules = [];
-        $jsAttribute = $attribute;
 
         foreach ($rules as $rawRule) {
             list($rule, $parameters) = $this->parseRule($rawRule);
             list($jsAttribute, $jsRule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
             if ($jsRule) {
-                $jsRules[$jsRule][] = array(
+                $jsRules[$jsAttribute][$jsRule][] = array(
                     $rule, $jsParams,
                     $this->getJsMessage($attribute, $rule, $parameters),
                     $this->isImplicit($rule),
@@ -93,10 +89,7 @@ class Validator extends BaseValidator
             }
         }
 
-        return array(
-            'attribute' => $jsAttribute,
-            'rules' => $jsRules,
-        );
+        return $jsRules;
     }
 
     /**
