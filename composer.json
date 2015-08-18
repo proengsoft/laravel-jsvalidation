@@ -39,11 +39,6 @@
         "psr-4": {
             "Proengsoft\\JsValidation\\": "src"
         }
-    },
-    "scripts": {
-        "post-package-update": [
-            "php artisan vendor:publish --provider=Proengsoft\\JsValidation\\JsValidationServiceProvider --tag=public --force"
-        ]
     }
 
 }
