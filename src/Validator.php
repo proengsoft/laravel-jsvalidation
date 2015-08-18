@@ -58,7 +58,7 @@ class Validator extends BaseValidator
 
         return $jsValidations;
     }
-    
+
     /**
      * Make Laravel Validations compatible with JQuery Validation Plugin.
      *
@@ -69,26 +69,21 @@ class Validator extends BaseValidator
      */
     protected function jsConvertRules($attribute, $rules)
     {
-
-        if (!$this->jsValidationEnabled($attribute))
-        {
-            return array();
-        }
+        if (!$this->jsValidationEnabled($attribute)) return array();
 
         $jsRules = [];
-
         foreach ($rules as $rawRule) {
             list($rule, $parameters) = $this->parseRule($rawRule);
             list($jsAttribute, $jsRule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
             if ($jsRule) {
                 $jsRules[$jsAttribute][$jsRule][] = array(
-                    $rule, $jsParams,
+                    $rule,
+                    $jsParams,
                     $this->getJsMessage($attribute, $rule, $parameters),
                     $this->isImplicit($rule),
                 );
             }
         }
-
         return $jsRules;
     }
 

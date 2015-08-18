@@ -1,4 +1,11 @@
-## 1.1.1 (2015-8-15)
+## 1.1.2 (2015-08-18)
+
+Bugfixes:
+
+ - Issues resolved:
+    - Wrong password confirmed rule convertion. #52
+
+## 1.1.1 (2015-08-15)
 
 Bugfixes:
 
