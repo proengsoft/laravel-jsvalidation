@@ -41,7 +41,7 @@ $.extend(true, laravelValidation, {
          *Validate that a required attribute exists.
          */
         Required: function(value, element) {
-            return $.validator.methods.required.call(this, value, element, true);
+            return  $.validator.methods.required.call(this, value, element);
         },
 
         /**

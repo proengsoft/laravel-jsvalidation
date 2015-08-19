@@ -141,7 +141,7 @@ $.extend(true, laravelValidation, {
             var fmt = new DateFormatter();
 
             if ($.type(format) === 'object') {
-                var dateRule=this.getLaravelValidation('DateFormat', format)
+                var dateRule=this.getLaravelValidation('DateFormat', format);
                 if (dateRule !== undefined) {
                     format = dateRule[1][0];
                 } else {
