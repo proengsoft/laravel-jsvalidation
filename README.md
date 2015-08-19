@@ -31,7 +31,7 @@ The Javascript validations are made using [JQuery Validation Plugin][], that is 
 
 ##### Upgrade notice
 
-**If you are upgrading this package from release older than [v1.1.2 (2015-08-19)](https://github.com/proengsoft/laravel-jsvalidation/releases/tag/v1.1.1) follow the
+**If you are upgrading this package from release older than [v1.2.0 (2015-08-19)](https://github.com/proengsoft/laravel-jsvalidation/releases/tag/v1.2.0) follow the
 [Upgrade Guide] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation#upgrade-from-previous-versions) and update your `composer.json` file to make
 sure that your Javascript assets are updated correctly.**
 
