@@ -125,7 +125,7 @@ laravelValidation = {
                 data: data,
                 context: validator.currentForm,
                 url: $(validator.currentForm).attr('action'),
-                type: $(validator.currentForm).attr('method'),
+                type: $(validator.currentForm).find('input[name="_method"]').val() ? $(validator.currentForm).find('input[name="_method"]').val() : $(validator.currentForm).attr('method'),
 
                 beforeSend: function (xhr) {
                     if ($(validator.currentForm).attr('method').toLowerCase() !== 'get' && token) {
