@@ -51,9 +51,18 @@ class Validator extends BaseValidator
         // Check if JS Validation is disabled for this attribute
         $vAttributes = array_filter(array_keys($this->rules), [$this, 'jsValidationEnabled']);
         $vRules = array_intersect_key($this->rules, array_flip($vAttributes));
+        
+        // Support multidimensional array validation.
+        $attributeNames = array_map(function($v) {
+            $multiDimension = explode(".", $v);
+            if(count($multiDimension) > 1) {
+                return $multiDimension[0] . "[".implode("][", array_slice($multiDimension, 1)) . "]";
+            }
+            return $v;
+        }, array_keys($vRules));
 
         // Convert each rules and messages
-        $convertedRules = array_map([$this, 'jsConvertRules'], array_keys($vRules), $vRules);
+        $convertedRules = array_map([$this, 'jsConvertRules'], $attributeNames, $vRules);        
 
         $convertedRules = array_filter($convertedRules, function ($value) {
             return !empty($value['rules']);
