@@ -62,7 +62,7 @@ class Validator extends BaseValidator
         }, array_keys($vRules));
 
         // Convert each rules and messages
-        $convertedRules = array_map([$this, 'jsConvertRules'], $attributeNames, $vRules);        
+        $convertedRules = array_map([$this, 'jsConvertRules'], $attributeNames, $vRules);
 
         $convertedRules = array_filter($convertedRules, function ($value) {
             return !empty($value['rules']);
