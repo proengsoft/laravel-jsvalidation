@@ -77,7 +77,7 @@ trait JavascriptRules
     protected function jsRuleAfter($attribute, array $parameters)
     {
         if (!($date = strtotime($parameters[0]))) {
-            $date =  $parameters[0];
+            $date = $this->getAttributeName($parameters[0]);
         }
 
         return [$attribute, [$date]];
@@ -94,7 +94,7 @@ trait JavascriptRules
     protected function jsRuleBefore($attribute, array $parameters)
     {
         if (!($date = strtotime($parameters[0]))) {
-            $date = $parameters[0];
+            $date = $this->getAttributeName($parameters[0]);
         }
 
         return [$attribute, [$date]];
