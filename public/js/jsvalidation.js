@@ -2179,6 +2179,10 @@ laravelValidation = {
             data = {};
             data[ element.name ] = value;
             data['_jsvalidation']= attribute;
+            var formMethod = $(validator.currentForm).attr('method');
+            if($(validator.currentForm).find('input[name="_method"]').length) {
+                formMethod = $(validator.currentForm).find('input[name="_method"]').val();
+            }
 
             $.ajax( $.extend( true, {
                 mode: "abort",
@@ -2187,7 +2191,7 @@ laravelValidation = {
                 data: data,
                 context: validator.currentForm,
                 url: $(validator.currentForm).attr('action'),
-                type: $(validator.currentForm).attr('method'),
+                type: formMethod,
 
                 beforeSend: function (xhr) {
                     if ($(validator.currentForm).attr('method').toLowerCase() !== 'get' && token) {
@@ -2233,6 +2237,7 @@ laravelValidation = {
 $(function() {
     laravelValidation.init();
 });
+
 /*!
  * Laravel Javascript Validation
  *
