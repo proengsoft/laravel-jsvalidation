@@ -2178,6 +2178,15 @@ laravelValidation = {
             data = {};
             data[ element.name ] = value;
             data['_jsvalidation']= attribute;
+            var hiddenMethod = $(validator.currentForm).find('input[name=_method]').val();
+            if (typeof hiddenMethod != 'undefined')
+            {
+            	var methodToUse = hiddenMethod;
+            }
+            else
+            {
+            	var methodToUse = $(validator.currentForm).attr('method');
+            }
 
             $.ajax( $.extend( true, {
                 mode: "abort",
@@ -2186,7 +2195,7 @@ laravelValidation = {
                 data: data,
                 context: validator.currentForm,
                 url: $(validator.currentForm).attr('action'),
-                type: $(validator.currentForm).attr('method'),
+                type: methodToUse,
 
                 beforeSend: function (xhr) {
                     if ($(validator.currentForm).attr('method').toLowerCase() !== 'get' && token) {
