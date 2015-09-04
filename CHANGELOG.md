@@ -1,6 +1,6 @@
 ## 1.1.1 (2015-08-15)
 
-Bugfixes:
+Bugfixes: 
 
  - Issues resolved:
      - Rules that depends from other rules they are not validated in some cases. #44
