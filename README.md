@@ -29,6 +29,7 @@ view the Javascript code needed to validate your form is rendered to the page.
 
 The Javascript validations are made using [JQuery Validation Plugin][], that is compiled into javascript in the package.
 
+
 ### Documentation
 
 - [About](https://github.com/proengsoft/laravel-jsvalidation/wiki/Home)

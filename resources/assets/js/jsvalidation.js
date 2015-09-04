@@ -10,7 +10,7 @@
 var laravelValidation;
 laravelValidation = {
 
-    implicitRules: ['Confirmed'],
+    implicitRules: ['Required','Confirmed'],
 
     /**
      * Initialize laravel validations
@@ -55,8 +55,10 @@ laravelValidation = {
 
                 if (laravelValidation.methods[rule]!==undefined) {
                     validated = laravelValidation.methods[rule].call(validator, value, element, param[1]);
+                    /*
                 } else if($.validator.methods[rule]!==undefined) {
                     validated = $.validator.methods[rule].call(validator, value, element, param[1]);
+                    */
                 } else {
                     validated=false;
                 }
@@ -70,7 +72,6 @@ laravelValidation = {
                 }
 
             });
-
             return validated;
 
         }, "");
