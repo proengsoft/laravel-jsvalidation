@@ -2,9 +2,9 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Contracts\Validation\Factory as FactoryContract;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Validation\Factory as FactoryContract;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
@@ -99,7 +99,7 @@ class Factory
     /**
      *  Creates and initializes an Form Request instance
      *
-     * @param $class
+     * @param string $class
      * @return FormRequest
      */
     protected function createFormRequest($class)
