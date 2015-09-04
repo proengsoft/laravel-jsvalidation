@@ -112,6 +112,7 @@ class Validator extends BaseValidator
     {
         $method = "jsRule{$rule}";
         $jsRule = false;
+        $attribute = $this->getAttributeName($attribute);
 
         if ($this->isRemoteRule($rule)) {
             list($attribute, $parameters) = $this->jsRemoteRule($attribute);
@@ -201,6 +202,22 @@ class Validator extends BaseValidator
             'rules' => $jsValidations,
             'messages' => $jsMessages,
         ];
+    }
+
+    /**
+     * Handles multidimensional attribute names
+     *
+     * @param $attribute
+     * @return string
+     */
+    private function getAttributeName($attribute)
+    {
+        $attributeArray = explode(".", $attribute);
+        if(count($attributeArray) > 1) {
+            return $attributeArray[0] . "[".implode("][", array_slice($attributeArray, 1)) . "]";
+        }
+
+        return $attribute;
     }
 
 
