@@ -1,7 +1,7 @@
 <?php
 
 namespace Proengsoft\JsValidation\Test {
-    require dirname(__FILE__) . '/stubs/Factory.php';
+    require_once dirname(__FILE__) . '/stubs/Factory.php';
 
     use Mockery as m;
     use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
