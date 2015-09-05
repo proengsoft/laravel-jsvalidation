@@ -289,8 +289,8 @@ namespace Proengsoft\JsValidation\Test {
         /**
          * Resolve the given type from the container.
          *
-         * @param  string $abstract
-         * @param  array $parameters
+         * @param  string  $abstract
+         * @param  array   $parameters
          * @return mixed
          */
         public function make($abstract, array $parameters = [])
