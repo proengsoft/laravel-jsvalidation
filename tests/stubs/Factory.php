@@ -16,7 +16,7 @@ namespace  Illuminate\Foundation\Http {
 
 
 namespace Proengsoft\JsValidation\Test {
-
+    use Closure;
 
     class  FakeFormRequest extends \Illuminate\Foundation\Http\FormRequest {
         public function rules(){return ['name'=>'require'];}
