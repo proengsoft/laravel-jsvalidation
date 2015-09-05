@@ -1,10 +1,28 @@
+## dev-master
+
+Features:
+
+ - Automatic update for public Javascript assets
+ - Minor Javascript improvements.
+ - Support multidimensional array validation
+
+Bugfixes:
+
+ - Issues resolved:
+    - Wrong password confirmed rule conversion. #52
+    - Fix numeric check for min/max validation #54
+	- Validate PUT/PATCH methods on remote #69
+	- Hidden input raising an error #58
+	- Non radio-list show error messages from other radio-list #57 
+	
+
 ## 1.1.1 (2015-08-15)
 
 Bugfixes: 
 
  - Issues resolved:
-     - Rules that depends from other rules they are not validated in some cases. #44
-     - Route Model Binding Form Request Validation Error. #47
+     - Rules that depends from other rules they are not validated in some cases. #47
+     - Route Model Binding Form Request Validation Error. #44
 
 
 ## 1.1.0 (2015-08-11)

@@ -2405,6 +2405,17 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * This method allows you to intelligently guess the date by closely matching the specific format.
+         * @param value
+         * @param format
+         * @returns {Date}
+         */
+        gessDate: function (value, format) {
+            var fmt = new DateFormatter();
+            return fmt.guessDate(value, format)
+        },
+
+        /**
          * Returns Unix timestamp based on PHP function strototime
          * http://php.net/manual/es/function.strtotime.php
          * http://phpjs.org/functions/strtotime/
@@ -3370,7 +3381,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         DateFormat: function(value, element, params) {
-            return  laravelValidation.helpers.parseTime(value,params[0])!==false;
+            return !isNaN(laravelValidation.helpers.gessDate(value,params[0]).getTime());
         },
 
         /**
