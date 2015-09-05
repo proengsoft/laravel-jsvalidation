@@ -1,4 +1,4 @@
-## dev-master
+## 1.1.2 (2015-09-05)
 
 Features:
 
@@ -14,6 +14,7 @@ Bugfixes:
 	- Validate PUT/PATCH methods on remote #69
 	- Hidden input raising an error #58
 	- Non radio-list show error messages from other radio-list #57 
+	- date_format:m rule always return not valid #66 
 	
 
 ## 1.1.1 (2015-08-15)

@@ -29,27 +29,35 @@ view the Javascript code needed to validate your form is rendered to the page.
 
 The Javascript validations are made using [JQuery Validation Plugin][], that is compiled into javascript in the package.
 
+##### Upgrade notice
+
+**If you are upgrading this package from release older than [v1.1.1 (2015-08-15)](https://github.com/proengsoft/laravel-jsvalidation/releases/tag/v1.2.0) follow the
+[Upgrade Guide] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation#upgrade-from-previous-versions) and update your `composer.json` file to make
+sure that your Javascript assets are updated correctly.**
+
 
 ### Documentation
 
+### Table of Contents
+
 - [About](https://github.com/proengsoft/laravel-jsvalidation/wiki/Home)
 - [Installation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation)
-  - [Upgrade] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation#upgrade-from-previous-versions)
+  - [Upgrade] (Installation#upgrade-from-previous-versions)
 - [Configuration](https://github.com/proengsoft/laravel-jsvalidation/wiki/Configuration)
   - [Settings](https://github.com/proengsoft/laravel-jsvalidation/wiki/Settings)
   - [Javascript Rendering](https://github.com/proengsoft/laravel-jsvalidation/wiki/Javascript-Rendering)
   - [Dependencies](https://github.com/proengsoft/laravel-jsvalidation/wiki/Dependencies)
 - [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/wiki/Basic-Usage)
-  - [Laravel Rules](https://github.com/proengsoft/laravel-jsvalidation/wiki/Rules)
-  - [Form Requests](https://github.com/proengsoft/laravel-jsvalidation/wiki/Form-Requests)
-- [Validation Examples](https://github.com/proengsoft/laravel-jsvalidation/wiki/Validating-Examples)
+  - [FormRequest validation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Form-Requests)
+  - [Controller validation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Controller-validation)
+- [Examples](https://github.com/proengsoft/laravel-jsvalidation/wiki/Validating-Examples)
   - [Controller Example](https://github.com/proengsoft/laravel-jsvalidation/wiki/Controller-Validation-Example)
   - [FormRequest Example](https://github.com/proengsoft/laravel-jsvalidation/wiki/FormRequest-Validation-Example)
 - [Testing](https://github.com/proengsoft/laravel-jsvalidation/wiki/Testing)
-- [Contributing] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Contributing)
-- [ChangeLog] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/CHANGELOG.md)
-- [Security] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Security)
-- [Credits] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Credits)
+- [Contributing] (Contributing)
+- [Changelog] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/CHANGELOG.md)
+- [Security] (Security)
+- [Credits] (Credits)
 - [License] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/LICENSE.md)
 
 ---
@@ -63,12 +71,12 @@ The Javascript validations are made using [JQuery Validation Plugin][], that is 
 ---
 
 ### [JsValidator Reference](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference)
- 
-* [`selector()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#selectorselector)
-* [`view()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#viewview)
-* [`render()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#renderview-selector)
-* [`Arrayable interface`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#arrayable-interface)
-* [`__toString()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#__tostring)
+
+* [`selector()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#selectorselector) 
+* [`view()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#viewview)  
+* [`render()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#renderview-selector) 
+* [`Arrayable interface`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#arrayable-interface) 
+* [`__toString()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#__tostring) 
 
 ## License
 
