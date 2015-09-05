@@ -27,6 +27,15 @@ trait JavascriptRules
     abstract protected function getAttribute($attribute);
 
     /**
+     * Handles multidimensional attribute names
+     *
+     * @param string $attribute
+     *
+     * @return string
+     */
+    abstract protected function getJsAttributeName($attribute);
+
+    /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
      *
      * @param $message
@@ -77,7 +86,7 @@ trait JavascriptRules
     protected function jsRuleAfter($attribute, array $parameters)
     {
         if (!($date = strtotime($parameters[0]))) {
-            $date = $this->getAttributeName($parameters[0]);
+            $date = $this->getJsAttributeName($parameters[0]);
         }
 
         return [$attribute, [$date]];
@@ -94,7 +103,7 @@ trait JavascriptRules
     protected function jsRuleBefore($attribute, array $parameters)
     {
         if (!($date = strtotime($parameters[0]))) {
-            $date = $this->getAttributeName($parameters[0]);
+            $date = $this->getJsAttributeName($parameters[0]);
         }
 
         return [$attribute, [$date]];

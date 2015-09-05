@@ -163,7 +163,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testAfter(){
 
-        $mayDay="May 4, 1886";
+        $mayDay="May 4, 1986";
 
         $rule=[
             'date'=>'after:"'.$mayDay.'"',
@@ -196,7 +196,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testBefore(){
 
-        $mayDay="May 4, 1886";
+        $mayDay="May 4, 1986";
         $rule=[
             'date'=>'before:"'.$mayDay.'"',
             'other_date'=>'before:date',
@@ -366,6 +366,16 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
         $data=$this->validator->passes();
 
+
+    }
+
+    public function testGetAttributeName()
+    {
+        $rules=['att.ribu.te' =>'after:"May 4, 1986"'];
+        $validator=new Validator($this->translator, [],$rules ,[]);
+
+        $data=$validator->validationData();
+        $this->assertArrayHasKey('att[ribu][te]',$data['rules']);
 
     }
 

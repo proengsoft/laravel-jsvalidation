@@ -147,7 +147,7 @@ class Manager implements Arrayable
 
     /**
      * Set the view to render Javascript Validations.
-     * @param string|null $view
+     * @param \Illuminate\Contracts\View\View|string|null $view
      * @return Manager
      */
     public function view($view)

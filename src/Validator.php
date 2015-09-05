@@ -100,7 +100,7 @@ class Validator extends BaseValidator
     {
         $method = "jsRule{$rule}";
         $jsRule = false;
-        $attribute = $this->getAttributeName($attribute);
+        $attribute = $this->getJsAttributeName($attribute);
 
         if ($this->isRemoteRule($rule)) {
             list($attribute, $parameters) = $this->jsRemoteRule($attribute);
@@ -198,7 +198,7 @@ class Validator extends BaseValidator
      * @param $attribute
      * @return string
      */
-    private function getAttributeName($attribute)
+    private function getJsAttributeName($attribute)
     {
         $attributeArray = explode(".", $attribute);
         if(count($attributeArray) > 1) {
