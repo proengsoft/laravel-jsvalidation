@@ -80,7 +80,8 @@ class Factory
      */
     public function formRequest($formRequest, $selector = null)
     {
-        if (!is_subclass_of($formRequest,  'Illuminate\\Foundation\\Http\\FormRequest')) {
+
+        if (!is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
             $className = is_object($formRequest) ? get_class($formRequest) : (string) $formRequest;
             throw new FormRequestArgumentException($className);
         }
@@ -88,7 +89,6 @@ class Factory
         if (is_string($formRequest)) {
             $formRequest = $this->createFormRequest($formRequest);
         }
-
 
         $validator = $this->validator->make([], $formRequest->rules(), $formRequest->messages(), $formRequest->attributes());
 
@@ -105,7 +105,7 @@ class Factory
     protected function createFormRequest($class)
     {
         $formRequest=new $class();
-        $request=$this->container->offsetGet('request');
+        $request=$this->container['request'];
 
         $formRequest->initialize($request->query->all(), $request->request->all(), $request->attributes->all(),
             $request->cookies->all(), array(), $request->server->all(), $request->getContent()
