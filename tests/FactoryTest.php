@@ -38,8 +38,8 @@ namespace Proengsoft\JsValidation\Test {
 
         public function setUp() {
 
-            //$this->mockedApp=m::mock('\Illuminate\Contracts\Foundation\Application');
-            $this->mockedApp= new FakeApplication();
+            $this->mockedApp=m::mock('\Illuminate\Contracts\Foundation\Application');
+            //$this->mockedApp= new FakeApplication();
             $this->mockedFactory =  m::mock('Illuminate\Contracts\Validation\Factory');
             $this->mockedJs= m::mock('Proengsoft\JsValidation\Manager');
             $this->mockedRequest= m::mock('Illuminate\Http\Request');
@@ -98,7 +98,7 @@ namespace Proengsoft\JsValidation\Test {
             $rules=['name'=>'require'];
             $formRequest='Proengsoft\JsValidation\Test\FakeFormRequest';
             $mockSession=m::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface');
-            //$mockedRequest= m::mock('Illuminate\Http\Request');
+            $mockedRequest= m::mock('Illuminate\Http\Request');
             //$mockQuery=m::mock('Symfony\Component\HttpFoundation\ParameterBag')->shouldReceive('all')->andReturn([])->getMock();;
             $this->mockedRequest->query =m::mock()->shouldReceive('all')->andReturn([])->getMock();
             $this->mockedRequest->attributes =m::mock()->shouldReceive('all')->andReturn([])->getMock();
@@ -115,7 +115,7 @@ namespace Proengsoft\JsValidation\Test {
                 ->shouldReceive('setRouteResolver');
 
             $this->mockedRequest->request = $this->mockedRequest;
-            //$this->mockedApp->shouldReceive('offsetGet')->with('request')->andReturn($this->mockedRequest);
+            $this->mockedApp->shouldReceive('offsetGet')->with('request')->andReturn($this->mockedRequest);
             $this->mockedApp->mockedRequest=$this->mockedRequest;
 
 

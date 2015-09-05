@@ -105,7 +105,7 @@ class Factory
     protected function createFormRequest($class)
     {
         $formRequest=new $class();
-        $request=$this->container['request'];
+        $request=$this->container->offsetGet('request');
 
         $formRequest->initialize($request->query->all(), $request->request->all(), $request->attributes->all(),
             $request->cookies->all(), array(), $request->server->all(), $request->getContent()

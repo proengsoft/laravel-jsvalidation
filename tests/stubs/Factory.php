@@ -26,7 +26,8 @@ namespace Proengsoft\JsValidation\Test {
 
 
 
-    class  FakeApplication  implements \Illuminate\Contracts\Foundation\Application, \ArrayAccess {
+    class  FakeApplication  {
+        // implements \Illuminate\Contracts\Foundation\Application, \ArrayAccess
 
         public $mockedRequest;
 
