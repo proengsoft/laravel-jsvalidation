@@ -1,3 +1,11 @@
+# 1.1.3 (2015-09-07)
+
+Bugfixes:
+
+ - Issues resolved:
+    - DateFormat generate javascript error if date is not valid
+
+
 ## 1.1.2 (2015-09-05)
 
 Features:

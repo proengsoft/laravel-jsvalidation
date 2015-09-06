@@ -440,7 +440,8 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         DateFormat: function(value, element, params) {
-            return !isNaN(laravelValidation.helpers.gessDate(value,params[0]).getTime());
+            return laravelValidation.helpers.parseTime(value,params[0])!=false;
+            //return !isNaN(laravelValidation.helpers.gessDate(value,params[0]).getTime());
         },
 
         /**
