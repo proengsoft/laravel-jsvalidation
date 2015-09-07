@@ -35,6 +35,9 @@ The Javascript validations are made using [JQuery Validation Plugin][], that is 
 [Upgrade Guide] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation#upgrade-from-previous-versions) and update your `composer.json` file to make
 sure that your Javascript assets are updated correctly.**
 
+##### Known issues
+- This package is not compatible with other validation packages
+- DateFormat rule don't support timezone format 
 
 ### Documentation
 
