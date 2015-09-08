@@ -2301,12 +2301,14 @@ $.extend(true, laravelValidation, {
 
             var validator = $.data(element.form, "validator");
             var objRules = validator.settings.rules[element.name];
-
-            for (var i = 0; i < numericRules.length; i++) {
-                found = found ||
-                    $.grep(objRules, function(rule) {
-                        return $.inArray(numericRules[i], rule);
-                    });
+            if ('laravelValidation' in objRules) {
+                var rules=objRules.laravelValidation;
+                for (var i = 0; i < rules.length; i++) {
+                    if ($.inArray(rules[i][0],numericRules) !== -1) {
+                        found = true;
+                        break;
+                    }
+                }
             }
 
             return found;
@@ -3381,8 +3383,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         DateFormat: function(value, element, params) {
-            return laravelValidation.helpers.parseTime(value,params[0])!=false;
-            //return !isNaN(laravelValidation.helpers.gessDate(value,params[0]).getTime());
+            return laravelValidation.helpers.parseTime(value,params[0])!==false;
         },
 
         /**
