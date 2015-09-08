@@ -472,7 +472,7 @@ $.extend(true, laravelValidation, {
                 city=tzparts[1].toLowerCase();
             }
 
-            return (continent in timezones && ( timezones[continent].length==0 || timezones[continent].indexOf(city)!=-1))
+            return (continent in timezones && ( timezones[continent].length===0 || timezones[continent].indexOf(city)!==-1))
 
         }
     }

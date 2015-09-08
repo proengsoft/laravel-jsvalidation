@@ -2,18 +2,33 @@
     jQuery(document).ready(function(){
 
         $("<?php echo $validator['selector']; ?>").validate({
-            highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group, .checkbox').addClass('has-error'); // set error class to the control group
+            errorElement: 'span',
+            errorClass: 'help-block error-help-block',
+
+            errorPlacement: function(error, element) {
+                if (element.parent('.input-group').length ||
+                    element.prop('type') === 'checkbox' || element.prop('type') === 'radio') {
+                    error.insertAfter(element.parent());
+                    // else just place the validation message immediatly after the input
+                } else {
+                    error.insertAfter(element);
+                }
             },
-            unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group, .checkbox').removeClass('has-error'); // set error class to the control group
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error'); // add the Bootstrap error class to the control group
             },
-            errorElement: 'p', //default input error message container
-            errorClass: 'help-block help-block-error', // default input error message class
+
+            /*
+             // Uncomment this to mark as validated non required fields
+             unhighlight: function(element) {
+             $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+             },
+             */
+            success: function(element) {
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success'); // remove the Boostrap error class from the control group
+            },
+
             focusInvalid: false, // do not focus the last invalid input
-            ignore: "",  // validate all fields including form hidden input
             <?php if(Config::get('jsvalidation.focus_on_error')): ?>
             invalidHandler: function(form, validator) {
 
@@ -27,27 +42,8 @@
 
             },
             <?php endif; ?>
-            errorPlacement: function(error, element) {
-                if (element.attr("type") == "radio") {
-                    error.insertAfter(element.parents('div').find('.radio-list'));
-                }
-               else if (element.attr("type") == "checkbox") {
-                    error.insertAfter(element.parents('label'));
-                }
-                else {
-                    if(element.parent('.input-group').length) {
-                        error.insertAfter(element.parent());
-                    } else {
-                        error.insertAfter(element);
-                    }
-                }
-            },
-            success: function (label) {
-                label
-                        .closest('.form-group, .checkbox').removeClass('has-error'); // set success class to the control group
-            },
-            rules: <?php echo json_encode($validator['rules']); ?> ,
-            messages: <?php echo json_encode($validator['messages']) ?>
+
+            rules: <?php echo json_encode($validator['rules']); ?>
         })
     })
 </script>

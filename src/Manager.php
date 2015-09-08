@@ -1,4 +1,6 @@
-<?php namespace Proengsoft\JsValidation;
+<?php
+
+namespace Proengsoft\JsValidation;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
@@ -7,23 +9,22 @@ use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
 class Manager implements Arrayable
 {
-
     /**
-     * Registered validator instance
+     * Registered validator instance.
      *
      * @var \Illuminate\Contracts\Validation\Validator
      */
     protected $validator;
 
     /**
-     * Selector used in javascript generation
+     * Selector used in javascript generation.
      *
      * @var string
      */
-    protected $selector ;
+    protected $selector;
 
     /**
-     * View that renders Javascript
+     * View that renders Javascript.
      *
      * @var
      */
@@ -35,13 +36,12 @@ class Manager implements Arrayable
      */
     public function __construct($selector, $view)
     {
-        $this->selector=$selector;
+        $this->selector = $selector;
         $this->view = $view;
     }
 
-
     /**
-     * Set Validation instance used to get rules and messages
+     * Set Validation instance used to get rules and messages.
      *
      * @param ValidatorContract $validator
      */
@@ -51,23 +51,21 @@ class Manager implements Arrayable
     }
 
     /**
-     * Render the specified view with validator data
+     * Render the specified view with validator data.
      *
      * @param \Illuminate\Contracts\View\View|string|null $view
-     * @param string|null $selector
+     * @param string|null                                 $selector
+     *
      * @return string
      */
-    public function render($view=null, $selector=null)
+    public function render($view = null, $selector = null)
     {
-        $view=is_null($view)?$this->view:$view;
-        $this->setSelector(is_null($selector)?$this->selector:$selector);
+        $this->view($view );
+        $this->selector($selector);
 
-
-        return View::make($view, ['validator'=>$this->getViewData()])
+        return View::make($this->view, ['validator' => $this->getViewData()])
             ->render();
     }
-
-
 
     /**
      * Get the view data as an array.
@@ -79,9 +77,8 @@ class Manager implements Arrayable
         return $this->getViewData();
     }
 
-
     /**
-     * Get the string resulting of render default view
+     * Get the string resulting of render default view.
      *
      * @return string
      */
@@ -91,15 +88,17 @@ class Manager implements Arrayable
     }
 
     /**
-     * Gets value from view data
+     * Gets value from view data.
      *
      * @param $name
+     *
      * @return string
+     *
      * @throws PropertyNotFoundException
      */
     public function __get($name)
     {
-        $data=$this->getViewData();
+        $data = $this->getViewData();
         if (array_key_exists($name, $data)) {
             return $data[$name];
         } else {
@@ -107,35 +106,54 @@ class Manager implements Arrayable
         }
     }
 
-
-
-
     /**
-     *  Gets view data
+     *  Gets view data.
      *
      * @return array
      */
     protected function getViewData()
     {
-
-        if (method_exists($this->validator, 'js')) {
-            $data= [
-                'selector' => $this->selector
+        if (method_exists($this->validator, 'validationData')) {
+            $data = [
+                'selector' => $this->selector,
             ];
 
-            return array_merge($data, (array)call_user_func([$this->validator, 'js']));
+            return array_merge($data, (array) call_user_func([$this->validator, 'validationData']));
         }
 
         return array();
     }
 
     /**
+     * Set the form selector to validate.
      * @param string $selector
+     * @deprecated
      */
     public function setSelector($selector)
     {
         $this->selector = $selector;
     }
 
+    /**
+     * Set the form selector to validate.
+     * @param string $selector
+     * @return Manager
+     */
+    public function selector($selector)
+    {
+        $this->selector = is_null($selector) ? $this->selector : $selector;
+        return $this;
+    }
 
+    /**
+     * Set the view to render Javascript Validations.
+     * @param \Illuminate\Contracts\View\View|string|null $view
+     * @return Manager
+     */
+    public function view($view)
+    {
+        $this->view = is_null($view) ? $this->view : $view;
+        return $this;
+    }
 }
+
