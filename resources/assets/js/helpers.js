@@ -61,12 +61,14 @@ $.extend(true, laravelValidation, {
 
             var validator = $.data(element.form, "validator");
             var objRules = validator.settings.rules[element.name];
-
-            for (var i = 0; i < numericRules.length; i++) {
-                found = found ||
-                    $.grep(objRules, function(rule) {
-                        return $.inArray(numericRules[i], rule);
-                    });
+            if ('laravelValidation' in objRules) {
+                var rules=objRules.laravelValidation;
+                for (var i = 0; i < rules.length; i++) {
+                    if ($.inArray(rules[i][0],numericRules) !== -1) {
+                        found = true;
+                        break;
+                    }
+                }
             }
 
             return found;
