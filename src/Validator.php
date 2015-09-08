@@ -2,6 +2,7 @@
 
 namespace Proengsoft\JsValidation;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Traits\RemoteValidation;
 use Proengsoft\JsValidation\Traits\JavascriptRules;
@@ -104,7 +105,10 @@ class Validator extends BaseValidator
 
         if ($this->isRemoteRule($rule)) {
             list($attribute, $parameters) = $this->jsRemoteRule($attribute);
-            $jsRule = 'laravelValidationRemote';
+
+            if(Config::get('jsvalidation.active_remote_validation'))
+                $jsRule = 'laravelValidationRemote';
+
         } elseif (method_exists($this, $method)) {
             list($attribute, $parameters) = $this->$method($attribute, $parameters);
             $jsRule = 'laravelValidation';
