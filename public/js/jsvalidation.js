@@ -2077,9 +2077,14 @@ laravelValidation = {
      * Initialize laravel validations
      */
     init: function () {
+
+        // Disable class rules and attribute rules
+        $.validator.classRuleSettings = {};
+        $.validator.normalizeAttributeRule = function(){};
+
         // Register validations methods
         this.setupValidations();
-
+        
     },
 
 
