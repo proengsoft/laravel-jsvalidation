@@ -1,4 +1,14 @@
-# 1.1.3 (2015-09-07)
+## dev-master
+
+Bugfixes:
+
+ - Issues resolved:
+    -  String validation fails on length. #71
+    -  Default validation messages can't be changed. #27
+
+
+
+## 1.1.3 (2015-09-07)
 
 Bugfixes:
 
