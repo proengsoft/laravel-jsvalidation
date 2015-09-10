@@ -1,4 +1,4 @@
-## dev-master
+## 1.1.4 (2015-09-10)
 
 Bugfixes:
 
