@@ -1,5 +1,8 @@
 ## dev-master
 
+Features:
+ - Allow validate rule In for type array 
+
 Bugfixes:
 
  - Issues resolved:
