@@ -100,7 +100,6 @@ class Validator extends BaseValidator
     {
         $method = "jsRule{$rule}";
         $jsRule = false;
-        $attribute = $this->getJsAttributeName($attribute);
 
         if ($this->isRemoteRule($rule)) {
             list($attribute, $parameters) = $this->jsRemoteRule($attribute);
@@ -111,6 +110,8 @@ class Validator extends BaseValidator
         } elseif (method_exists($this, "validate{$rule}")) {
             $jsRule = 'laravelValidation';
         }
+
+        $attribute = $this->getJsAttributeName($attribute);
 
         return [$attribute, $jsRule, $parameters];
     }
@@ -198,7 +199,7 @@ class Validator extends BaseValidator
      * @param $attribute
      * @return string
      */
-    private function getJsAttributeName($attribute)
+    protected function getJsAttributeName($attribute)
     {
         $attributeArray = explode(".", $attribute);
         if(count($attributeArray) > 1) {
