@@ -55,13 +55,12 @@ trait JavascriptRules
      * @param $message
      * @param $parameters
      *
-     * @return mixed
+     * @return string
      */
     public function jsReplaceRequiredIf($attribute, $message, $parameters)
     {
         $field = $parameters[0];
-
-        $data[$field] = $parameters[1];
+        $data = array($field => $parameters[1]);
 
         $parameters[0] = $this->getAttribute($field);
         $parameters[1] = $this->getDisplayableValue($field, array_get($data, $field));
@@ -227,7 +226,7 @@ trait JavascriptRules
     /**
      * Returns Javascript parameters for remote validated rules.
      *
-     * @param $attribute
+     * @param string $attribute
      *
      * @return array
      */
