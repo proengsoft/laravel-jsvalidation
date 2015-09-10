@@ -82,6 +82,8 @@ trait RemoteValidation
      */
     protected function validateJsRemoteRequest($attribute, $callable)
     {
+        $attribute = str_replace(array("[", "]"), array(".", ""), $attribute);
+
         if (!$this->setRemoteValidationData($attribute)) {
             throw new BadRequestHttpException('Bad request');
         }
@@ -116,8 +118,6 @@ trait RemoteValidation
      */
     protected function setRemoteValidationData($attribute)
     {
-        $attribute = str_replace(array("[", "]"), array(".", ""), $attribute);
-        
         if (!array_key_exists($attribute, $this->getRules())) {
             $this->setRules(array());
             return false;

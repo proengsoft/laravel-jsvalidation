@@ -225,6 +225,138 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testSame()
+    {
+        $rule=[
+            'field'=>'same:other.field.name',
+        ];
+        $message=[
+            'field.same'=>'Should be validated',
+        ];
+        $expected=array(
+            'rules' => array(
+                'field'=> ['laravelValidation'=>[['Same',['other[field][name]'],'Should be validated',false]]],
+            ),
+            'messages'=>array()
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->validationData();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
+    public function testDifferent()
+    {
+        $rule=[
+            'field'=>'different:other.field.name',
+        ];
+        $message=[
+            'field.different'=>'Should be validated',
+        ];
+        $expected=array(
+            'rules' => array(
+                'field'=> ['laravelValidation'=>[['Different',['other[field][name]'],'Should be validated',false]]],
+            ),
+            'messages'=>array()
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->validationData();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
+
+    public function testRequiredWith()
+    {
+        $rule=[
+            'field'=>'required_with:other.field.name',
+        ];
+        $message=[
+            'field.required_with'=>'Should be validated',
+        ];
+        $expected=array(
+            'rules' => array(
+                'field'=> ['laravelValidation'=>[['RequiredWith',['other[field][name]'],'Should be validated',true]]],
+            ),
+            'messages'=>array()
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->validationData();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
+    public function testRequiredWithAll()
+    {
+        $rule=[
+            'field'=>'required_with_all:other.field.name',
+        ];
+        $message=[
+            'field.required_with_all'=>'Should be validated',
+        ];
+        $expected=array(
+            'rules' => array(
+                'field'=> ['laravelValidation'=>[['RequiredWithAll',['other[field][name]'],'Should be validated',true]]],
+            ),
+            'messages'=>array()
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->validationData();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
+    public function testRequiredWithout()
+    {
+        $rule=[
+            'field'=>'required_without:other.field.name',
+        ];
+        $message=[
+            'field.required_without'=>'Should be validated',
+        ];
+        $expected=array(
+            'rules' => array(
+                'field'=> ['laravelValidation'=>[['RequiredWithout',['other[field][name]'],'Should be validated',true]]],
+            ),
+            'messages'=>array()
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->validationData();
+
+        $this->assertEquals($expected,$data);
+
+    }
+
+    public function testRequiredWithoutAll()
+    {
+        $rule=[
+            'field'=>'required_without_all:other.field.name',
+        ];
+        $message=[
+            'field.required_without_all'=>'Should be validated',
+        ];
+        $expected=array(
+            'rules' => array(
+                'field'=> ['laravelValidation'=>[['RequiredWithoutAll',['other[field][name]'],'Should be validated',true]]],
+            ),
+            'messages'=>array()
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        $data=$validator->validationData();
+
+        $this->assertEquals($expected,$data);
+
+    }
 
     public function  testPassesRemoteOk()
     {
@@ -378,6 +510,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->assertArrayHasKey('att[ribu][te]',$data['rules']);
 
     }
+
 
 
 }
