@@ -51,25 +51,23 @@ trait JavascriptRules
     /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
      *
-     * @param $message
      * @param $attribute
-     * @param $rule
+     * @param $message
      * @param $parameters
      *
      * @return mixed
      */
-    public function jsReplaceRequiredIf($message, $attribute, $rule, $parameters)
+    public function jsReplaceRequiredIf($attribute, $message, $parameters)
     {
-        unset($attribute);
-        unset($rule);
+        $field = $parameters[0];
 
-        $data = array();
-        $data[$parameters[0]] = $parameters[1];
+        $data[$field] = $parameters[1];
 
-        $parameters[1] = $this->getDisplayableValue($parameters[0], array_get($data, $parameters[0]));
-        $parameters[0] = $this->getAttribute($parameters[0]);
+        $parameters[0] = $this->getAttribute($field);
+        $parameters[1] = $this->getDisplayableValue($field, array_get($data, $field));
+        $parameters[2] = $this->getAttribute($attribute);
 
-        return str_replace(array(':other', ':value'), $parameters, $message);
+        return str_replace(array(':other', ':value', ':attribute'), $parameters, $message);
     }
 
     /**

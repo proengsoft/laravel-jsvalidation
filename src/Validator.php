@@ -132,8 +132,7 @@ class Validator extends BaseValidator
         if (isset($this->replacers[snake_case($rule)])) {
             $message = $this->doReplacements($message, $attribute, $rule, $parameters);
         } elseif (method_exists($this, $replacer = "jsReplace{$rule}")) {
-            $message = str_replace(':attribute', $this->getAttribute($attribute), $message);
-            $message = $this->$replacer($message, $attribute, $rule, $parameters);
+            $message = $this->$replacer($attribute, $message, $parameters);
         } else {
             $message = $this->doReplacements($message, $attribute, $rule, $parameters);
         }
