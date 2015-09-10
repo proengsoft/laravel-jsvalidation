@@ -320,6 +320,10 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         In: function(value, element, params) {
+            if ($.isArray(value) && laravelValidation.helpers.hasRules(element, 'Array')) {
+                var diff = laravelValidation.helpers.arrayDiff(value, params);
+                return Object.keys(diff).length === 0;
+            }
             return params.indexOf(value.toString()) !== -1;
         },
 
