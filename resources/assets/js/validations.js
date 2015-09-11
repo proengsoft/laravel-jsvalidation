@@ -503,6 +503,23 @@ $.extend(true, laravelValidation, {
          */
         Timezone: function(value) {
             return  laravelValidation.helpers.isTimezone(value);
+        },
+
+
+        /**
+         * Validate the attribute is a valid JSON string.
+         *
+         * @param  value
+         * @return bool
+         */
+        Json: function(value) {
+            var result = true;
+            try {
+                JSON.parse(value);
+            } catch (e) {
+                result = false;
+            }
+            return result;
         }
 
 
