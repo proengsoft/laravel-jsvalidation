@@ -383,7 +383,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Alpha: function(value) {
-            var regex = new RegExp("^(?:^[a-z]+$)$",'i');
+            if (typeof  value !== 'string') {
+                return false;
+            }
+
+            var regex = new RegExp("^(?:^[a-z\u00E0-\u00FC]+$)$",'i');
             return  regex.test(value);
 
         },
@@ -393,8 +397,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         AlphaNum: function(value) {
-            var regex = new RegExp("^(?:^[a-z0-9]+$)$",'i');
-            return   regex.test(value);
+            if (typeof  value !== 'string') {
+                return false;
+            }
+            var regex = new RegExp("^(?:^[a-z0-9\u00E0-\u00FC]+$)$",'i');
+            return regex.test(value);
         },
 
         /**
@@ -402,8 +409,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         AlphaDash: function(value) {
-            var regex = new RegExp("^(?:^[\\w\\-_]+$)$",'i');
-            return   regex.test(value);
+            if (typeof  value !== 'string') {
+                return false;
+            }
+            var regex = new RegExp("^(?:^[a-z0-9\u00E0-\u00FC_-]+$)$",'i');
+            return regex.test(value);
         },
 
         /**
