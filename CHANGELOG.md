@@ -1,12 +1,15 @@
 ## dev-master
 
 Features:
- - Allow validate rule In for type array 
+
+ - Allow validate rule "In" for type array 
+ - Added JSON validator
 
 Bugfixes:
 
  - Issues resolved:
     - Fix some validations when field is array #75 
+    - Fix validateAlpha logic [c31a38d](https://github.com/laravel/framework/commit/c31a38d596c1913696ace0cd77201cf675748fe8)
 
 
 ## 1.1.4 (2015-09-10)
