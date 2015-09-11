@@ -2349,7 +2349,7 @@ $.extend(true, laravelValidation, {
 
             var found = false;
             if (typeof rules === 'string') {
-                rules = [rules]
+                rules = [rules];
             }
 
             var validator = $.data(element.form, "validator");
@@ -2489,10 +2489,12 @@ $.extend(true, laravelValidation, {
          * http://phpjs.org/functions/array_diff/
          *
          * @param arr1
-         * @param [arguments]
+         * @param arr2
          * @returns {*}
          */
-        arrayDiff: array_diff,
+        arrayDiff: function (arr1, arr2) {
+            return array_diff(arr1, arr2);
+        },
 
 
         dependentElement: function(validator, element, name) {
@@ -3303,7 +3305,8 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Between: function(value, element, params) {
-            return ( laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]) && laravelValidation.helpers.getSize(this,element,value) <= parseFloat(params[1]));
+            return ( laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]) &&
+                laravelValidation.helpers.getSize(this,element,value) <= parseFloat(params[1]));
         },
 
         /**
@@ -3327,7 +3330,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         In: function(value, element, params) {
-            if ($.isArray(value) && laravelValidation.helpers.hasRules(element, 'Array')) {
+            if ($.isArray(value) && laravelValidation.helpers.hasRules(element, "Array")) {
                 var diff = laravelValidation.helpers.arrayDiff(value, params);
                 return Object.keys(diff).length === 0;
             }
