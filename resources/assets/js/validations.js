@@ -296,7 +296,8 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Between: function(value, element, params) {
-            return ( laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]) && laravelValidation.helpers.getSize(this,element,value) <= parseFloat(params[1]));
+            return ( laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]) &&
+                laravelValidation.helpers.getSize(this,element,value) <= parseFloat(params[1]));
         },
 
         /**
@@ -320,7 +321,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         In: function(value, element, params) {
-            if ($.isArray(value) && laravelValidation.helpers.hasRules(element, 'Array')) {
+            if ($.isArray(value) && laravelValidation.helpers.hasRules(element, "Array")) {
                 var diff = laravelValidation.helpers.arrayDiff(value, params);
                 return Object.keys(diff).length === 0;
             }

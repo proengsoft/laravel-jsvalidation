@@ -74,7 +74,7 @@ $.extend(true, laravelValidation, {
 
             var found = false;
             if (typeof rules === 'string') {
-                rules = [rules]
+                rules = [rules];
             }
 
             var validator = $.data(element.form, "validator");
@@ -214,10 +214,12 @@ $.extend(true, laravelValidation, {
          * http://phpjs.org/functions/array_diff/
          *
          * @param arr1
-         * @param [arguments]
+         * @param arr2
          * @returns {*}
          */
-        arrayDiff: array_diff,
+        arrayDiff: function (arr1, arr2) {
+            return array_diff(arr1, arr2);
+        },
 
 
         dependentElement: function(validator, element, name) {
