@@ -101,7 +101,6 @@ class Validator extends BaseValidator
     {
         $method = "jsRule{$rule}";
         $jsRule = false;
-        $attribute = $this->getJsAttributeName($attribute);
 
         if ($this->isRemoteRule($rule)) {
             list($attribute, $parameters) = $this->jsRemoteRule($attribute);
@@ -115,6 +114,8 @@ class Validator extends BaseValidator
         } elseif (method_exists($this, "validate{$rule}")) {
             $jsRule = 'laravelValidation';
         }
+
+        $attribute = $this->getJsAttributeName($attribute);
 
         return [$attribute, $jsRule, $parameters];
     }
@@ -135,8 +136,7 @@ class Validator extends BaseValidator
         if (isset($this->replacers[snake_case($rule)])) {
             $message = $this->doReplacements($message, $attribute, $rule, $parameters);
         } elseif (method_exists($this, $replacer = "jsReplace{$rule}")) {
-            $message = str_replace(':attribute', $this->getAttribute($attribute), $message);
-            $message = $this->$replacer($message, $attribute, $rule, $parameters);
+            $message = $this->$replacer($attribute, $message, $parameters);
         } else {
             $message = $this->doReplacements($message, $attribute, $rule, $parameters);
         }
@@ -202,7 +202,7 @@ class Validator extends BaseValidator
      * @param $attribute
      * @return string
      */
-    private function getJsAttributeName($attribute)
+    protected function getJsAttributeName($attribute)
     {
         $attributeArray = explode(".", $attribute);
         if(count($attributeArray) > 1) {

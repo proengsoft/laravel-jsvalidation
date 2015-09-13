@@ -1412,6 +1412,36 @@ function strlen(string) {
   }
   return lgth;
 }
+function array_diff(arr1) {
+  //  discuss at: http://phpjs.org/functions/array_diff/
+  // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // improved by: Sanjoy Roy
+  //  revised by: Brett Zamir (http://brett-zamir.me)
+  //   example 1: array_diff(['Kevin', 'van', 'Zonneveld'], ['van', 'Zonneveld']);
+  //   returns 1: {0:'Kevin'}
+
+  var retArr = {},
+    argl = arguments.length,
+    k1 = '',
+    i = 1,
+    k = '',
+    arr = {};
+
+  arr1keys: for (k1 in arr1) {
+    for (i = 1; i < argl; i++) {
+      arr = arguments[i];
+      for (k in arr) {
+        if (arr[k] === arr1[k1]) {
+          // If it reaches here, it was found in at least one array, so try next value
+          continue arr1keys;
+        }
+      }
+      retArr[k1] = arr1[k1];
+    }
+  }
+
+  return retArr;
+}
 function strtotime(text, now) {
   //  discuss at: http://phpjs.org/functions/strtotime/
   //     version: 1109.2016
@@ -2028,9 +2058,14 @@ laravelValidation = {
      * Initialize laravel validations
      */
     init: function () {
+
+        // Disable class rules and attribute rules
+        $.validator.classRuleSettings = {};
+        $.validator.normalizeAttributeRule = function(){};
+
         // Register validations methods
         this.setupValidations();
-
+        
     },
 
 
@@ -2205,6 +2240,11 @@ $.extend(true, laravelValidation, {
     helpers: {
 
         /**
+         * Numeric rules
+         */
+        numericRules: ['Integer', 'Numeric'],
+
+        /**
          * Gets the file information from file input
          *
          * @param fieldObj
@@ -2246,23 +2286,37 @@ $.extend(true, laravelValidation, {
          * @returns {boolean}
          */
         hasNumericRules: function (element) {
+            return this.hasRules(element, this.numericRules);
+        },
 
-            var numericRules = ['Numeric', 'Integer'];
+        /**
+         * Check if element has passed ruls rules
+         *
+         * @param element
+         * @param rules
+         * @returns {boolean}
+         */
+        hasRules: function (element, rules) {
+
             var found = false;
+            if (typeof rules === 'string') {
+                rules = [rules];
+            }
 
             var validator = $.data(element.form, "validator");
             var objRules = validator.settings.rules[element.name];
-
-            for (var i = 0; i < numericRules.length; i++) {
-                found = found ||
-                    $.grep(objRules, function(rule) {
-                        return $.inArray(numericRules[i], rule);
-                    });
+            if ('laravelValidation' in objRules) {
+                var _rules=objRules.laravelValidation;
+                for (var i = 0; i < _rules.length; i++) {
+                    if ($.inArray(_rules[i][0],rules) !== -1) {
+                        found = true;
+                        break;
+                    }
+                }
             }
 
             return found;
         },
-
 
         /**
          * Return the string length using PHP function
@@ -2377,6 +2431,20 @@ $.extend(true, laravelValidation, {
          */
         strtotime: function (text, now) {
             return strtotime(text, now)
+        },
+
+
+        /**
+         * Returns Array diff based on PHP function array_diff
+         * http://php.net/manual/es/function.array_diff.php
+         * http://phpjs.org/functions/array_diff/
+         *
+         * @param arr1
+         * @param arr2
+         * @returns {*}
+         */
+        arrayDiff: function (arr1, arr2) {
+            return array_diff(arr1, arr2);
         },
 
 
@@ -3188,7 +3256,8 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Between: function(value, element, params) {
-            return ( laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]) && laravelValidation.helpers.getSize(this,element,value) <= parseFloat(params[1]));
+            return ( laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]) &&
+                laravelValidation.helpers.getSize(this,element,value) <= parseFloat(params[1]));
         },
 
         /**
@@ -3212,6 +3281,10 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         In: function(value, element, params) {
+            if ($.isArray(value) && laravelValidation.helpers.hasRules(element, "Array")) {
+                var diff = laravelValidation.helpers.arrayDiff(value, params);
+                return Object.keys(diff).length === 0;
+            }
             return params.indexOf(value.toString()) !== -1;
         },
 
@@ -3270,7 +3343,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Alpha: function(value) {
-            var regex = new RegExp("^(?:^[a-z]+$)$",'i');
+            if (typeof  value !== 'string') {
+                return false;
+            }
+
+            var regex = new RegExp("^(?:^[a-z\u00E0-\u00FC]+$)$",'i');
             return  regex.test(value);
 
         },
@@ -3280,8 +3357,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         AlphaNum: function(value) {
-            var regex = new RegExp("^(?:^[a-z0-9]+$)$",'i');
-            return   regex.test(value);
+            if (typeof  value !== 'string') {
+                return false;
+            }
+            var regex = new RegExp("^(?:^[a-z0-9\u00E0-\u00FC]+$)$",'i');
+            return regex.test(value);
         },
 
         /**
@@ -3289,8 +3369,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         AlphaDash: function(value) {
-            var regex = new RegExp("^(?:^[\\w\\-_]+$)$",'i');
-            return   regex.test(value);
+            if (typeof  value !== 'string') {
+                return false;
+            }
+            var regex = new RegExp("^(?:^[a-z0-9\u00E0-\u00FC_-]+$)$",'i');
+            return regex.test(value);
         },
 
         /**
@@ -3332,8 +3415,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         DateFormat: function(value, element, params) {
-            return laravelValidation.helpers.parseTime(value,params[0])!=false;
-            //return !isNaN(laravelValidation.helpers.gessDate(value,params[0]).getTime());
+            return laravelValidation.helpers.parseTime(value,params[0])!==false;
         },
 
         /**
@@ -3381,6 +3463,23 @@ $.extend(true, laravelValidation, {
          */
         Timezone: function(value) {
             return  laravelValidation.helpers.isTimezone(value);
+        },
+
+
+        /**
+         * Validate the attribute is a valid JSON string.
+         *
+         * @param  value
+         * @return bool
+         */
+        Json: function(value) {
+            var result = true;
+            try {
+                JSON.parse(value);
+            } catch (e) {
+                result = false;
+            }
+            return result;
         }
 
 

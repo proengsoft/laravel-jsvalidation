@@ -296,7 +296,8 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Between: function(value, element, params) {
-            return ( laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]) && laravelValidation.helpers.getSize(this,element,value) <= parseFloat(params[1]));
+            return ( laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]) &&
+                laravelValidation.helpers.getSize(this,element,value) <= parseFloat(params[1]));
         },
 
         /**
@@ -320,6 +321,10 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         In: function(value, element, params) {
+            if ($.isArray(value) && laravelValidation.helpers.hasRules(element, "Array")) {
+                var diff = laravelValidation.helpers.arrayDiff(value, params);
+                return Object.keys(diff).length === 0;
+            }
             return params.indexOf(value.toString()) !== -1;
         },
 
@@ -378,7 +383,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Alpha: function(value) {
-            var regex = new RegExp("^(?:^[a-z]+$)$",'i');
+            if (typeof  value !== 'string') {
+                return false;
+            }
+
+            var regex = new RegExp("^(?:^[a-z\u00E0-\u00FC]+$)$",'i');
             return  regex.test(value);
 
         },
@@ -388,8 +397,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         AlphaNum: function(value) {
-            var regex = new RegExp("^(?:^[a-z0-9]+$)$",'i');
-            return   regex.test(value);
+            if (typeof  value !== 'string') {
+                return false;
+            }
+            var regex = new RegExp("^(?:^[a-z0-9\u00E0-\u00FC]+$)$",'i');
+            return regex.test(value);
         },
 
         /**
@@ -397,8 +409,11 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         AlphaDash: function(value) {
-            var regex = new RegExp("^(?:^[\\w\\-_]+$)$",'i');
-            return   regex.test(value);
+            if (typeof  value !== 'string') {
+                return false;
+            }
+            var regex = new RegExp("^(?:^[a-z0-9\u00E0-\u00FC_-]+$)$",'i');
+            return regex.test(value);
         },
 
         /**
@@ -440,8 +455,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         DateFormat: function(value, element, params) {
-            return laravelValidation.helpers.parseTime(value,params[0])!=false;
-            //return !isNaN(laravelValidation.helpers.gessDate(value,params[0]).getTime());
+            return laravelValidation.helpers.parseTime(value,params[0])!==false;
         },
 
         /**
@@ -489,6 +503,23 @@ $.extend(true, laravelValidation, {
          */
         Timezone: function(value) {
             return  laravelValidation.helpers.isTimezone(value);
+        },
+
+
+        /**
+         * Validate the attribute is a valid JSON string.
+         *
+         * @param  value
+         * @return bool
+         */
+        Json: function(value) {
+            var result = true;
+            try {
+                JSON.parse(value);
+            } catch (e) {
+                result = false;
+            }
+            return result;
         }
 
 
