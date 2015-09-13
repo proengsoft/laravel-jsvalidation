@@ -293,8 +293,6 @@ $.extend( $.validator, {
 		$.extend( $.validator.defaults, settings );
 	},
 
-	messages: i18n,
-
 	autoCreateRanges: false,
 
 	prototype: {
