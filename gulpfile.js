@@ -28,6 +28,7 @@ elixir(function(mix) {
             [
                 bowerPath + 'jquery-validation/dist/jquery.validate.js',
                 bowerPath + 'phpjs/functions/strings/strlen.js',
+                bowerPath + 'phpjs/functions/array/array_diff.js',
                 bowerPath + 'phpjs/functions/datetime/strtotime.js',
                 bowerPath + 'php-date-formatter/js/php-date-formatter.js',
                 'assets/js/jsvalidation.js',

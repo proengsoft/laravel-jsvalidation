@@ -14,6 +14,11 @@ $.extend(true, laravelValidation, {
     helpers: {
 
         /**
+         * Numeric rules
+         */
+        numericRules: ['Integer', 'Numeric'],
+
+        /**
          * Gets the file information from file input
          *
          * @param fieldObj
@@ -55,23 +60,37 @@ $.extend(true, laravelValidation, {
          * @returns {boolean}
          */
         hasNumericRules: function (element) {
+            return this.hasRules(element, this.numericRules);
+        },
 
-            var numericRules = ['Numeric', 'Integer'];
+        /**
+         * Check if element has passed ruls rules
+         *
+         * @param element
+         * @param rules
+         * @returns {boolean}
+         */
+        hasRules: function (element, rules) {
+
             var found = false;
+            if (typeof rules === 'string') {
+                rules = [rules];
+            }
 
             var validator = $.data(element.form, "validator");
             var objRules = validator.settings.rules[element.name];
-
-            for (var i = 0; i < numericRules.length; i++) {
-                found = found ||
-                    $.grep(objRules, function(rule) {
-                        return $.inArray(numericRules[i], rule);
-                    });
+            if ('laravelValidation' in objRules) {
+                var _rules=objRules.laravelValidation;
+                for (var i = 0; i < _rules.length; i++) {
+                    if ($.inArray(_rules[i][0],rules) !== -1) {
+                        found = true;
+                        break;
+                    }
+                }
             }
 
             return found;
         },
-
 
         /**
          * Return the string length using PHP function
@@ -186,6 +205,20 @@ $.extend(true, laravelValidation, {
          */
         strtotime: function (text, now) {
             return strtotime(text, now)
+        },
+
+
+        /**
+         * Returns Array diff based on PHP function array_diff
+         * http://php.net/manual/es/function.array_diff.php
+         * http://phpjs.org/functions/array_diff/
+         *
+         * @param arr1
+         * @param arr2
+         * @returns {*}
+         */
+        arrayDiff: function (arr1, arr2) {
+            return array_diff(arr1, arr2);
         },
 
 
