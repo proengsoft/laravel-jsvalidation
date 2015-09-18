@@ -155,6 +155,11 @@ trait RemoteValidation
         return true;
     }
 
+    /**
+     * Check if remote validation is enabled
+     *
+     * @return bool
+     */
     protected function remoteValidationEnabled()
     {
         return Config::get('jsvalidation.enable_remote_validation');
