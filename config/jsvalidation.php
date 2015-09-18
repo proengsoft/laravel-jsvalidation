@@ -20,17 +20,18 @@ return array(
      */
     'focus_on_error' => false,
 
+    
     /**
      * Duration time for the animation when We are moving the focus
      * to the first error, http://api.jquery.com/animate/ for more information.
      */
     'duration_animate' => 1000,
 
+
     /**
-     * If you want check some rules before send your form to your server
-     * then active this parameter, notice that you will need to implement the control to handle
-     * this remote validation on your Controller.
+     * Enable or disable Ajax validations of Database and custom rules.
+     * By default Unique, ActiveURL, Exists and custom validations are validated via AJAX
      */
-    'active_remote_validation' => true,
+    'enable_remote_validation' => true,
 
 );

@@ -5,6 +5,7 @@ namespace Proengsoft\JsValidation\Traits;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Illuminate\Support\Facades\Config;
 
 trait RemoteValidation
 {
@@ -104,8 +105,9 @@ trait RemoteValidation
      */
     protected function isRemoteValidationRequest()
     {
-        $data = $this->getData();
+        if (!$this->remoteValidationEnabled()) return false;
 
+        $data = $this->getData();
         return !empty($data['_jsvalidation']);
     }
 
@@ -151,5 +153,10 @@ trait RemoteValidation
         }
 
         return true;
+    }
+
+    protected function remoteValidationEnabled()
+    {
+        return Config::get('jsvalidation.enable_remote_validation');
     }
 }
