@@ -4,6 +4,7 @@ Features:
 
  - Allow validate rule "In" for type array 
  - Added JSON validator
+ - Allow disable demote validations
 
 Bugfixes:
 
