@@ -102,8 +102,10 @@ class Validator extends BaseValidator
         $jsRule = false;
 
         if ($this->isRemoteRule($rule)) {
-            list($attribute, $parameters) = $this->jsRemoteRule($attribute);
-            $jsRule = 'laravelValidationRemote';
+            if ($this->remoteValidationEnabled() ) {
+                list($attribute, $parameters) = $this->jsRemoteRule($attribute);
+                $jsRule = 'laravelValidationRemote';
+            }
         } elseif (method_exists($this, $method)) {
             list($attribute, $parameters) = $this->$method($attribute, $parameters);
             $jsRule = 'laravelValidation';

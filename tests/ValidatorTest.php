@@ -5,6 +5,7 @@ use Mockery as m;
 use Proengsoft\JsValidation\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 
@@ -32,6 +33,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $data = [];
         $rules = ['name'=>'required', 'novalidate'=>'no_js_validation'];
         $customAttributes = [];
+        Config::shouldReceive('get')->withArgs(['jsvalidation.enable_remote_validation'])->andReturn(true);
 
         $this->validator= new Validator($this->translator, $data, $rules,$messages ,$customAttributes);
     }
@@ -509,6 +511,23 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $data=$validator->validationData();
         $this->assertArrayHasKey('att[ribu][te]',$data['rules']);
 
+    }
+
+    public function testRemoteValidationDisabled()
+    {
+        $rule=['name'=>'active_url'];
+        $message=['name.active_url'=>'active url'];
+        $expected=array(
+            'rules' => array(),
+            'messages'=>array()
+        );
+
+        $validator=new Validator($this->translator, [], $rule,$message);
+        Config::clearResolvedInstances();
+        Config::shouldReceive('get')->withArgs(['jsvalidation.enable_remote_validation'])->andReturn(false);
+        $data=$validator->validationData();
+
+        $this->assertEquals($expected,$data);
     }
 
 

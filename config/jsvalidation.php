@@ -20,10 +20,18 @@ return array(
      */
     'focus_on_error' => false,
 
+    
     /**
      * Duration time for the animation when We are moving the focus
      * to the first error, http://api.jquery.com/animate/ for more information.
      */
     'duration_animate' => 1000,
+
+
+    /**
+     * Enable or disable Ajax validations of Database and custom rules.
+     * By default Unique, ActiveURL, Exists and custom validations are validated via AJAX
+     */
+    'enable_remote_validation' => true,
 
 );
