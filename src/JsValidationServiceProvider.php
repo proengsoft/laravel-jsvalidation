@@ -17,7 +17,7 @@ class JsValidationServiceProvider extends ServiceProvider
         $this->bootstrapConfigs();
         $this->bootstrapViews();
         $this->publishAssets();
-        //$this->bootstrapValidator();
+
     }
 
     /**
@@ -26,6 +26,15 @@ class JsValidationServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerValidationFactory();
+        $this->registerJsValidator();
+    }
+
+    /**
+     *  Register JsValidator Factory
+     *
+     */
+    protected function registerJsValidator()
+    {
         $this->app->bind('jsvalidator', function (Application $app) {
 
             $selector = Config::get('jsvalidation.form_selector');
@@ -37,7 +46,6 @@ class JsValidationServiceProvider extends ServiceProvider
             return new JsValidatorFactory($validatorFactory, $manager, $app);
         });
 
-        //$this->registerResolver();
     }
 
     /**
@@ -59,7 +67,7 @@ class JsValidationServiceProvider extends ServiceProvider
 
             // The session manager is responsible to secure Ajax validations
             if (isset($app['session.store'])) {
-                $validator->setSessionManager($app['session.store']);
+                $validator->setSessionStore($app['session.store']);
             }
 
             $validator->setJsRemoteEnabled(!$app['config']->get('jsvalidation.disable_remote_validation'));
@@ -68,37 +76,6 @@ class JsValidationServiceProvider extends ServiceProvider
         });
     }
 
-
-    /**
-     *
-     */
-
-    /**
-     * Register Validator resolver.
-     */
-    protected function registerResolver()
-    {
-        $this->app->booted(function($app)  {
-            $getResolver = \Closure::bind(function(){
-                return $this->resolver;
-            },$app['validator'],$app['validator']);
-
-            $resolver = $getResolver();
-            $app['validator']->resolver(
-                function ($translator, $data, $rules, $messages = array(), $customAttributes = array()) use ($resolver) {
-                    return new Validator($translator, $data, $rules, $messages, $customAttributes, $resolver);
-                }
-            );
-        });
-
-
-        /*
-        $this->app['validator']->resolver(function ($translator, $data, $rules, $messages = array(), $customAttributes = array()) {
-            return new Validator($translator, $data, $rules, $messages, $customAttributes);
-        });
-        */
-
-    }
 
     /**
      * Configure and publish views.

@@ -78,7 +78,7 @@ class Factory extends BaseFactory
      *
      * @param \Illuminate\Session\Store $store
      */
-    public function setSessionManager(Store $store)
+    public function setSessionStore(Store $store)
     {
         $this->sessionStore = $store;
     }
@@ -88,7 +88,7 @@ class Factory extends BaseFactory
      *
      * @return \Illuminate\Session\SessionManager
      */
-    public function getSessionManager()
+    public function getSessionStore()
     {
         return $this->sessionStore;
     }

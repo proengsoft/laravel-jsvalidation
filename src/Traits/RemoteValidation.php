@@ -165,7 +165,7 @@ trait RemoteValidation
      *
      * @return bool
      */
-    protected function remoteValidationEnabled()
+    public function remoteValidationEnabled()
     {
         return $this->remoteEnabled === true;
     }

@@ -224,7 +224,7 @@ class Validator implements ValidatorContract
      */
     public function getMessageBag()
     {
-        return $this->validator->getMessageBag();
+        return $this->validator->__call('getMessageBag',[]);
     }
 
     /**
@@ -234,7 +234,7 @@ class Validator implements ValidatorContract
      */
     public function fails()
     {
-        return $this->validator->fails();
+        return $this->validator->__call('fails',[]);
     }
 
     /**
@@ -244,7 +244,7 @@ class Validator implements ValidatorContract
      */
     public function failed()
     {
-        return $this->validator->failed();
+        return $this->validator->__call('failed',[]);
     }
 
     /**
@@ -257,7 +257,7 @@ class Validator implements ValidatorContract
      */
     public function sometimes($attribute, $rules, callable $callback)
     {
-        $this->validator->sometimes($attribute, $rules, $callback);
+        $this->validator->__call('sometimes',[$attribute, $rules, $callback]);
     }
 
     /**
@@ -268,7 +268,7 @@ class Validator implements ValidatorContract
      */
     public function after($callback)
     {
-        return $this->validator->after($callback);
+        return $this->validator->__call('after',[$callback]);
     }
 
     /**
