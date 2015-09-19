@@ -2,44 +2,65 @@
 
 namespace Proengsoft\JsValidation;
 
+use Closure;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Traits\RemoteValidation;
 use Proengsoft\JsValidation\Traits\JavascriptRules;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Extends Laravel Validator to add Javascript Validations.
  *
  * Class Validator
  */
-class Validator extends BaseValidator
+class Validator //extends BaseValidator
 {
     use JavascriptRules,RemoteValidation;
 
     const JSVALIDATION_DISABLE = 'NoJsValidation';
 
     /**
-     * Determine if the data passes the validation rules.
+     * The Translator implementation.
      *
-     * @return bool
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
-    public function passes()
-    {
-        if ($this->isRemoteValidationRequest()) {
-            return $this->validateJsRemoteRequest($this->data['_jsvalidation'], [$this, 'parent::passes']);
-        }
-
-        return parent::passes();
-    }
+    protected $translator;
 
     /**
-     * Disable Javascript Validations for some attribute.
+     * The Validator resolved instance.
      *
-     * @return bool
+     * @var DelegatedValidator
      */
-    public function validateNoJsValidation()
+    protected $validator;
+
+    /**
+     * The Validator resolver instance.
+     *
+     * @var Closure
+     */
+    protected $resolver;
+
+    /**
+     * Create a new JsValidation instance.
+     *
+     * @param \Proengsoft\JsValidation\DelegatedValidator $validator
+     */
+    public function __construct(DelegatedValidator $validator)
     {
-        return true;
+        $this->validator = $validator;
     }
+
+
+    /**
+     * Returns DelegatedValidator instance
+     *
+     * @return DelegatedValidator
+     */
+    public function getValidator()
+    {
+        return $this->validator;
+    }
+
 
     /**
      * Generate Javascript validations.
@@ -50,7 +71,7 @@ class Validator extends BaseValidator
     {
         $jsValidations = array();
 
-        foreach ($this->rules as $attribute=>$rules)
+        foreach ($this->validator->getRules() as $attribute=>$rules)
         {
             $newRules=$this->jsConvertRules($attribute,$rules);
             $jsValidations = array_merge($jsValidations, $newRules);
@@ -73,14 +94,14 @@ class Validator extends BaseValidator
 
         $jsRules = [];
         foreach ($rules as $rawRule) {
-            list($rule, $parameters) = $this->parseRule($rawRule);
+            list($rule, $parameters) = $this->validator->parseRule($rawRule);
             list($jsAttribute, $jsRule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
             if ($jsRule) {
                 $jsRules[$jsAttribute][$jsRule][] = array(
                     $rule,
                     $jsParams,
                     $this->getJsMessage($attribute, $rule, $parameters),
-                    $this->isImplicit($rule),
+                    $this->validator->isImplicit($rule),
                 );
             }
         }
@@ -109,7 +130,7 @@ class Validator extends BaseValidator
         } elseif (method_exists($this, $method)) {
             list($attribute, $parameters) = $this->$method($attribute, $parameters);
             $jsRule = 'laravelValidation';
-        } elseif (method_exists($this, "validate{$rule}")) {
+        } elseif (method_exists($this->validator, "validate{$rule}")) {
             $jsRule = 'laravelValidation';
         }
 
@@ -130,13 +151,13 @@ class Validator extends BaseValidator
     protected function getJsMessage($attribute, $rule, $parameters)
     {
         $message = $this->getTypeMessage($attribute, $rule);
-
-        if (isset($this->replacers[snake_case($rule)])) {
-            $message = $this->doReplacements($message, $attribute, $rule, $parameters);
+        $replacers= $this->validator->getReplacers();
+        if (isset($replacers[snake_case($rule)])) {
+            $message = $this->validator->doReplacements($message, $attribute, $rule, $parameters);
         } elseif (method_exists($this, $replacer = "jsReplace{$rule}")) {
             $message = $this->$replacer($attribute, $message, $parameters);
         } else {
-            $message = $this->doReplacements($message, $attribute, $rule, $parameters);
+            $message = $this->validator->doReplacements($message, $attribute, $rule, $parameters);
         }
 
         return $message;
@@ -150,18 +171,19 @@ class Validator extends BaseValidator
      *
      * @return string
      */
-    private function getTypeMessage($attribute, $rule)
+    protected function getTypeMessage($attribute, $rule)
     {
-        // find more elegant solution to set the attribute file type
-        $prevFiles = $this->files;
-        if ($this->hasRule($attribute, array('Mimes', 'Image'))) {
-            if (!array_key_exists($attribute, $this->files)) {
-                $this->files[$attribute] = false;
+        $prevFiles = $this->validator->getFiles();
+        if ($this->validator->hasRule($attribute, array('Mimes', 'Image'))) {
+            if (!array_key_exists($attribute, $prevFiles)) {
+                $newFiles=$prevFiles;
+                $newFiles[$attribute] = false;
+                $this->validator->setFiles($newFiles);
             }
         }
 
-        $message = $this->getMessage($attribute, $rule);
-        $this->files = $prevFiles;
+        $message = $this->validator->getMessage($attribute, $rule);
+        $this->validator->setFiles($prevFiles);
 
         return $message;
     }
@@ -175,7 +197,7 @@ class Validator extends BaseValidator
      */
     public function jsValidationEnabled($attribute)
     {
-        return !$this->hasRule($attribute, self::JSVALIDATION_DISABLE);
+        return !$this->validator->hasRule($attribute, self::JSVALIDATION_DISABLE);
     }
 
     /**
@@ -208,6 +230,20 @@ class Validator extends BaseValidator
         }
 
         return $attribute;
+    }
+
+    /**
+     * Delegate method calls to validator instance
+     *
+     * @param $method
+     * @param $params
+     *
+     * @return mixed
+     */
+    public function __call($method, $params)
+    {
+        $arrCaller = array( $this->validator, $method );
+        return call_user_func_array( $arrCaller, $params );
     }
 
 

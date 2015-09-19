@@ -12,7 +12,7 @@ class Manager implements Arrayable
     /**
      * Registered validator instance.
      *
-     * @var \Illuminate\Contracts\Validation\Validator
+     * @var \Proengsoft\JsValidation\Validator
      */
     protected $validator;
 
@@ -43,9 +43,9 @@ class Manager implements Arrayable
     /**
      * Set Validation instance used to get rules and messages.
      *
-     * @param ValidatorContract $validator
+     * @param Validator $validator
      */
-    public function setValidator(ValidatorContract $validator)
+    public function setValidator(Validator $validator)
     {
         $this->validator = $validator;
     }
@@ -113,6 +113,7 @@ class Manager implements Arrayable
      */
     protected function getViewData()
     {
+
         if (method_exists($this->validator, 'validationData')) {
             $data = [
                 'selector' => $this->selector,

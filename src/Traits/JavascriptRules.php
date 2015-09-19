@@ -2,29 +2,18 @@
 
 namespace Proengsoft\JsValidation\Traits;
 
+use Proengsoft\JsValidation\DelegatedValidator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 
 trait JavascriptRules
 {
     /**
-     * Get the displayable name of the value.
+     * Returns DelegatedValidator instance
      *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return string
+     * @return DelegatedValidator
      */
-    abstract public function getDisplayableValue($attribute, $value);
-
-    /**
-     * Get the displayable name of the attribute.
-     *
-     * @param string $attribute
-     *
-     * @return string
-     */
-    abstract protected function getAttribute($attribute);
+    abstract public function getValidator();
 
     /**
      * Handles multidimensional attribute names
@@ -34,19 +23,6 @@ trait JavascriptRules
      * @return string
      */
     abstract protected function getJsAttributeName($attribute);
-
-    /**
-     * Require a certain number of parameters to be present.
-     *
-     * @param  int    $count
-     * @param  array  $parameters
-     * @param  string  $rule
-     *
-     * @return void
-     *
-     * @throws \InvalidArgumentException
-     */
-    abstract protected function requireParameterCount($count, $parameters, $rule);
 
     /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
@@ -62,9 +38,9 @@ trait JavascriptRules
         $field = $parameters[0];
         $data = array($field => $parameters[1]);
 
-        $parameters[0] = $this->getAttribute($field);
-        $parameters[1] = $this->getDisplayableValue($field, array_get($data, $field));
-        $parameters[2] = $this->getAttribute($attribute);
+        $parameters[0] = $this->getValidator()->getAttribute($field);
+        $parameters[1] = $this->getValidator()->getDisplayableValue($field, array_get($data, $field));
+        $parameters[2] = $this->getValidator()->getAttribute($attribute);
 
         return str_replace(array(':other', ':value', ':attribute'), $parameters, $message);
     }
@@ -95,7 +71,7 @@ trait JavascriptRules
      */
     protected function jsRuleAfter($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'after');
+        $this->getValidator()->requireParameterCount(1, $parameters, 'after');
 
         if (!($date = strtotime($parameters[0]))) {
             $date = $this->getJsAttributeName($parameters[0]);
@@ -114,7 +90,7 @@ trait JavascriptRules
      */
     protected function jsRuleBefore($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'before');
+        $this->getValidator()->requireParameterCount(1, $parameters, 'before');
 
         return $this->jsRuleAfter($attribute, $parameters);
     }
@@ -129,7 +105,7 @@ trait JavascriptRules
      */
     protected function jsRuleSame($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'same');
+        $this->getValidator()->requireParameterCount(1, $parameters, 'same');
 
         $other = $this->getJsAttributeName($parameters[0]);
 
@@ -146,7 +122,7 @@ trait JavascriptRules
      */
     protected function jsRuleDifferent($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'different');
+        $this->getValidator()->requireParameterCount(1, $parameters, 'different');
 
         return $this->jsRuleSame($attribute, $parameters);
     }
@@ -215,7 +191,7 @@ trait JavascriptRules
      */
     protected function jsRuleRequiredIf($attribute, array $parameters)
     {
-        $this->requireParameterCount(2, $parameters, 'required_if');
+        $this->getValidator()->requireParameterCount(2, $parameters, 'required_if');
 
         $parameters[0] = $this->getJsAttributeName($parameters[0]);
 

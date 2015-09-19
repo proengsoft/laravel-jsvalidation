@@ -14,12 +14,10 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // First we bootstrap configurations
         $this->bootstrapConfigs();
-
         $this->bootstrapViews();
         $this->publishAssets();
-        $this->bootstrapValidator();
+        //$this->bootstrapValidator();
     }
 
     /**
@@ -27,26 +25,72 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->registerValidationFactory();
         $this->app->bind('jsvalidator', function (Application $app) {
 
             $selector = Config::get('jsvalidation.form_selector');
             $view = Config::get('jsvalidation.view');
 
-            $validator = new Manager($selector, $view);
+            $manager = new Manager($selector, $view);
             $validatorFactory = $app->make('Illuminate\Contracts\Validation\Factory');
 
-            return new Factory($validatorFactory, $validator, $app);
+            return new JsValidatorFactory($validatorFactory, $manager, $app);
+        });
+
+        //$this->registerResolver();
+    }
+
+    /**
+     * Register the validation factory.
+     *
+     * @return void
+     */
+    protected function registerValidationFactory()
+    {
+        $this->app->singleton('validator', function ($app) {
+            $validator = new Factory($app['translator'], $app);
+
+            // The validation presence verifier is responsible for determining the existence
+            // of values in a given data collection, typically a relational database or
+            // other persistent data stores. And it is used to check for uniqueness.
+            if (isset($app['validation.presence'])) {
+                $validator->setPresenceVerifier($app['validation.presence']);
+            }
+
+            return $validator;
         });
     }
+
+
+    /**
+     *
+     */
 
     /**
      * Register Validator resolver.
      */
-    protected function bootstrapValidator()
+    protected function registerResolver()
     {
+        $this->app->booted(function($app)  {
+            $getResolver = \Closure::bind(function(){
+                return $this->resolver;
+            },$app['validator'],$app['validator']);
+
+            $resolver = $getResolver();
+            $app['validator']->resolver(
+                function ($translator, $data, $rules, $messages = array(), $customAttributes = array()) use ($resolver) {
+                    return new Validator($translator, $data, $rules, $messages, $customAttributes, $resolver);
+                }
+            );
+        });
+
+
+        /*
         $this->app['validator']->resolver(function ($translator, $data, $rules, $messages = array(), $customAttributes = array()) {
             return new Validator($translator, $data, $rules, $messages, $customAttributes);
         });
+        */
+
     }
 
     /**

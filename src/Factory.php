@@ -2,152 +2,56 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Validation\Factory as FactoryContract;
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
-use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
+use Illuminate\Validation\Factory as BaseFactory;
 
-class Factory
+class Factory extends BaseFactory
 {
+
     /**
-     * The application instance.
+     * Create a new Validator instance.
      *
-     * @var \Illuminate\Contracts\Validation\Factory
+     * @param  array  $data
+     * @param  array  $rules
+     * @param  array  $messages
+     * @param  array  $customAttributes
+     * @return \Proengsoft\JsValidation\Validator
      */
-    protected $validator;
-
-    /**
-     * Javascript validator instance.
-     *
-     * @var Manager
-     */
-    protected $manager;
-
-    /**
-     *  Current Request
-     * @var Request
-     */
-    protected  $request;
-
-    /**
-     *  Current Application Container
-     * @var Application
-     */
-    protected  $container;
-
-    /**
-     * Create a new Validator factory instance.
-     *
-     * @param \Illuminate\Contracts\Validation\Factory $validator
-     * @param \Proengsoft\JsValidation\Manager $manager
-     * @param Application $app
-     */
-    public function __construct(FactoryContract $validator, Manager $manager, Application $app)
+    public function make(array $data, array $rules, array $messages = [], array $customAttributes = [])
     {
-        $this->validator = $validator;
-        $this->manager = $manager;
-        $this->container = $app;
-    }
+        // The presence verifier is responsible for checking the unique and exists data
+        // for the validator. It is behind an interface so that multiple versions of
+        // it may be written besides database. We'll inject it into the validator.
+        $delegated = $this->resolve($data, $rules, $messages, $customAttributes);
+        $validator = $delegated->getValidator();
 
-    /**
-     * Creates JsValidator instance based on rules and message arrays.
-     *
-     * @param array       $rules
-     * @param array       $messages
-     * @param array       $customAttributes
-     * @param null|string $selector
-     *
-     * @return \Proengsoft\JsValidation\Manager
-     */
-    public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector = null)
-    {
-        $validator = $this->validator->make([], $rules, $messages, $customAttributes);
-
-        return $this->createValidator($validator, $selector);
-    }
-
-    /**
-     * Creates JsValidator instance based on FormRequest.
-     *
-     * @param $formRequest
-     * @param null $selector
-     *
-     * @return Manager
-     *
-     * @throws FormRequestArgumentException
-     */
-    public function formRequest($formRequest, $selector = null)
-    {
-
-        if (!is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
-            $className = is_object($formRequest) ? get_class($formRequest) : (string) $formRequest;
-            throw new FormRequestArgumentException($className);
+        if (! is_null($this->verifier)) {
+            $validator->setPresenceVerifier($this->verifier);
         }
 
-        if (is_string($formRequest)) {
-            $formRequest = $this->createFormRequest($formRequest);
+        // Next we'll set the IoC container instance of the validator, which is used to
+        // resolve out class based validator extensions. If it is not set then these
+        // types of extensions will not be possible on these validation instances.
+        if (! is_null($this->container)) {
+            $validator->setContainer($this->container);
         }
 
-        $validator = $this->validator->make([], $formRequest->rules(), $formRequest->messages(), $formRequest->attributes());
+        $this->addExtensions($validator);
 
-        return $this->createValidator($validator, $selector);
-    }
-
-
-    /**
-     *  Creates and initializes an Form Request instance
-     *
-     * @param string $class
-     * @return FormRequest
-     */
-    protected function createFormRequest($class)
-    {
-        $formRequest=new $class();
-        $request=$this->container->offsetGet('request');
-
-        $formRequest->initialize($request->query->all(), $request->request->all(), $request->attributes->all(),
-            $request->cookies->all(), array(), $request->server->all(), $request->getContent()
-        );
-
-        if ($session = $request->getSession())
-        {
-            $formRequest->setSession($session);
-        }
-        $formRequest->setUserResolver($request->getUserResolver());
-        $formRequest->setRouteResolver($request->getRouteResolver());
-
-        return $formRequest;
+        return  new Validator($delegated);
     }
 
     /**
-     * Creates JsValidator instance based on Validator.
+     * Resolve a new Validator instance.
      *
-     * @param ValidatorContract $validator
-     * @param string|null       $selector
-     *
-     * @return Manager
+     * @param  array  $data
+     * @param  array  $rules
+     * @param  array  $messages
+     * @param  array  $customAttributes
+     * @return \Proengsoft\JsValidation\DelegatedValidator
      */
-    public function validator(ValidatorContract $validator, $selector = null)
+    protected function resolve(array $data, array $rules, array $messages, array $customAttributes)
     {
-        return $this->createValidator($validator, $selector);
-    }
-
-    /**
-     * Creates JsValidator instance based on Validator.
-     *
-     * @param ValidatorContract $validator
-     * @param string|null       $selector
-     *
-     * @return Manager
-     */
-    protected function createValidator(ValidatorContract $validator, $selector = null)
-    {
-
-        $this->manager->selector($selector);
-        $this->manager->setValidator($validator);
-
-        return $this->manager;
+        $resolved = parent::resolve($data, $rules, $messages, $customAttributes);
+        return new DelegatedValidator($resolved);
     }
 }
