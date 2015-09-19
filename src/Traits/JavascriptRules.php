@@ -8,6 +8,21 @@ use Illuminate\Support\Facades\Session;
 
 trait JavascriptRules
 {
+
+    /**
+     *  Rules validated with Javascript
+     *
+     * @var array
+     */
+    protected $javascriptRules = ['Accepted', 'After', 'Alpha', 'AlphaDash',
+        'AlphaNum', 'Array', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
+        'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Image',
+        'In', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
+        'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
+        'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes' ,
+        'String', 'Timezone', 'Url'];
+
+
     /**
      * Returns DelegatedValidator instance
      *
@@ -23,6 +38,17 @@ trait JavascriptRules
      * @return string
      */
     abstract protected function getJsAttributeName($attribute);
+
+    /**
+     * Returns if rule is validated using Javascript
+     *
+     * @param $rule
+     * @return bool
+     */
+    public function jsImplementedRule($rule)
+    {
+        return in_array($rule, $this->javascriptRules);
+    }
 
     /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
@@ -198,23 +224,4 @@ trait JavascriptRules
         return [$attribute, $parameters];
     }
 
-
-    /**
-     * Returns Javascript parameters for remote validated rules.
-     *
-     * @param string $attribute
-     *
-     * @return array
-     */
-    private function jsRemoteRule($attribute)
-    {
-        $token = Session::token();
-        $token = Crypt::encrypt($token);
-        $params = [
-            $attribute,
-            $token,
-        ];
-
-        return [$attribute, $params];
-    }
 }

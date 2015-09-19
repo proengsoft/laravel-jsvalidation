@@ -2,29 +2,20 @@
 
 namespace Proengsoft\JsValidation;
 
-use Closure;
-use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Traits\RemoteValidation;
 use Proengsoft\JsValidation\Traits\JavascriptRules;
-use Symfony\Component\Translation\TranslatorInterface;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 
 /**
  * Extends Laravel Validator to add Javascript Validations.
  *
  * Class Validator
  */
-class Validator //extends BaseValidator
+class Validator implements ValidatorContract
 {
     use JavascriptRules,RemoteValidation;
 
     const JSVALIDATION_DISABLE = 'NoJsValidation';
-
-    /**
-     * The Translator implementation.
-     *
-     * @var \Symfony\Component\Translation\TranslatorInterface
-     */
-    protected $translator;
 
     /**
      * The Validator resolved instance.
@@ -33,12 +24,6 @@ class Validator //extends BaseValidator
      */
     protected $validator;
 
-    /**
-     * The Validator resolver instance.
-     *
-     * @var Closure
-     */
-    protected $resolver;
 
     /**
      * Create a new JsValidation instance.
@@ -130,7 +115,7 @@ class Validator //extends BaseValidator
         } elseif (method_exists($this, $method)) {
             list($attribute, $parameters) = $this->$method($attribute, $parameters);
             $jsRule = 'laravelValidation';
-        } elseif (method_exists($this->validator, "validate{$rule}")) {
+        } elseif ($this->jsImplementedRule($rule)) {
             $jsRule = 'laravelValidation';
         }
 
@@ -233,6 +218,60 @@ class Validator //extends BaseValidator
     }
 
     /**
+     * Get the messages for the instance.
+     *
+     * @return \Illuminate\Contracts\Support\MessageBag
+     */
+    public function getMessageBag()
+    {
+        return $this->validator->getMessageBag();
+    }
+
+    /**
+     * Determine if the data fails the validation rules.
+     *
+     * @return bool
+     */
+    public function fails()
+    {
+        return $this->validator->fails();
+    }
+
+    /**
+     * Get the failed validation rules.
+     *
+     * @return array
+     */
+    public function failed()
+    {
+        return $this->validator->failed();
+    }
+
+    /**
+     * Add conditions to a given field based on a Closure.
+     *
+     * @param  string $attribute
+     * @param  string|array $rules
+     * @param  callable $callback
+     * @return void
+     */
+    public function sometimes($attribute, $rules, callable $callback)
+    {
+        $this->validator->sometimes($attribute, $rules, $callback);
+    }
+
+    /**
+     * After an after validation callback.
+     *
+     * @param  callable|string $callback
+     * @return $this
+     */
+    public function after($callback)
+    {
+        return $this->validator->after($callback);
+    }
+
+    /**
      * Delegate method calls to validator instance
      *
      * @param $method
@@ -245,6 +284,4 @@ class Validator //extends BaseValidator
         $arrCaller = array( $this->validator, $method );
         return call_user_func_array( $arrCaller, $params );
     }
-
-
 }

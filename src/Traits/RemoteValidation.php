@@ -6,10 +6,23 @@ use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Proengsoft\JsValidation\DelegatedValidator;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Illuminate\Support\Facades\Config;
 
 trait RemoteValidation
 {
+    /**
+     * Token used to secure remote validations
+     *
+     * @var
+     */
+    protected $token;
+
+    /**
+     * Enable or disable remote validations
+     *
+     * @var
+     */
+    protected $remoteEnabled;
+
     /**
      * Returns DelegatedValidator instance
      *
@@ -44,6 +57,25 @@ trait RemoteValidation
         return $this->getValidator()->passes();
     }
 
+    /**
+     * Check if remote validation is enabled
+
+     * @param string $enabled
+     */
+    public function enableRemote($enabled)
+    {
+        $this->remoteEnabled = $enabled;
+    }
+
+    /**
+     * Set the token  for securing remote validation
+
+     * @param string $token
+     */
+    public function setRemoteToken($token)
+    {
+        $this->token = $token;
+    }
 
     /**
      * Validate remote Javascript Validations.
@@ -135,7 +167,24 @@ trait RemoteValidation
      */
     protected function remoteValidationEnabled()
     {
-        return Config::get('jsvalidation.enable_remote_validation');
+        return $this->remoteEnabled === true;
+    }
+
+    /**
+     * Returns Javascript parameters for remote validated rules.
+     *
+     * @param string $attribute
+     *
+     * @return array
+     */
+    private function jsRemoteRule($attribute)
+    {
+        $params = [
+            $attribute,
+            $this->token,
+        ];
+
+        return [$attribute, $params];
     }
 
 }

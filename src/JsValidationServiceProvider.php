@@ -57,6 +57,13 @@ class JsValidationServiceProvider extends ServiceProvider
                 $validator->setPresenceVerifier($app['validation.presence']);
             }
 
+            // The session manager is responsible to secure Ajax validations
+            if (isset($app['session.store'])) {
+                $validator->setSessionManager($app['session.store']);
+            }
+
+            $validator->setJsRemoteEnabled(!$app['config']->get('jsvalidation.disable_remote_validation'));
+
             return $validator;
         });
     }

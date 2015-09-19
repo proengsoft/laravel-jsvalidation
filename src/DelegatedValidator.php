@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Validation\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 
-class DelegatedValidator implements ValidatorContract
+class DelegatedValidator
 {
     /**
      * The Validator resolved instance.
@@ -258,57 +258,5 @@ class DelegatedValidator implements ValidatorContract
     }
 
 
-    /**
-     * Get the messages for the instance.
-     *
-     * @return \Illuminate\Contracts\Support\MessageBag
-     */
-    public function getMessageBag()
-    {
-       return $this->validator->getMessageBag();
-    }
 
-    /**
-     * Determine if the data fails the validation rules.
-     *
-     * @return bool
-     */
-    public function fails()
-    {
-        return $this->validator->fails();
-    }
-
-    /**
-     * Get the failed validation rules.
-     *
-     * @return array
-     */
-    public function failed()
-    {
-        return $this->validator->failed();
-    }
-
-    /**
-     * Add conditions to a given field based on a Closure.
-     *
-     * @param  string $attribute
-     * @param  string|array $rules
-     * @param  callable $callback
-     * @return void
-     */
-    public function sometimes($attribute, $rules, callable $callback)
-    {
-        $this->validator->sometimes($attribute, $rules, $callback);
-    }
-
-    /**
-     * After an after validation callback.
-     *
-     * @param  callable|string $callback
-     * @return $this
-     */
-    public function after($callback)
-    {
-        return $this->validator->after($callback);
-    }
 }
