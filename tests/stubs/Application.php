@@ -188,13 +188,13 @@ class Application implements \ArrayAccess, Container
     /**
      * Resolve the given type from the container.
      *
-     * @param  string $abstract
-     * @param  array $parameters
+     * @param  string  $abstract
+     * @param  array   $parameters
      * @return mixed
      */
     public function make($abstract, array $parameters = [])
     {
-        // TODO: Implement make() method.
+        return $this;
     }
 
     /**
