@@ -2,9 +2,9 @@
 
 namespace Proengsoft\JsValidation;
 
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Validation\Factory as FactoryContract;
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
@@ -14,7 +14,7 @@ class JsValidatorFactory
     /**
      * The application instance.
      *
-     * @var \Illuminate\Contracts\Validation\Factory
+     * @var Factory
      */
     protected $validator;
 
@@ -33,7 +33,7 @@ class JsValidatorFactory
 
     /**
      *  Current Application Container
-     * @var Application
+     * @var Container
      */
     protected  $container;
 
@@ -42,9 +42,9 @@ class JsValidatorFactory
      *
      * @param \Illuminate\Contracts\Validation\Factory $validator
      * @param \Proengsoft\JsValidation\Manager $manager
-     * @param Application $app
+     * @param Container $app
      */
-    public function __construct(FactoryContract $validator, Manager $manager, Application $app)
+    public function __construct(FactoryContract $validator, Manager $manager, Container $app)
     {
         $this->validator = $validator;
         $this->manager = $manager;
@@ -90,7 +90,8 @@ class JsValidatorFactory
             $formRequest = $this->createFormRequest($formRequest);
         }
 
-        $validator = $this->validator->make([], $formRequest->rules(), $formRequest->messages(), $formRequest->attributes());
+        $rules = method_exists($formRequest,'rules')?$formRequest->rules():[];
+        $validator = $this->validator->make([], $rules, $formRequest->messages(), $formRequest->attributes());
 
         return $this->jsValidator($validator, $selector);
     }
@@ -104,8 +105,12 @@ class JsValidatorFactory
      */
     protected function createFormRequest($class)
     {
+        /**
+         * @var $formRequest \Illuminate\Foundation\Http\FormRequest
+         * @var $request Request
+         */
         $formRequest=new $class();
-        $request=$this->container->offsetGet('request');
+        $request=$this->container['request'];
 
         $formRequest->initialize($request->query->all(), $request->request->all(), $request->attributes->all(),
             $request->cookies->all(), array(), $request->server->all(), $request->getContent()
@@ -124,12 +129,12 @@ class JsValidatorFactory
     /**
      * Creates JsValidator instance based on Validator.
      *
-     * @param ValidatorContract $validator
+     * @param Validator  $validator
      * @param string|null       $selector
      *
      * @return Manager
      */
-    public function validator(ValidatorContract $validator, $selector = null)
+    public function validator(Validator $validator, $selector = null)
     {
         return $this->jsValidator($validator, $selector);
     }
