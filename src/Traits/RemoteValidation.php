@@ -60,7 +60,7 @@ trait RemoteValidation
     /**
      * Check if remote validation is enabled
 
-     * @param string $enabled
+     * @param bool $enabled
      */
     public function enableRemote($enabled)
     {

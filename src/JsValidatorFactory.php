@@ -4,7 +4,6 @@ namespace Proengsoft\JsValidation;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Validation\Factory as FactoryContract;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
@@ -40,11 +39,11 @@ class JsValidatorFactory
     /**
      * Create a new Validator factory instance.
      *
-     * @param \Illuminate\Contracts\Validation\Factory $validator
+     * @param Factory $validator
      * @param \Proengsoft\JsValidation\Manager $manager
      * @param Container $app
      */
-    public function __construct(FactoryContract $validator, Manager $manager, Container $app)
+    public function __construct(Factory $validator, Manager $manager, Container $app)
     {
         $this->validator = $validator;
         $this->manager = $manager;
