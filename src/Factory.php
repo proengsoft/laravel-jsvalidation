@@ -89,7 +89,7 @@ class Factory //extends BaseFactory
         $delegated = new DelegatedValidator($validator);
         return new Validator($delegated);
     }
-    
+
     /**
      * Sets the session manager used to secure Ajax validations
      *
