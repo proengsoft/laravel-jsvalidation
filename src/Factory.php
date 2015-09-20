@@ -11,7 +11,7 @@ use Illuminate\Validation\Validator as BaseValidator;
 use Symfony\Component\Translation\TranslatorInterface;
 
 
-class Factory //extends BaseFactory
+class Factory
 {
     /**
      * Enables or disable JsValidation Remote validations
@@ -63,21 +63,7 @@ class Factory //extends BaseFactory
     public function make(array $data, array $rules, array $messages = [], array $customAttributes = [])
     {
         $validator = $this->factory->make($data, $rules, $messages, $customAttributes);
-        //$delegated = new DelegatedValidator($validator);
-        /*
-        $delegated = $this->resolve($data, $rules, $messages, $customAttributes);
-        $validator = $delegated->getValidator();
 
-        if (! is_null($this->verifier)) {
-            $validator->setPresenceVerifier($this->verifier);
-        }
-
-        if (! is_null($this->container)) {
-            $validator->setContainer($this->container);
-        }
-
-        $this->addExtensions($validator);
-        */
         $jsValidator = $this->makeJsValidator($validator);
         $this->configureJsRemote($jsValidator);
 
@@ -121,11 +107,11 @@ class Factory //extends BaseFactory
     }
 
     /**
-     * Enables or disable JsValidation Remote validations
+     * Check if JsValidation Remote validations are enabled
      *
      * @return bool
      */
-    public function getJsRemoteEnabled()
+    public function isJsRemoteEnabled()
     {
         return $this->jsRemoteEnabled === true;
     }

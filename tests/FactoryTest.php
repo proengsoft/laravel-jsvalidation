@@ -59,7 +59,7 @@ class ValidationFactoryTest extends \PHPUnit_Framework_TestCase
         $factory->setJsRemoteEnabled(true);
         $validator = $factory->make([], []);
 
-        $enabled =$factory->getJsRemoteEnabled();
+        $enabled =$factory->isJsRemoteEnabled();
         $this->assertTrue($enabled);
 
         $enabled =$validator->remoteValidationEnabled();
