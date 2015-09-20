@@ -11,11 +11,11 @@ use Illuminate\Contracts\Container\Container;
 function load_container()
 {
     $composer=dirname(__FILE__).'/../../vendor/illuminate/contracts/composer.json';
-    $data = json_decode($composer);
+    $data = json_decode(file_get_contents($composer), true);
     $release=$data['extra']['branch-alias']['dev-master'];
     if ($release == "5.0-dev"){
         require dirname(__FILE__).'/ApplicationMake50.php';
-    } else {
+    } elseif ($release == "5.1-dev"){
         require dirname(__FILE__).'/ApplicationMake51.php';
     }
 
