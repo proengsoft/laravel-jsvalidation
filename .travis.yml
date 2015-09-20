@@ -16,5 +16,6 @@ script:
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "hhvm" ]]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
+  - bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm-nightly" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi;'
+  - bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm-nightly" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi;'
 
