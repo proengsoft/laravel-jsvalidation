@@ -89,22 +89,7 @@ class Factory //extends BaseFactory
         $delegated = new DelegatedValidator($validator);
         return new Validator($delegated);
     }
-
-    /**
-     * Resolve a new Validator instance.
-     *
-     * @param  array  $data
-     * @param  array  $rules
-     * @param  array  $messages
-     * @param  array  $customAttributes
-     * @return \Proengsoft\JsValidation\DelegatedValidator
-     */
-    protected function resolve(array $data, array $rules, array $messages, array $customAttributes)
-    {
-        $resolved = parent::resolve($data, $rules, $messages, $customAttributes);
-        return new DelegatedValidator($resolved);
-    }
-
+    
     /**
      * Sets the session manager used to secure Ajax validations
      *
