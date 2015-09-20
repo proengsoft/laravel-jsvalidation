@@ -224,4 +224,26 @@ trait JavascriptRules
         return [$attribute, $parameters];
     }
 
+    /**
+     * Returns Javascript parameters for remote validated rules.
+     *
+     * @param string $attribute
+     * @param $rule
+     * @param $parameters
+     * @return array
+     */
+    protected function jsClientRule($attribute, $rule, $parameters)
+    {
+        $jsRule = false;
+        $method = "jsRule{$rule}";
+        if (method_exists($this, $method)) {
+            list($attribute, $parameters) = $this->$method($attribute, $parameters);
+            $jsRule = 'laravelValidation';
+        } elseif ($this->jsImplementedRule($rule)) {
+            $jsRule = 'laravelValidation';
+        }
+
+        return [$jsRule, $attribute, $parameters];
+    }
+
 }

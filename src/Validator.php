@@ -104,17 +104,12 @@ class Validator implements ValidatorContract
      */
     protected function getJsRule($attribute, $rule, $parameters)
     {
-        $method = "jsRule{$rule}";
-        $jsRule = false;
 
-        if ($this->remoteValidationEnabled() && $this->isRemoteRule($rule)) { 
+        if ($this->remoteValidationEnabled() && $this->isRemoteRule($rule)) {
             list($attribute, $parameters) = $this->jsRemoteRule($attribute);
             $jsRule = 'laravelValidationRemote';
-        } elseif (method_exists($this, $method)) {
-            list($attribute, $parameters) = $this->$method($attribute, $parameters);
-            $jsRule = 'laravelValidation';
-        } elseif ($this->jsImplementedRule($rule)) {
-            $jsRule = 'laravelValidation';
+        } else {
+            list($jsRule, $attribute, $parameters) = $this->jsClientRule($attribute, $rule, $parameters);
         }
 
         $attribute = $this->getJsAttributeName($attribute);
