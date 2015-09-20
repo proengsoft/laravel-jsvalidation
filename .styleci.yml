@@ -1,0 +1,16 @@
+preset: laravel
+
+linting: true
+
+enabled:
+  - strict
+  - unalign_double_arrow
+
+disabled:
+  - short_array_syntax
+
+finder:
+  exclude:
+    - "tests"
+  name:
+    - "*.php"
