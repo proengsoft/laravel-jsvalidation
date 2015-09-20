@@ -5,6 +5,7 @@ Features:
  - Allow validate rule "In" for type array 
  - Added JSON validator
  - Allow disable demote validations
+ - Add support for other validation packages. #69 
 
 Bugfixes:
 
