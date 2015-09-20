@@ -140,8 +140,8 @@ trait RemoteValidation
             }
         }
         $this->getValidator()->setRules([$attribute => $rules]);
-
-        return !empty($this->getValidator()->getRules()[$attribute]);
+        $newRules=$this->getValidator()->getRules();
+        return !empty($newRules[$attribute]);
     }
 
     /**
