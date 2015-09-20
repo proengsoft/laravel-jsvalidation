@@ -71,9 +71,7 @@ class Validator implements ValidatorContract
      */
     protected function jsConvertRules($attribute, $rules)
     {
-        if (! $this->jsValidationEnabled($attribute)) {
-            return array();
-        }
+        if (! $this->jsValidationEnabled($attribute)) return array();
 
         $jsRules = [];
         foreach ($rules as $rawRule) {
