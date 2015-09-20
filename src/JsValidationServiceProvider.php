@@ -68,7 +68,7 @@ class JsValidationServiceProvider extends ServiceProvider
 
             return $validator;
         });
-        
+
         $this->app->booting(function($app) {
             $app['validator']=$app['jsvalidator.validator'];
         });

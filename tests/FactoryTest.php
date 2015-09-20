@@ -68,4 +68,70 @@ class ValidationFactoryTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testExtend()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('extend')->with(true,true,true)->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->extend(true, true, true);
+    }
+
+
+    public function testExtendImplicit()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('extendImplicit')->with(true,true,true)->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->extendImplicit(true, true, true);
+    }
+
+    public function testReplacer()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('replacer')->with(true,true)->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->replacer(true, true);
+    }
+
+
+    public function testResolver()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('resolver')->withAnyArgs()->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->resolver(function(){});
+    }
+
+    public function testGetTranslator()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('getTranslator')->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->getTranslator();
+    }
+
+
+    public function testGetPresenceVerifier()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('getPresenceVerifier')->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->getPresenceVerifier();
+    }
+
+    public function testSetPresenceVerifier()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('setPresenceVerifier')->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->setPresenceVerifier(m::mock('Illuminate\Validation\PresenceVerifierInterface'));
+    }
+
 }
