@@ -70,6 +70,12 @@ class Factory
         return $jsValidator;
     }
 
+    /**
+     * Creates new instance of Validator
+     *
+     * @param BaseValidator $validator
+     * @return Validator
+     */
     protected function makeJsValidator(BaseValidator $validator)
     {
         $delegated = new DelegatedValidator($validator);
@@ -116,6 +122,11 @@ class Factory
         return $this->jsRemoteEnabled === true;
     }
 
+    /**
+     * Configure Javascript remote validations
+     *
+     * @param Validator $validator
+     */
     protected function configureJsRemote(Validator $validator) {
         if ( is_null($this->sessionStore)) return;
 
