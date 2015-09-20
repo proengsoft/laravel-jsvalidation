@@ -81,8 +81,7 @@ class JsValidatorFactory
     {
 
         if (!is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
-            $className = is_object($formRequest) ? get_class($formRequest) : (string) $formRequest;
-            throw new FormRequestArgumentException($className);
+            throw new FormRequestArgumentException((string)$formRequest);
         }
 
         if (is_string($formRequest)) {
