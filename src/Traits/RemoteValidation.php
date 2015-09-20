@@ -43,6 +43,14 @@ trait RemoteValidation
     abstract protected function getJsRule($attribute, $rule, $parameters);
 
     /**
+     * Returns if rule is validated using Javascript
+     *
+     * @param $rule
+     * @return bool
+     */
+    abstract public function jsImplementedRule($rule);
+
+    /**
      * Determine if the data passes the validation rules.
      *
      * @return bool
@@ -153,8 +161,10 @@ trait RemoteValidation
      */
     protected function isRemoteRule($rule)
     {
+        $validator = $this->getValidator();
         if (!in_array($rule, ['ActiveUrl', 'Exists', 'Unique'])) {
-            return in_array(snake_case($rule), array_keys($this->getValidator()->getExtensions()));
+            return in_array(snake_case($rule), array_keys($validator->getExtensions())) ||
+            ( !$this->jsImplementedRule($rule) && method_exists($validator ->getValidator(),"validate{$rule}"));
         }
 
         return true;

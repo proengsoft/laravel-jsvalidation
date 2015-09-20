@@ -55,9 +55,6 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     protected function registerValidationFactory()
     {
-
-
-
         $this->app->singleton('jsvalidator.validator', function ($app)  {
             $currentValidator = $app['validator'];
             $validator = new Factory($currentValidator, $app);
@@ -71,12 +68,12 @@ class JsValidationServiceProvider extends ServiceProvider
 
             return $validator;
         });
+        
         $this->app->booting(function($app) {
             $app['validator']=$app['jsvalidator.validator'];
         });
-
     }
-    
+
     /**
      * Configure and publish views.
      */
