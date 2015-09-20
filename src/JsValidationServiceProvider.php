@@ -55,15 +55,12 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     protected function registerValidationFactory()
     {
-        $this->app->singleton('validator', function ($app) {
-            $validator = new Factory($app['translator'], $app);
 
-            // The validation presence verifier is responsible for determining the existence
-            // of values in a given data collection, typically a relational database or
-            // other persistent data stores. And it is used to check for uniqueness.
-            if (isset($app['validation.presence'])) {
-                $validator->setPresenceVerifier($app['validation.presence']);
-            }
+
+
+        $this->app->singleton('jsvalidator.validator', function ($app)  {
+            $currentValidator = $app['validator'];
+            $validator = new Factory($currentValidator, $app);
 
             // The session manager is responsible to secure Ajax validations
             if (isset($app['session.store'])) {
@@ -74,9 +71,12 @@ class JsValidationServiceProvider extends ServiceProvider
 
             return $validator;
         });
+        $this->app->booting(function($app) {
+            $app['validator']=$app['jsvalidator.validator'];
+        });
+
     }
-
-
+    
     /**
      * Configure and publish views.
      */

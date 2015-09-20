@@ -16,63 +16,27 @@ class ValidationFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testMakeMethodCreatesValidValidator()
     {
-        $translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
-        $factory = new Factory($translator);
-        $validator = $factory->make(['foo' => 'bar'], ['baz' => 'boom']);
-        $this->assertEquals($translator, $validator->getTranslator());
-        $this->assertEquals(['foo' => 'bar'], $validator->getData());
-        $this->assertEquals(['baz' => ['boom']], $validator->getRules());
-        $presence = m::mock('Illuminate\Validation\PresenceVerifierInterface');
-        $noop1 = function () {
-        };
-        $noop2 = function () {
-        };
-        $noop3 = function () {
-        };
-        $factory->extend('foo', $noop1);
-        $factory->extendImplicit('implicit', $noop2);
-        $factory->replacer('replacer', $noop3);
-        $factory->setPresenceVerifier($presence);
-        $validator = $factory->make([], []);
-        $this->assertEquals(['foo' => $noop1, 'implicit' => $noop2], $validator->getExtensions());
-        $this->assertEquals(['replacer' => $noop3], $validator->getReplacers());
-        $this->assertEquals($presence, $validator->getPresenceVerifier());
-        $presence = m::mock('Illuminate\Validation\PresenceVerifierInterface');
-        $factory->extend('foo', $noop1, 'foo!');
-        $factory->extendImplicit('implicit', $noop2, 'implicit!');
-        $factory->setPresenceVerifier($presence);
-        $validator = $factory->make([], []);
-        $this->assertEquals(['foo' => $noop1, 'implicit' => $noop2], $validator->getExtensions());
-        $this->assertEquals(['foo' => 'foo!', 'implicit' => 'implicit!'], $validator->getFallbackMessages());
-        $this->assertEquals($presence, $validator->getPresenceVerifier());
-    }
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('make')
+            ->with(['foo' => 'bar'], ['baz' => 'boom'],[],[])
+            ->andReturn(m::mock('Illuminate\Validation\Validator'));
+        $app = new \Application();
 
-    public function testCustomResolverIsCalled()
-    {
-        unset($_SERVER['__validator.factory']);
-        $translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
-        $app = m::mock('Illuminate\Contracts\Container\Container');
-        $factory = new Factory($translator, $app);
-        $factory->resolver(function ($translator, $data, $rules) {
-            $_SERVER['__validator.factory'] = true;
-            return new \Illuminate\Validation\Validator($translator, $data, $rules);
-        });
+        $factory = new Factory($laravelFactory, $app);
         $validator = $factory->make(['foo' => 'bar'], ['baz' => 'boom']);
-        $this->assertTrue($_SERVER['__validator.factory']);
-        $this->assertEquals($translator, $validator->getTranslator());
-        $this->assertEquals(['foo' => 'bar'], $validator->getData());
-        $this->assertEquals(['baz' => ['boom']], $validator->getRules());
-        unset($_SERVER['__validator.factory']);
+
+        $this->assertInstanceOf('Proengsoft\JsValidation\Validator',$validator);
+
     }
 
     public function testSessionStore()
     {
-        $translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
+        $translator = m::mock('Illuminate\Validation\Factory');
         $store = m::mock('\Illuminate\Session\Store')
             ->shouldReceive('token')->andReturn('session token')
             ->getMock();
         $app = m::mock('Illuminate\Contracts\Container\Container');
-        $factory = new Factory($translator);
+        $factory = new Factory($translator, $app);
         $factory->setSessionStore($store);
         $currentStore = $factory->getSessionStore();
         $this->assertEquals($store,$currentStore);
@@ -81,13 +45,16 @@ class ValidationFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoteConfigured()
     {
-        $translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('make')
+            ->with([], [],[],[])
+            ->andReturn(m::mock('Illuminate\Validation\Validator'));
         $store = m::mock('\Illuminate\Session\Store')
             ->shouldReceive('token')->andReturn('session token')
             ->getMock();
         $app = new \Application();
         $app['encrypter']= m::mock()->shouldReceive('encrypt')->with("session token")->andReturn("session token")->getMock();
-        $factory = new Factory($translator, $app);
+        $factory = new Factory($laravelFactory, $app);
         $factory->setSessionStore($store);
         $factory->setJsRemoteEnabled(true);
         $validator = $factory->make([], []);
