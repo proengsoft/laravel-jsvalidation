@@ -2232,22 +2232,29 @@ laravelValidation = {
                     if ($(validator.currentForm).attr('method').toLowerCase() !== 'get' && token) {
                         return xhr.setRequestHeader('X-XSRF-TOKEN', token);
                     }
-                },
+                }
 
-                complete: function(jqXHR, response ) {
-                    var valid, errors, message, submitted;
 
-                    if (jqXHR.status == 200 ) {
-                        valid = response === true || response === "true";
-                    } else {
+            }, param )
+            ).always(function( response, textStatus, errorThrown ) {
+                    var errors, message, submitted, valid;
+
+                    if (textStatus === 'error') {
                         valid = false;
-                        var errorMsg= jqXHR.responseText.match(/<h1\s*>(.*)<\/h1\s*>/i);
-                        if ($.isArray(errorMsg)) {
-                            response = [errorMsg[1]];
+                        if ('responseText' in response) {
+                            var errorMsg = response.responseText.match(/<h1\s*>(.*)<\/h1\s*>/i);
+                            if ($.isArray(errorMsg)) {
+                                response = [errorMsg[1]];
+                            }
                         } else {
                             response = ["Whoops, looks like something went wrong."];
                         }
+                    } else if (textStatus === 'success') {
+                        valid = response === true || response === "true";
+                    } else {
+                        return;
                     }
+
 
                     validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
 
@@ -2260,7 +2267,7 @@ laravelValidation = {
                         validator.showErrors();
                     } else {
                         errors = {};
-                        message = response;
+                        message = response || validator.defaultMessage( element, "remote" );
                         errors[ element.name ] = previous.message = $.isFunction( message ) ? message( value ) : message[0];
                         validator.invalid[ element.name ] = true;
                         validator.showErrors( errors );
@@ -2269,7 +2276,7 @@ laravelValidation = {
                     previous.valid = valid;
                     validator.stopRequest( element, valid );
                 }
-            }, param ) );
+            );
             return "pending";
 
 
