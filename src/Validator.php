@@ -24,7 +24,6 @@ class Validator implements ValidatorContract
      */
     protected $validator;
 
-
     /**
      * Create a new JsValidation instance.
      *
@@ -35,9 +34,8 @@ class Validator implements ValidatorContract
         $this->validator = $validator;
     }
 
-
     /**
-     * Returns DelegatedValidator instance
+     * Returns DelegatedValidator instance.
      *
      * @return DelegatedValidator
      */
@@ -45,7 +43,6 @@ class Validator implements ValidatorContract
     {
         return $this->validator;
     }
-
 
     /**
      * Generate Javascript validations.
@@ -56,9 +53,8 @@ class Validator implements ValidatorContract
     {
         $jsValidations = array();
 
-        foreach ($this->validator->getRules() as $attribute=>$rules)
-        {
-            $newRules=$this->jsConvertRules($attribute,$rules);
+        foreach ($this->validator->getRules() as $attribute => $rules) {
+            $newRules = $this->jsConvertRules($attribute, $rules);
             $jsValidations = array_merge($jsValidations, $newRules);
         }
 
@@ -75,7 +71,9 @@ class Validator implements ValidatorContract
      */
     protected function jsConvertRules($attribute, $rules)
     {
-        if (!$this->jsValidationEnabled($attribute)) return array();
+        if (! $this->jsValidationEnabled($attribute)) {
+            return array();
+        }
 
         $jsRules = [];
         foreach ($rules as $rawRule) {
@@ -90,6 +88,7 @@ class Validator implements ValidatorContract
                 );
             }
         }
+
         return $jsRules;
     }
 
@@ -104,7 +103,6 @@ class Validator implements ValidatorContract
      */
     protected function getJsRule($attribute, $rule, $parameters)
     {
-
         if ($this->remoteValidationEnabled() && $this->isRemoteRule($rule)) {
             list($attribute, $parameters) = $this->jsRemoteRule($attribute);
             $jsRule = 'laravelValidationRemote';
@@ -129,7 +127,7 @@ class Validator implements ValidatorContract
     protected function getJsMessage($attribute, $rule, $parameters)
     {
         $message = $this->getTypeMessage($attribute, $rule);
-        $replacers= $this->validator->getReplacers();
+        $replacers = $this->validator->getReplacers();
         if (isset($replacers[snake_case($rule)])) {
             $message = $this->validator->doReplacements($message, $attribute, $rule, $parameters);
         } elseif (method_exists($this, $replacer = "jsReplace{$rule}")) {
@@ -153,8 +151,8 @@ class Validator implements ValidatorContract
     {
         $prevFiles = $this->validator->getFiles();
         if ($this->validator->hasRule($attribute, array('Mimes', 'Image'))) {
-            if (!array_key_exists($attribute, $prevFiles)) {
-                $newFiles=$prevFiles;
+            if (! array_key_exists($attribute, $prevFiles)) {
+                $newFiles = $prevFiles;
                 $newFiles[$attribute] = false;
                 $this->validator->setFiles($newFiles);
             }
@@ -175,7 +173,7 @@ class Validator implements ValidatorContract
      */
     public function jsValidationEnabled($attribute)
     {
-        return !$this->validator->hasRule($attribute, self::JSVALIDATION_DISABLE);
+        return ! $this->validator->hasRule($attribute, self::JSVALIDATION_DISABLE);
     }
 
     /**
@@ -195,16 +193,16 @@ class Validator implements ValidatorContract
     }
 
     /**
-     * Handles multidimensional attribute names
+     * Handles multidimensional attribute names.
      *
      * @param $attribute
      * @return string
      */
     protected function getJsAttributeName($attribute)
     {
-        $attributeArray = explode(".", $attribute);
-        if(count($attributeArray) > 1) {
-            return $attributeArray[0] . "[".implode("][", array_slice($attributeArray, 1)) . "]";
+        $attributeArray = explode('.', $attribute);
+        if (count($attributeArray) > 1) {
+            return $attributeArray[0].'['.implode('][', array_slice($attributeArray, 1)).']';
         }
 
         return $attribute;
@@ -217,7 +215,7 @@ class Validator implements ValidatorContract
      */
     public function getMessageBag()
     {
-        return $this->validator->__call('getMessageBag',[]);
+        return $this->validator->__call('getMessageBag', []);
     }
 
     /**
@@ -227,7 +225,7 @@ class Validator implements ValidatorContract
      */
     public function fails()
     {
-        return $this->validator->__call('fails',[]);
+        return $this->validator->__call('fails', []);
     }
 
     /**
@@ -237,7 +235,7 @@ class Validator implements ValidatorContract
      */
     public function failed()
     {
-        return $this->validator->__call('failed',[]);
+        return $this->validator->__call('failed', []);
     }
 
     /**
@@ -250,7 +248,7 @@ class Validator implements ValidatorContract
      */
     public function sometimes($attribute, $rules, callable $callback)
     {
-        $this->validator->__call('sometimes',[$attribute, $rules, $callback]);
+        $this->validator->__call('sometimes', [$attribute, $rules, $callback]);
     }
 
     /**
@@ -261,11 +259,11 @@ class Validator implements ValidatorContract
      */
     public function after($callback)
     {
-        return $this->validator->__call('after',[$callback]);
+        return $this->validator->__call('after', [$callback]);
     }
 
     /**
-     * Delegate method calls to validator instance
+     * Delegate method calls to validator instance.
      *
      * @param $method
      * @param $params
@@ -274,7 +272,8 @@ class Validator implements ValidatorContract
      */
     public function __call($method, $params)
     {
-        $arrCaller = array( $this->validator, $method );
-        return call_user_func_array( $arrCaller, $params );
+        $arrCaller = array($this->validator, $method);
+
+        return call_user_func_array($arrCaller, $params);
     }
 }

@@ -8,34 +8,32 @@ use Illuminate\Session\Store;
 use Illuminate\Validation\Factory as BaseFactory;
 use Illuminate\Validation\PresenceVerifierInterface;
 use Illuminate\Validation\Validator as BaseValidator;
-use Symfony\Component\Translation\TranslatorInterface;
-
 
 class Factory
 {
     /**
-     * Enables or disable JsValidation Remote validations
+     * Enables or disable JsValidation Remote validations.
      *
      * @var
      */
     protected $jsRemoteEnabled;
 
     /**
-     * Session Store used to secure Ajax validations
+     * Session Store used to secure Ajax validations.
      *
      * @var Store
      */
     protected $sessionStore;
 
     /**
-     * Laravel Factory
+     * Laravel Factory.
      *
      * @var \Illuminate\Validation\Factory
      */
     protected $factory;
 
     /**
-     * Laravel Application Container
+     * Laravel Application Container.
      * @var Container
      */
     protected $container;
@@ -71,7 +69,7 @@ class Factory
     }
 
     /**
-     * Creates new instance of Validator
+     * Creates new instance of Validator.
      *
      * @param BaseValidator $validator
      * @return Validator
@@ -79,11 +77,12 @@ class Factory
     protected function makeJsValidator(BaseValidator $validator)
     {
         $delegated = new DelegatedValidator($validator);
+
         return new Validator($delegated);
     }
 
     /**
-     * Sets the session manager used to secure Ajax validations
+     * Sets the session manager used to secure Ajax validations.
      *
      * @param \Illuminate\Session\Store $store
      */
@@ -93,7 +92,7 @@ class Factory
     }
 
     /**
-     * Sets the session manager used to secure Ajax validations
+     * Sets the session manager used to secure Ajax validations.
      *
      * @return \Illuminate\Session\Store
      */
@@ -103,17 +102,17 @@ class Factory
     }
 
     /**
-     * Enables or disable JsValidation Remote validations
+     * Enables or disable JsValidation Remote validations.
      *
-     * @param boolean $enabled
+     * @param bool $enabled
      */
     public function setJsRemoteEnabled($enabled)
     {
-        $this->jsRemoteEnabled = (bool)$enabled;
+        $this->jsRemoteEnabled = (bool) $enabled;
     }
 
     /**
-     * Check if JsValidation Remote validations are enabled
+     * Check if JsValidation Remote validations are enabled.
      *
      * @return bool
      */
@@ -123,12 +122,15 @@ class Factory
     }
 
     /**
-     * Configure Javascript remote validations
+     * Configure Javascript remote validations.
      *
      * @param Validator $validator
      */
-    protected function configureJsRemote(Validator $validator) {
-        if ( is_null($this->sessionStore)) return;
+    protected function configureJsRemote(Validator $validator)
+    {
+        if (is_null($this->sessionStore)) {
+            return;
+        }
 
         $token = $this->sessionStore->token();
         if (! is_null($this->container['encrypter'])) {
@@ -218,6 +220,4 @@ class Factory
     {
         $this->factory->setPresenceVerifier($presenceVerifier);
     }
-
-
 }

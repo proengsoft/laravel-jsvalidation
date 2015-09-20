@@ -2,10 +2,8 @@
 
 namespace Proengsoft\JsValidation;
 
-
 use Closure;
 use Illuminate\Validation\Validator as BaseValidator;
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 
 class DelegatedValidator
 {
@@ -17,7 +15,7 @@ class DelegatedValidator
     protected $validator;
 
     /**
-     *  Create new instance that delegate calls to Validator
+     *  Create new instance that delegate calls to Validator.
      * @param BaseValidator $validator
      */
     public function __construct(BaseValidator $validator)
@@ -26,7 +24,7 @@ class DelegatedValidator
     }
 
     /**
-     * Get current \Illuminate\Validation\Validator instance
+     * Get current \Illuminate\Validation\Validator instance.
      *
      * @return BaseValidator
      */
@@ -84,7 +82,6 @@ class DelegatedValidator
     public function setRules(array $rules)
     {
         return $this->validator->setRules($rules);
-
     }
 
     /**
@@ -228,15 +225,16 @@ class DelegatedValidator
     }
 
     /**
-     * Calls inaccessible validator method
+     * Calls inaccessible validator method.
      * @param $method
      * @param $args
      * @return mixed
      */
     private function callProtected($method, $args)
     {
-        $validatorMethod = Closure::bind(function($method, $args) {
+        $validatorMethod = Closure::bind(function ($method, $args) {
             $callable = array($this, $method);
+
             return call_user_func_array($callable, $args);
         }, $this->validator, $this->validator);
 
@@ -244,7 +242,7 @@ class DelegatedValidator
     }
 
     /**
-     * Delegate method calls to validator instance
+     * Delegate method calls to validator instance.
      *
      * @param $method
      * @param $params
@@ -253,10 +251,8 @@ class DelegatedValidator
      */
     public function __call($method, $params)
     {
-        $arrCaller = array( $this->validator, $method );
-        return call_user_func_array( $arrCaller, $params );
+        $arrCaller = array($this->validator, $method);
+
+        return call_user_func_array($arrCaller, $params);
     }
-
-
-
 }

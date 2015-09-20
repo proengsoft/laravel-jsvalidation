@@ -3,14 +3,11 @@
 namespace Proengsoft\JsValidation\Traits;
 
 use Proengsoft\JsValidation\DelegatedValidator;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Session;
 
 trait JavascriptRules
 {
-
     /**
-     *  Rules validated with Javascript
+     *  Rules validated with Javascript.
      *
      * @var array
      */
@@ -20,18 +17,17 @@ trait JavascriptRules
         'In', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
         'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
         'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes' ,
-        'String', 'Timezone', 'Url'];
-
+        'String', 'Timezone', 'Url', ];
 
     /**
-     * Returns DelegatedValidator instance
+     * Returns DelegatedValidator instance.
      *
      * @return DelegatedValidator
      */
     abstract public function getValidator();
 
     /**
-     * Handles multidimensional attribute names
+     * Handles multidimensional attribute names.
      *
      * @param string $attribute
      *
@@ -40,7 +36,7 @@ trait JavascriptRules
     abstract protected function getJsAttributeName($attribute);
 
     /**
-     * Returns if rule is validated using Javascript
+     * Returns if rule is validated using Javascript.
      *
      * @param $rule
      * @return bool
@@ -99,7 +95,7 @@ trait JavascriptRules
     {
         $this->getValidator()->requireParameterCount(1, $parameters, 'after');
 
-        if (!($date = strtotime($parameters[0]))) {
+        if (! ($date = strtotime($parameters[0]))) {
             $date = $this->getJsAttributeName($parameters[0]);
         }
 
@@ -245,5 +241,4 @@ trait JavascriptRules
 
         return [$jsRule, $attribute, $parameters];
     }
-
 }
