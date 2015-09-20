@@ -71,16 +71,16 @@ class Validator implements ValidatorContract
      */
     protected function jsConvertRules($attribute, $rules)
     {
-        if (! $this->jsValidationEnabled($attribute)) return array();
+        if (! $this->jsValidationEnabled($attribute)) {
+            return array();
+        }
 
         $jsRules = [];
         foreach ($rules as $rawRule) {
             list($rule, $parameters) = $this->validator->parseRule($rawRule);
             list($jsAttribute, $jsRule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
             if ($jsRule) {
-                $jsRules[$jsAttribute][$jsRule][] = array(
-                    $rule,
-                    $jsParams,
+                $jsRules[$jsAttribute][$jsRule][] = array($rule, $jsParams,
                     $this->getJsMessage($attribute, $rule, $parameters),
                     $this->validator->isImplicit($rule),
                 );
