@@ -1,8 +1,7 @@
 <?php namespace Proengsoft\JsValidation\Test;
 
-use Closure;
+
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Foundation\Application;
 use Mockery as m;
 use Proengsoft\JsValidation\Factory;
 
@@ -86,7 +85,7 @@ class ValidationFactoryTest extends \PHPUnit_Framework_TestCase
         $store = m::mock('\Illuminate\Session\Store')
             ->shouldReceive('token')->andReturn('session token')
             ->getMock();
-        $app = new Application();
+        $app = new \Application();
         $app['encrypter']= m::mock()->shouldReceive('encrypt')->with("session token")->andReturn("session token")->getMock();
         $factory = new Factory($translator, $app);
         $factory->setSessionStore($store);
