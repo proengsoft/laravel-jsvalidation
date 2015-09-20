@@ -17,7 +17,6 @@ class JsValidationServiceProvider extends ServiceProvider
         $this->bootstrapConfigs();
         $this->bootstrapViews();
         $this->publishAssets();
-
     }
 
     /**
@@ -30,8 +29,7 @@ class JsValidationServiceProvider extends ServiceProvider
     }
 
     /**
-     *  Register JsValidator Factory
-     *
+     *  Register JsValidator Factory.
      */
     protected function registerJsValidator()
     {
@@ -45,7 +43,6 @@ class JsValidationServiceProvider extends ServiceProvider
 
             return new JsValidatorFactory($validatorFactory, $manager, $app);
         });
-
     }
 
     /**
@@ -55,7 +52,7 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     protected function registerValidationFactory()
     {
-        $this->app->singleton('jsvalidator.validator', function ($app)  {
+        $this->app->singleton('jsvalidator.validator', function ($app) {
             $currentValidator = $app['validator'];
             $validator = new Factory($currentValidator, $app);
 
@@ -64,13 +61,13 @@ class JsValidationServiceProvider extends ServiceProvider
                 $validator->setSessionStore($app['session.store']);
             }
 
-            $validator->setJsRemoteEnabled(!$app['config']->get('jsvalidation.disable_remote_validation'));
+            $validator->setJsRemoteEnabled(! $app['config']->get('jsvalidation.disable_remote_validation'));
 
             return $validator;
         });
 
-        $this->app->booting(function($app) {
-            $app['validator']=$app['jsvalidator.validator'];
+        $this->app->booting(function ($app) {
+            $app['validator'] = $app['jsvalidator.validator'];
         });
     }
 

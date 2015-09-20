@@ -29,7 +29,7 @@
             },
 
             focusInvalid: false, // do not focus the last invalid input
-            <?php if(Config::get('jsvalidation.focus_on_error')): ?>
+            <?php if (Config::get('jsvalidation.focus_on_error')): ?>
             invalidHandler: function(form, validator) {
 
                 if (!validator.numberOfInvalids())

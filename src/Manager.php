@@ -29,7 +29,6 @@ class Manager implements Arrayable
      */
     protected $view;
 
-
     /**
      * @param string $selector
      * @param string $view
@@ -60,7 +59,7 @@ class Manager implements Arrayable
      */
     public function render($view = null, $selector = null)
     {
-        $this->view($view );
+        $this->view($view);
         $this->selector($selector);
 
         return View::make($this->view, ['validator' => $this->getViewData()])
@@ -113,7 +112,6 @@ class Manager implements Arrayable
      */
     protected function getViewData()
     {
-
         $data = $this->validator->validationData();
         $data['selector'] = $this->selector;
 
@@ -138,6 +136,7 @@ class Manager implements Arrayable
     public function selector($selector)
     {
         $this->selector = is_null($selector) ? $this->selector : $selector;
+
         return $this;
     }
 
@@ -149,8 +148,7 @@ class Manager implements Arrayable
     public function view($view)
     {
         $this->view = is_null($view) ? $this->view : $view;
+
         return $this;
     }
-
 }
-

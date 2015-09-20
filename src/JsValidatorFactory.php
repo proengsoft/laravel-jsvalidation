@@ -25,16 +25,16 @@ class JsValidatorFactory
     protected $manager;
 
     /**
-     *  Current Request
+     *  Current Request.
      * @var Request
      */
-    protected  $request;
+    protected $request;
 
     /**
-     *  Current Application Container
+     *  Current Application Container.
      * @var Container
      */
-    protected  $container;
+    protected $container;
 
     /**
      * Create a new Validator factory instance.
@@ -79,24 +79,22 @@ class JsValidatorFactory
      */
     public function formRequest($formRequest, $selector = null)
     {
-
-        if (!is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
-            throw new FormRequestArgumentException((string)$formRequest);
+        if (! is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
+            throw new FormRequestArgumentException((string) $formRequest);
         }
 
         if (is_string($formRequest)) {
             $formRequest = $this->createFormRequest($formRequest);
         }
 
-        $rules = method_exists($formRequest,'rules')?$formRequest->rules():[];
+        $rules = method_exists($formRequest, 'rules') ? $formRequest->rules() : [];
         $validator = $this->validator->make([], $rules, $formRequest->messages(), $formRequest->attributes());
 
         return $this->jsValidator($validator, $selector);
     }
 
-
     /**
-     *  Creates and initializes an Form Request instance
+     *  Creates and initializes an Form Request instance.
      *
      * @param string $class
      * @return FormRequest
@@ -104,18 +102,17 @@ class JsValidatorFactory
     protected function createFormRequest($class)
     {
         /**
-         * @var $formRequest \Illuminate\Foundation\Http\FormRequest
+         * @var \Illuminate\Foundation\Http\FormRequest
          * @var $request Request
          */
-        $formRequest=new $class();
-        $request=$this->container['request'];
+        $formRequest = new $class();
+        $request = $this->container['request'];
 
         $formRequest->initialize($request->query->all(), $request->request->all(), $request->attributes->all(),
             $request->cookies->all(), array(), $request->server->all(), $request->getContent()
         );
 
-        if ($session = $request->getSession())
-        {
+        if ($session = $request->getSession()) {
             $formRequest->setSession($session);
         }
         $formRequest->setUserResolver($request->getUserResolver());
@@ -147,7 +144,6 @@ class JsValidatorFactory
      */
     protected function jsValidator(Validator $validator, $selector = null)
     {
-
         $this->manager->selector($selector);
         $this->manager->setValidator($validator);
 

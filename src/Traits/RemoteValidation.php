@@ -10,26 +10,25 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 trait RemoteValidation
 {
     /**
-     * Token used to secure remote validations
+     * Token used to secure remote validations.
      *
      * @var
      */
     protected $token;
 
     /**
-     * Enable or disable remote validations
+     * Enable or disable remote validations.
      *
      * @var
      */
     protected $remoteEnabled;
 
     /**
-     * Returns DelegatedValidator instance
+     * Returns DelegatedValidator instance.
      *
      * @return DelegatedValidator
      */
     abstract public function getValidator();
-
 
     /**
      * Return parsed Javascript Rule.
@@ -43,7 +42,7 @@ trait RemoteValidation
     abstract protected function getJsRule($attribute, $rule, $parameters);
 
     /**
-     * Returns if rule is validated using Javascript
+     * Returns if rule is validated using Javascript.
      *
      * @param $rule
      * @return bool
@@ -58,7 +57,8 @@ trait RemoteValidation
     public function passes()
     {
         if ($this->isRemoteValidationRequest()) {
-            $data=$this->getValidator()->getData();
+            $data = $this->getValidator()->getData();
+
             return $this->validateJsRemoteRequest($data['_jsvalidation']);
         }
 
@@ -66,8 +66,8 @@ trait RemoteValidation
     }
 
     /**
-     * Check if remote validation is enabled
-
+     * Check if remote validation is enabled.
+     
      * @param bool $enabled
      */
     public function enableRemote($enabled)
@@ -76,8 +76,8 @@ trait RemoteValidation
     }
 
     /**
-     * Set the token  for securing remote validation
-
+     * Set the token  for securing remote validation.
+     
      * @param string $token
      */
     public function setRemoteToken($token)
@@ -94,14 +94,14 @@ trait RemoteValidation
      */
     protected function validateJsRemoteRequest($attribute)
     {
-        $attribute = str_replace(array("[", "]"), array(".", ""), $attribute);
+        $attribute = str_replace(array('[', ']'), array('.', ''), $attribute);
 
-        if (!$this->setRemoteValidation($attribute)) {
+        if (! $this->setRemoteValidation($attribute)) {
             throw new BadRequestHttpException('Bad request');
         }
 
         //$message = call_user_func($callable);
-        $passes= $this->getValidator()->passes();
+        $passes = $this->getValidator()->passes();
         if ($passes) {
             $message = true;
         } else {
@@ -119,10 +119,13 @@ trait RemoteValidation
      */
     protected function isRemoteValidationRequest()
     {
-        if (!$this->remoteValidationEnabled()) return false;
+        if (! $this->remoteValidationEnabled()) {
+            return false;
+        }
 
         $data = $this->getValidator()->getData();
-        return !empty($data['_jsvalidation']);
+
+        return ! empty($data['_jsvalidation']);
     }
 
     /**
@@ -134,8 +137,9 @@ trait RemoteValidation
      */
     protected function setRemoteValidation($attribute)
     {
-        if (!array_key_exists($attribute, $this->getValidator()->getRules())) {
+        if (! array_key_exists($attribute, $this->getValidator()->getRules())) {
             $this->getValidator()->setRules(array());
+
             return false;
         }
 
@@ -148,8 +152,9 @@ trait RemoteValidation
             }
         }
         $this->getValidator()->setRules([$attribute => $rules]);
-        $newRules=$this->getValidator()->getRules();
-        return !empty($newRules[$attribute]);
+        $newRules = $this->getValidator()->getRules();
+
+        return ! empty($newRules[$attribute]);
     }
 
     /**
@@ -162,16 +167,16 @@ trait RemoteValidation
     protected function isRemoteRule($rule)
     {
         $validator = $this->getValidator();
-        if (!in_array($rule, ['ActiveUrl', 'Exists', 'Unique'])) {
+        if (! in_array($rule, ['ActiveUrl', 'Exists', 'Unique'])) {
             return in_array(snake_case($rule), array_keys($validator->getExtensions())) ||
-            ( !$this->jsImplementedRule($rule) && method_exists($validator ->getValidator(),"validate{$rule}"));
+            (! $this->jsImplementedRule($rule) && method_exists($validator->getValidator(), "validate{$rule}"));
         }
 
         return true;
     }
 
     /**
-     * Check if remote validation is enabled
+     * Check if remote validation is enabled.
      *
      * @return bool
      */
@@ -196,5 +201,4 @@ trait RemoteValidation
 
         return [$attribute, $params];
     }
-
 }
