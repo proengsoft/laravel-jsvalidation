@@ -80,7 +80,7 @@ class Factory extends BaseFactory
     /**
      * Sets the session manager used to secure Ajax validations
      *
-     * @return \Illuminate\Session\SessionManager
+     * @return \Illuminate\Session\Store
      */
     public function getSessionStore()
     {
@@ -90,7 +90,7 @@ class Factory extends BaseFactory
     /**
      * Enables or disable JsValidation Remote validations
      *
-     * @param $enabled
+     * @param boolean $enabled
      */
     public function setJsRemoteEnabled($enabled)
     {
