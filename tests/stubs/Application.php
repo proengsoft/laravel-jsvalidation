@@ -8,7 +8,22 @@
 
 use Illuminate\Contracts\Container\Container;
 
-class Application implements \ArrayAccess, Container
+function load_container()
+{
+    $composer=dirname(__FILE__).'/../../vendor/illuminate/contracts/composer.json';
+    $data = json_decode($composer);
+    $release=$data['extra']['branch-alias']['dev-master'];
+    if ($release == "5.0-dev"){
+        require dirname(__FILE__).'/ApplicationMake50.php';
+    } else {
+        require dirname(__FILE__).'/ApplicationMake51.php';
+    }
+
+}
+
+load_container();
+
+class Application extends ApplicationMake implements \ArrayAccess
 {
 
     protected $objects = array();
@@ -185,17 +200,6 @@ class Application implements \ArrayAccess, Container
         // TODO: Implement when() method.
     }
 
-    /**
-     * Resolve the given type from the container.
-     *
-     * @param  string  $abstract
-     * @param  array   $parameters
-     * @return mixed
-     */
-    public function make($abstract, array $parameters = [])
-    {
-        return $this;
-    }
 
     /**
      * Call the given Closure / class@method and inject its dependencies.
