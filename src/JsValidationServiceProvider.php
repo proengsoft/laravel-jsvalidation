@@ -14,12 +14,10 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // First we bootstrap configurations
         $this->bootstrapConfigs();
-
         $this->bootstrapViews();
         $this->publishAssets();
-        $this->bootstrapValidator();
+
     }
 
     /**
@@ -27,25 +25,52 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->registerValidationFactory();
+        $this->registerJsValidator();
+    }
+
+    /**
+     *  Register JsValidator Factory
+     *
+     */
+    protected function registerJsValidator()
+    {
         $this->app->bind('jsvalidator', function (Application $app) {
 
             $selector = Config::get('jsvalidation.form_selector');
             $view = Config::get('jsvalidation.view');
 
-            $validator = new Manager($selector, $view);
+            $manager = new Manager($selector, $view);
             $validatorFactory = $app->make('Illuminate\Contracts\Validation\Factory');
 
-            return new Factory($validatorFactory, $validator, $app);
+            return new JsValidatorFactory($validatorFactory, $manager, $app);
         });
+
     }
 
     /**
-     * Register Validator resolver.
+     * Register the validation factory.
+     *
+     * @return void
      */
-    protected function bootstrapValidator()
+    protected function registerValidationFactory()
     {
-        $this->app['validator']->resolver(function ($translator, $data, $rules, $messages = array(), $customAttributes = array()) {
-            return new Validator($translator, $data, $rules, $messages, $customAttributes);
+        $this->app->singleton('jsvalidator.validator', function ($app)  {
+            $currentValidator = $app['validator'];
+            $validator = new Factory($currentValidator, $app);
+
+            // The session manager is responsible to secure Ajax validations
+            if (isset($app['session.store'])) {
+                $validator->setSessionStore($app['session.store']);
+            }
+
+            $validator->setJsRemoteEnabled(!$app['config']->get('jsvalidation.disable_remote_validation'));
+
+            return $validator;
+        });
+
+        $this->app->booting(function($app) {
+            $app['validator']=$app['jsvalidator.validator'];
         });
     }
 

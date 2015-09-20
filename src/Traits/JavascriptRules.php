@@ -2,29 +2,33 @@
 
 namespace Proengsoft\JsValidation\Traits;
 
+use Proengsoft\JsValidation\DelegatedValidator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 
 trait JavascriptRules
 {
-    /**
-     * Get the displayable name of the value.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return string
-     */
-    abstract public function getDisplayableValue($attribute, $value);
 
     /**
-     * Get the displayable name of the attribute.
+     *  Rules validated with Javascript
      *
-     * @param string $attribute
-     *
-     * @return string
+     * @var array
      */
-    abstract protected function getAttribute($attribute);
+    protected $javascriptRules = ['Accepted', 'After', 'Alpha', 'AlphaDash',
+        'AlphaNum', 'Array', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
+        'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Image',
+        'In', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
+        'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
+        'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes' ,
+        'String', 'Timezone', 'Url'];
+
+
+    /**
+     * Returns DelegatedValidator instance
+     *
+     * @return DelegatedValidator
+     */
+    abstract public function getValidator();
 
     /**
      * Handles multidimensional attribute names
@@ -36,17 +40,15 @@ trait JavascriptRules
     abstract protected function getJsAttributeName($attribute);
 
     /**
-     * Require a certain number of parameters to be present.
+     * Returns if rule is validated using Javascript
      *
-     * @param  int    $count
-     * @param  array  $parameters
-     * @param  string  $rule
-     *
-     * @return void
-     *
-     * @throws \InvalidArgumentException
+     * @param $rule
+     * @return bool
      */
-    abstract protected function requireParameterCount($count, $parameters, $rule);
+    public function jsImplementedRule($rule)
+    {
+        return in_array($rule, $this->javascriptRules);
+    }
 
     /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
@@ -62,9 +64,9 @@ trait JavascriptRules
         $field = $parameters[0];
         $data = array($field => $parameters[1]);
 
-        $parameters[0] = $this->getAttribute($field);
-        $parameters[1] = $this->getDisplayableValue($field, array_get($data, $field));
-        $parameters[2] = $this->getAttribute($attribute);
+        $parameters[0] = $this->getValidator()->getAttribute($field);
+        $parameters[1] = $this->getValidator()->getDisplayableValue($field, array_get($data, $field));
+        $parameters[2] = $this->getValidator()->getAttribute($attribute);
 
         return str_replace(array(':other', ':value', ':attribute'), $parameters, $message);
     }
@@ -95,7 +97,7 @@ trait JavascriptRules
      */
     protected function jsRuleAfter($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'after');
+        $this->getValidator()->requireParameterCount(1, $parameters, 'after');
 
         if (!($date = strtotime($parameters[0]))) {
             $date = $this->getJsAttributeName($parameters[0]);
@@ -114,7 +116,7 @@ trait JavascriptRules
      */
     protected function jsRuleBefore($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'before');
+        $this->getValidator()->requireParameterCount(1, $parameters, 'before');
 
         return $this->jsRuleAfter($attribute, $parameters);
     }
@@ -129,7 +131,7 @@ trait JavascriptRules
      */
     protected function jsRuleSame($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'same');
+        $this->getValidator()->requireParameterCount(1, $parameters, 'same');
 
         $other = $this->getJsAttributeName($parameters[0]);
 
@@ -146,7 +148,7 @@ trait JavascriptRules
      */
     protected function jsRuleDifferent($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'different');
+        $this->getValidator()->requireParameterCount(1, $parameters, 'different');
 
         return $this->jsRuleSame($attribute, $parameters);
     }
@@ -215,30 +217,33 @@ trait JavascriptRules
      */
     protected function jsRuleRequiredIf($attribute, array $parameters)
     {
-        $this->requireParameterCount(2, $parameters, 'required_if');
+        $this->getValidator()->requireParameterCount(2, $parameters, 'required_if');
 
         $parameters[0] = $this->getJsAttributeName($parameters[0]);
 
         return [$attribute, $parameters];
     }
 
-
     /**
      * Returns Javascript parameters for remote validated rules.
      *
      * @param string $attribute
-     *
+     * @param $rule
+     * @param $parameters
      * @return array
      */
-    private function jsRemoteRule($attribute)
+    protected function jsClientRule($attribute, $rule, $parameters)
     {
-        $token = Session::token();
-        $token = Crypt::encrypt($token);
-        $params = [
-            $attribute,
-            $token,
-        ];
+        $jsRule = false;
+        $method = "jsRule{$rule}";
+        if (method_exists($this, $method)) {
+            list($attribute, $parameters) = $this->$method($attribute, $parameters);
+            $jsRule = 'laravelValidation';
+        } elseif ($this->jsImplementedRule($rule)) {
+            $jsRule = 'laravelValidation';
+        }
 
-        return [$attribute, $params];
+        return [$jsRule, $attribute, $parameters];
     }
+
 }

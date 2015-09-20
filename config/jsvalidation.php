@@ -32,6 +32,6 @@ return array(
      * Enable or disable Ajax validations of Database and custom rules.
      * By default Unique, ActiveURL, Exists and custom validations are validated via AJAX
      */
-    'enable_remote_validation' => true,
+    'disable_remote_validation' => false,
 
 );

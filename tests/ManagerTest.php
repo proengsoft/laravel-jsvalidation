@@ -110,12 +110,13 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
     public function testGetViewDataFails()
     {
         unset($this->mockValidator);
-        $this->mockValidator=m::mock('Illuminate\Contracts\Validation\Validator');
+        $this->mockValidator=m::mock('Proengsoft\JsValidation\Validator');
         $this->jsValidator->setValidator($this->mockValidator);
 
-        $expected=[];
-        $viewData=$this->jsValidator->toArray();
+        $this->mockValidator->shouldReceive('validationData')->once();
 
+        $expected=['selector' =>'form'];
+        $viewData=$this->jsValidator->toArray();
         $this->assertEquals($expected,$viewData);
     }
 

@@ -1,174 +1,137 @@
-<?php
-
-namespace Proengsoft\JsValidation\Test {
-    require_once dirname(__FILE__) . '/stubs/Factory.php';
-
-    use Mockery as m;
-    use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
-    use Proengsoft\JsValidation\Factory;
+<?php namespace Proengsoft\JsValidation\Test;
 
 
+use Illuminate\Contracts\Container\Container;
+use Mockery as m;
+use Proengsoft\JsValidation\Factory;
 
+require_once(dirname(__FILE__).'/stubs/Application.php');
 
-    class FactoryTest extends \PHPUnit_Framework_TestCase {
+class ValidationFactoryTest extends \PHPUnit_Framework_TestCase
+{
+    public function tearDown()
+    {
+        m::close();
+    }
 
+    public function testMakeMethodCreatesValidValidator()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('make')
+            ->with(['foo' => 'bar'], ['baz' => 'boom'],[],[])
+            ->andReturn(m::mock('Illuminate\Validation\Validator'));
+        $app = new \Application();
 
-        public $mockedFactory;
-        public $mockedValidator;
-        public $factory;
-        public $mockedJs;
-        public $mockedApp;
-        /**
-         * @var m\Mock
-         */
-        public  $mockedRequest;
+        $factory = new Factory($laravelFactory, $app);
+        $validator = $factory->make(['foo' => 'bar'], ['baz' => 'boom']);
 
-
-        public function tearDown()
-        {
-            m::close();
-            unset($this->mockedFactory);
-            unset($this->mockedValidator);
-            unset($this->factory);
-            unset($this->mockedJs);
-            unset($this->mockedRequest);
-            unset($this->mockedApp);
-        }
-
-
-        public function setUp() {
-
-            $this->mockedApp=m::mock('\Illuminate\Contracts\Foundation\Application');
-            //$this->mockedApp= new FakeApplication();
-            $this->mockedFactory =  m::mock('Illuminate\Contracts\Validation\Factory');
-            $this->mockedJs= m::mock('Proengsoft\JsValidation\Manager');
-            $this->mockedRequest= m::mock('Illuminate\Http\Request');
-            $this->mockedJs->shouldReceive('setValidator');
-            $this->mockedRequest->shouldReceive('all')->andReturn([]);
-            $this->factory=new Factory($this->mockedFactory,$this->mockedJs,$this->mockedApp);
-
-        }
-
-
-        public function testMake() {
-
-            $rules=['name'=>'required'];
-
-            $this->mockedFactory->shouldReceive('make')
-                ->once()
-                ->with([],$rules,[],[])
-                ->andReturn(
-                    m::mock('Illuminate\Contracts\Validation\Validator')
-                );
-            $this->mockedJs->shouldReceive('selector')->once()->andReturn('form');
-
-            $js=$this->factory->make($rules,[],[],'form');
-
-            $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
-
-        }
-
-
-        public function testFormRequestFromInstance() {
-
-            $rules=['name'=>'require'];
-            $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
-            $mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
-            $mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
-            $mockFormRequest->shouldReceive('attributes')->once()->andReturn([]);
-            $this->mockedJs->shouldReceive('selector')->once()->andReturn('form');
-
-            $this->mockedFactory->shouldReceive('make')
-                ->once()
-                ->with([],$rules,[],[])
-                ->andReturn(
-                    m::mock('Illuminate\Contracts\Validation\Validator')
-                );
-
-
-            $js=$this->factory->formRequest($mockFormRequest);
-
-            $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
-
-        }
-
-
-        public function testFormRequestFromClassName() {
-
-            $rules=['name'=>'require'];
-            $formRequest='Proengsoft\JsValidation\Test\FakeFormRequest';
-            $mockSession=m::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface');
-            $mockedRequest= m::mock('Illuminate\Http\Request');
-            //$mockQuery=m::mock('Symfony\Component\HttpFoundation\ParameterBag')->shouldReceive('all')->andReturn([])->getMock();;
-            $this->mockedRequest->query =m::mock()->shouldReceive('all')->andReturn([])->getMock();
-            $this->mockedRequest->attributes =m::mock()->shouldReceive('all')->andReturn([])->getMock();
-            $this->mockedRequest->cookies =m::mock()->shouldReceive('all')->andReturn([])->getMock();
-            $this->mockedRequest->server =m::mock()->shouldReceive('all')->andReturn([])->getMock();
-            $this->mockedRequest
-                ->shouldReceive('all')->andReturn([])
-                ->shouldReceive('getContent')->andReturn('')
-                ->shouldReceive('getSession')->andReturn($mockSession)
-                ->shouldReceive('setSession')->with($mockSession)
-                ->shouldReceive('getUserResolver')->andReturn(function(){})
-                ->shouldReceive('setUserResolver')
-                ->shouldReceive('getRouteResolver')->andReturn(function(){})
-                ->shouldReceive('setRouteResolver');
-
-            $this->mockedRequest->request = $this->mockedRequest;
-            $this->mockedApp->shouldReceive('offsetGet')->with('request')->andReturn($this->mockedRequest);
-            $this->mockedApp->mockedRequest=$this->mockedRequest;
-
-
-
-            //$mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
-            //$mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
-            //$mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
-            //$mockFormRequest->shouldReceive('attributes')->once()->andReturn([]);
-            $this->mockedJs->shouldReceive('selector')->once()->andReturn('form');
-
-
-            $this->mockedFactory->shouldReceive('make')
-                ->once()
-                ->with([],$rules,[],[])
-                ->andReturn(
-                    m::mock('Illuminate\Contracts\Validation\Validator')
-                );
-
-            //$factory=new Factory($this->mockedFactory,$this->mockedJs,$mockedRequest);
-            $js=$this->factory->formRequest($formRequest);
-
-            $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
-
-        }
-
-
-        public function testFormRequestException() {
-
-            try {
-                $mock=m::mock('Object');
-
-                $js=$this->factory->formRequest($mock);
-                $this->assertNotInstanceOf('Proengsoft\JsValidation\Manager',$js);
-            }
-            catch (FormRequestArgumentException $expected) {
-                $this->assertTrue(true);
-                return;
-            }
-
-            $this->fail('An expected exception has not been raised.');
-
-
-        }
-
-        public function testValidator()
-        {
-            $validator=m::mock('Illuminate\Contracts\Validation\Validator');
-            $this->mockedJs->shouldReceive('selector')->once()->andReturn('form');
-
-            $js=$this->factory->validator($validator);
-            $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
-
-        }
+        $this->assertInstanceOf('Proengsoft\JsValidation\Validator',$validator);
 
     }
+
+    public function testSessionStore()
+    {
+        $translator = m::mock('Illuminate\Validation\Factory');
+        $store = m::mock('\Illuminate\Session\Store')
+            ->shouldReceive('token')->andReturn('session token')
+            ->getMock();
+        $app = m::mock('Illuminate\Contracts\Container\Container');
+        $factory = new Factory($translator, $app);
+        $factory->setSessionStore($store);
+        $currentStore = $factory->getSessionStore();
+        $this->assertEquals($store,$currentStore);
+
+    }
+
+    public function testRemoteConfigured()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('make')
+            ->with([], [],[],[])
+            ->andReturn(m::mock('Illuminate\Validation\Validator'));
+        $store = m::mock('\Illuminate\Session\Store')
+            ->shouldReceive('token')->andReturn('session token')
+            ->getMock();
+        $app = new \Application();
+        $app['encrypter']= m::mock()->shouldReceive('encrypt')->with("session token")->andReturn("session token")->getMock();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->setSessionStore($store);
+        $factory->setJsRemoteEnabled(true);
+        $validator = $factory->make([], []);
+
+        $enabled =$factory->isJsRemoteEnabled();
+        $this->assertTrue($enabled);
+
+        $enabled =$validator->remoteValidationEnabled();
+        $this->assertTrue($enabled);
+
+
+    }
+
+    public function testExtend()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('extend')->with(true,true,true)->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->extend(true, true, true);
+    }
+
+
+    public function testExtendImplicit()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('extendImplicit')->with(true,true,true)->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->extendImplicit(true, true, true);
+    }
+
+    public function testReplacer()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('replacer')->with(true,true)->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->replacer(true, true);
+    }
+
+
+    public function testResolver()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('resolver')->withAnyArgs()->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->resolver(function(){});
+    }
+
+    public function testGetTranslator()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('getTranslator')->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->getTranslator();
+    }
+
+
+    public function testGetPresenceVerifier()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('getPresenceVerifier')->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->getPresenceVerifier();
+    }
+
+    public function testSetPresenceVerifier()
+    {
+        $laravelFactory = m::mock('Illuminate\Validation\Factory');
+        $laravelFactory->shouldReceive('setPresenceVerifier')->getMock();
+        $app = new \Application();
+        $factory = new Factory($laravelFactory, $app);
+        $factory->setPresenceVerifier(m::mock('Illuminate\Validation\PresenceVerifierInterface'));
+    }
+
 }

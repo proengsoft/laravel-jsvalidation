@@ -3,7 +3,6 @@
 namespace Proengsoft\JsValidation;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Support\Facades\View;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
@@ -12,7 +11,7 @@ class Manager implements Arrayable
     /**
      * Registered validator instance.
      *
-     * @var \Illuminate\Contracts\Validation\Validator
+     * @var \Proengsoft\JsValidation\Validator
      */
     protected $validator;
 
@@ -28,7 +27,8 @@ class Manager implements Arrayable
      *
      * @var
      */
-    private $view;
+    protected $view;
+
 
     /**
      * @param string $selector
@@ -43,9 +43,9 @@ class Manager implements Arrayable
     /**
      * Set Validation instance used to get rules and messages.
      *
-     * @param ValidatorContract $validator
+     * @param Validator $validator
      */
-    public function setValidator(ValidatorContract $validator)
+    public function setValidator(Validator $validator)
     {
         $this->validator = $validator;
     }
@@ -113,15 +113,11 @@ class Manager implements Arrayable
      */
     protected function getViewData()
     {
-        if (method_exists($this->validator, 'validationData')) {
-            $data = [
-                'selector' => $this->selector,
-            ];
 
-            return array_merge($data, (array) call_user_func([$this->validator, 'validationData']));
-        }
+        $data = $this->validator->validationData();
+        $data['selector'] = $this->selector;
 
-        return array();
+        return $data;
     }
 
     /**
@@ -155,5 +151,6 @@ class Manager implements Arrayable
         $this->view = is_null($view) ? $this->view : $view;
         return $this;
     }
+
 }
 

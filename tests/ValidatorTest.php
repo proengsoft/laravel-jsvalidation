@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Exception\HttpResponseException;
 use Mockery as m;
+use Proengsoft\JsValidation\DelegatedValidator;
 use Proengsoft\JsValidation\Validator;
+use Illuminate\Validation\Validator as LaravelValidator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
@@ -23,6 +25,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     public function setUp()
     {
 
+        /*
         $this->translator = \Mockery::instanceMock('Symfony\Component\Translation\TranslatorInterface')
             ->shouldReceive('trans')
             ->getMock();
@@ -33,10 +36,19 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $data = [];
         $rules = ['name'=>'required', 'novalidate'=>'no_js_validation'];
         $customAttributes = [];
+        */
         Config::shouldReceive('get')->withArgs(['jsvalidation.enable_remote_validation'])->andReturn(true);
+        /*
+        $this->delegated = m::mock('Proengsoft\JsValidation\DelegatedValidator')
+            ->shouldReceive('hasRule')->withAnyArgs()->andReturn(True)
+            ->getMock();
+        $this->validator= new Validator($this->delegated);
+        */
 
-        $this->validator= new Validator($this->translator, $data, $rules,$messages ,$customAttributes);
+        //$this->delegated= new DelegatedValidator(new LaravelValidator($this->translator, $data, $rules, $messages, $customAttributes));
     }
+
+
 
     public function tearDown(){
         m::close();
@@ -48,66 +60,51 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testJsValidationEnabled()
     {
-        $data=$this->validator->jsValidationEnabled('name');
+        $validator = $this->getRealValidator(['name'=>'required']);
+        $data=$validator->jsValidationEnabled('name');
         $this->assertTrue($data);
     }
 
-
     public function testJsValidationDisabled()
     {
-        $data=$this->validator->jsValidationEnabled('novalidate');
+
+        $validator = $this->getRealValidator(['name'=>Validator::JSVALIDATION_DISABLE]);
+        $data=$validator->jsValidationEnabled('name');
         $this->assertFalse($data);
+
     }
-
-
-    public function testValidateNoJsValidation()
-    {
-        $this->assertTrue($this->validator->validateNoJsValidation());
-    }
-
 
     public function testValidationData() {
 
-        $expected=array(
-            'rules' => array('name'=>['laravelValidation'=>[['Required',[],'name required',true]]]),
-            'messages' =>  array(),
+        $validator = $this->getRealValidator(['name'=>'required']);
+        $data=$validator->validationData();
+        $this->assertEquals([
+                'rules' => array('name'=>['laravelValidation'=>[['Required',[],'name required!',true]]]),
+                'messages' =>  array(),
+            ], $data
         );
-
-        $data=$this->validator->validationData();
-        $this->assertEquals($expected,$data);
-
     }
-
-
 
     public function testValidationDataRemote() {
 
-        $rule=['name'=>'active_url'];
-        $message=['name.active_url'=>'active url'];
-        $expected=array(
-            'rules' => array('name'=>['laravelValidationRemote'=>[['ActiveUrl',['name','encrypted token'],'active url',false]]]),
-            'messages'=>array()
+        $validator = $this->getRealValidator(['name'=>'active_url']);
+        $validator->setRemoteToken('encrypted token');
+        $validator->enableRemote(true);
+        $data=$validator->validationData();
+        $this->assertEquals([
+                'rules' => array('name'=>['laravelValidationRemote'=>[['ActiveUrl',['name','encrypted token'],'name active_url!',false]]]),
+                'messages'=>array()
+            ], $data
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
-        Session::shouldReceive('token')->once();
-        Crypt::shouldReceive('encrypt')->once()->andReturn('encrypted token');
-        $data=$validator->validationData();
-
-        $this->assertEquals($expected,$data);
     }
 
 
     public function testJsRemoteCustomRule() {
 
-        $rule=['name'=>'foo'];
-        $message=['name.foo'=>'custom rule %replace%'];
-        $expected=array(
-            'rules' => array('name'=>['laravelValidationRemote'=>[['Foo',['name','encrypted token'],'custom rule -replaced text-',false]]]),
-            'messages'=>array()
-        );
-
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator = $this->getRealValidator(['name'=>'foo'], ['name.foo'=>'custom rule %replace%']);
+        $validator->setRemoteToken('encrypted token');
+        $validator->enableRemote(true);
 
         $validator->addExtension('foo', function($attribute, $value, $parameters) {
             return $value == 'foo';
@@ -117,12 +114,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             return str_replace('%replace%','-replaced text-',$message);
         });
 
-
-        Session::shouldReceive('token')->once();
-        Crypt::shouldReceive('encrypt')->once()->andReturn('encrypted token');
         $data=$validator->validationData();
+        $this->assertEquals([
+                'rules' => array('name'=>['laravelValidationRemote'=>[['Foo',['name','encrypted token'],'custom rule -replaced text-',false]]]),
+                'messages'=>array()
+            ], $data
+        );
 
-        $this->assertEquals($expected,$data);
     }
 
     public function testNotImplementedRules()
@@ -134,7 +132,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -154,7 +152,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
 
@@ -188,7 +186,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -220,7 +218,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -242,7 +240,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -264,7 +262,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -287,7 +285,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -309,7 +307,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -331,7 +329,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -353,7 +351,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -370,11 +368,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $rules = ['name'=>'active_url|required'];
 
 
-        $validator=new Validator($this->translator, $data, $rules,$messages);
+        $validator= $this->getRealValidator($rules,$messages, $data);
+        $validator->setRemoteToken('encrypted token');
+        $validator->enableRemote(true);
 
         try {
-            $validator->passes();
-
+            $result=$validator->passes();
+            $this->assertFalse($result);
         } catch (HttpResponseException $ex) {
             $response=$ex->getResponse();
             $this->assertEquals(200,$response->getStatusCode());
@@ -395,11 +395,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $rules = ['name'=>'active_url','other'=>'required'];
 
 
-        $validator=new Validator($this->translator, $data, $rules,$messages);
+        $validator= $this->getRealValidator($rules,$messages, $data);
+        $validator->setRemoteToken('encrypted token');
+        $validator->enableRemote(true);
 
         try {
-            $validator->passes();
-
+            $result = $validator->passes();
+            $this->assertTrue($result);
         } catch (BadRequestHttpException $ex) {
             $this->assertEquals(400,$ex->getStatusCode());
             $this->assertEquals("Bad request",$ex->getMessage());
@@ -424,10 +426,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'rules' => array('name'=>['laravelRequired'=>[]]),
             'messages' =>  array('name'=>['laravelRequired'=>'name required']),
         );
-        $validator=new Validator($this->translator, $data, $rules,$messages);
+        $validator= $this->getRealValidator($rules,$messages, $data);
+        $validator->setRemoteToken('encrypted token');
+        $validator->enableRemote(true);
 
         try {
-            $validator->passes();
+            $result = $validator->passes();
+            $this->assertTrue($result);
 
         } catch (HttpResponseException $ex) {
             $response=$ex->getResponse();
@@ -447,7 +452,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $expected=array(
             'rules' => array(
                 'name'=> [
-                    'laravelValidation'=>[['RequiredIf',array('field1','value1'),'The  field is required when  is .',true]],
+                    'laravelValidation'=>[['RequiredIf',array('field1','value1'),'The name field is required when field1 is value1.',true]],
                 ]
             ),
             'messages'=>array()
@@ -456,7 +461,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         //$rules=['name'=>'required_if:field1,value1|required_if:field2,value2'];
         //$messages=['name'=>'required_if:field1,value1|required_if:field2,value2'];
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -474,7 +479,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         $data=$validator->validationData();
 
         $this->assertEquals($expected,$data);
@@ -496,9 +501,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'rules' => array('name'=>['laravelRequired'=>[]]),
             'messages' =>  array('name'=>['laravelRequired'=>'name required']),
         );
-        $validator=new Validator($this->translator, [], $rules,$messages);
+        $validator=$this->getRealValidator($rules, $messages);
 
-        $data=$this->validator->passes();
+        $data=$validator->passes();
 
 
     }
@@ -506,8 +511,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testGetAttributeName()
     {
         $rules=['att.ribu.te' =>'after:"May 4, 1986"'];
-        $validator=new Validator($this->translator, [],$rules ,[]);
-
+        $validator=$this->getRealValidator($rules);
         $data=$validator->validationData();
         $this->assertArrayHasKey('att[ribu][te]',$data['rules']);
 
@@ -522,7 +526,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
             'messages'=>array()
         );
 
-        $validator=new Validator($this->translator, [], $rule,$message);
+        $validator=$this->getRealValidator($rule,$message);
         Config::clearResolvedInstances();
         Config::shouldReceive('get')->withArgs(['jsvalidation.enable_remote_validation'])->andReturn(false);
         $data=$validator->validationData();
@@ -530,6 +534,68 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($expected,$data);
     }
 
+
+    protected function getTranslator()
+    {
+        return m::mock('Symfony\Component\Translation\TranslatorInterface');
+    }
+
+    protected function getRealTranslator()
+    {
+        $trans = new \Symfony\Component\Translation\Translator('en', new \Symfony\Component\Translation\MessageSelector);
+        $trans->addLoader('array', new \Symfony\Component\Translation\Loader\ArrayLoader);
+        $trans->addResource(
+            'array',
+            [
+                'validation.required' => ':attribute required!',
+                'validation.active_url' => ':attribute active_url!'
+            ],
+            'en',
+            'messages'
+        );
+
+        return $trans;
+    }
+
+
+    public function testGetMessageBag()
+    {
+        $this->getRealValidator([])->getMessageBag();
+    }
+
+    public function testFails()
+    {
+        $this->getRealValidator([])->fails();
+    }
+
+    public function testFailed()
+    {
+        $this->getRealValidator([])->failed();
+    }
+
+    public function testSometimes()
+    {
+        $this->getRealValidator([])->sometimes('', [], function(){});
+    }
+
+    public function testAfterCallback()
+    {
+        $this->getRealValidator([])->after(function(){});
+    }
+
+
+    protected function getRealValidator($rules, $messages = array(), $data=[])
+    {
+        $trans = $this->getRealTranslator();
+        $laravelValidator = new LaravelValidator($trans, $data, $rules, $messages );
+        $delegated = new DelegatedValidator($laravelValidator);
+        return new Validator($delegated);
+    }
+
+    protected function getDelegatedValidator()
+    {
+        return m::mock('Proengsoft\JsValidation\DelegatedValidator');
+    }
 
 
 }
