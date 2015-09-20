@@ -143,9 +143,20 @@ laravelValidation = {
                     }
                 },
 
-                success: function( response ) {
-                    var valid = response === true || response === "true",
-                        errors, message, submitted;
+                complete: function(jqXHR, response ) {
+                    var valid, errors, message, submitted;
+
+                    if (jqXHR.status == 200 ) {
+                        valid = response === true || response === "true";
+                    } else {
+                        valid = false;
+                        var errorMsg= jqXHR.responseText.match(/<h1\s*>(.*)<\/h1\s*>/i);
+                        if ($.isArray(errorMsg)) {
+                            response = [errorMsg[1]];
+                        } else {
+                            response = ["Whoops, looks like something went wrong."];
+                        }
+                    }
 
                     validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
 
@@ -158,7 +169,7 @@ laravelValidation = {
                         validator.showErrors();
                     } else {
                         errors = {};
-                        message = response || validator.defaultMessage( element, "remote" );
+                        message = response;
                         errors[ element.name ] = previous.message = $.isFunction( message ) ? message( value ) : message[0];
                         validator.invalid[ element.name ] = true;
                         validator.showErrors( errors );
