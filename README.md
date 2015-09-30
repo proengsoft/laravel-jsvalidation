@@ -53,6 +53,7 @@ sure that your Javascript assets are updated correctly.**
   - [FormRequest validation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Form-Requests)
   - [Controller validation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Controller-validation)
 - [Examples](https://github.com/proengsoft/laravel-jsvalidation/wiki/Validating-Examples)
+  - [Laravel Auth Controller](https://github.com/proengsoft/laravel-jsvalidation/wiki/Laravel-Auth-Controller)
   - [Controller Example](https://github.com/proengsoft/laravel-jsvalidation/wiki/Controller-Validation-Example)
   - [FormRequest Example](https://github.com/proengsoft/laravel-jsvalidation/wiki/FormRequest-Validation-Example)
 - [Testing](https://github.com/proengsoft/laravel-jsvalidation/wiki/Testing)
