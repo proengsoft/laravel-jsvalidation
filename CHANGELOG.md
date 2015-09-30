@@ -3,7 +3,7 @@
 Features:
 
  - Allow validate rule "In" for type array 
- - Added JSON validator
+ - - Added JSON validator [3f508c1] (https://github.com/laravel/framework/commit/3f508c1c88897bd6b8fe15137ec77d3023bbcd9f#diff-38fd116b7c7b8ac1bdd8362250d04d57)
  - Allow disable remote validations
  - Add support for other validation packages. #69
 
@@ -11,7 +11,7 @@ Bugfixes:
 
  - Issues resolved:
     - Fix some validations when field is array #75 
-    - Fix validateAlpha logic [c31a38d](https://github.com/laravel/framework/commit/c31a38d596c1913696ace0cd77201cf675748fe8)
+    - Updated validateAlpha logic [c31a38d](https://github.com/laravel/framework/commit/c31a38d596c1913696ace0cd77201cf675748fe8)
 
 
 ## 1.1.4 (2015-09-10)
