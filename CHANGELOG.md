@@ -1,4 +1,4 @@
-## dev-master
+## 1.2.0 (2015-09-30)
 
 Features:
 
