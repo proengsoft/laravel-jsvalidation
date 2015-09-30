@@ -36,7 +36,6 @@ The Javascript validations are made using [JQuery Validation Plugin][], that is 
 sure that your Javascript assets are updated correctly.**
 
 ##### Known issues
-- This package is not compatible with other validation packages
 - DateFormat rule don't support timezone format 
 
 ### Documentation
