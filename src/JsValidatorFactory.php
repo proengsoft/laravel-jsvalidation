@@ -144,9 +144,11 @@ class JsValidatorFactory
      */
     protected function jsValidator(Validator $validator, $selector = null)
     {
-        $this->manager->selector($selector);
-        $this->manager->setValidator($validator);
+        $manager = clone $this->manager;
 
-        return $this->manager;
+        $manager->selector($selector);
+        $manager->setValidator($validator);
+
+        return $manager;
     }
 }
