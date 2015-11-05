@@ -30,7 +30,7 @@ class Manager implements Arrayable
     protected $view;
 
     /**
-     * 'ignore' option for jQuery Validation Plugin
+     * 'ignore' option for jQuery Validation Plugin.
      *
      * @var string
      */
@@ -122,7 +122,7 @@ class Manager implements Arrayable
         $data = $this->validator->validationData();
         $data['selector'] = $this->selector;
 
-        if (!is_null($this->ignore)) {
+        if (! is_null($this->ignore)) {
             $data['ignore'] = $this->ignore;
         }
 

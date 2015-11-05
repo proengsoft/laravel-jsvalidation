@@ -79,7 +79,7 @@ class JsValidatorFactory
      */
     public function formRequest($formRequest, $selector = null)
     {
-        if (! is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
+        if (! is_subclass_of($formRequest, FormRequest::class)) {
             throw new FormRequestArgumentException((string) $formRequest);
         }
 
@@ -101,7 +101,7 @@ class JsValidatorFactory
      */
     protected function createFormRequest($class)
     {
-        /**
+        /*
          * @var \Illuminate\Foundation\Http\FormRequest
          * @var $request Request
          */
