@@ -30,6 +30,13 @@ class Manager implements Arrayable
     protected $view;
 
     /**
+     * 'ignore' option for jQuery Validation Plugin.
+     *
+     * @var string
+     */
+    protected $ignore;
+
+    /**
      * @param string $selector
      * @param string $view
      */
@@ -115,6 +122,10 @@ class Manager implements Arrayable
         $data = $this->validator->validationData();
         $data['selector'] = $this->selector;
 
+        if (! is_null($this->ignore)) {
+            $data['ignore'] = $this->ignore;
+        }
+
         return $data;
     }
 
@@ -136,6 +147,18 @@ class Manager implements Arrayable
     public function selector($selector)
     {
         $this->selector = is_null($selector) ? $this->selector : $selector;
+
+        return $this;
+    }
+
+    /**
+     * Set the input selector to ignore for validation.
+     * @param string $ignore
+     * @return Manager
+     */
+    public function ignore($ignore)
+    {
+        $this->ignore = $ignore;
 
         return $this;
     }
