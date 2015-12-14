@@ -1,11 +1,11 @@
 <?php
 
-namespace Proengsoft\JsValidation;
+namespace Proengsoft\JsValidation\Traits;
 
 use Closure;
 use Illuminate\Validation\Validator as BaseValidator;
 
-class DelegatedValidator
+trait DelegatedValidator
 {
     /**
      * The Validator resolved instance.
@@ -15,22 +15,32 @@ class DelegatedValidator
     protected $validator;
 
     /**
-     *  Create new instance that delegate calls to Validator.
-     * @param BaseValidator $validator
+     *  Closure to invoke non accessible Validator methods
+     *
+     * @var Closure
      */
-    public function __construct(BaseValidator $validator)
-    {
-        $this->validator = $validator;
-    }
+    protected $validatorMethod;
+
 
     /**
      * Get current \Illuminate\Validation\Validator instance.
      *
-     * @return BaseValidator
+     * @return \Illuminate\Validation\Validator
      */
     public function getValidator()
     {
         return $this->validator;
+    }
+
+    /**
+     * Set Validation instance used to get rules and messages.
+     *
+     * @param \Illuminate\Validation\Validator $validator
+     */
+    public function setValidator(BaseValidator $validator)
+    {
+        $this->validator = $validator;
+        $this->validatorMethod = $this->createProtectedCaller($validator);
     }
 
     /**
@@ -232,13 +242,77 @@ class DelegatedValidator
      */
     private function callProtected($method, $args)
     {
-        $validatorMethod = Closure::bind(function ($method, $args) {
+        return call_user_func($this->validatorMethod, $method, $args);
+    }
+
+    /**
+     * Calls inaccessible validator method.
+     *
+     * @param $validator
+     * @return Closure
+     */
+    private function createProtectedCaller($validator)
+    {
+        return Closure::bind(function ($method, $args) {
             $callable = array($this, $method);
 
             return call_user_func_array($callable, $args);
-        }, $this->validator, $this->validator);
+        }, $validator, $validator);
 
-        return $validatorMethod($method, $args);
+    }
+
+    /**
+     * Get the messages for the instance.
+     *
+     * @return \Illuminate\Contracts\Support\MessageBag
+     */
+    public function getMessageBag()
+    {
+        return $this->validator->getMessageBag();
+    }
+
+    /**
+     * Determine if the data fails the validation rules.
+     *
+     * @return bool
+     */
+    public function fails()
+    {
+        return $this->validator->fails();
+    }
+
+    /**
+     * Get the failed validation rules.
+     *
+     * @return array
+     */
+    public function failed()
+    {
+        return $this->validator->failed();
+    }
+
+    /**
+     * Add conditions to a given field based on a Closure.
+     *
+     * @param  string $attribute
+     * @param  string|array $rules
+     * @param  callable $callback
+     * @return void
+     */
+    public function sometimes($attribute, $rules, callable $callback)
+    {
+        $this->validator->sometimes($attribute, $rules, $callback);
+    }
+
+    /**
+     * After an after validation callback.
+     *
+     * @param  callable|string $callback
+     * @return $this
+     */
+    public function after($callback)
+    {
+        return $this->validator->after($callback);
     }
 
     /**
@@ -255,4 +329,5 @@ class DelegatedValidator
 
         return call_user_func_array($arrCaller, $params);
     }
+
 }

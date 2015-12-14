@@ -4,7 +4,6 @@ namespace Proengsoft\JsValidation\Traits;
 
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Proengsoft\JsValidation\DelegatedValidator;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 trait RemoteValidation
@@ -22,13 +21,6 @@ trait RemoteValidation
      * @var
      */
     protected $remoteEnabled;
-
-    /**
-     * Returns DelegatedValidator instance.
-     *
-     * @return DelegatedValidator
-     */
-    abstract public function getValidator();
 
     /**
      * Return parsed Javascript Rule.
@@ -57,12 +49,12 @@ trait RemoteValidation
     public function passes()
     {
         if ($this->isRemoteValidationRequest()) {
-            $data = $this->getValidator()->getData();
+            $data = $this->getData();
 
             return $this->validateJsRemoteRequest($data['_jsvalidation']);
         }
 
-        return $this->getValidator()->passes();
+        return $this->passes();
     }
 
     /**
@@ -101,11 +93,11 @@ trait RemoteValidation
         }
 
         //$message = call_user_func($callable);
-        $passes = $this->getValidator()->passes();
+        $passes = $this->passes();
         if ($passes) {
             $message = true;
         } else {
-            $message = $this->getValidator()->messages()->get($attribute);
+            $message = $this->messages()->get($attribute);
         }
 
         throw new HttpResponseException(
@@ -123,7 +115,7 @@ trait RemoteValidation
             return false;
         }
 
-        $data = $this->getValidator()->getData();
+        $data = $this->getData();
 
         return ! empty($data['_jsvalidation']);
     }
@@ -137,22 +129,22 @@ trait RemoteValidation
      */
     protected function setRemoteValidation($attribute)
     {
-        if (! array_key_exists($attribute, $this->getValidator()->getRules())) {
-            $this->getValidator()->setRules(array());
+        if (! array_key_exists($attribute, $this->getRules())) {
+            $this->setRules(array());
 
             return false;
         }
 
-        $rules = $this->getValidator()->getRules()[$attribute];
+        $rules = $this->getRules()[$attribute];
         foreach ($rules as $i => $rule) {
-            list($rule, $parameters) = $this->getValidator()->parseRule($rule);
+            list($rule, $parameters) = $this->parseRule($rule);
             $jsRule = $this->getJsRule($attribute, $rule, $parameters);
             if ($jsRule [1] !== 'laravelValidationRemote') {
                 unset($rules[$i]);
             }
         }
-        $this->getValidator()->setRules([$attribute => $rules]);
-        $newRules = $this->getValidator()->getRules();
+        $this->setRules([$attribute => $rules]);
+        $newRules = $this->getRules();
 
         return ! empty($newRules[$attribute]);
     }
@@ -166,7 +158,7 @@ trait RemoteValidation
      */
     protected function isRemoteRule($rule)
     {
-        $validator = $this->getValidator();
+        $validator = $this;
         if (! in_array($rule, ['ActiveUrl', 'Exists', 'Unique'])) {
             return in_array(snake_case($rule), array_keys($validator->getExtensions())) ||
             (! $this->jsImplementedRule($rule) && method_exists($validator->getValidator(), "validate{$rule}"));

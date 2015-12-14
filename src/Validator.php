@@ -2,9 +2,11 @@
 
 namespace Proengsoft\JsValidation;
 
+use Proengsoft\JsValidation\Traits\DelegatedValidator;
 use Proengsoft\JsValidation\Traits\RemoteValidation;
 use Proengsoft\JsValidation\Traits\JavascriptRules;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
+use Illuminate\Validation\Validator as BaseValidator;
 
 /**
  * Extends Laravel Validator to add Javascript Validations.
@@ -13,36 +15,24 @@ use Illuminate\Contracts\Validation\Validator as ValidatorContract;
  */
 class Validator implements ValidatorContract
 {
-    use JavascriptRules,RemoteValidation;
+    use DelegatedValidator,
+        JavascriptRules,RemoteValidation {
+        RemoteValidation::passes insteadof DelegatedValidator;
+    }
 
     const JSVALIDATION_DISABLE = 'NoJsValidation';
 
-    /**
-     * The Validator resolved instance.
-     *
-     * @var DelegatedValidator
-     */
-    protected $validator;
 
     /**
      * Create a new JsValidation instance.
      *
-     * @param \Proengsoft\JsValidation\DelegatedValidator $validator
+     * @param \Illuminate\Validation\Validator $validator
      */
-    public function __construct(DelegatedValidator $validator)
+    public function __construct(BaseValidator $validator)
     {
-        $this->validator = $validator;
+        $this->setValidator($validator);
     }
-
-    /**
-     * Returns DelegatedValidator instance.
-     *
-     * @return DelegatedValidator
-     */
-    public function getValidator()
-    {
-        return $this->validator;
-    }
+    
 
     /**
      * Generate Javascript validations.
@@ -53,7 +43,7 @@ class Validator implements ValidatorContract
     {
         $jsValidations = array();
 
-        foreach ($this->validator->getRules() as $attribute => $rules) {
+        foreach ($this->getRules() as $attribute => $rules) {
             $newRules = $this->jsConvertRules($attribute, $rules);
             $jsValidations = array_merge($jsValidations, $newRules);
         }
@@ -77,12 +67,12 @@ class Validator implements ValidatorContract
 
         $jsRules = [];
         foreach ($rules as $rawRule) {
-            list($rule, $parameters) = $this->validator->parseRule($rawRule);
+            list($rule, $parameters) = $this->parseRule($rawRule);
             list($jsAttribute, $jsRule, $jsParams) = $this->getJsRule($attribute, $rule, $parameters);
             if ($jsRule) {
                 $jsRules[$jsAttribute][$jsRule][] = array($rule, $jsParams,
                     $this->getJsMessage($attribute, $rule, $parameters),
-                    $this->validator->isImplicit($rule),
+                    $this->isImplicit($rule),
                 );
             }
         }
@@ -125,13 +115,13 @@ class Validator implements ValidatorContract
     protected function getJsMessage($attribute, $rule, $parameters)
     {
         $message = $this->getTypeMessage($attribute, $rule);
-        $replacers = $this->validator->getReplacers();
+        $replacers = $this->getReplacers();
         if (isset($replacers[snake_case($rule)])) {
-            $message = $this->validator->doReplacements($message, $attribute, $rule, $parameters);
+            $message = $this->doReplacements($message, $attribute, $rule, $parameters);
         } elseif (method_exists($this, $replacer = "jsReplace{$rule}")) {
             $message = $this->$replacer($attribute, $message, $parameters);
         } else {
-            $message = $this->validator->doReplacements($message, $attribute, $rule, $parameters);
+            $message = $this->doReplacements($message, $attribute, $rule, $parameters);
         }
 
         return $message;
@@ -147,17 +137,17 @@ class Validator implements ValidatorContract
      */
     protected function getTypeMessage($attribute, $rule)
     {
-        $prevFiles = $this->validator->getFiles();
-        if ($this->validator->hasRule($attribute, array('Mimes', 'Image'))) {
+        $prevFiles = $this->getFiles();
+        if ($this->hasRule($attribute, array('Mimes', 'Image'))) {
             if (! array_key_exists($attribute, $prevFiles)) {
                 $newFiles = $prevFiles;
                 $newFiles[$attribute] = false;
-                $this->validator->setFiles($newFiles);
+                $this->setFiles($newFiles);
             }
         }
 
-        $message = $this->validator->getMessage($attribute, $rule);
-        $this->validator->setFiles($prevFiles);
+        $message = $this->getMessage($attribute, $rule);
+        $this->setFiles($prevFiles);
 
         return $message;
     }
@@ -171,7 +161,7 @@ class Validator implements ValidatorContract
      */
     public function jsValidationEnabled($attribute)
     {
-        return ! $this->validator->hasRule($attribute, self::JSVALIDATION_DISABLE);
+        return ! $this->hasRule($attribute, self::JSVALIDATION_DISABLE);
     }
 
     /**
@@ -206,72 +196,7 @@ class Validator implements ValidatorContract
         return $attribute;
     }
 
-    /**
-     * Get the messages for the instance.
-     *
-     * @return \Illuminate\Contracts\Support\MessageBag
-     */
-    public function getMessageBag()
-    {
-        return $this->validator->__call('getMessageBag', []);
-    }
 
-    /**
-     * Determine if the data fails the validation rules.
-     *
-     * @return bool
-     */
-    public function fails()
-    {
-        return $this->validator->__call('fails', []);
-    }
 
-    /**
-     * Get the failed validation rules.
-     *
-     * @return array
-     */
-    public function failed()
-    {
-        return $this->validator->__call('failed', []);
-    }
 
-    /**
-     * Add conditions to a given field based on a Closure.
-     *
-     * @param  string $attribute
-     * @param  string|array $rules
-     * @param  callable $callback
-     * @return void
-     */
-    public function sometimes($attribute, $rules, callable $callback)
-    {
-        $this->validator->__call('sometimes', [$attribute, $rules, $callback]);
-    }
-
-    /**
-     * After an after validation callback.
-     *
-     * @param  callable|string $callback
-     * @return $this
-     */
-    public function after($callback)
-    {
-        return $this->validator->__call('after', [$callback]);
-    }
-
-    /**
-     * Delegate method calls to validator instance.
-     *
-     * @param $method
-     * @param $params
-     *
-     * @return mixed
-     */
-    public function __call($method, $params)
-    {
-        $arrCaller = array($this->validator, $method);
-
-        return call_user_func_array($arrCaller, $params);
-    }
 }

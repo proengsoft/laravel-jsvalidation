@@ -8,8 +8,9 @@ use Illuminate\Session\Store;
 use Illuminate\Validation\Factory as BaseFactory;
 use Illuminate\Validation\PresenceVerifierInterface;
 use Illuminate\Validation\Validator as BaseValidator;
+use Illuminate\Contracts\Validation\Factory as FactoryContract;
 
-class Factory
+class Factory implements FactoryContract
 {
     /**
      * Enables or disable JsValidation Remote validations.
@@ -62,7 +63,7 @@ class Factory
     {
         $validator = $this->factory->make($data, $rules, $messages, $customAttributes);
 
-        $jsValidator = $this->makeJsValidator($validator);
+        $jsValidator = new Validator($validator);
         $this->configureJsRemote($jsValidator);
 
         return $jsValidator;
@@ -76,9 +77,7 @@ class Factory
      */
     protected function makeJsValidator(BaseValidator $validator)
     {
-        $delegated = new DelegatedValidator($validator);
-
-        return new Validator($delegated);
+        return new Validator($validator);
     }
 
     /**
