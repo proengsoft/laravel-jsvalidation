@@ -15,9 +15,9 @@ use Illuminate\Validation\Validator as BaseValidator;
  */
 class Validator implements ValidatorContract
 {
-    use DelegatedValidator,
-        JavascriptRules,RemoteValidation {
-        RemoteValidation::passes insteadof DelegatedValidator;
+    use DelegatedValidator, JavascriptRules,RemoteValidation {
+        DelegatedValidator::passes as passesDelegated;
+
     }
 
     const JSVALIDATION_DISABLE = 'NoJsValidation';
@@ -32,7 +32,17 @@ class Validator implements ValidatorContract
     {
         $this->setValidator($validator);
     }
-    
+
+    /**
+     * Determine if the data passes the validation rules.
+     *
+     * @return bool
+     */
+    public function passes()
+    {
+        return $this->passesRemote([$this,'passesDelegated']);
+
+    }
 
     /**
      * Generate Javascript validations.

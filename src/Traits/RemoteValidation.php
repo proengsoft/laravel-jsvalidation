@@ -46,15 +46,15 @@ trait RemoteValidation
      *
      * @return bool
      */
-    public function passes()
+    public function passesRemote($delegated)
     {
         if ($this->isRemoteValidationRequest()) {
             $data = $this->getData();
 
-            return $this->validateJsRemoteRequest($data['_jsvalidation']);
+            return $this->validateJsRemoteRequest($data['_jsvalidation'], $delegated);
         }
 
-        return $this->passes();
+        return call_user_func($delegated);
     }
 
     /**
@@ -84,7 +84,7 @@ trait RemoteValidation
      *
      * @return bool
      */
-    protected function validateJsRemoteRequest($attribute)
+    protected function validateJsRemoteRequest($attribute, $delegated)
     {
         $attribute = str_replace(array('[', ']'), array('.', ''), $attribute);
 
@@ -93,7 +93,7 @@ trait RemoteValidation
         }
 
         //$message = call_user_func($callable);
-        $passes = $this->passes();
+        $passes = call_user_func($delegated);
         if ($passes) {
             $message = true;
         } else {
