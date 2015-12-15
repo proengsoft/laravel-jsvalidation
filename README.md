@@ -37,6 +37,7 @@ sure that your Javascript assets are updated correctly.**
 
 ##### Known issues
 - DateFormat rule don't support timezone format 
+- Other validation packages are not supported yet.
 
 ### Documentation
 
