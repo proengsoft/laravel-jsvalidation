@@ -2,12 +2,9 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
-use Illuminate\Session\Store;
-use Illuminate\Validation\Factory;
 use Illuminate\Validation\Validator;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 
