@@ -108,7 +108,7 @@ class RemoteValidator
      * @param $attribute
      * @param $value
      * @param $parameters
-     * @return mixed
+     * @return array
      */
     protected function parseJsRemoteRequest($attribute, $value, $parameters) {
         parse_str("$value=",$attr_parts);
