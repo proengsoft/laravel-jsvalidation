@@ -4,11 +4,10 @@ namespace Proengsoft\JsValidation;
 
 use Closure;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Routing\Middleware;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 
-class RemoteValidationMiddleware implements Middleware
+class RemoteValidationMiddleware
 {
 
     /**

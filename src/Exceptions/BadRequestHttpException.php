@@ -14,6 +14,9 @@ class BadRequestHttpException extends BaseException
      */
     public function __construct($message = null, \Exception $previous = null, $code = 0)
     {
-        parent::__construct(400, $message, $previous, array(), $code);
+        if (is_null($message)) {
+            $message = 'Malformed JsValidation Request';
+        }
+        parent::__construct($message, $previous, array(), $code);
     }
 }

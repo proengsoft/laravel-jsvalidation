@@ -141,7 +141,7 @@ class JsValidatorFactory
 
         $remote = ! $this->options['disable_remote_validation'];
         $view = $this->options['view'];
-        $selector = $this->options['form_selector'];
+        $selector = is_null($selector)?$this->options['form_selector']:$selector;
 
         $jsValidator = new JavascriptValidator($validator, compact('remote'));
         $jsValidator->setRemoteToken(

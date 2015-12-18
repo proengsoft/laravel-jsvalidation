@@ -70,7 +70,7 @@ class RemoteValidator
      * @param $messages
      * @param $customAttributes
      * @param $field
-     * @return Validator;
+     * @return Validator
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field) {
 
@@ -96,8 +96,8 @@ class RemoteValidator
     public function validator() {
 
         return function ($attribute, $value, $parameters, $validator) {
-            $attribute = $this->parseJsRemoteRequest($attribute, $value, $parameters);
-            $this->validateJsRemoteRequest($attribute, $validator);
+            $validationData = $this->parseJsRemoteRequest($attribute, $value, $parameters);
+            $this->validateJsRemoteRequest($validationData[1], $validator);
         };
     }
 
@@ -113,7 +113,7 @@ class RemoteValidator
     protected function parseJsRemoteRequest($attribute, $value, $parameters) {
         parse_str("$value=",$attr_parts);
         $newAttr = array_keys(Arr::dot($attr_parts));
-        return array_pop($newAttr);
+        return [$attribute, array_pop($newAttr), $parameters];
     }
 
 
