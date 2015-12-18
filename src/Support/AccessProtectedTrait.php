@@ -1,10 +1,10 @@
 <?php
-namespace Proengsoft\JsValidation\Traits;
+namespace Proengsoft\JsValidation\Support;
 
 
 use Closure;
 
-trait AccessProtected
+trait AccessProtectedTrait
 {
 
     /**

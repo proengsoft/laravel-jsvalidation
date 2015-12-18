@@ -1,13 +1,14 @@
 <?php
 
-namespace Proengsoft\JsValidation\Traits;
+namespace Proengsoft\JsValidation\Support;
 
 use Closure;
 use Illuminate\Validation\Validator as BaseValidator;
+use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
-trait DelegatedValidator
+trait DelegatedValidatorTrait
 {
-    use AccessProtected;
+    use AccessProtectedTrait;
     /**
      * The Validator resolved instance.
      *

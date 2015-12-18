@@ -45,9 +45,9 @@ class RemoteValidationMiddleware implements Middleware
 
     protected function wrapValidator() {
 
-        $validator = new RemoteValidation($this->factory);
+        $validator = new RemoteValidator($this->factory);
         $this->factory->resolver($validator->resolver($this->field));
-        $this->factory->extend(RemoteValidation::EXTENSION_NAME, $validator->validator());
+        $this->factory->extend(RemoteValidator::EXTENSION_NAME, $validator->validator());
 
     }
 

@@ -9,17 +9,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\Validator;
-use Proengsoft\JsValidation\Traits\AccessProtected;
-use Proengsoft\JsValidation\Traits\RuleList;
+use Proengsoft\JsValidation\Support\RuleListTrait;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
 /**
  * Class RemoteValidator
  * @package Proengsoft\JsValidation
  */
-class RemoteValidation
+class RemoteValidator
 {
-    use AccessProtected, RuleList;
+    use AccessProtectedTrait, RuleListTrait;
 
     /**
      *

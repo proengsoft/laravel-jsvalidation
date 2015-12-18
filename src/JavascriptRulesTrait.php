@@ -1,11 +1,13 @@
 <?php
 
-namespace Proengsoft\JsValidation\Traits;
+namespace Proengsoft\JsValidation;
 
-trait JavascriptRules
+use Proengsoft\JsValidation\Support\RuleListTrait;
+
+trait JavascriptRulesTrait
 {
 
-    use RuleList;
+    use RuleListTrait;
 
     /**
      *  Rules validated with Javascript.

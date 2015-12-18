@@ -3,13 +3,11 @@
 namespace Proengsoft\JsValidation;
 
 use Illuminate\Validation\Validator;
-use Proengsoft\JsValidation\Traits\DelegatedValidator;
-use Proengsoft\JsValidation\Traits\JavascriptRules;
-use Proengsoft\JsValidation\Traits\RuleList;
+use Proengsoft\JsValidation\Support\DelegatedValidatorTrait;
 
-class JavascriptValidator //extends Validator
+class JavascriptValidator 
 {
-    use DelegatedValidator, JavascriptRules;
+    use DelegatedValidatorTrait, JavascriptRulesTrait;
 
     /**
      * Token used to secure remote validations

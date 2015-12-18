@@ -1,8 +1,8 @@
 <?php
-namespace Proengsoft\JsValidation\Traits;
+namespace Proengsoft\JsValidation\Support;
 
 
-trait RuleList
+trait RuleListTrait
 {
 
     /**
