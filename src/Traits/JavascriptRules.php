@@ -4,11 +4,14 @@ namespace Proengsoft\JsValidation\Traits;
 
 trait JavascriptRules
 {
+
+    use RuleList;
+
     /**
      *  Rules validated with Javascript.
      *
      * @var array
-     */
+     *
     protected $javascriptRules = ['Accepted', 'After', 'Alpha', 'AlphaDash',
         'AlphaNum', 'Array', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
         'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Image',
@@ -16,7 +19,7 @@ trait JavascriptRules
         'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
         'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes' ,
         'String', 'Timezone', 'Url', ];
-
+    */
     /**
      * Handles multidimensional attribute names.
      *
@@ -31,11 +34,12 @@ trait JavascriptRules
      *
      * @param $rule
      * @return bool
-     */
+     *
     public function jsImplementedRule($rule)
     {
         return in_array($rule, $this->javascriptRules);
     }
+     * */
 
     /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
@@ -231,5 +235,22 @@ trait JavascriptRules
         }
 
         return [$jsRule, $attribute, $parameters];
+    }
+
+    /**
+     * Returns Javascript parameters for remote validated rules.
+     *
+     * @param string $attribute
+     *
+     * @return array
+     */
+    private function jsRemoteRule($attribute)
+    {
+        $params = [
+            $attribute,
+            $this->token,
+        ];
+
+        return [$attribute, $params];
     }
 }

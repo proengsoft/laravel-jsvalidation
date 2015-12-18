@@ -31,4 +31,10 @@ return array(
      */
     'disable_remote_validation' => false,
 
+    /*
+     * Field name used in the remote validation Ajax request
+     * You can change this value to avoid conflicts wth your field names
+     */
+    'remote_validation_field' => '_jsvalidation',
+
 );

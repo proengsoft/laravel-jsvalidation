@@ -1,9 +1,17 @@
+## features/delegated-factory
+
+Features:
+ - Add ignore method to override default configuration  #
+ - Add remote_validation_field config option
+ - Allow using with other validation packages
+
+
 ## 1.2.0 (2015-09-30)
 
 Features:
 
  - Allow validate rule "In" for type array 
- - - Added JSON validator [3f508c1] (https://github.com/laravel/framework/commit/3f508c1c88897bd6b8fe15137ec77d3023bbcd9f#diff-38fd116b7c7b8ac1bdd8362250d04d57)
+ - Added JSON validator [3f508c1] (https://github.com/laravel/framework/commit/3f508c1c88897bd6b8fe15137ec77d3023bbcd9f#diff-38fd116b7c7b8ac1bdd8362250d04d57)
  - Allow disable remote validations
  - Add support for other validation packages. #69
 

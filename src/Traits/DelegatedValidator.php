@@ -7,6 +7,7 @@ use Illuminate\Validation\Validator as BaseValidator;
 
 trait DelegatedValidator
 {
+    use AccessProtected;
     /**
      * The Validator resolved instance.
      *
@@ -21,6 +22,10 @@ trait DelegatedValidator
      */
     protected $validatorMethod;
 
+    private function callValidator($method, $args = [])
+    {
+        return $this->callProtected($this->validatorMethod, $method ,$args);
+    }
 
     /**
      * Get current \Illuminate\Validation\Validator instance.
@@ -143,7 +148,7 @@ trait DelegatedValidator
      */
     public function isImplicit($rule)
     {
-        return $this->callProtected('isImplicit', [$rule]);
+        return $this->callValidator('isImplicit', [$rule]);
     }
 
     /**
@@ -157,7 +162,7 @@ trait DelegatedValidator
      */
     public function doReplacements($message, $attribute, $rule, $parameters)
     {
-        return $this->callProtected('doReplacements', [$message, $attribute, $rule, $parameters]);
+        return $this->callValidator('doReplacements', [$message, $attribute, $rule, $parameters]);
     }
 
     /**
@@ -169,7 +174,7 @@ trait DelegatedValidator
      */
     public function hasRule($attribute, $rules)
     {
-        return $this->callProtected('hasRule', [$attribute, $rules]);
+        return $this->callValidator('hasRule', [$attribute, $rules]);
     }
 
     /**
@@ -181,7 +186,7 @@ trait DelegatedValidator
      */
     public function getMessage($attribute, $rule)
     {
-        return $this->callProtected('getMessage', [$attribute, $rule]);
+        return $this->callValidator('getMessage', [$attribute, $rule]);
     }
 
     /**
@@ -192,7 +197,7 @@ trait DelegatedValidator
      */
     public function parseRule($rules)
     {
-        return $this->callProtected('parseRule', [$rules]);
+        return $this->callValidator('parseRule', [$rules]);
     }
 
     /**
@@ -205,7 +210,7 @@ trait DelegatedValidator
      */
     public function getDisplayableValue($attribute, $value)
     {
-        return $this->callProtected('getDisplayableValue', [$attribute, $value]);
+        return $this->callValidator('getDisplayableValue', [$attribute, $value]);
     }
 
     /**
@@ -217,7 +222,7 @@ trait DelegatedValidator
      */
     public function getAttribute($attribute)
     {
-        return $this->callProtected('getAttribute', [$attribute]);
+        return $this->callValidator('getAttribute', [$attribute]);
     }
 
     /**
@@ -231,35 +236,9 @@ trait DelegatedValidator
      */
     public function requireParameterCount($count, $parameters, $rule)
     {
-        return $this->callProtected('requireParameterCount', [$count, $parameters, $rule]);
+        return $this->callValidator('requireParameterCount', [$count, $parameters, $rule]);
     }
 
-    /**
-     * Calls inaccessible validator method.
-     * @param $method
-     * @param $args
-     * @return mixed
-     */
-    private function callProtected($method, $args)
-    {
-        return call_user_func($this->validatorMethod, $method, $args);
-    }
-
-    /**
-     * Calls inaccessible validator method.
-     *
-     * @param $validator
-     * @return Closure
-     */
-    private function createProtectedCaller($validator)
-    {
-        return Closure::bind(function ($method, $args) {
-            $callable = array($this, $method);
-
-            return call_user_func_array($callable, $args);
-        }, $validator, $validator);
-
-    }
 
     /**
      * Get the messages for the instance.

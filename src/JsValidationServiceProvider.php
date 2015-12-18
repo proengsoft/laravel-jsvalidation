@@ -3,20 +3,40 @@
 namespace Proengsoft\JsValidation;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Proengsoft\JsValidation;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class JsValidationServiceProvider extends ServiceProvider
 {
+
     /**
      * Bootstrap the application services.
      */
     public function boot()
     {
+
         $this->bootstrapConfigs();
         $this->bootstrapViews();
         $this->publishAssets();
+
+        if (Config::get('jsvalidation.disable_remote_validation') === false) {
+            $this->app['Illuminate\Contracts\Http\Kernel']->pushMiddleware(RemoteValidationMiddleware::class);
+        }
+
+        /*
+        $validator = $this->app['validator'];
+        $validator->extend('jsvalidation', function($attribute, $value, $parameters, $validator) {
+            dd($validator);
+            throw new HttpResponseException(
+                new JsonResponse('jjjj', 200));
+        });
+        */
+
+
     }
 
     /**
@@ -24,24 +44,33 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerValidationFactory();
+        //$this->registerValidationFactory();
         $this->registerJsValidator();
+        //$this->registerRemote();
     }
+
+    protected function registerRemote() {
+
+
+    }
+
 
     /**
      *  Register JsValidator Factory.
      */
     protected function registerJsValidator()
     {
-        $this->app->bind('jsvalidator', function (Application $app) {
+        $this->app->bind('jsvalidator', function ($app) {
 
             $selector = Config::get('jsvalidation.form_selector');
             $view = Config::get('jsvalidation.view');
+            $config = Config::get('jsvalidation');
 
-            $manager = new Manager($selector, $view);
-            $validatorFactory = $app->make('Illuminate\Contracts\Validation\Factory');
+            //$manager = new Manager($selector, $view);
+            $validatorFactory = $app['validator'];
+            $request = $app['request'];
 
-            return new JsValidatorFactory($validatorFactory, $manager, $app);
+            return new JsValidatorFactory($app, $config );
         });
     }
 
@@ -67,9 +96,13 @@ class JsValidationServiceProvider extends ServiceProvider
         });
 
         $this->app->booting(function ($app) {
-            $app['validator'] = $app['jsvalidator.validator'];
+            //$app['validator']->resolver(function(){});
+            //$r = new Resolver($app['validator']);
+            //$app['validator'] = $app['jsvalidator.validator'];
         });
     }
+
+
 
     /**
      * Configure and publish views.
@@ -104,4 +137,6 @@ class JsValidationServiceProvider extends ServiceProvider
             realpath(__DIR__.'/../public') => $this->app['path.public'].'/vendor/jsvalidation',
         ], 'public');
     }
+
+
 }

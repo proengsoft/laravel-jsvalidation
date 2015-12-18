@@ -11,7 +11,7 @@ class Manager implements Arrayable
     /**
      * Registered validator instance.
      *
-     * @var \Proengsoft\JsValidation\Validator
+     * @var \Proengsoft\JsValidation\JavascriptValidator
      */
     protected $validator;
 
@@ -36,22 +36,26 @@ class Manager implements Arrayable
      */
     protected $ignore;
 
+
     /**
-     * @param string $selector
-     * @param string $view
+     * @param JavascriptValidator $validator
+     * @param array $options
      */
-    public function __construct($selector, $view)
+    public function __construct(JavascriptValidator $validator, $options=[])
     {
-        $this->selector = $selector;
-        $this->view = $view;
+        $this->validator = $validator;
+
+        $this->selector = empty($options['selector'])?null:$options['selector'];
+        $this->view = empty($options['view'])?null:$options['view'];
+
     }
 
     /**
      * Set Validation instance used to get rules and messages.
      *
-     * @param Validator $validator
+     * @param JavascriptValidator $validator
      */
-    public function setValidator(Validator $validator)
+    public function setValidator(JavascriptValidator $validator)
     {
         $this->validator = $validator;
     }
@@ -171,6 +175,23 @@ class Manager implements Arrayable
     public function view($view)
     {
         $this->view = is_null($view) ? $this->view : $view;
+
+        return $this;
+    }
+
+    /**
+     * Enables or disables remote validations
+     *
+     * @param bool $enabled
+     * @return Manager
+     */
+    public function remote($enabled)
+    {
+        if ($enabled) {
+            $this->validator->enableRemote();
+        } else {
+            $this->validator->disableRemote();
+        }
 
         return $this;
     }
