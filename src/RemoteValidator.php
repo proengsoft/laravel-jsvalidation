@@ -3,15 +3,14 @@
 namespace Proengsoft\JsValidation;
 
 use Closure;
+use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\Validator;
-use Proengsoft\JsValidation\Support\RuleListTrait;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Proengsoft\JsValidation\Exceptions\BadRequestHttpException;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
+use Proengsoft\JsValidation\Support\RuleListTrait;
 
 /**
  * Class RemoteValidator
@@ -22,7 +21,7 @@ class RemoteValidator
     use AccessProtectedTrait, RuleListTrait;
 
     /**
-     *
+     * Validator extension name
      */
     const EXTENSION_NAME = 'jsvalidation';
 
@@ -103,6 +102,14 @@ class RemoteValidator
     }
 
 
+    /**
+     *  Parse Validation input request data
+     *
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     * @return mixed
+     */
     protected function parseJsRemoteRequest($attribute, $value, $parameters) {
         parse_str("$value=",$attr_parts);
         $newAttr = array_keys(Arr::dot($attr_parts));

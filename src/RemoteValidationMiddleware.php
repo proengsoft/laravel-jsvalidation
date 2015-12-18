@@ -3,29 +3,35 @@
 namespace Proengsoft\JsValidation;
 
 use Closure;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Http\Exception\HttpResponseException;
-use Illuminate\Http\JsonResponse;
-//use Illuminate\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\Routing\Middleware;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+
 
 class RemoteValidationMiddleware implements Middleware
 {
 
     /**
+     * Validator factory instance to wrap
+     *
      * @var ValidationFactory
      */
     protected $factory;
 
+    /**
+     * Field used to detect Javascript validation
+     *
+     * @var mixed
+     */
     protected $field;
 
-    /**
-     * @var Application
-     */
-    private $app;
 
+    /**
+     * RemoteValidationMiddleware constructor.
+     *
+     * @param ValidationFactory $validator
+     * @param Config $config
+     */
     public function __construct(ValidationFactory $validator, Config $config) {
 
         $this->factory = $validator;
@@ -34,6 +40,13 @@ class RemoteValidationMiddleware implements Middleware
     }
 
 
+    /**
+     * Handle an incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param Closure $next
+     * @return mixed
+     */
     public function handle($request, Closure $next)
     {
         if ($request->has($this->field)) {
@@ -43,6 +56,9 @@ class RemoteValidationMiddleware implements Middleware
         return $next($request);
     }
 
+    /**
+     * Wraps Validaroe resolver with RemoteValidator resolver
+     */
     protected function wrapValidator() {
 
         $validator = new RemoteValidator($this->factory);

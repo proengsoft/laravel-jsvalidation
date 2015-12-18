@@ -5,7 +5,7 @@ namespace Proengsoft\JsValidation;
 use Illuminate\Validation\Validator;
 use Proengsoft\JsValidation\Support\DelegatedValidatorTrait;
 
-class JavascriptValidator 
+class JavascriptValidator
 {
     use DelegatedValidatorTrait, JavascriptRulesTrait;
 
@@ -23,6 +23,11 @@ class JavascriptValidator
      */
     protected $remote = true;
 
+    /**
+     * Rule used to disable validations
+     *
+     * @const string
+     */
     const JSVALIDATION_DISABLE = 'NoJsValidation';
 
     /**
@@ -210,14 +215,33 @@ class JavascriptValidator
         $this->token = $token;
     }
 
+    /**
+     * Gets the token  for securing remote validation.
+     */
+    public function getRemoteToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * Enables the generation of remote rules
+     */
     public function enableRemote() {
         $this->remote = true;
     }
 
+    /**
+     * Disables the generation of remote rules
+     */
     public function disableRemote() {
         $this->remote = false;
     }
 
+    /**
+     * Check if the generation of remote rules is enabled
+     *
+     * @return bool
+     */
     public function remoteEnabled() {
         return $this->remote;
     }

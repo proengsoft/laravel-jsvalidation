@@ -9,19 +9,7 @@ trait JavascriptRulesTrait
 
     use RuleListTrait;
 
-    /**
-     *  Rules validated with Javascript.
-     *
-     * @var array
-     *
-    protected $javascriptRules = ['Accepted', 'After', 'Alpha', 'AlphaDash',
-        'AlphaNum', 'Array', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
-        'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Image',
-        'In', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
-        'Regex', 'Required', 'RequiredIf', 'RequiredWith', 'RequiredWithAll',
-        'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes' ,
-        'String', 'Timezone', 'Url', ];
-    */
+
     /**
      * Handles multidimensional attribute names.
      *
@@ -32,16 +20,40 @@ trait JavascriptRulesTrait
     abstract protected function getJsAttributeName($attribute);
 
     /**
-     * Returns if rule is validated using Javascript.
+     * Gets the token  for securing remote validation.
+     */
+    abstract public function getRemoteToken();
+
+    /**
+     * Get the displayable name of the attribute.
      *
-     * @param $rule
-     * @return bool
+     * @param string $attribute
      *
-    public function jsImplementedRule($rule)
-    {
-        return in_array($rule, $this->javascriptRules);
-    }
-     * */
+     * @return string
+     */
+    abstract public function getAttribute($attribute);
+
+    /**
+     * Get the displayable name of the value.
+     *
+     * @param string $attribute
+     * @param mixed  $value
+     *
+     * @return string
+     */
+    abstract public function getDisplayableValue($attribute, $value);
+
+    /**
+     * Require a certain number of parameters to be present.
+     *
+     * @param  int    $count
+     * @param  array  $parameters
+     * @param  string  $rule
+     *
+     * @return mixed
+     */
+    abstract public function requireParameterCount($count, $parameters, $rule);
+
 
     /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
@@ -250,7 +262,7 @@ trait JavascriptRulesTrait
     {
         $params = [
             $attribute,
-            $this->token,
+            $this->getRemoteToken(),
         ];
 
         return [$attribute, $params];

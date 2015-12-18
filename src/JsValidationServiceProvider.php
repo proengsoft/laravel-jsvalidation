@@ -2,12 +2,7 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\Exception\HttpResponseException;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use Proengsoft\JsValidation;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class JsValidationServiceProvider extends ServiceProvider
@@ -23,19 +18,9 @@ class JsValidationServiceProvider extends ServiceProvider
         $this->bootstrapViews();
         $this->publishAssets();
 
-        if (Config::get('jsvalidation.disable_remote_validation') === false) {
+        if ($this->app['config']->get('jsvalidation.disable_remote_validation') === false) {
             $this->app['Illuminate\Contracts\Http\Kernel']->pushMiddleware(RemoteValidationMiddleware::class);
         }
-
-        /*
-        $validator = $this->app['validator'];
-        $validator->extend('jsvalidation', function($attribute, $value, $parameters, $validator) {
-            dd($validator);
-            throw new HttpResponseException(
-                new JsonResponse('jjjj', 200));
-        });
-        */
-
 
     }
 
@@ -44,64 +29,12 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //$this->registerValidationFactory();
-        $this->registerJsValidator();
-        //$this->registerRemote();
-    }
-
-    protected function registerRemote() {
-
-
-    }
-
-
-    /**
-     *  Register JsValidator Factory.
-     */
-    protected function registerJsValidator()
-    {
-        $this->app->bind('jsvalidator', function ($app) {
-
-            $selector = Config::get('jsvalidation.form_selector');
-            $view = Config::get('jsvalidation.view');
-            $config = Config::get('jsvalidation');
-
-            //$manager = new Manager($selector, $view);
-            $validatorFactory = $app['validator'];
-            $request = $app['request'];
-
+        $this->app->singleton('jsvalidator', function ($app) {
+            $config = $app['config']->get('jsvalidation');
             return new JsValidatorFactory($app, $config );
         });
+
     }
-
-    /**
-     * Register the validation factory.
-     *
-     * @return void
-     */
-    protected function registerValidationFactory()
-    {
-        $this->app->singleton('jsvalidator.validator', function ($app) {
-            $currentValidator = $app['validator'];
-            $validator = new Factory($currentValidator, $app);
-
-            // The session manager is responsible to secure Ajax validations
-            if (isset($app['session.store'])) {
-                $validator->setSessionStore($app['session.store']);
-            }
-
-            $validator->setJsRemoteEnabled(! $app['config']->get('jsvalidation.disable_remote_validation'));
-
-            return $validator;
-        });
-
-        $this->app->booting(function ($app) {
-            //$app['validator']->resolver(function(){});
-            //$r = new Resolver($app['validator']);
-            //$app['validator'] = $app['jsvalidator.validator'];
-        });
-    }
-
 
 
     /**

@@ -4,7 +4,6 @@ namespace Proengsoft\JsValidation\Support;
 
 use Closure;
 use Illuminate\Validation\Validator as BaseValidator;
-use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
 trait DelegatedValidatorTrait
 {
@@ -50,16 +49,6 @@ trait DelegatedValidatorTrait
     }
 
     /**
-     * Determine if the data passes the validation rules.
-     *
-     * @return bool
-     */
-    public function passes()
-    {
-        return $this->validator->passes();
-    }
-
-    /**
      * Get the data under validation.
      *
      * @return array
@@ -67,16 +56,6 @@ trait DelegatedValidatorTrait
     public function getData()
     {
         return $this->validator->getData();
-    }
-
-    /**
-     * Get the message container for the validator.
-     *
-     * @return \Illuminate\Support\MessageBag
-     */
-    public function messages()
-    {
-        return $this->validator->messages();
     }
 
     /**
@@ -89,26 +68,6 @@ trait DelegatedValidatorTrait
         return $this->validator->getRules();
     }
 
-    /**
-     * Set the validation rules.
-     *
-     * @param  array  $rules
-     * @return \Illuminate\Validation\Validator
-     */
-    public function setRules(array $rules)
-    {
-        return $this->validator->setRules($rules);
-    }
-
-    /**
-     * Get the array of custom validator extensions.
-     *
-     * @return array
-     */
-    public function getExtensions()
-    {
-        return $this->validator->getExtensions();
-    }
 
     /**
      * Get the files under validation.
@@ -240,60 +199,6 @@ trait DelegatedValidatorTrait
         return $this->callValidator('requireParameterCount', [$count, $parameters, $rule]);
     }
 
-
-    /**
-     * Get the messages for the instance.
-     *
-     * @return \Illuminate\Contracts\Support\MessageBag
-     */
-    public function getMessageBag()
-    {
-        return $this->validator->getMessageBag();
-    }
-
-    /**
-     * Determine if the data fails the validation rules.
-     *
-     * @return bool
-     */
-    public function fails()
-    {
-        return $this->validator->fails();
-    }
-
-    /**
-     * Get the failed validation rules.
-     *
-     * @return array
-     */
-    public function failed()
-    {
-        return $this->validator->failed();
-    }
-
-    /**
-     * Add conditions to a given field based on a Closure.
-     *
-     * @param  string $attribute
-     * @param  string|array $rules
-     * @param  callable $callback
-     * @return void
-     */
-    public function sometimes($attribute, $rules, callable $callback)
-    {
-        $this->validator->sometimes($attribute, $rules, $callback);
-    }
-
-    /**
-     * After an after validation callback.
-     *
-     * @param  callable|string $callback
-     * @return $this
-     */
-    public function after($callback)
-    {
-        return $this->validator->after($callback);
-    }
 
     /**
      * Delegate method calls to validator instance.
