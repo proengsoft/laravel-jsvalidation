@@ -6,44 +6,40 @@ use Closure;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
-
 class RemoteValidationMiddleware
 {
-
     /**
-     * Validator factory instance to wrap
+     * Validator factory instance to wrap.
      *
      * @var ValidationFactory
      */
     protected $factory;
 
     /**
-     * Field used to detect Javascript validation
+     * Field used to detect Javascript validation.
      *
      * @var mixed
      */
     protected $field;
 
-
     /**
      * RemoteValidationMiddleware constructor.
      *
      * @param ValidationFactory $validator
-     * @param Config $config
+     * @param Config            $config
      */
-    public function __construct(ValidationFactory $validator, Config $config) {
-
+    public function __construct(ValidationFactory $validator, Config $config)
+    {
         $this->factory = $validator;
         $this->field = $config->get('jsvalidation.remote_validation_field');
-
     }
-
 
     /**
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param Closure $next
+     * @param Closure                  $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -56,16 +52,12 @@ class RemoteValidationMiddleware
     }
 
     /**
-     * Wraps Validaroe resolver with RemoteValidator resolver
+     * Wraps Validaroe resolver with RemoteValidator resolver.
      */
-    protected function wrapValidator() {
-
-        $validator = new RemoteValidator($this->factory);
-        $this->factory->resolver($validator->resolver($this->field));
-        $this->factory->extend(RemoteValidator::EXTENSION_NAME, $validator->validator());
-
+    protected function wrapValidator()
+    {
+        $resolver = new RemoteResolver($this->factory);
+        $this->factory->resolver($resolver->resolver($this->field));
+        $this->factory->extend(RemoteValidator::EXTENSION_NAME, $resolver->validator());
     }
-
-
-
 }
