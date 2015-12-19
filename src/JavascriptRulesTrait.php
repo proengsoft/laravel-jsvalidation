@@ -6,9 +6,7 @@ use Proengsoft\JsValidation\Support\RuleListTrait;
 
 trait JavascriptRulesTrait
 {
-
     use RuleListTrait;
-
 
     /**
      * Handles multidimensional attribute names.
@@ -46,14 +44,13 @@ trait JavascriptRulesTrait
     /**
      * Require a certain number of parameters to be present.
      *
-     * @param  int    $count
-     * @param  array  $parameters
-     * @param  string  $rule
+     * @param int    $count
+     * @param array  $parameters
+     * @param string $rule
      *
      * @return mixed
      */
     abstract public function requireParameterCount($count, $parameters, $rule);
-
 
     /**
      * Replace javascript error message place-holders in RequiredIf with actual values.
@@ -104,7 +101,7 @@ trait JavascriptRulesTrait
     {
         $this->requireParameterCount(1, $parameters, 'after');
 
-        if (! ($date = strtotime($parameters[0]))) {
+        if (!($date = strtotime($parameters[0]))) {
             $date = $this->getJsAttributeName($parameters[0]);
         }
 
@@ -129,8 +126,8 @@ trait JavascriptRulesTrait
     /**
      * Validate that two attributes match.
      *
-     * @param  string  $attribute
-     * @param  array   $parameters
+     * @param string $attribute
+     * @param array  $parameters
      *
      * @return array
      */
@@ -146,8 +143,8 @@ trait JavascriptRulesTrait
     /**
      * Validate that an attribute is different from another attribute.
      *
-     * @param  string  $attribute
-     * @param  array   $parameters
+     * @param string $attribute
+     * @param array  $parameters
      *
      * @return array
      */
@@ -161,14 +158,14 @@ trait JavascriptRulesTrait
     /**
      * Validate that an attribute exists when any other attribute exists.
      *
-     * @param  string  $attribute
-     * @param  mixed   $parameters
+     * @param string $attribute
+     * @param mixed  $parameters
      *
      * @return array
      */
     protected function jsRuleRequiredWith($attribute, array $parameters)
     {
-        $parameters = array_map([$this,'getJsAttributeName'], $parameters);
+        $parameters = array_map([$this, 'getJsAttributeName'], $parameters);
 
         return [$attribute, $parameters];
     }
@@ -176,8 +173,8 @@ trait JavascriptRulesTrait
     /**
      * Validate that an attribute exists when all other attributes exists.
      *
-     * @param  string  $attribute
-     * @param  mixed   $parameters
+     * @param string $attribute
+     * @param mixed  $parameters
      *
      * @return array
      */
@@ -189,8 +186,8 @@ trait JavascriptRulesTrait
     /**
      * Validate that an attribute exists when another attribute does not.
      *
-     * @param  string  $attribute
-     * @param  mixed   $parameters
+     * @param string $attribute
+     * @param mixed  $parameters
      *
      * @return array
      */
@@ -202,8 +199,8 @@ trait JavascriptRulesTrait
     /**
      * Validate that an attribute exists when all other attributes do not.
      *
-     * @param  string  $attribute
-     * @param  mixed   $parameters
+     * @param string $attribute
+     * @param mixed  $parameters
      *
      * @return array
      */
@@ -215,8 +212,8 @@ trait JavascriptRulesTrait
     /**
      * Validate that an attribute exists when another attribute has a given value.
      *
-     * @param  string  $attribute
-     * @param  mixed   $parameters
+     * @param string $attribute
+     * @param mixed  $parameters
      *
      * @return array
      */
@@ -235,6 +232,7 @@ trait JavascriptRulesTrait
      * @param string $attribute
      * @param $rule
      * @param $parameters
+     *
      * @return array
      */
     protected function jsClientRule($attribute, $rule, $parameters)

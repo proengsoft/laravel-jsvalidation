@@ -4,16 +4,13 @@ namespace Proengsoft\JsValidation;
 
 use Illuminate\Support\ServiceProvider;
 
-
 class JsValidationServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap the application services.
      */
     public function boot()
     {
-
         $this->bootstrapConfigs();
         $this->bootstrapViews();
         $this->publishAssets();
@@ -21,7 +18,6 @@ class JsValidationServiceProvider extends ServiceProvider
         if ($this->app['config']->get('jsvalidation.disable_remote_validation') === false) {
             $this->app['Illuminate\Contracts\Http\Kernel']->pushMiddleware(RemoteValidationMiddleware::class);
         }
-
     }
 
     /**
@@ -31,11 +27,10 @@ class JsValidationServiceProvider extends ServiceProvider
     {
         $this->app->singleton('jsvalidator', function ($app) {
             $config = $app['config']->get('jsvalidation');
-            return new JsValidatorFactory($app, $config );
+
+            return new JsValidatorFactory($app, $config);
         });
-
     }
-
 
     /**
      * Configure and publish views.
@@ -70,6 +65,4 @@ class JsValidationServiceProvider extends ServiceProvider
             realpath(__DIR__.'/../public') => $this->app['path.public'].'/vendor/jsvalidation',
         ], 'public');
     }
-
-
 }

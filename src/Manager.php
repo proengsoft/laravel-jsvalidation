@@ -36,18 +36,16 @@ class Manager implements Arrayable
      */
     protected $ignore;
 
-
     /**
      * @param JavascriptValidator $validator
-     * @param array $options
+     * @param array               $options
      */
-    public function __construct(JavascriptValidator $validator, $options=[])
+    public function __construct(JavascriptValidator $validator, $options = [])
     {
         $this->validator = $validator;
 
-        $this->selector = empty($options['selector'])?null:$options['selector'];
-        $this->view = empty($options['view'])?null:$options['view'];
-
+        $this->selector = empty($options['selector']) ? null : $options['selector'];
+        $this->view = empty($options['view']) ? null : $options['view'];
     }
 
     /**
@@ -126,7 +124,7 @@ class Manager implements Arrayable
         $data = $this->validator->validationData();
         $data['selector'] = $this->selector;
 
-        if (! is_null($this->ignore)) {
+        if (!is_null($this->ignore)) {
             $data['ignore'] = $this->ignore;
         }
 
@@ -135,7 +133,9 @@ class Manager implements Arrayable
 
     /**
      * Set the form selector to validate.
+     *
      * @param string $selector
+     *
      * @deprecated
      */
     public function setSelector($selector)
@@ -145,7 +145,9 @@ class Manager implements Arrayable
 
     /**
      * Set the form selector to validate.
+     *
      * @param string $selector
+     *
      * @return Manager
      */
     public function selector($selector)
@@ -157,7 +159,9 @@ class Manager implements Arrayable
 
     /**
      * Set the input selector to ignore for validation.
+     *
      * @param string $ignore
+     *
      * @return Manager
      */
     public function ignore($ignore)
@@ -169,7 +173,9 @@ class Manager implements Arrayable
 
     /**
      * Set the view to render Javascript Validations.
+     *
      * @param \Illuminate\Contracts\View\View|string|null $view
+     *
      * @return Manager
      */
     public function view($view)
@@ -180,9 +186,10 @@ class Manager implements Arrayable
     }
 
     /**
-     * Enables or disables remote validations
+     * Enables or disables remote validations.
      *
      * @param bool $enabled
+     *
      * @return Manager
      */
     public function remote($enabled)

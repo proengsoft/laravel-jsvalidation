@@ -10,7 +10,6 @@ use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 
 class JsValidatorFactory
 {
-
     /**
      * The application instance.
      *
@@ -18,20 +17,18 @@ class JsValidatorFactory
      */
     protected $app;
 
-
     /**
-     * Configuration options
+     * Configuration options.
      *
      * @var array
      */
-    protected $options ;
-
+    protected $options;
 
     /**
      * Create a new Validator factory instance.
      *
-     * @param \Illuminate\Contracts\Foundation\Application  $app
-     * @param array $options
+     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param array                                        $options
      */
     public function __construct($app, array $options = [])
     {
@@ -64,6 +61,7 @@ class JsValidatorFactory
     protected function getValidatorInstance(array $rules, array $messages = array(), array $customAttributes = array())
     {
         $factory = $this->app->make(ValidationFactory::class);
+
         return $factory->make([], $rules, $messages, $customAttributes);
     }
 
@@ -79,7 +77,7 @@ class JsValidatorFactory
      */
     public function formRequest($formRequest, $selector = null)
     {
-        if (! is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
+        if (!is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
             throw new FormRequestArgumentException((string) $formRequest);
         }
 
@@ -97,12 +95,13 @@ class JsValidatorFactory
      *  Creates and initializes an Form Request instance.
      *
      * @param string $class
+     *
      * @return FormRequest
      */
     protected function createFormRequest($class)
     {
         $request = $this->app['request'];
-        $formRequest = call_user_func([$class,'createFromBase'], $request);
+        $formRequest = call_user_func([$class, 'createFromBase'], $request);
 
         if ($session = $request->getSession()) {
             $formRequest->setSession($session);
@@ -118,8 +117,8 @@ class JsValidatorFactory
     /**
      * Creates JsValidator instance based on Validator.
      *
-     * @param \Illuminate\Validation\Validator  $validator
-     * @param string|null       $selector
+     * @param \Illuminate\Validation\Validator $validator
+     * @param string|null                      $selector
      *
      * @return Manager
      */
@@ -132,30 +131,28 @@ class JsValidatorFactory
      * Creates JsValidator instance based on Validator.
      *
      * @param \Illuminate\Validation\Validator $validator
-     * @param string|null       $selector
+     * @param string|null                      $selector
      *
      * @return Manager
      */
     protected function jsValidator(Validator $validator, $selector = null)
     {
-
-        $remote = ! $this->options['disable_remote_validation'];
+        $remote = !$this->options['disable_remote_validation'];
         $view = $this->options['view'];
-        $selector = is_null($selector)?$this->options['form_selector']:$selector;
+        $selector = is_null($selector) ? $this->options['form_selector'] : $selector;
 
         $jsValidator = new JavascriptValidator($validator, compact('remote'));
         $jsValidator->setRemoteToken(
             $this->getSessionToken()
         );
 
-        $manager = new Manager($jsValidator, compact('view','selector'));
+        $manager = new Manager($jsValidator, compact('view', 'selector'));
 
         return $manager;
     }
 
-
     /**
-     * Get and encrypt token from session store
+     * Get and encrypt token from session store.
      *
      * @return null|string
      */
@@ -172,6 +169,4 @@ class JsValidatorFactory
 
         return $token;
     }
-
-
 }

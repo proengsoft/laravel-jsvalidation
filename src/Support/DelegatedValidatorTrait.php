@@ -16,7 +16,7 @@ trait DelegatedValidatorTrait
     protected $validator;
 
     /**
-     *  Closure to invoke non accessible Validator methods
+     *  Closure to invoke non accessible Validator methods.
      *
      * @var Closure
      */
@@ -24,7 +24,7 @@ trait DelegatedValidatorTrait
 
     private function callValidator($method, $args = [])
     {
-        return $this->callProtected($this->validatorMethod, $method ,$args);
+        return $this->callProtected($this->validatorMethod, $method, $args);
     }
 
     /**
@@ -68,7 +68,6 @@ trait DelegatedValidatorTrait
         return $this->validator->getRules();
     }
 
-
     /**
      * Get the files under validation.
      *
@@ -82,7 +81,8 @@ trait DelegatedValidatorTrait
     /**
      * Set the files under validation.
      *
-     * @param  array  $files
+     * @param array $files
+     *
      * @return BaseValidator
      */
     public function setFiles(array $files)
@@ -103,7 +103,8 @@ trait DelegatedValidatorTrait
     /**
      * Determine if a given rule implies the attribute is required.
      *
-     * @param  string  $rule
+     * @param string $rule
+     *
      * @return bool
      */
     public function isImplicit($rule)
@@ -114,10 +115,11 @@ trait DelegatedValidatorTrait
     /**
      * Replace all error message place-holders with actual values.
      *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array   $parameters
+     * @param string $message
+     * @param string $attribute
+     * @param string $rule
+     * @param array  $parameters
+     *
      * @return string
      */
     public function doReplacements($message, $attribute, $rule, $parameters)
@@ -128,8 +130,9 @@ trait DelegatedValidatorTrait
     /**
      * Determine if the given attribute has a rule in the given set.
      *
-     * @param  string  $attribute
-     * @param  string|array  $rules
+     * @param string       $attribute
+     * @param string|array $rules
+     *
      * @return bool
      */
     public function hasRule($attribute, $rules)
@@ -140,8 +143,9 @@ trait DelegatedValidatorTrait
     /**
      * Get the validation message for an attribute and rule.
      *
-     * @param  string  $attribute
-     * @param  string  $rule
+     * @param string $attribute
+     * @param string $rule
+     *
      * @return string
      */
     public function getMessage($attribute, $rule)
@@ -152,7 +156,8 @@ trait DelegatedValidatorTrait
     /**
      * Extract the rule name and parameters from a rule.
      *
-     * @param  array|string  $rules
+     * @param array|string $rules
+     *
      * @return array
      */
     public function parseRule($rules)
@@ -188,9 +193,9 @@ trait DelegatedValidatorTrait
     /**
      * Require a certain number of parameters to be present.
      *
-     * @param  int    $count
-     * @param  array  $parameters
-     * @param  string  $rule
+     * @param int    $count
+     * @param array  $parameters
+     * @param string $rule
      *
      * @return mixed
      */
@@ -198,7 +203,6 @@ trait DelegatedValidatorTrait
     {
         return $this->callValidator('requireParameterCount', [$count, $parameters, $rule]);
     }
-
 
     /**
      * Delegate method calls to validator instance.
@@ -214,5 +218,4 @@ trait DelegatedValidatorTrait
 
         return call_user_func_array($arrCaller, $params);
     }
-
 }

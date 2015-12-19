@@ -10,21 +10,21 @@ class JavascriptValidator
     use DelegatedValidatorTrait, JavascriptRulesTrait;
 
     /**
-     * Token used to secure remote validations
+     * Token used to secure remote validations.
      *
      * @var string
      */
     protected $token;
 
     /**
-     * Enable or disable remote validations
+     * Enable or disable remote validations.
      *
      * @var bool
      */
     protected $remote = true;
 
     /**
-     * Rule used to disable validations
+     * Rule used to disable validations.
      *
      * @const string
      */
@@ -34,13 +34,13 @@ class JavascriptValidator
      * Create a new JsValidation instance.
      *
      * @param \Illuminate\Validation\Validator $validator
-     * @param array $options
+     * @param array                            $options
      */
     public function __construct(Validator $validator, $options = [])
     {
         $this->setValidator($validator);
 
-        $this->remote = empty($options['remote'])?true:$options['remote'];;
+        $this->remote = empty($options['remote']) ? true : $options['remote'];
     }
 
     /**
@@ -70,7 +70,7 @@ class JavascriptValidator
      */
     protected function jsConvertRules($attribute, $rules)
     {
-        if (! $this->jsValidationEnabled($attribute)) {
+        if (!$this->jsValidationEnabled($attribute)) {
             return array();
         }
 
@@ -148,7 +148,7 @@ class JavascriptValidator
     {
         $prevFiles = $this->getFiles();
         if ($this->hasRule($attribute, array('Mimes', 'Image'))) {
-            if (! array_key_exists($attribute, $prevFiles)) {
+            if (!array_key_exists($attribute, $prevFiles)) {
                 $newFiles = $prevFiles;
                 $newFiles[$attribute] = false;
                 $this->setFiles($newFiles);
@@ -170,7 +170,7 @@ class JavascriptValidator
      */
     public function jsValidationEnabled($attribute)
     {
-        return ! $this->hasRule($attribute, self::JSVALIDATION_DISABLE);
+        return !$this->hasRule($attribute, self::JSVALIDATION_DISABLE);
     }
 
     /**
@@ -193,6 +193,7 @@ class JavascriptValidator
      * Handles multidimensional attribute names.
      *
      * @param $attribute
+     *
      * @return string
      */
     protected function getJsAttributeName($attribute)
@@ -207,7 +208,7 @@ class JavascriptValidator
 
     /**
      * Set the token  for securing remote validation.
-
+     
      * @param string $token
      */
     public function setRemoteToken($token)
@@ -224,27 +225,28 @@ class JavascriptValidator
     }
 
     /**
-     * Enables the generation of remote rules
+     * Enables the generation of remote rules.
      */
-    public function enableRemote() {
+    public function enableRemote()
+    {
         $this->remote = true;
     }
 
     /**
-     * Disables the generation of remote rules
+     * Disables the generation of remote rules.
      */
-    public function disableRemote() {
+    public function disableRemote()
+    {
         $this->remote = false;
     }
 
     /**
-     * Check if the generation of remote rules is enabled
+     * Check if the generation of remote rules is enabled.
      *
      * @return bool
      */
-    public function remoteEnabled() {
+    public function remoteEnabled()
+    {
         return $this->remote;
     }
-
-
 }

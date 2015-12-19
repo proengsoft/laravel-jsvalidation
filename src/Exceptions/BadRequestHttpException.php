@@ -1,6 +1,7 @@
 <?php
 
 namespace Proengsoft\JsValidation\Exceptions;
+
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException as BaseException;
 
 class BadRequestHttpException extends BaseException
