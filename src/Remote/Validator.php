@@ -1,11 +1,11 @@
 <?php
 
-namespace Proengsoft\JsValidation;
+namespace Proengsoft\JsValidation\Remote;
 
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
-use Illuminate\Validation\Validator;
+use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Exceptions\BadRequestHttpException;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 use Proengsoft\JsValidation\Support\RuleListTrait;
@@ -13,7 +13,7 @@ use Proengsoft\JsValidation\Support\RuleListTrait;
 /**
  * Class RemoteValidator.
  */
-class RemoteValidator
+class Validator
 {
     use AccessProtectedTrait, RuleListTrait;
 
@@ -23,16 +23,16 @@ class RemoteValidator
     const EXTENSION_NAME = 'jsvalidation';
 
     /**
-     * @var Validator
+     * @var \Illuminate\Validation\Validator
      */
     protected $validator;
 
     /**
      * RemoteValidator constructor.
      *
-     * @param Validator $validator
+     * @param \Illuminate\Validation\Validator $validator
      */
-    public function __construct(Validator $validator)
+    public function __construct(BaseValidator $validator)
     {
         $this->validator = $validator;
     }
@@ -86,9 +86,9 @@ class RemoteValidator
      *
      * @param $attribute
      *
-     * @return Validator
+     * @return \Illuminate\Validation\Validator
      */
-    protected function setRemoteValidation($attribute, Validator $validator)
+    protected function setRemoteValidation($attribute, BaseValidator $validator)
     {
         if (!array_key_exists($attribute, $validator->getRules())) {
             throw new BadRequestHttpException("Undefined '$attribute' attribute");

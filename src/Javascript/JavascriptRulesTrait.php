@@ -1,12 +1,9 @@
 <?php
 
-namespace Proengsoft\JsValidation;
-
-use Proengsoft\JsValidation\Support\RuleListTrait;
+namespace Proengsoft\JsValidation\Javascript;
 
 trait JavascriptRulesTrait
 {
-    use RuleListTrait;
 
     /**
      * Handles multidimensional attribute names.
@@ -17,61 +14,6 @@ trait JavascriptRulesTrait
      */
     abstract protected function getJsAttributeName($attribute);
 
-    /**
-     * Gets the token  for securing remote validation.
-     */
-    abstract public function getRemoteToken();
-
-    /**
-     * Get the displayable name of the attribute.
-     *
-     * @param string $attribute
-     *
-     * @return string
-     */
-    abstract public function getAttribute($attribute);
-
-    /**
-     * Get the displayable name of the value.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return string
-     */
-    abstract public function getDisplayableValue($attribute, $value);
-
-    /**
-     * Require a certain number of parameters to be present.
-     *
-     * @param int    $count
-     * @param array  $parameters
-     * @param string $rule
-     *
-     * @return mixed
-     */
-    abstract public function requireParameterCount($count, $parameters, $rule);
-
-    /**
-     * Replace javascript error message place-holders in RequiredIf with actual values.
-     *
-     * @param $attribute
-     * @param $message
-     * @param $parameters
-     *
-     * @return string
-     */
-    public function jsReplaceRequiredIf($attribute, $message, $parameters)
-    {
-        $field = $parameters[0];
-        $data = array($field => $parameters[1]);
-
-        $parameters[0] = $this->getAttribute($field);
-        $parameters[1] = $this->getDisplayableValue($field, array_get($data, $field));
-        $parameters[2] = $this->getAttribute($attribute);
-
-        return str_replace(array(':other', ':value', ':attribute'), $parameters, $message);
-    }
 
     /**
      * Confirmed rule is applied to confirmed attribute.
@@ -99,7 +41,6 @@ trait JavascriptRulesTrait
      */
     protected function jsRuleAfter($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'after');
 
         if (!($date = strtotime($parameters[0]))) {
             $date = $this->getJsAttributeName($parameters[0]);
@@ -118,8 +59,6 @@ trait JavascriptRulesTrait
      */
     protected function jsRuleBefore($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'before');
-
         return $this->jsRuleAfter($attribute, $parameters);
     }
 
@@ -133,8 +72,6 @@ trait JavascriptRulesTrait
      */
     protected function jsRuleSame($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'same');
-
         $other = $this->getJsAttributeName($parameters[0]);
 
         return [$attribute, [$other]];
@@ -150,8 +87,6 @@ trait JavascriptRulesTrait
      */
     protected function jsRuleDifferent($attribute, array $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'different');
-
         return $this->jsRuleSame($attribute, $parameters);
     }
 
@@ -219,50 +154,10 @@ trait JavascriptRulesTrait
      */
     protected function jsRuleRequiredIf($attribute, array $parameters)
     {
-        $this->requireParameterCount(2, $parameters, 'required_if');
-
         $parameters[0] = $this->getJsAttributeName($parameters[0]);
 
         return [$attribute, $parameters];
     }
 
-    /**
-     * Returns Javascript parameters for remote validated rules.
-     *
-     * @param string $attribute
-     * @param $rule
-     * @param $parameters
-     *
-     * @return array
-     */
-    protected function jsClientRule($attribute, $rule, $parameters)
-    {
-        $jsRule = false;
-        $method = "jsRule{$rule}";
-        if (method_exists($this, $method)) {
-            list($attribute, $parameters) = $this->$method($attribute, $parameters);
-            $jsRule = 'laravelValidation';
-        } elseif ($this->jsImplementedRule($rule)) {
-            $jsRule = 'laravelValidation';
-        }
 
-        return [$jsRule, $attribute, $parameters];
-    }
-
-    /**
-     * Returns Javascript parameters for remote validated rules.
-     *
-     * @param string $attribute
-     *
-     * @return array
-     */
-    private function jsRemoteRule($attribute)
-    {
-        $params = [
-            $attribute,
-            $this->getRemoteToken(),
-        ];
-
-        return [$attribute, $params];
-    }
 }

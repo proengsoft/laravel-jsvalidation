@@ -2,6 +2,8 @@
 
 namespace Proengsoft\JsValidation\Support;
 
+use Illuminate\Support\Str;
+
 trait RuleListTrait
 {
     /**
@@ -23,6 +25,13 @@ trait RuleListTrait
      * @var array
      */
     protected $serverRules = ['ActiveUrl', 'Exists', 'Unique'];
+
+    /**
+     * Rules applyed to files
+     *
+     * @var array
+     */
+    protected $fileRules = ['Image', 'Mimes'];
 
     /**
      * Rule used to disable validations.
@@ -78,5 +87,16 @@ trait RuleListTrait
     public function validationDisabled($rules)
     {
         return in_array($this->disableJsValidationRule, $rules);
+    }
+
+    /**
+     * Check if rules is for input file type
+     *
+     * @param $rule
+
+     * @return bool
+     */
+    public function isFileRule($rule) {
+        return in_array($this->fileRules, $rule);
     }
 }

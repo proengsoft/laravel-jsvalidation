@@ -7,6 +7,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
+use Proengsoft\JsValidation\Javascript\MessageParser;
+use Proengsoft\JsValidation\Javascript\RuleParser;
+use Proengsoft\JsValidation\Support\DelegatedValidator;
+use Proengsoft\JsValidation\Javascript\JavascriptValidator;
+use Proengsoft\JsValidation\Javascript\ValidatorParser;
 
 class JsValidatorFactory
 {
@@ -62,7 +67,10 @@ class JsValidatorFactory
     {
         $factory = $this->app->make(ValidationFactory::class);
 
-        return $factory->make([], $rules, $messages, $customAttributes);
+        $validator = $factory->make([], $rules, $messages, $customAttributes);
+        $validator->addCustomAttributes($customAttributes);
+
+        return $validator;
     }
 
     /**
@@ -71,7 +79,7 @@ class JsValidatorFactory
      * @param $formRequest
      * @param null $selector
      *
-     * @return Manager
+     * @return JavascriptValidator
      *
      * @throws FormRequestArgumentException
      */
@@ -86,6 +94,7 @@ class JsValidatorFactory
         }
 
         $rules = method_exists($formRequest, 'rules') ? $formRequest->rules() : [];
+
         $validator = $this->getValidatorInstance($rules, $formRequest->messages(), $formRequest->attributes());
 
         return $this->jsValidator($validator, $selector);
@@ -120,7 +129,7 @@ class JsValidatorFactory
      * @param \Illuminate\Validation\Validator $validator
      * @param string|null                      $selector
      *
-     * @return Manager
+     * @return JavascriptValidator
      */
     public function validator(Validator $validator, $selector = null)
     {
@@ -133,7 +142,7 @@ class JsValidatorFactory
      * @param \Illuminate\Validation\Validator $validator
      * @param string|null                      $selector
      *
-     * @return Manager
+     * @return JavascriptValidator
      */
     protected function jsValidator(Validator $validator, $selector = null)
     {
@@ -141,12 +150,13 @@ class JsValidatorFactory
         $view = $this->options['view'];
         $selector = is_null($selector) ? $this->options['form_selector'] : $selector;
 
-        $jsValidator = new JavascriptValidator($validator, compact('remote'));
-        $jsValidator->setRemoteToken(
-            $this->getSessionToken()
-        );
+        $delegated = new DelegatedValidator($validator);
+        $rules = new RuleParser($delegated, $this->getSessionToken());
+        $messages = new MessageParser($delegated);
 
-        $manager = new Manager($jsValidator, compact('view', 'selector'));
+        $jsValidator = new ValidatorParser($rules, $messages);
+
+        $manager = new JavascriptValidator($jsValidator, compact('view', 'selector', 'remote'));
 
         return $manager;
     }

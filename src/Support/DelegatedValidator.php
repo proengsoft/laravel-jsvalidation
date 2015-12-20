@@ -5,7 +5,7 @@ namespace Proengsoft\JsValidation\Support;
 use Closure;
 use Illuminate\Validation\Validator as BaseValidator;
 
-trait DelegatedValidatorTrait
+class DelegatedValidator
 {
     use AccessProtectedTrait;
     /**
@@ -21,6 +21,18 @@ trait DelegatedValidatorTrait
      * @var Closure
      */
     protected $validatorMethod;
+
+
+    /**
+     * DelegatedValidator constructor.
+     * @param \Illuminate\Validation\Validator $validator
+     */
+    public function __construct(BaseValidator $validator )
+    {
+
+        $this->validator = $validator;
+        $this->validatorMethod = $this->createProtectedCaller($validator);
+    }
 
     private function callValidator($method, $args = [])
     {
@@ -38,17 +50,6 @@ trait DelegatedValidatorTrait
     }
 
     /**
-     * Set Validation instance used to get rules and messages.
-     *
-     * @param \Illuminate\Validation\Validator $validator
-     */
-    public function setValidator(BaseValidator $validator)
-    {
-        $this->validator = $validator;
-        $this->validatorMethod = $this->createProtectedCaller($validator);
-    }
-
-    /**
      * Get the data under validation.
      *
      * @return array
@@ -56,6 +57,16 @@ trait DelegatedValidatorTrait
     public function getData()
     {
         return $this->validator->getData();
+    }
+
+    /**
+     * Set the data under validation.
+     *
+     * @param array
+     */
+    public function setData($data)
+    {
+        $this->validator->setData($data);
     }
 
     /**
@@ -90,15 +101,6 @@ trait DelegatedValidatorTrait
         return $this->validator->setFiles($files);
     }
 
-    /**
-     * Get the array of custom validator message replacers.
-     *
-     * @return array
-     */
-    public function getReplacers()
-    {
-        return $this->validator->getReplacers();
-    }
 
     /**
      * Determine if a given rule implies the attribute is required.
@@ -165,44 +167,6 @@ trait DelegatedValidatorTrait
         return $this->callValidator('parseRule', [$rules]);
     }
 
-    /**
-     * Get the displayable name of the value.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return string
-     */
-    public function getDisplayableValue($attribute, $value)
-    {
-        return $this->callValidator('getDisplayableValue', [$attribute, $value]);
-    }
-
-    /**
-     * Get the displayable name of the attribute.
-     *
-     * @param string $attribute
-     *
-     * @return string
-     */
-    public function getAttribute($attribute)
-    {
-        return $this->callValidator('getAttribute', [$attribute]);
-    }
-
-    /**
-     * Require a certain number of parameters to be present.
-     *
-     * @param int    $count
-     * @param array  $parameters
-     * @param string $rule
-     *
-     * @return mixed
-     */
-    public function requireParameterCount($count, $parameters, $rule)
-    {
-        return $this->callValidator('requireParameterCount', [$count, $parameters, $rule]);
-    }
 
     /**
      * Delegate method calls to validator instance.

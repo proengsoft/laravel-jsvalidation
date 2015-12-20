@@ -1,13 +1,13 @@
 <?php
 
-namespace Proengsoft\JsValidation;
+namespace Proengsoft\JsValidation\Remote;
 
 use Closure;
 use Illuminate\Contracts\Validation\Factory;
-use Illuminate\Validation\Validator;
+use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
-class RemoteResolver
+class Resolver
 {
     use AccessProtectedTrait;
 
@@ -61,11 +61,11 @@ class RemoteResolver
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)
     {
         if (is_null($this->resolver)) {
-            $validator = new Validator($translator, $data, $rules, $messages, $customAttributes);
+            $validator = new BaseValidator($translator, $data, $rules, $messages, $customAttributes);
         } else {
             $validator = call_user_func($this->resolver, $translator, $data, $rules, $messages, $customAttributes);
         }
-        $validator->sometimes($field, RemoteValidator::EXTENSION_NAME, function () {
+        $validator->sometimes($field, Validator::EXTENSION_NAME, function () {
             return true;
         });
 
@@ -80,7 +80,7 @@ class RemoteResolver
     public function validator()
     {
         return function ($attribute, $value, $parameters, $validator) {
-            $remoteValidator = new RemoteValidator($validator);
+            $remoteValidator = new Validator($validator);
             $remoteValidator->validate($attribute, $value, $parameters);
         };
     }
