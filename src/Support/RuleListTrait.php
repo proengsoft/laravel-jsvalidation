@@ -47,7 +47,7 @@ trait RuleListTrait
      *
      * @return bool
      */
-    public function jsImplementedRule($rule)
+    protected function jsImplementedRule($rule)
     {
         return in_array($rule, $this->clientRules) || in_array($rule, $this->serverRules);
     }
@@ -59,7 +59,7 @@ trait RuleListTrait
      *
      * @return bool
      */
-    public function isRemoteRule($rule)
+    protected function isRemoteRule($rule)
     {
         return in_array($rule, $this->serverRules) ||
             !in_array($rule, $this->clientRules);
@@ -72,7 +72,7 @@ trait RuleListTrait
      *
      * @return bool
      */
-    public function isDisableRule($rule)
+    protected function isDisableRule($rule)
     {
         return $rule === $this->disableJsValidationRule;
     }
@@ -84,7 +84,7 @@ trait RuleListTrait
      *
      * @return bool
      */
-    public function validationDisabled($rules)
+    protected function validationDisabled($rules)
     {
         return in_array($this->disableJsValidationRule, $rules);
     }
@@ -96,7 +96,7 @@ trait RuleListTrait
 
      * @return bool
      */
-    public function isFileRule($rule) {
+    protected function isFileRule($rule) {
         return in_array($this->fileRules, $rule);
     }
 }

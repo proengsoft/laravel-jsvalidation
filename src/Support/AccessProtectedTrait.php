@@ -48,7 +48,7 @@ trait AccessProtectedTrait
      *
      * @return mixed
      */
-    public function callProtected($instance, $method, $args = [])
+    protected function callProtected($instance, $method, $args = [])
     {
         if (!($instance instanceof Closure)) {
             $instance = $this->createProtectedCaller($instance);
