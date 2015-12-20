@@ -52,28 +52,45 @@ class MessageParser
      * @return array
      */
     protected function fakeValidationData($attribute, $rule, $parameters) {
+        $files = $this->validator->getFiles();
+        $data = $this->validator->getData();
 
-        $data = $this->validator->getFiles();
-        $files = $this->validator->getData();
+        $this->fakeFileData($files, $attribute);
+        $this->fakeRequiredIfData($data, $rule, $parameters);
 
-        if (array_key_exists($attribute, $data) ||array_key_exists($attribute, $files)) {
-            return compact('data', 'files');
-        }
+        return compact('data', 'files');
 
+    }
+
+    /**
+     * Generate fake data to get RequiredIf message
+     *
+     * @param $data
+     * @param $rule
+     * @param $parameters
+     */
+    private function fakeRequiredIfData($data, $rule, $parameters) {
         if ($rule == 'RequiredIf') {
+
             $newData = $data;
             $newData[$parameters[0]] = $parameters[1];
             $this->validator->setData($newData);
         }
+    }
+
+    /**
+     * Generate fake data to get file type messages
+     *
+     * @param $files
+     * @param $attribute
+     */
+    private function fakeFileData($files, $attribute) {
 
         if ($this->validator->hasRule($attribute, array('Mimes', 'Image'))) {
             $newFiles = $files;
             $newFiles[$attribute] = false;
             $this->validator->setFiles($newFiles);
         }
-
-        return compact('data', 'files');
-
     }
 
     /**

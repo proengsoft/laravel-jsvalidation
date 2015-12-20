@@ -54,8 +54,8 @@ class Validator
      */
     protected function parseJsRemoteRequest($attribute, $value, $parameters)
     {
-        $attr_parts = array();
         parse_str("$value=", $attr_parts);
+        $attr_parts = is_null($attr_parts)?[]:$attr_parts;
         $newAttr = array_keys(Arr::dot($attr_parts));
 
         return [$attribute, array_pop($newAttr), $parameters];
@@ -95,6 +95,18 @@ class Validator
         }
 
         $rules = $validator->getRules()[$attribute];
+        $rules = $this->purgeNonRemoteRules($rules, $validator);
+        $validator->setRules([$attribute => $rules]);
+
+        if (empty($validator->getRules())) {
+            throw new BadRequestHttpException("No validations available for '$attribute''");
+        }
+
+        return $validator;
+    }
+
+
+    protected function purgeNonRemoteRules($rules, $validator) {
         $disabled = $this->validationDisabled($rules);
         $protectedValidator = $this->createProtectedCaller($validator);
 
@@ -104,12 +116,6 @@ class Validator
                 unset($rules[$i]);
             }
         }
-        $validator->setRules([$attribute => $rules]);
-
-        if (empty($validator->getRules())) {
-            throw new BadRequestHttpException("No validations available for '$attribute''");
-        }
-
-        return $validator;
+        return $rules;
     }
 }

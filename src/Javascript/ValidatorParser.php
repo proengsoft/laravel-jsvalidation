@@ -83,7 +83,7 @@ class ValidatorParser
         foreach ($rules as $rawRule) {
             list($rule, $parameters) = $this->validator->parseRule($rawRule);
             list($jsAttribute, $jsRule, $jsParams) = $this->rules->getJsRule($attribute, $rule, $parameters);
-            if ($jsRule && ($includeRemote || $jsRule != RuleParser::REMOTE_RULE)) {
+            if ($this->isValidatable($jsRule, $includeRemote)) {
                 $jsRules[$jsAttribute][$jsRule][] = array($rule, $jsParams,
                     $this->messages->getJsMessage($attribute, $rule, $parameters),
                     $this->validator->isImplicit($rule),
@@ -92,6 +92,17 @@ class ValidatorParser
         }
 
         return $jsRules;
+    }
+
+    /**
+     * Check if rule should be validated with javascript
+     *
+     * @param $jsRule
+     * @param $includeRemote
+     * @return bool
+     */
+    protected function isValidatable($jsRule, $includeRemote) {
+        return ($jsRule && ($includeRemote || $jsRule != RuleParser::REMOTE_RULE));
     }
 
 
