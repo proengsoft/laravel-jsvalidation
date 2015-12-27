@@ -11,7 +11,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Registered validator instance.
      *
-     * @var \Proengsoft\JsValidation\Javascript\ValidatorParser
+     * @var \Proengsoft\JsValidation\Javascript\ValidatorHandler
      */
     protected $validator;
 
@@ -44,10 +44,10 @@ class JavascriptValidator implements Arrayable
     protected $ignore;
 
     /**
-     * @param ValidatorParser $validator
+     * @param ValidatorHandler $validator
      * @param array               $options
      */
-    public function __construct(ValidatorParser $validator, $options = [])
+    public function __construct(ValidatorHandler $validator, $options = [])
     {
         $this->validator = $validator;
         $this->setDefaults($options);

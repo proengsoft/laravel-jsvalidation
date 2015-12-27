@@ -40,7 +40,10 @@ class Validator
     public function validate($attribute, $value, $parameters)
     {
         $validationData = $this->parseJsRemoteRequest($attribute, $value, $parameters);
-        $this->validateJsRemoteRequest($validationData[1]);
+        $validationResult = $this->validateJsRemoteRequest($validationData[1]);
+        throw new HttpResponseException(
+            new JsonResponse($validationResult, 200));
+
     }
 
     /**
@@ -49,7 +52,6 @@ class Validator
      * @param $attribute
      * @param $value
      * @param $parameters
-     *
      * @return array
      */
     protected function parseJsRemoteRequest($attribute, $value, $parameters)
@@ -65,6 +67,7 @@ class Validator
      * Validate remote Javascript Validations.
      *
      * @param $attribute
+     * @return array|bool
      */
     protected function validateJsRemoteRequest($attribute)
     {
@@ -72,13 +75,10 @@ class Validator
         $validator = $this->setRemoteValidation($attribute, $validator);
 
         if ($validator->passes()) {
-            $message = true;
-        } else {
-            $message = $validator->messages()->get($attribute);
+            return true;
         }
+        return $validator->messages()->get($attribute);
 
-        throw new HttpResponseException(
-            new JsonResponse($message, 200));
     }
 
     /**
@@ -98,8 +98,8 @@ class Validator
         $rules = $this->purgeNonRemoteRules($rules, $validator);
         $validator->setRules([$attribute => $rules]);
 
-        if (empty($validator->getRules())) {
-            throw new BadRequestHttpException("No validations available for '$attribute''");
+        if (empty($validator->getRules()[$attribute])) {
+            throw new BadRequestHttpException("No validations available for '$attribute'");
         }
 
         return $validator;

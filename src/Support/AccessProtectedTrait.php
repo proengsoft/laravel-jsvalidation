@@ -7,7 +7,7 @@ use Closure;
 trait AccessProtectedTrait
 {
     /**
-     * Calls inaccessible validator method.
+     * Create closure to call inaccessible method.
      *
      * @param $instance
      *
@@ -23,7 +23,7 @@ trait AccessProtectedTrait
     }
 
     /**
-     * Calls inaccessible validator method.
+     * Gets inaccessible property.
      *
      * @param $instance
      * @param $property
@@ -40,7 +40,7 @@ trait AccessProtectedTrait
     }
 
     /**
-     * Calls inaccessible validator method.
+     * Calls inaccessible method.
      *
      * @param object|Closure $instance
      * @param $method

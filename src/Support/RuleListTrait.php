@@ -47,7 +47,7 @@ trait RuleListTrait
      *
      * @return bool
      */
-    protected function jsImplementedRule($rule)
+    protected function isImplemented($rule)
     {
         return in_array($rule, $this->clientRules) || in_array($rule, $this->serverRules);
     }
@@ -97,6 +97,6 @@ trait RuleListTrait
      * @return bool
      */
     protected function isFileRule($rule) {
-        return in_array($this->fileRules, $rule);
+        return in_array($rule, $this->fileRules);
     }
 }

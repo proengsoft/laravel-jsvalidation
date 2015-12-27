@@ -27,7 +27,7 @@ class MessageParser
      *
      * @return mixed
      */
-    public function getJsMessage($attribute, $rule, $parameters)
+    public function getMessage($attribute, $rule, $parameters)
     {
 
         $data = $this->fakeValidationData($attribute, $rule, $parameters);
@@ -70,12 +70,12 @@ class MessageParser
      * @param $parameters
      */
     private function fakeRequiredIfData($data, $rule, $parameters) {
-        if ($rule == 'RequiredIf') {
+        if ($rule != 'RequiredIf') return;
 
-            $newData = $data;
-            $newData[$parameters[0]] = $parameters[1];
-            $this->validator->setData($newData);
-        }
+        $newData = $data;
+        $newData[$parameters[0]] = $parameters[1];
+        $this->validator->setData($newData);
+
     }
 
     /**
@@ -85,12 +85,12 @@ class MessageParser
      * @param $attribute
      */
     private function fakeFileData($files, $attribute) {
+        if (! $this->validator->hasRule($attribute, array('Mimes', 'Image'))) return;
 
-        if ($this->validator->hasRule($attribute, array('Mimes', 'Image'))) {
-            $newFiles = $files;
-            $newFiles[$attribute] = false;
-            $this->validator->setFiles($newFiles);
-        }
+        $newFiles = $files;
+        $newFiles[$attribute] = false;
+        $this->validator->setFiles($newFiles);
+
     }
 
     /**

@@ -14,6 +14,11 @@ class RuleParser
      * Rule used to validate remote requests
      */
     const REMOTE_RULE = 'laravelValidationRemote';
+
+    /**
+     * Rule used to validate javascript fields
+     */
+    const JAVASCRIPT_RULE = 'laravelValidation';
     
 
     /**
@@ -45,29 +50,19 @@ class RuleParser
      *
      * @return array
      */
-    public function getJsRule($attribute, $rule, $parameters)
+    public function getRule($attribute, $rule, $parameters)
     {
 
         if ($this->isRemoteRule($rule)) {
-            list($attribute, $parameters) = $this->jsRemoteRule($attribute);
+            list($attribute, $parameters) = $this->remoteRule($attribute);
             $jsRule = self::REMOTE_RULE;
         } else {
-            list($jsRule, $attribute, $parameters) = $this->jsClientRule($attribute, $rule, $parameters);
+            list($jsRule, $attribute, $parameters) = $this->clientRule($attribute, $rule, $parameters);
         }
 
-        $attribute = $this->getJsAttributeName($attribute);
+        $attribute = $this->getAttributeName($attribute);
 
         return [$attribute, $jsRule, $parameters];
-    }
-
-    /**
-     * Parses raw rule
-     *
-     * @param array|string $rawRule
-     * @return array
-     */
-    public function parseRaw($rawRule) {
-        return $this->validator->parseRule($rawRule);
     }
 
     /**
@@ -88,15 +83,13 @@ class RuleParser
      *
      * @return array
      */
-    protected function jsClientRule($attribute, $rule, $parameters)
+    protected function clientRule($attribute, $rule, $parameters)
     {
-        $jsRule = false;
-        $method = "jsRule{$rule}";
+        $jsRule = self::JAVASCRIPT_RULE;
+        $method = "rule{$rule}";
+
         if (method_exists($this, $method)) {
             list($attribute, $parameters) = $this->$method($attribute, $parameters);
-            $jsRule = 'laravelValidation';
-        } elseif ($this->jsImplementedRule($rule)) {
-            $jsRule = 'laravelValidation';
         }
 
         return [$jsRule, $attribute, $parameters];
@@ -109,7 +102,7 @@ class RuleParser
      *
      * @return array
      */
-    protected function jsRemoteRule($attribute)
+    protected function remoteRule($attribute)
     {
         $params = [
             $attribute,
@@ -126,7 +119,7 @@ class RuleParser
      *
      * @return string
      */
-    protected function getJsAttributeName($attribute)
+    protected function getAttributeName($attribute)
     {
         $attributeArray = explode('.', $attribute);
         if (count($attributeArray) > 1) {

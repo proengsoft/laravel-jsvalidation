@@ -10,7 +10,7 @@ use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Javascript\RuleParser;
-use Proengsoft\JsValidation\Javascript\ValidatorParser;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 
 class JsValidatorFactory
@@ -18,7 +18,7 @@ class JsValidatorFactory
     /**
      * The application instance.
      *
-     * @var \Illuminate\Contracts\Foundation\Application
+     * @var \Illuminate\Contracts\Container\Container
      */
     protected $app;
 
@@ -32,7 +32,7 @@ class JsValidatorFactory
     /**
      * Create a new Validator factory instance.
      *
-     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param \Illuminate\Contracts\Container\Container $app
      * @param array                                        $options
      */
     public function __construct($app, array $options = [])
@@ -154,7 +154,7 @@ class JsValidatorFactory
         $rules = new RuleParser($delegated, $this->getSessionToken());
         $messages = new MessageParser($delegated);
 
-        $jsValidator = new ValidatorParser($rules, $messages);
+        $jsValidator = new ValidatorHandler($rules, $messages);
 
         $manager = new JavascriptValidator($jsValidator, compact('view', 'selector', 'remote'));
 

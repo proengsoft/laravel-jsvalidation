@@ -12,7 +12,7 @@ trait JavascriptRulesTrait
      *
      * @return string
      */
-    abstract protected function getJsAttributeName($attribute);
+    abstract protected function getAttributeName($attribute);
 
 
     /**
@@ -23,9 +23,9 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleConfirmed($attribute, array $parameters)
+    protected function ruleConfirmed($attribute, array $parameters)
     {
-        $parameters[0] = $this->getJsAttributeName($attribute);
+        $parameters[0] = $this->getAttributeName($attribute);
         $attribute = "{$attribute}_confirmation";
 
         return [$attribute, $parameters];
@@ -39,11 +39,11 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleAfter($attribute, array $parameters)
+    protected function ruleAfter($attribute, array $parameters)
     {
 
         if (!($date = strtotime($parameters[0]))) {
-            $date = $this->getJsAttributeName($parameters[0]);
+            $date = $this->getAttributeName($parameters[0]);
         }
 
         return [$attribute, [$date]];
@@ -57,9 +57,9 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleBefore($attribute, array $parameters)
+    protected function ruleBefore($attribute, array $parameters)
     {
-        return $this->jsRuleAfter($attribute, $parameters);
+        return $this->ruleAfter($attribute, $parameters);
     }
 
     /**
@@ -70,9 +70,9 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleSame($attribute, array $parameters)
+    protected function ruleSame($attribute, array $parameters)
     {
-        $other = $this->getJsAttributeName($parameters[0]);
+        $other = $this->getAttributeName($parameters[0]);
 
         return [$attribute, [$other]];
     }
@@ -85,9 +85,9 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleDifferent($attribute, array $parameters)
+    protected function ruleDifferent($attribute, array $parameters)
     {
-        return $this->jsRuleSame($attribute, $parameters);
+        return $this->ruleSame($attribute, $parameters);
     }
 
     /**
@@ -98,9 +98,9 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleRequiredWith($attribute, array $parameters)
+    protected function ruleRequiredWith($attribute, array $parameters)
     {
-        $parameters = array_map([$this, 'getJsAttributeName'], $parameters);
+        $parameters = array_map([$this, 'getAttributeName'], $parameters);
 
         return [$attribute, $parameters];
     }
@@ -113,9 +113,9 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleRequiredWithAll($attribute, array $parameters)
+    protected function ruleRequiredWithAll($attribute, array $parameters)
     {
-        return $this->jsRuleRequiredWith($attribute, $parameters);
+        return $this->ruleRequiredWith($attribute, $parameters);
     }
 
     /**
@@ -126,9 +126,9 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleRequiredWithout($attribute, array $parameters)
+    protected function ruleRequiredWithout($attribute, array $parameters)
     {
-        return $this->jsRuleRequiredWith($attribute, $parameters);
+        return $this->ruleRequiredWith($attribute, $parameters);
     }
 
     /**
@@ -139,9 +139,9 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleRequiredWithoutAll($attribute, array $parameters)
+    protected function ruleRequiredWithoutAll($attribute, array $parameters)
     {
-        return $this->jsRuleRequiredWith($attribute, $parameters);
+        return $this->ruleRequiredWith($attribute, $parameters);
     }
 
     /**
@@ -152,9 +152,9 @@ trait JavascriptRulesTrait
      *
      * @return array
      */
-    protected function jsRuleRequiredIf($attribute, array $parameters)
+    protected function ruleRequiredIf($attribute, array $parameters)
     {
-        $parameters[0] = $this->getJsAttributeName($parameters[0]);
+        $parameters[0] = $this->getAttributeName($parameters[0]);
 
         return [$attribute, $parameters];
     }
