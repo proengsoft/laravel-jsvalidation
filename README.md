@@ -16,18 +16,19 @@
 [Validation]: http://laravel.com/docs/5.1/validation
 [Custom Validation Rules]: http://laravel.com/docs/5.1/validation#custom-validation-rules
 
-**Laravel Javascript Validation** allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to validate forms transparently in client side **without need to write any Javascript code or use HTML Builder Class**. You can validate forms automatically
- referencing it to your defined validations. The messages are loaded from your validators and translated according your Localization preferences.
+**Laravel Javascript Validation** allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to automatically validate forms on the client side **without need to write any Javascript code or use HTML Builder Class**.
+You can validate forms automatically referencing it to your defined validations. The messages are loaded from your validators and translated according your Localization preferences.
  
-**All Laravel [Validation Rules][]  and [Custom Validation Rules][] are supported**. [ActiveURL](http://laravel.com/docs/5.1/validation#rule-active-url),
-[Unique](http://laravel.com/docs/5.1/validation#rule-unique), [Exists](http://laravel.com/docs/5.1/validation#rule-exists) and [Custom Validation Rules][]
-are validated automatically via Ajax.
+All Laravel [Validation Rules][], [Custom Validation Rules][] or otherare supported**.
+[ActiveURL](http://laravel.com/docs/5.1/validation#rule-active-url),
+[Unique](http://laravel.com/docs/5.1/validation#rule-unique), [Exists](http://laravel.com/docs/5.1/validation#rule-exists), [Custom Validation Rules][]
+and validations provided by other packages are validated automatically via Ajax. The other Laravel [Validation Rules][] are validated 
+using [JQuery Validation Plugin][] provided with this package.
 
-The [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference) created by the [Facade](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade) inherits from [Laravel Validation](http://laravel.com/docs/5.0/validation), so you can use all methods and procedures that Laravel provides to
+The [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference) created by the [Facade](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade) allows to use all methods and procedures that Laravel provides to
 setup your validations. Also class and rule syntax are the same that Laravel Validation class implements. When the instance is printed in a 
 view the Javascript code needed to validate your form is rendered to the page.
 
-The Javascript validations are made using [JQuery Validation Plugin][], that is compiled into javascript in the package.
 
 ##### Upgrade notice
 
@@ -37,7 +38,7 @@ sure that your Javascript assets are updated correctly.**
 
 ##### Known issues
 - DateFormat rule don't support timezone format 
-- Other validation packages are not supported yet.
+- Extra fields in remote rules are not supported. Issue #88
 
 ### Documentation
 

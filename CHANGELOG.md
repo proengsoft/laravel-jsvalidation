@@ -1,9 +1,19 @@
-## dev-master
+## 1.3.0 (2015-12-29)
 
 Features:
  - Add ignore method to override default configuration
  - Add remote_validation_field config option
  - Allow using with other validation packages
+ 
+
+Bugfixes:
+
+ - Issues resolved:
+    - Critical error with numeric min & max values #98 
+    - Error when using FormRequest validation #96
+    - Conflict with other Laravel funcionality ? #90
+    - Multiple Instances of JSValidation #87
+    - Error when using FormRequest validation #96 
 
 
 ## 1.2.0 (2015-09-30)
