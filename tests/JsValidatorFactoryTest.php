@@ -4,25 +4,6 @@ namespace Proengsoft\JsValidation;
 use Mockery as m;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 
-class MockFormRequest /*extends \Illuminate\Foundation\Http\FormRequest */ {
-
-
-    public function rules () {}
-
-    public static function createFromBase(\Symfony\Component\HttpFoundation\Request $request) {
-        $mockedRequest = m::mock('\Symfony\Component\HttpFoundation\Request');
-        $mockedRequest->shouldReceive('all')->andReturn([])
-            ->shouldReceive('setUserResolver')
-            ->shouldReceive('setRouteResolver')
-            ->shouldReceive('messages')->andReturn([])
-            ->shouldReceive('attributes')->andReturn([])
-            ->shouldReceive('setSession');
-
-        return $mockedRequest;
-
-    }
-
-}
 class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
 

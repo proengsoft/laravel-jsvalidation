@@ -44,6 +44,8 @@ class JsValidatorFactory
         $options['disable_remote_validation'] = empty($options['disable_remote_validation'])?false:$options['disable_remote_validation'];
         $options['view'] = empty($options['view'])?'jsvalidation:bootstrap':$options['view'];
         $options['form_selector'] = empty($options['form_selector'])?'form':$options['form_selector'];
+
+        $this->options = $options;
     }
 
 
