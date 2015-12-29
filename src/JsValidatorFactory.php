@@ -2,7 +2,6 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
@@ -72,7 +71,7 @@ class JsValidatorFactory
      */
     protected function getValidatorInstance(array $rules, array $messages = array(), array $customAttributes = array())
     {
-        $factory = $this->app->make(ValidationFactory::class);
+        $factory = $this->app->make('Illuminate\Contracts\Validation\Factory');
 
         $validator = $factory->make([], $rules, $messages, $customAttributes);
         $validator->addCustomAttributes($customAttributes);

@@ -16,7 +16,7 @@ class JsValidationServiceProvider extends ServiceProvider
         $this->publishAssets();
 
         if ($this->app['config']->get('jsvalidation.disable_remote_validation') === false) {
-            $this->app['Illuminate\Contracts\Http\Kernel']->pushMiddleware(RemoteValidationMiddleware::class);
+            $this->app['Illuminate\Contracts\Http\Kernel']->pushMiddleware('Proengsoft\JsValidation\RemoteValidationMiddleware');
         }
     }
 
