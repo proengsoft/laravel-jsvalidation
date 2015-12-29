@@ -1,17 +1,17 @@
 <?php
 
-namespace Proengsoft\JsValidation;
+namespace Proengsoft\JsValidation\Javascript;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\View;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
-class Manager implements Arrayable
+class JavascriptValidator implements Arrayable
 {
     /**
      * Registered validator instance.
      *
-     * @var \Proengsoft\JsValidation\Validator
+     * @var \Proengsoft\JsValidation\Javascript\ValidatorHandler
      */
     protected $validator;
 
@@ -30,6 +30,13 @@ class Manager implements Arrayable
     protected $view;
 
     /**
+     * Enable or disable remote validations.
+     *
+     * @var bool
+     */
+    protected $remote;
+
+    /**
      * 'ignore' option for jQuery Validation Plugin.
      *
      * @var string
@@ -37,23 +44,25 @@ class Manager implements Arrayable
     protected $ignore;
 
     /**
-     * @param string $selector
-     * @param string $view
+     * @param ValidatorHandler $validator
+     * @param array               $options
      */
-    public function __construct($selector, $view)
+    public function __construct(ValidatorHandler $validator, $options = [])
     {
-        $this->selector = $selector;
-        $this->view = $view;
+        $this->validator = $validator;
+        $this->setDefaults($options);
     }
 
     /**
-     * Set Validation instance used to get rules and messages.
+     * Set default parameters.
      *
-     * @param Validator $validator
+     * @param $options
      */
-    public function setValidator(Validator $validator)
+    protected function setDefaults($options)
     {
-        $this->validator = $validator;
+        $this->selector = empty($options['selector']) ? 'form' : $options['selector'];
+        $this->view = empty($options['view']) ? 'jsvalidation::bootstrap' : $options['view'];
+        $this->remote = empty($options['remote']) ? true : $options['remote'];
     }
 
     /**
@@ -119,7 +128,7 @@ class Manager implements Arrayable
      */
     protected function getViewData()
     {
-        $data = $this->validator->validationData();
+        $data = $this->validator->validationData($this->remote);
         $data['selector'] = $this->selector;
 
         if (! is_null($this->ignore)) {
@@ -131,7 +140,9 @@ class Manager implements Arrayable
 
     /**
      * Set the form selector to validate.
+     *
      * @param string $selector
+     *
      * @deprecated
      */
     public function setSelector($selector)
@@ -141,8 +152,10 @@ class Manager implements Arrayable
 
     /**
      * Set the form selector to validate.
+     *
      * @param string $selector
-     * @return Manager
+     *
+     * @return JavascriptValidator
      */
     public function selector($selector)
     {
@@ -153,8 +166,10 @@ class Manager implements Arrayable
 
     /**
      * Set the input selector to ignore for validation.
+     *
      * @param string $ignore
-     * @return Manager
+     *
+     * @return JavascriptValidator
      */
     public function ignore($ignore)
     {
@@ -165,12 +180,28 @@ class Manager implements Arrayable
 
     /**
      * Set the view to render Javascript Validations.
+     *
      * @param \Illuminate\Contracts\View\View|string|null $view
-     * @return Manager
+     *
+     * @return JavascriptValidator
      */
     public function view($view)
     {
         $this->view = is_null($view) ? $this->view : $view;
+
+        return $this;
+    }
+
+    /**
+     * Enables or disables remote validations.
+     *
+     * @param bool|null $enabled
+     *
+     * @return JavascriptValidator
+     */
+    public function remote($enabled = true)
+    {
+        $this->remote = $enabled;
 
         return $this;
     }

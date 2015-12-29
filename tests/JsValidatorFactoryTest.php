@@ -1,174 +1,276 @@
 <?php
 
-namespace Proengsoft\JsValidation\Test {
-    require_once dirname(__FILE__) . '/stubs/Factory.php';
-    require_once dirname(__FILE__) . '/stubs/Application.php';
+namespace Proengsoft\JsValidation\Tests;
+use Mockery as m;
+use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
+use Proengsoft\JsValidation\JsValidatorFactory;
 
-    use Mockery as m;
-    use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
-    use Proengsoft\JsValidation\Factory;
-    use Proengsoft\JsValidation\JsValidatorFactory;
+require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
 
+class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
+{
 
-    class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase {
-
-
-        public $mockedFactory;
-        public $mockedValidator;
-        public $factory;
-        public $mockedJs;
-        public $mockedApp;
-        /**
-         * @var m\Mock
-         */
-        public  $mockedRequest;
+    public function testMake() {
+        $rules=['name'=>'required'];
+        $messages = [];
+        $customAttributes = [];
+        $selector = null;
 
 
-        public function tearDown()
-        {
-            m::close();
-            unset($this->mockedFactory);
-            unset($this->mockedValidator);
-            unset($this->factory);
-            unset($this->mockedJs);
-            unset($this->mockedRequest);
-            unset($this->mockedApp);
-        }
+        $mockValidator = $this->getMock(
+            '\Illuminate\Validation\Validator',['addCustomAttributes'],
+            [], '', false
+        );
+        $mockValidator->expects($this->once())
+            ->method('addCustomAttributes')
+            ->with($customAttributes);
 
 
-        public function setUp() {
-
-            //$this->mockedApp=m::mock('\Illuminate\Contracts\Foundation\Application');
-            $this->mockedApp= new \Application();
-            $this->mockedFactory =  m::mock('Proengsoft\JsValidation\Factory');
-            $this->mockedJs= m::mock('Proengsoft\JsValidation\Manager');
-            $this->mockedRequest= m::mock('Illuminate\Http\Request');
-            $this->mockedJs->shouldReceive('setValidator');
-            $this->mockedRequest->shouldReceive('all')->andReturn([]);
-            $this->factory=new JsValidatorFactory($this->mockedFactory,$this->mockedJs,$this->mockedApp);
-
-        }
+        $mockFactory = $this->getMock(
+            'Illuminate\Contracts\Validation\Factory',
+            ['make','extend','extendImplicit','replacer'], [], '', false
+        );
+        $mockFactory->expects($this->once())
+            ->method('make')
+            ->with([], $rules, $messages, $customAttributes)
+            ->willReturn($mockValidator);
 
 
-        public function testMake() {
+        $app = $this->getMock('\Illuminate\Container\Container');
+        $app->expects($this->once())
+            ->method('make')
+            ->with('Illuminate\Contracts\Validation\Factory')
+            ->willReturn($mockFactory);
 
-            $rules=['name'=>'required'];
+        $app->expects($this->at(1))
+            ->method('__get')
+            ->with('session')
+            ->willReturn(null);
 
-            $this->mockedFactory->shouldReceive('make')
-                ->once()
-                ->with([],$rules,[],[])
-                ->andReturn(
-                    m::mock('Proengsoft\JsValidation\Validator')
-                );
-            $this->mockedJs->shouldReceive('selector')->once()->andReturn('form');
+        $app->expects($this->at(2))
+            ->method('__get')
+            ->with('encrypter')
+            ->willReturn(null);
 
-            $js=$this->factory->make($rules,[],[],'form');
+        $options['disable_remote_validation'] = false;
+        $options['view'] = 'jsvalidation::bootstrap';
+        $options['form_selector'] = 'form';
 
-            $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
+        $factory = new JsValidatorFactory($app, $options);
 
-        }
+        $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
 
-
-        public function testFormRequestFromInstance() {
-
-            $rules=['name'=>'require'];
-            $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
-            //$mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
-            $mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
-            $mockFormRequest->shouldReceive('attributes')->once()->andReturn([]);
-            $this->mockedJs->shouldReceive('selector')->once()->andReturn('form');
-
-            $this->mockedFactory->shouldReceive('make')
-                ->once()
-                ->with([],[],[],[])
-                ->andReturn(
-                    m::mock('Proengsoft\JsValidation\Validator')
-                );
-
-
-            $js=$this->factory->formRequest($mockFormRequest);
-
-            $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
-
-        }
-
-
-        public function testFormRequestFromClassName() {
-
-            $rules=['name'=>'require'];
-            $formRequest='Proengsoft\JsValidation\Test\FakeFormRequest';
-            $mockSession=m::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface');
-            $mockedRequest= m::mock('Illuminate\Http\Request');
-            //$mockQuery=m::mock('Symfony\Component\HttpFoundation\ParameterBag')->shouldReceive('all')->andReturn([])->getMock();;
-            $this->mockedRequest->query =m::mock()->shouldReceive('all')->andReturn([])->getMock();
-            $this->mockedRequest->attributes =m::mock()->shouldReceive('all')->andReturn([])->getMock();
-            $this->mockedRequest->cookies =m::mock()->shouldReceive('all')->andReturn([])->getMock();
-            $this->mockedRequest->server =m::mock()->shouldReceive('all')->andReturn([])->getMock();
-            $this->mockedRequest
-                ->shouldReceive('all')->andReturn([])
-                ->shouldReceive('getContent')->andReturn('')
-                ->shouldReceive('getSession')->andReturn($mockSession)
-                ->shouldReceive('setSession')->with($mockSession)
-                ->shouldReceive('getUserResolver')->andReturn(function(){})
-                ->shouldReceive('setUserResolver')
-                ->shouldReceive('getRouteResolver')->andReturn(function(){})
-                ->shouldReceive('setRouteResolver');
-
-            $this->mockedRequest->request = $this->mockedRequest;
-            $this->mockedApp['request']=$this->mockedRequest;
-            $this->mockedApp->mockedRequest=$this->mockedRequest;
-
-
-
-            //$mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
-            //$mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
-            //$mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
-            //$mockFormRequest->shouldReceive('attributes')->once()->andReturn([]);
-            $this->mockedJs->shouldReceive('selector')->once()->andReturn('form');
-
-
-            $this->mockedFactory->shouldReceive('make')
-                ->once()
-                ->with([],$rules,[],[])
-                ->andReturn(
-                    m::mock('Proengsoft\JsValidation\Validator')
-                );
-
-            //$factory=new Factory($this->mockedFactory,$this->mockedJs,$mockedRequest);
-            $js=$this->factory->formRequest($formRequest);
-
-            $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
-
-        }
-
-
-        public function testFormRequestException() {
-
-            try {
-                $mock=m::mock('Object');
-
-                $js=$this->factory->formRequest($mock);
-                $this->assertNotInstanceOf('Proengsoft\JsValidation\Manager',$js);
-            }
-            catch (FormRequestArgumentException $expected) {
-                $this->assertTrue(true);
-                return;
-            }
-
-            $this->fail('An expected exception has not been raised.');
-
-
-        }
-
-        public function testValidator()
-        {
-            $validator=m::mock('Proengsoft\JsValidation\Validator');
-            $this->mockedJs->shouldReceive('selector')->once()->andReturn('form');
-
-            $js=$this->factory->validator($validator);
-            $this->assertInstanceOf('Proengsoft\JsValidation\Manager',$js);
-
-        }
+        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
 
     }
+
+
+    public function testMakeWithToken() {
+        $rules=['name'=>'required'];
+        $messages = [];
+        $customAttributes = [];
+        $selector = null;
+
+
+        $mockValidator = $this->getMock(
+            '\Illuminate\Validation\Validator',['addCustomAttributes'],
+            [], '', false
+        );
+        $mockValidator->expects($this->once())
+            ->method('addCustomAttributes')
+            ->with($customAttributes);
+
+
+        $mockFactory = $this->getMock(
+            'Illuminate\Contracts\Validation\Factory',
+            ['make','extend','extendImplicit','replacer'], [], '', false
+        );
+        $mockFactory->expects($this->once())
+            ->method('make')
+            ->with([], $rules, $messages, $customAttributes)
+            ->willReturn($mockValidator);
+
+
+        $app = $this->getMock('\Illuminate\Container\Container');
+        $app->expects($this->once())
+            ->method('make')
+            ->with('Illuminate\Contracts\Validation\Factory')
+            ->willReturn($mockFactory);
+
+        $sessionMock = $this->getMock('stdObject',['token']);
+        $sessionMock->expects($this->once())
+            ->method('token')
+            ->willReturn('token');
+
+        $app->expects($this->at(1))
+            ->method('__get')
+            ->with('session')
+            ->willReturn($sessionMock);
+
+        $encrypterMock = $this->getMock('stdObject',['encrypt']);
+        $encrypterMock->expects($this->once())
+            ->method('encrypt')
+            ->with('token')
+            ->willReturn('encrypted token');
+
+        $app->expects($this->at(2))
+            ->method('__get')
+            ->with('encrypter')
+            ->willReturn($encrypterMock);
+
+        $options['disable_remote_validation'] = false;
+        $options['view'] = 'jsvalidation::bootstrap';
+        $options['form_selector'] = 'form';
+
+        $factory = new JsValidatorFactory($app, $options);
+
+        $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
+
+        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
+
+    }
+
+    public function testCreateFromFormRequestInstance() {
+        $rules=['name'=>'required'];
+        $messages = [];
+        $customAttributes = [];
+        $selector = null;
+
+        $options['disable_remote_validation'] = false;
+        $options['view'] = 'jsvalidation::bootstrap';
+        $options['form_selector'] = 'form';
+
+        $mockValidator = $this->getMock(
+            '\Illuminate\Validation\Validator',['addCustomAttributes'],
+            [], '', false
+        );
+        $mockValidator->expects($this->once())
+            ->method('addCustomAttributes')
+            ->with($customAttributes);
+
+
+        $mockFactory = $this->getMock(
+            'Illuminate\Contracts\Validation\Factory',
+            ['make','extend','extendImplicit','replacer'], [], '', false
+        );
+        $mockFactory->expects($this->once())
+            ->method('make')
+            ->with([], [], $messages, $customAttributes)
+            ->willReturn($mockValidator);
+
+
+        $app = $this->getMock('\Illuminate\Container\Container');
+        $app->expects($this->once())
+            ->method('make')
+            ->with('Illuminate\Contracts\Validation\Factory')
+            ->willReturn($mockFactory);
+
+
+        $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
+        $mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
+        $mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
+        $mockFormRequest->shouldReceive('attributes')->once()->andReturn([]);
+
+
+        $factory = new JsValidatorFactory($app, $options);
+
+        $jsValidator = $factory->formRequest($mockFormRequest, $selector);
+
+
+        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
+    }
+
+
+    public function testCreateFromFormRequestClassName() {
+        $rules=['name'=>'required'];
+        $messages = [];
+        $customAttributes = [];
+        $selector = null;
+
+        $options['disable_remote_validation'] = false;
+        $options['view'] = 'jsvalidation::bootstrap';
+        $options['form_selector'] = 'form';
+
+        $mockValidator = $this->getMock(
+            '\Illuminate\Validation\Validator',['addCustomAttributes'],
+            [], '', false
+        );
+        $mockValidator->expects($this->once())
+            ->method('addCustomAttributes')
+            ->with($customAttributes);
+
+
+        $mockFactory = $this->getMock(
+            'Illuminate\Contracts\Validation\Factory',
+            ['make','extend','extendImplicit','replacer'], [], '', false
+        );
+        $mockFactory->expects($this->once())
+            ->method('make')
+            ->with([], [], $messages, $customAttributes)
+            ->willReturn($mockValidator);
+
+
+        $app = $this->getMock('\Illuminate\Container\Container');
+        $app->expects($this->once())
+            ->method('make')
+            ->with('Illuminate\Contracts\Validation\Factory')
+            ->willReturn($mockFactory);
+
+        $sessionMock = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface',[]);
+
+
+        $mockedRequest = m::mock('\Symfony\Component\HttpFoundation\Request');
+        $mockedRequest->shouldReceive('getSession')->andReturn($sessionMock)
+            ->shouldReceive('getUserResolver')->andReturn(function(){})
+            ->shouldReceive('getRouteResolver')->andReturn(function(){});
+
+        //$requestMock= $this->getMock('\Symfony\Component\HttpFoundation\Request',['getUserResolver']);
+
+        $app->expects($this->at(0))
+            ->method('__get')
+            ->with('request')
+            ->willReturn($mockedRequest);
+
+
+        $factory = new JsValidatorFactory($app, $options);
+        /*
+        $mockForm = $this->getMockForAbstractClass('\Illuminate\Foundation\Http\FormRequest',[],'',true,true,true,['messages','attributes']);
+        $mockForm->expects($this->once())
+            ->method('messages')
+            ->willReturn([]);
+        $mockForm->expects($this->once())
+            ->method('attributes')
+            ->willReturn([]);
+        */
+        //$r= new \Proengsoft\JsValidation\Tests\StubFormRequest();
+
+        $jsValidator = $factory->formRequest('Proengsoft\JsValidation\Tests\StubFormRequest' , $selector);
+
+        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
+    }
+
+    public function testFormRequestException() {
+        $app = $this->getMock('\Illuminate\Container\Container');
+        $options['disable_remote_validation'] = false;
+        $options['view'] = 'jsvalidation::bootstrap';
+        $options['form_selector'] = 'form';
+
+        try {
+            $mock=m::mock('Object');
+            $factory = new JsValidatorFactory($app, $options);
+
+            $js=$factory->formRequest($mock);
+            $this->assertNotInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator',$js);
+        }
+        catch (FormRequestArgumentException $expected) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $this->fail('An expected exception has not been raised.');
+
+
+    }
+
+
 }

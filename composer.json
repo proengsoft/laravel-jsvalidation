@@ -37,7 +37,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Proengsoft\\JsValidation\\": "src"
+            "Proengsoft\\JsValidation\\": "src",
+            "Proengsoft\\JsValidation\\Tests\\": "tests"
         }
     }
 

@@ -2,52 +2,51 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Validator;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
+use Proengsoft\JsValidation\Javascript\JavascriptValidator;
+use Proengsoft\JsValidation\Javascript\MessageParser;
+use Proengsoft\JsValidation\Javascript\RuleParser;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Support\DelegatedValidator;
 
 class JsValidatorFactory
 {
     /**
      * The application instance.
      *
-     * @var Factory
+     * @var \Illuminate\Contracts\Container\Container
      */
-    protected $validator;
+    protected $app;
 
     /**
-     * Javascript validator instance.
+     * Configuration options.
      *
-     * @var Manager
+     * @var array
      */
-    protected $manager;
-
-    /**
-     *  Current Request.
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     *  Current Application Container.
-     * @var Container
-     */
-    protected $container;
+    protected $options;
 
     /**
      * Create a new Validator factory instance.
      *
-     * @param Factory $validator
-     * @param \Proengsoft\JsValidation\Manager $manager
-     * @param Container $app
+     * @param \Illuminate\Contracts\Container\Container $app
+     * @param array                                        $options
      */
-    public function __construct(Factory $validator, Manager $manager, Container $app)
+    public function __construct($app, array $options = [])
     {
-        $this->validator = $validator;
-        $this->manager = $manager;
-        $this->container = $app;
+        $this->app = $app;
+        $this->setOptions($options);
+    }
+
+    protected function setOptions($options)
+    {
+        $options['disable_remote_validation'] = empty($options['disable_remote_validation']) ? false : $options['disable_remote_validation'];
+        $options['view'] = empty($options['view']) ? 'jsvalidation:bootstrap' : $options['view'];
+        $options['form_selector'] = empty($options['form_selector']) ? 'form' : $options['form_selector'];
+
+        $this->options = $options;
     }
 
     /**
@@ -58,13 +57,28 @@ class JsValidatorFactory
      * @param array       $customAttributes
      * @param null|string $selector
      *
-     * @return \Proengsoft\JsValidation\Manager
+     * @return JavascriptValidator
      */
     public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector = null)
     {
-        $validator = $this->validator->make([], $rules, $messages, $customAttributes);
+        $validator = $this->getValidatorInstance($rules, $messages, $customAttributes);
 
-        return $this->jsValidator($validator, $selector);
+        return $this->validator($validator, $selector);
+    }
+
+    /**
+     * Get the validator instance for the request.
+     *
+     * @return \Illuminate\Validation\Validator
+     */
+    protected function getValidatorInstance(array $rules, array $messages = array(), array $customAttributes = array())
+    {
+        $factory = $this->app->make('Illuminate\Contracts\Validation\Factory');
+
+        $validator = $factory->make([], $rules, $messages, $customAttributes);
+        $validator->addCustomAttributes($customAttributes);
+
+        return $validator;
     }
 
     /**
@@ -73,7 +87,7 @@ class JsValidatorFactory
      * @param $formRequest
      * @param null $selector
      *
-     * @return Manager
+     * @return JavascriptValidator
      *
      * @throws FormRequestArgumentException
      */
@@ -88,34 +102,30 @@ class JsValidatorFactory
         }
 
         $rules = method_exists($formRequest, 'rules') ? $formRequest->rules() : [];
-        $validator = $this->validator->make([], $rules, $formRequest->messages(), $formRequest->attributes());
 
-        return $this->jsValidator($validator, $selector);
+        $validator = $this->getValidatorInstance($rules, $formRequest->messages(), $formRequest->attributes());
+
+        return $this->validator($validator, $selector);
     }
 
     /**
      *  Creates and initializes an Form Request instance.
      *
      * @param string $class
+     *
      * @return FormRequest
      */
     protected function createFormRequest($class)
     {
-        /*
-         * @var \Illuminate\Foundation\Http\FormRequest
-         * @var $request Request
-         */
-        $formRequest = new $class();
-        $request = $this->container['request'];
-
-        $formRequest->initialize($request->query->all(), $request->request->all(), $request->attributes->all(),
-            $request->cookies->all(), array(), $request->server->all(), $request->getContent()
-        );
+        $request = $this->app->__get('request');
+        $formRequest = call_user_func([$class, 'createFromBase'], $request);
 
         if ($session = $request->getSession()) {
             $formRequest->setSession($session);
         }
+
         $formRequest->setUserResolver($request->getUserResolver());
+
         $formRequest->setRouteResolver($request->getRouteResolver());
 
         return $formRequest;
@@ -124,10 +134,10 @@ class JsValidatorFactory
     /**
      * Creates JsValidator instance based on Validator.
      *
-     * @param Validator  $validator
-     * @param string|null       $selector
+     * @param \Illuminate\Validation\Validator $validator
+     * @param string|null                      $selector
      *
-     * @return Manager
+     * @return JavascriptValidator
      */
     public function validator(Validator $validator, $selector = null)
     {
@@ -137,18 +147,44 @@ class JsValidatorFactory
     /**
      * Creates JsValidator instance based on Validator.
      *
-     * @param Validator $validator
-     * @param string|null       $selector
+     * @param \Illuminate\Validation\Validator $validator
+     * @param string|null                      $selector
      *
-     * @return Manager
+     * @return JavascriptValidator
      */
     protected function jsValidator(Validator $validator, $selector = null)
     {
-        $manager = clone $this->manager;
+        $remote = ! $this->options['disable_remote_validation'];
+        $view = $this->options['view'];
+        $selector = is_null($selector) ? $this->options['form_selector'] : $selector;
 
-        $manager->selector($selector);
-        $manager->setValidator($validator);
+        $delegated = new DelegatedValidator($validator);
+        $rules = new RuleParser($delegated, $this->getSessionToken());
+        $messages = new MessageParser($delegated);
+
+        $jsValidator = new ValidatorHandler($rules, $messages);
+
+        $manager = new JavascriptValidator($jsValidator, compact('view', 'selector', 'remote'));
 
         return $manager;
+    }
+
+    /**
+     * Get and encrypt token from session store.
+     *
+     * @return null|string
+     */
+    protected function getSessionToken()
+    {
+        $token = null;
+        if ($session = $this->app->__get('session')) {
+            $token = $session->token();
+        }
+
+        if ($encrypter = $this->app->__get('encrypter')) {
+            $token = $encrypter->encrypt($token);
+        }
+
+        return $token;
     }
 }
