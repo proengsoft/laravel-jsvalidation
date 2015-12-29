@@ -9,11 +9,6 @@ enabled:
 disabled:
   - short_array_syntax
 
-machine:
-  php:
-    version: 5.4.37
-
-
 finder:
   exclude:
     - "tests"
