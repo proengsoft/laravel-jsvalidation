@@ -1,4 +1,4 @@
-# Laravel 5 Javascript Validation
+### Laravel 5 Javascript Validation
 
 [![Latest Version](https://img.shields.io/github/release/proengsoft/laravel-jsvalidation.svg?style=flat-square)](https://github.com/proengsoft/laravel-jsvalidation/releases)
 [![Build Status](https://img.shields.io/travis/proengsoft/laravel-jsvalidation/master.svg?style=flat-square)](https://travis-ci.org/proengsoft/laravel-jsvalidation)
@@ -15,74 +15,80 @@
 [Laravel Localization]: http://laravel.com/docs/5.1/localization
 [Validation]: http://laravel.com/docs/5.1/validation
 [Custom Validation Rules]: http://laravel.com/docs/5.1/validation#custom-validation-rules
+[JQueryValidation]: http://jqueryvalidation.org/
+[FormRequest]: http://laravel.com/docs/5.1/validation#form-request-validation
+[Validators]: http://laravel.com/docs/5.1/validation#form-request-validation
+[Validation Rules]: http://laravel.com/docs/5.1/validation#available-validation-rules
+[Custom Validations]: http://laravel.com/docs/5.1/validation#custom-validation-rules
+[Messages]: http://laravel.com/docs/5.1/validation#error-messages-and-views
+[Laravel Localization]: http://laravel.com/docs/5.1/localization 
+[Validation]: http://laravel.com/docs/5.1/validation 
+[Validation Rules]: http://laravel.com/docs/5.1/validation#available-validation-rules
+[Custom Validation Rules]: http://laravel.com/docs/5.1/validation#custom-validation-rules
+**Laravel Javascript Validation** package allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to validate forms automatically in client side without need to write any Javascript code or use HTML Builder Class. 
 
-**Laravel Javascript Validation** allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to automatically validate forms on the client side **without need to write any Javascript code or use HTML Builder Class**.
-You can validate forms automatically referencing it to your defined validations. The messages are loaded from your validators and translated according your Localization preferences.
+You can validate forms automatically referencing it to your defined validations. The messages are loaded from your  validations and translated according your Localization preferences.
+  
+
+#### Feature overview
+
+- Automatic creation of Javascript validation based on your [Validation Rules][] or [FormRequest][], no Javascript coding required.
+- Supports other validation packages. 
+- AJAX validation for [ActiveURL](http://laravel.com/docs/5.1/validation#rule-active-url), [Unique](http://laravel.com/docs/5.1/validation#rule-unique) and [Exists](http://laravel.com/docs/5.1/validation#rule-exists) Rules, [Custom Validation Rules][] and other validation packages
+- Unobtrusive integration, you can use without Laravel Form Builder
+- The package uses [Jquery Validation Plugin](http://jqueryvalidation.org/)  bundled in provided script.
+- Uses Laravel Localization to translate messages.
+
+
+#### Supported Rules
+
+**All [Validation Rules][] provided by Laravel and other packages are supported**.
+
+Almost are validated in client-side using Javascript, but in some cases, the validation should to be done in server-side via AJAX:
+ - [ActiveURL](http://laravel.com/docs/5.1/validation#rule-active-url)
+ - [Unique](http://laravel.com/docs/5.1/validation#rule-unique)
+ - [Exists](http://laravel.com/docs/5.1/validation#rule-exists)
+ - [Custom Validation Rules][]
+ - Validations provided by other packages
+
+
+#### Getting started
+The easiest way to create Javascript validations is using [Laravel Form Request Validation](http://laravel.com/docs/5.1/validation#form-request-validation).
+
+##### Installation
+Follow the [Installation Guide](https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation) to install the package. **The default config shlould work out-of-box**
+
+##### Validating Form Request
+Call [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade) Facade in your view to validate any [FormRequest](https://laravel.com/docs/master/validation)
  
-[ActiveURL](http://laravel.com/docs/5.1/validation#rule-active-url),
-[Unique](http://laravel.com/docs/5.1/validation#rule-unique), [Exists](http://laravel.com/docs/5.1/validation#rule-exists), [Custom Validation Rules][]
-and validations provided by other packages are validated automatically via Ajax. All other Laravel [Validation Rules][] are validated 
-using [JQuery Validation Plugin][] provided with this package.
+```html
+ <form>
+    <!-- ... My form stuff ... -->
+ <form>
 
-The [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference) created by the [Facade](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade) allows to use all methods and procedures that Laravel provides to
-setup your validations. Also class and rule syntax are the same that Laravel Validation class implements. When the instance is printed in a 
-view the Javascript code needed to validate your form is rendered to the page.
+ <!-- Javascript Requirements -->
+ <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+ <!-- Laravel Javascript Validation -->
+ <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+
+{!! JsValidator::formRequest('App\Http\Requests\MyFormRequest') !!}
+
+```
+
+Take a look to [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/wiki/Basic-Usage) or [Examples](https://github.com/proengsoft/laravel-jsvalidation/wiki/Validating-Examples) to get more information.
+
+#### Documentation
+
+**To get more info refer to [Project Wiki](https://github.com/proengsoft/laravel-jsvalidation/wiki/Home)**
 
 
-##### Upgrade notice
-
-**If you are upgrading this package from release older than [v1.1.1 (2015-08-15)](https://github.com/proengsoft/laravel-jsvalidation/releases/tag/v1.2.0) follow the
-[Upgrade Guide] (https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation#upgrade-from-previous-versions) and update your `composer.json` file to make
-sure that your Javascript assets are updated correctly.**
-
-##### Known issues
+#### Known issues
 - DateFormat rule don't support timezone format 
 - Extra fields in remote rules are not supported. Issue #88
 
-### Documentation
-
-### Table of Contents
-
-- [About](https://github.com/proengsoft/laravel-jsvalidation/wiki/Home)
-- [Installation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation)
-  - [Upgrade] (Installation#upgrade-from-previous-versions)
-- [Configuration](https://github.com/proengsoft/laravel-jsvalidation/wiki/Configuration)
-  - [Settings](https://github.com/proengsoft/laravel-jsvalidation/wiki/Settings)
-  - [Javascript Rendering](https://github.com/proengsoft/laravel-jsvalidation/wiki/Javascript-Rendering)
-  - [Dependencies](https://github.com/proengsoft/laravel-jsvalidation/wiki/Dependencies)
-- [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/wiki/Basic-Usage)
-  - [FormRequest validation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Form-Requests)
-  - [Controller validation](https://github.com/proengsoft/laravel-jsvalidation/wiki/Controller-validation)
-- [Examples](https://github.com/proengsoft/laravel-jsvalidation/wiki/Validating-Examples)
-  - [Laravel Auth Controller](https://github.com/proengsoft/laravel-jsvalidation/wiki/Laravel-Auth-Controller)
-  - [Controller Example](https://github.com/proengsoft/laravel-jsvalidation/wiki/Controller-Validation-Example)
-  - [FormRequest Example](https://github.com/proengsoft/laravel-jsvalidation/wiki/FormRequest-Validation-Example)
-- [Testing](https://github.com/proengsoft/laravel-jsvalidation/wiki/Testing)
-- [Contributing] (Contributing)
-- [Changelog] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/CHANGELOG.md)
-- [Security] (Security)
-- [Credits] (Credits)
-- [License] (https://github.com/proengsoft/laravel-jsvalidation/blob/master/LICENSE.md)
-
----
-
-### [Facade Reference](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade)
-
-* [`JsValidator::make()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade#jsvalidatormake) 
-* [`JsValidator::formRequest()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade#jsvalidatorformrequest) 
-* [`JsValidator::validator()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade#jsvalidatorvalidator)
-
----
-
-### [JsValidator Reference](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference)
-
-* [`selector()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#selectorselector) 
-* [`view()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#viewview)  
-* [`render()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#renderview-selector) 
-* [`Arrayable interface`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#arrayable-interface) 
-* [`__toString()`](https://github.com/proengsoft/laravel-jsvalidation/wiki/JsValidator-Reference#__tostring) 
-
-## License
+#### License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
