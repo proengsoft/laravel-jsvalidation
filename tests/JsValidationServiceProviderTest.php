@@ -124,7 +124,7 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app['config']=$mockedConfig;
 
 
-        $mockKernel = $this->getMockForAbstractClass('Illuminate\Foundation\Http\Kernel',['pushMiddleware'],'',false);
+        $mockKernel = $this->getMockForAbstractClass('Illuminate\Contracts\Http\Kernel',[],'',true,true,true,['pushMiddleware']);
 
         $app['Illuminate\Contracts\Http\Kernel'] = $mockKernel;
 

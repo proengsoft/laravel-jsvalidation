@@ -2,7 +2,6 @@
 
 namespace Proengsoft\JsValidation;
 use Mockery as m;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 
 class MockFormRequest /*extends \Illuminate\Foundation\Http\FormRequest */ {
@@ -56,7 +55,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $app = $this->getMock('\Illuminate\Container\Container');
         $app->expects($this->once())
             ->method('make')
-            ->with(ValidationFactory::class)
+            ->with('Illuminate\Contracts\Validation\Factory')
             ->willReturn($mockFactory);
 
         $app->expects($this->at(1))
@@ -111,7 +110,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $app = $this->getMock('\Illuminate\Container\Container');
         $app->expects($this->once())
             ->method('make')
-            ->with(ValidationFactory::class)
+            ->with('Illuminate\Contracts\Validation\Factory')
             ->willReturn($mockFactory);
 
         $sessionMock = $this->getMock('stdObject',['token']);
@@ -179,7 +178,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $app = $this->getMock('\Illuminate\Container\Container');
         $app->expects($this->once())
             ->method('make')
-            ->with(ValidationFactory::class)
+            ->with('Illuminate\Contracts\Validation\Factory')
             ->willReturn($mockFactory);
 
 
@@ -230,7 +229,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $app = $this->getMock('\Illuminate\Container\Container');
         $app->expects($this->once())
             ->method('make')
-            ->with(ValidationFactory::class)
+            ->with('Illuminate\Contracts\Validation\Factory')
             ->willReturn($mockFactory);
 
         $sessionMock = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface',[]);
@@ -251,7 +250,13 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $factory = new JsValidatorFactory($app, $options);
 
-        $mockForm = $this->getMockForAbstractClass('\Illuminate\Foundation\Http\FormRequest');
+        $mockForm = $this->getMockForAbstractClass('\Illuminate\Foundation\Http\FormRequest',[],'',true,true,true,['messages','attributes']);
+        $mockForm->expects($this->once())
+            ->method('messages')
+            ->willReturn([]);
+        $mockForm->expects($this->once())
+            ->method('attributes')
+            ->willReturn([]);
         $jsValidator = $factory->formRequest($mockForm , $selector);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
