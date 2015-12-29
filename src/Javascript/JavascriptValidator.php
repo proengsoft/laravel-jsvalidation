@@ -54,16 +54,15 @@ class JavascriptValidator implements Arrayable
     }
 
     /**
-     * Set default parameters
+     * Set default parameters.
      *
      * @param $options
      */
-    protected function setDefaults($options) {
-
+    protected function setDefaults($options)
+    {
         $this->selector = empty($options['selector']) ? 'form' : $options['selector'];
         $this->view = empty($options['view']) ? 'jsvalidation::bootstrap' : $options['view'];
         $this->remote = empty($options['remote']) ? true : $options['remote'];
-
     }
 
     /**
@@ -132,7 +131,7 @@ class JavascriptValidator implements Arrayable
         $data = $this->validator->validationData($this->remote);
         $data['selector'] = $this->selector;
 
-        if (!is_null($this->ignore)) {
+        if (! is_null($this->ignore)) {
             $data['ignore'] = $this->ignore;
         }
 
@@ -200,7 +199,7 @@ class JavascriptValidator implements Arrayable
      *
      * @return JavascriptValidator
      */
-    public function remote($enabled=true)
+    public function remote($enabled = true)
     {
         $this->remote = $enabled;
 

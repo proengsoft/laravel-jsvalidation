@@ -4,7 +4,6 @@ namespace Proengsoft\JsValidation\Javascript;
 
 trait JavascriptRulesTrait
 {
-
     /**
      * Handles multidimensional attribute names.
      *
@@ -13,7 +12,6 @@ trait JavascriptRulesTrait
      * @return string
      */
     abstract protected function getAttributeName($attribute);
-
 
     /**
      * Confirmed rule is applied to confirmed attribute.
@@ -41,8 +39,7 @@ trait JavascriptRulesTrait
      */
     protected function ruleAfter($attribute, array $parameters)
     {
-
-        if (!($date = strtotime($parameters[0]))) {
+        if (! ($date = strtotime($parameters[0]))) {
             $date = $this->getAttributeName($parameters[0]);
         }
 
@@ -158,6 +155,4 @@ trait JavascriptRulesTrait
 
         return [$attribute, $parameters];
     }
-
-
 }

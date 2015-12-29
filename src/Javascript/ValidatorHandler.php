@@ -17,7 +17,6 @@ class ValidatorHandler
      */
     const JSVALIDATION_DISABLE = 'NoJsValidation';
 
-
     /**
      * @var RuleParser
      */
@@ -38,7 +37,6 @@ class ValidatorHandler
         $this->rules = $rules;
         $this->messages = $messages;
         $this->validator = $rules->getDelegatedValidator();
-
     }
 
     /**
@@ -46,19 +44,21 @@ class ValidatorHandler
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
      */
-    public function setDelegatedValidator(DelegatedValidator $validator) {
+    public function setDelegatedValidator(DelegatedValidator $validator)
+    {
         $this->validator = $validator;
         $this->rules->setDelegatedValidator($validator);
         $this->messages->setDelegatedValidator($validator);
     }
-
 
     protected function generateJavascriptValidations($includeRemote = true)
     {
         $jsValidations = array();
 
         foreach ($this->validator->getRules() as $attribute => $rules) {
-            if (!$this->jsValidationEnabled($attribute)) continue;
+            if (! $this->jsValidationEnabled($attribute)) {
+                continue;
+            }
 
             $newRules = $this->jsConvertRules($attribute, $rules, $includeRemote);
             $jsValidations = array_merge($jsValidations, $newRules);
@@ -78,7 +78,6 @@ class ValidatorHandler
      */
     protected function jsConvertRules($attribute, $rules, $includeRemote)
     {
-
         $jsRules = [];
         foreach ($rules as $rawRule) {
             list($rule, $parameters) = $this->validator->parseRule($rawRule);
@@ -95,16 +94,16 @@ class ValidatorHandler
     }
 
     /**
-     * Check if rule should be validated with javascript
+     * Check if rule should be validated with javascript.
      *
      * @param $jsRule
      * @param $includeRemote
      * @return bool
      */
-    protected function isValidatable($jsRule, $includeRemote) {
-        return ($jsRule && ($includeRemote || $jsRule != RuleParser::REMOTE_RULE));
+    protected function isValidatable($jsRule, $includeRemote)
+    {
+        return $jsRule && ($includeRemote || $jsRule !== RuleParser::REMOTE_RULE);
     }
-
 
     /**
      * Check if JS Validation is disabled for attribute.
@@ -115,7 +114,7 @@ class ValidatorHandler
      */
     public function jsValidationEnabled($attribute)
     {
-        return !$this->validator->hasRule($attribute, self::JSVALIDATION_DISABLE);
+        return ! $this->validator->hasRule($attribute, self::JSVALIDATION_DISABLE);
     }
 
     /**
@@ -124,7 +123,7 @@ class ValidatorHandler
      * @param bool $remote
      * @return array
      */
-    public function validationData($remote=true)
+    public function validationData($remote = true)
     {
         $jsMessages = array();
         $jsValidations = $this->generateJavascriptValidations($remote);
@@ -134,7 +133,4 @@ class ValidatorHandler
             'messages' => $jsMessages,
         ];
     }
-
-
-
 }

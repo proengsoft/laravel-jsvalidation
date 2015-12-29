@@ -1,6 +1,6 @@
 <?php
-namespace Proengsoft\JsValidation\Javascript;
 
+namespace Proengsoft\JsValidation\Javascript;
 
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\RuleListTrait;
@@ -11,18 +11,17 @@ class RuleParser
     use RuleListTrait, JavascriptRulesTrait, UseDelegatedValidatorTrait;
 
     /**
-     * Rule used to validate remote requests
+     * Rule used to validate remote requests.
      */
     const REMOTE_RULE = 'laravelValidationRemote';
 
     /**
-     * Rule used to validate javascript fields
+     * Rule used to validate javascript fields.
      */
     const JAVASCRIPT_RULE = 'laravelValidation';
-    
 
     /**
-     * Token used to secure romte validations
+     * Token used to secure romte validations.
      *
      * @string|null $remoteToken
      */
@@ -40,7 +39,6 @@ class RuleParser
         $this->remoteToken = $remoteToken;
     }
 
-
     /**
      * Return parsed Javascript Rule.
      *
@@ -52,7 +50,6 @@ class RuleParser
      */
     public function getRule($attribute, $rule, $parameters)
     {
-
         if ($this->isRemoteRule($rule)) {
             list($attribute, $parameters) = $this->remoteRule($attribute);
             $jsRule = self::REMOTE_RULE;
@@ -66,11 +63,12 @@ class RuleParser
     }
 
     /**
-     * Gets rules
+     * Gets rules.
      *
      * @return array
      */
-    public function getRules() {
+    public function getRules()
+    {
         return $this->validator->getRules();
     }
 
@@ -128,7 +126,4 @@ class RuleParser
 
         return $attribute;
     }
-
-
-    
 }

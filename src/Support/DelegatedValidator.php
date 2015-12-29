@@ -22,14 +22,12 @@ class DelegatedValidator
      */
     protected $validatorMethod;
 
-
     /**
      * DelegatedValidator constructor.
      * @param \Illuminate\Validation\Validator $validator
      */
-    public function __construct(BaseValidator $validator )
+    public function __construct(BaseValidator $validator)
     {
-
         $this->validator = $validator;
         $this->validatorMethod = $this->createProtectedCaller($validator);
     }
@@ -101,7 +99,6 @@ class DelegatedValidator
         return $this->validator->setFiles($files);
     }
 
-
     /**
      * Determine if a given rule implies the attribute is required.
      *
@@ -166,7 +163,6 @@ class DelegatedValidator
     {
         return $this->callValidator('parseRule', [$rules]);
     }
-
 
     /**
      * Delegate method calls to validator instance.

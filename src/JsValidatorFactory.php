@@ -40,14 +40,14 @@ class JsValidatorFactory
         $this->setOptions($options);
     }
 
-    protected function setOptions($options) {
-        $options['disable_remote_validation'] = empty($options['disable_remote_validation'])?false:$options['disable_remote_validation'];
-        $options['view'] = empty($options['view'])?'jsvalidation:bootstrap':$options['view'];
-        $options['form_selector'] = empty($options['form_selector'])?'form':$options['form_selector'];
+    protected function setOptions($options)
+    {
+        $options['disable_remote_validation'] = empty($options['disable_remote_validation']) ? false : $options['disable_remote_validation'];
+        $options['view'] = empty($options['view']) ? 'jsvalidation:bootstrap' : $options['view'];
+        $options['form_selector'] = empty($options['form_selector']) ? 'form' : $options['form_selector'];
 
         $this->options = $options;
     }
-
 
     /**
      * Creates JsValidator instance based on rules and message arrays.
@@ -93,7 +93,7 @@ class JsValidatorFactory
      */
     public function formRequest($formRequest, $selector = null)
     {
-        if (!is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
+        if (! is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
             throw new FormRequestArgumentException((string) $formRequest);
         }
 
@@ -154,7 +154,7 @@ class JsValidatorFactory
      */
     protected function jsValidator(Validator $validator, $selector = null)
     {
-        $remote = !$this->options['disable_remote_validation'];
+        $remote = ! $this->options['disable_remote_validation'];
         $view = $this->options['view'];
         $selector = is_null($selector) ? $this->options['form_selector'] : $selector;
 
@@ -187,5 +187,4 @@ class JsValidatorFactory
 
         return $token;
     }
-
 }

@@ -43,7 +43,6 @@ class Validator
         $validationResult = $this->validateJsRemoteRequest($validationData[1]);
         throw new HttpResponseException(
             new JsonResponse($validationResult, 200));
-
     }
 
     /**
@@ -57,7 +56,7 @@ class Validator
     protected function parseJsRemoteRequest($attribute, $value, $parameters)
     {
         parse_str("$value=", $attr_parts);
-        $attr_parts = is_null($attr_parts)?[]:$attr_parts;
+        $attr_parts = is_null($attr_parts) ? [] : $attr_parts;
         $newAttr = array_keys(Arr::dot($attr_parts));
 
         return [$attribute, array_pop($newAttr), $parameters];
@@ -77,8 +76,8 @@ class Validator
         if ($validator->passes()) {
             return true;
         }
-        return $validator->messages()->get($attribute);
 
+        return $validator->messages()->get($attribute);
     }
 
     /**
@@ -90,7 +89,7 @@ class Validator
      */
     protected function setRemoteValidation($attribute, BaseValidator $validator)
     {
-        if (!array_key_exists($attribute, $validator->getRules())) {
+        if (! array_key_exists($attribute, $validator->getRules())) {
             throw new BadRequestHttpException("Undefined '$attribute' attribute");
         }
 
@@ -105,17 +104,18 @@ class Validator
         return $validator;
     }
 
-
-    protected function purgeNonRemoteRules($rules, $validator) {
+    protected function purgeNonRemoteRules($rules, $validator)
+    {
         $disabled = $this->validationDisabled($rules);
         $protectedValidator = $this->createProtectedCaller($validator);
 
         foreach ($rules as $i => $rule) {
             $parsedRule = call_user_func($protectedValidator, 'parseRule', [$rule]);
-            if ($disabled || !$this->isRemoteRule($parsedRule[0])) {
+            if ($disabled || ! $this->isRemoteRule($parsedRule[0])) {
                 unset($rules[$i]);
             }
         }
+
         return $rules;
     }
 }

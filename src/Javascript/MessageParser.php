@@ -1,6 +1,7 @@
 <?php
 
 namespace Proengsoft\JsValidation\Javascript;
+
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 
@@ -29,7 +30,6 @@ class MessageParser
      */
     public function getMessage($attribute, $rule, $parameters)
     {
-
         $data = $this->fakeValidationData($attribute, $rule, $parameters);
 
         $message = $this->validator->getMessage($attribute, $rule);
@@ -40,10 +40,9 @@ class MessageParser
         return $message;
     }
 
-
     /**
      * Creates fake data needed to parse messages
-     * Returns original data
+     * Returns original data.
      *
      * @param string $attribute
      * @param string $rule
@@ -51,7 +50,8 @@ class MessageParser
      *
      * @return array
      */
-    protected function fakeValidationData($attribute, $rule, $parameters) {
+    protected function fakeValidationData($attribute, $rule, $parameters)
+    {
         $files = $this->validator->getFiles();
         $data = $this->validator->getData();
 
@@ -59,49 +59,51 @@ class MessageParser
         $this->fakeRequiredIfData($data, $rule, $parameters);
 
         return compact('data', 'files');
-
     }
 
     /**
-     * Generate fake data to get RequiredIf message
+     * Generate fake data to get RequiredIf message.
      *
      * @param $data
      * @param $rule
      * @param $parameters
      */
-    private function fakeRequiredIfData($data, $rule, $parameters) {
-        if ($rule != 'RequiredIf') return;
+    private function fakeRequiredIfData($data, $rule, $parameters)
+    {
+        if ($rule !== 'RequiredIf') {
+            return;
+        }
 
         $newData = $data;
         $newData[$parameters[0]] = $parameters[1];
         $this->validator->setData($newData);
-
     }
 
     /**
-     * Generate fake data to get file type messages
+     * Generate fake data to get file type messages.
      *
      * @param $files
      * @param $attribute
      */
-    private function fakeFileData($files, $attribute) {
-        if (! $this->validator->hasRule($attribute, array('Mimes', 'Image'))) return;
+    private function fakeFileData($files, $attribute)
+    {
+        if (! $this->validator->hasRule($attribute, array('Mimes', 'Image'))) {
+            return;
+        }
 
         $newFiles = $files;
         $newFiles[$attribute] = false;
         $this->validator->setFiles($newFiles);
-
     }
 
     /**
-     * Sets validation data
+     * Sets validation data.
      *
      * @param array $data
      */
-    protected function setValidationData($data) {
+    protected function setValidationData($data)
+    {
         $this->validator->setFiles($data['files']);
         $this->validator->setData($data['data']);
     }
-
-
 }

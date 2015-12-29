@@ -2,8 +2,6 @@
 
 namespace Proengsoft\JsValidation\Support;
 
-use Illuminate\Support\Str;
-
 trait RuleListTrait
 {
     /**
@@ -27,7 +25,7 @@ trait RuleListTrait
     protected $serverRules = ['ActiveUrl', 'Exists', 'Unique'];
 
     /**
-     * Rules applyed to files
+     * Rules applyed to files.
      *
      * @var array
      */
@@ -62,7 +60,7 @@ trait RuleListTrait
     protected function isRemoteRule($rule)
     {
         return in_array($rule, $this->serverRules) ||
-            !in_array($rule, $this->clientRules);
+            ! in_array($rule, $this->clientRules);
     }
 
     /**
@@ -86,19 +84,20 @@ trait RuleListTrait
      */
     protected function validationDisabled($rules)
     {
-        $rules = (array)$rules;
+        $rules = (array) $rules;
 
         return in_array($this->disableJsValidationRule, $rules);
     }
 
     /**
-     * Check if rules is for input file type
+     * Check if rules is for input file type.
      *
      * @param $rule
-
+     
      * @return bool
      */
-    protected function isFileRule($rule) {
+    protected function isFileRule($rule)
+    {
         return in_array($rule, $this->fileRules);
     }
 }
