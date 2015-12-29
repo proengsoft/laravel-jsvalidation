@@ -29,6 +29,7 @@ class JsValidationServiceProvider extends ServiceProvider
             $config = $app['config']->get('jsvalidation');
 
             return new JsValidatorFactory($app, $config);
+
         });
     }
 

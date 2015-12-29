@@ -38,8 +38,15 @@ class JsValidatorFactory
     public function __construct($app, array $options = [])
     {
         $this->app = $app;
-        $this->options = $options;
+        $this->setOptions($options);
     }
+
+    protected function setOptions($options) {
+        $options['disable_remote_validation'] = empty($options['disable_remote_validation'])?false:$options['disable_remote_validation'];
+        $options['view'] = empty($options['view'])?'jsvalidation:bootstrap':$options['view'];
+        $options['form_selector'] = empty($options['form_selector'])?'form':$options['form_selector'];
+    }
+
 
     /**
      * Creates JsValidator instance based on rules and message arrays.
@@ -55,7 +62,7 @@ class JsValidatorFactory
     {
         $validator = $this->getValidatorInstance($rules, $messages, $customAttributes);
 
-        return $this->jsValidator($validator, $selector);
+        return $this->validator($validator, $selector);
     }
 
     /**
@@ -97,7 +104,7 @@ class JsValidatorFactory
 
         $validator = $this->getValidatorInstance($rules, $formRequest->messages(), $formRequest->attributes());
 
-        return $this->jsValidator($validator, $selector);
+        return $this->validator($validator, $selector);
     }
 
     /**
@@ -109,7 +116,7 @@ class JsValidatorFactory
      */
     protected function createFormRequest($class)
     {
-        $request = $this->app['request'];
+        $request = $this->app->__get('request');
         $formRequest = call_user_func([$class, 'createFromBase'], $request);
 
         if ($session = $request->getSession()) {
@@ -169,14 +176,15 @@ class JsValidatorFactory
     protected function getSessionToken()
     {
         $token = null;
-        if ($session = $this->app['session']) {
+        if ($session = $this->app->__get('session')) {
             $token = $session->token();
         }
 
-        if ($encrypter = $this->app['encrypter']) {
+        if ($encrypter = $this->app->__get('encrypter')) {
             $token = $encrypter->encrypt($token);
         }
 
         return $token;
     }
+
 }
