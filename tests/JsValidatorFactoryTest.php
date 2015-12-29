@@ -5,7 +5,7 @@ use Mockery as m;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 
-class MockFormRequest extends \Illuminate\Foundation\Http\FormRequest {
+class MockFormRequest /*extends \Illuminate\Foundation\Http\FormRequest */ {
 
 
     public function rules () {}
@@ -242,15 +242,17 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getRouteResolver')->andReturn(function(){});
 
         //$requestMock= $this->getMock('\Symfony\Component\HttpFoundation\Request',['getUserResolver']);
+        /*
         $app->expects($this->at(0))
             ->method('__get')
             ->with('request')
             ->willReturn($mockedRequest);
-
+        */
 
         $factory = new JsValidatorFactory($app, $options);
 
-        $jsValidator = $factory->formRequest(MockFormRequest::class, $selector);
+        $mockForm = $this->getMockForAbstractClass('\Illuminate\Foundation\Http\FormRequest');
+        $jsValidator = $factory->formRequest($mockForm , $selector);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
     }

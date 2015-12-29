@@ -56,7 +56,7 @@ class JsValidatorFactory
      * @param array       $customAttributes
      * @param null|string $selector
      *
-     * @return \Proengsoft\JsValidation\Manager
+     * @return JavascriptValidator
      */
     public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector = null)
     {
