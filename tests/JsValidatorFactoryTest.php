@@ -1,8 +1,11 @@
 <?php
 
-namespace Proengsoft\JsValidation;
+namespace Proengsoft\JsValidation\Tests;
 use Mockery as m;
 use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
+use Proengsoft\JsValidation\JsValidatorFactory;
+
+require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
 
 class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -222,15 +225,15 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getRouteResolver')->andReturn(function(){});
 
         //$requestMock= $this->getMock('\Symfony\Component\HttpFoundation\Request',['getUserResolver']);
-        /*
+
         $app->expects($this->at(0))
             ->method('__get')
             ->with('request')
             ->willReturn($mockedRequest);
-        */
+
 
         $factory = new JsValidatorFactory($app, $options);
-
+        /*
         $mockForm = $this->getMockForAbstractClass('\Illuminate\Foundation\Http\FormRequest',[],'',true,true,true,['messages','attributes']);
         $mockForm->expects($this->once())
             ->method('messages')
@@ -238,7 +241,10 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $mockForm->expects($this->once())
             ->method('attributes')
             ->willReturn([]);
-        $jsValidator = $factory->formRequest($mockForm , $selector);
+        */
+        //$r= new \Proengsoft\JsValidation\Tests\StubFormRequest();
+
+        $jsValidator = $factory->formRequest('Proengsoft\JsValidation\Tests\StubFormRequest' , $selector);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
     }

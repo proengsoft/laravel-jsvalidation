@@ -3,8 +3,6 @@
 namespace Proengsoft\JsValidation;
 
 
-use Illuminate\Foundation\Application;
-
 class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
 
