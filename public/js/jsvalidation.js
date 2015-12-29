@@ -1776,6 +1776,34 @@ function strtotime(text, now) {
 
   return (date.getTime() / 1000);
 }
+function is_numeric(mixed_var) {
+  //  discuss at: http://phpjs.org/functions/is_numeric/
+  // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // improved by: David
+  // improved by: taith
+  // bugfixed by: Tim de Koning
+  // bugfixed by: WebDevHobo (http://webdevhobo.blogspot.com/)
+  // bugfixed by: Brett Zamir (http://brett-zamir.me)
+  // bugfixed by: Denis Chenu (http://shnoulle.net)
+  //   example 1: is_numeric(186.31);
+  //   returns 1: true
+  //   example 2: is_numeric('Kevin van Zonneveld');
+  //   returns 2: false
+  //   example 3: is_numeric(' +186.31e2');
+  //   returns 3: true
+  //   example 4: is_numeric('');
+  //   returns 4: false
+  //   example 5: is_numeric([]);
+  //   returns 5: false
+  //   example 6: is_numeric('1 ');
+  //   returns 6: false
+
+  var whitespace =
+    " \n\r\t\f\x0b\xa0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000";
+  return (typeof mixed_var === 'number' || (typeof mixed_var === 'string' && whitespace.indexOf(mixed_var.slice(-1)) ===
+    -
+    1)) && mixed_var !== '' && !isNaN(mixed_var);
+}
 /*!
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
  * @version 1.3.1
@@ -2407,7 +2435,7 @@ $.extend(true, laravelValidation, {
          */
         getSize: function getSize(obj, element, value) {
 
-            if (this.hasNumericRules(element) && /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value)) {
+            if (this.hasNumericRules(element) && this.is_numeric(value)) {
                 return parseFloat(value);
             } else if ($.isArray(value)) {
                 return parseFloat(value.length);
@@ -2500,6 +2528,17 @@ $.extend(true, laravelValidation, {
             return strtotime(text, now)
         },
 
+        /**
+         * Returns if value is numeric
+         * http://php.net/manual/es/var.is_numeric.php
+         * http://phpjs.org/functions/is_numeric/
+         *
+         * @param mixed_var
+         * @returns {*}
+         */
+        is_numeric: function (mixed_var) {
+            return is_numeric(mixed_var)
+        },
 
         /**
          * Returns Array diff based on PHP function array_diff

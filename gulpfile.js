@@ -26,15 +26,16 @@ elixir(function(mix) {
          */
         mix.scripts(
             [
-                bowerPath + 'jquery-validation/dist/jquery.validate.js',
-                bowerPath + 'phpjs/functions/strings/strlen.js',
-                bowerPath + 'phpjs/functions/array/array_diff.js',
-                bowerPath + 'phpjs/functions/datetime/strtotime.js',
-                bowerPath + 'php-date-formatter/js/php-date-formatter.js',
-                'assets/js/jsvalidation.js',
-                'assets/js/helpers.js',
-                'assets/js/timezones.js',
-                'assets/js/validations.js'
+                    bowerPath + 'jquery-validation/dist/jquery.validate.js',
+                    bowerPath + 'phpjs/functions/strings/strlen.js',
+                    bowerPath + 'phpjs/functions/array/array_diff.js',
+                    bowerPath + 'phpjs/functions/datetime/strtotime.js',
+                    bowerPath + 'phpjs/functions/var/is_numeric.js',
+                    bowerPath + 'php-date-formatter/js/php-date-formatter.js',
+                    'assets/js/jsvalidation.js',
+                    'assets/js/helpers.js',
+                    'assets/js/timezones.js',
+                    'assets/js/validations.js'
             ],
             'public/js/jsvalidation' + minSuffix + '.js',
             'resources'

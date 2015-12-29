@@ -114,7 +114,7 @@ $.extend(true, laravelValidation, {
          */
         getSize: function getSize(obj, element, value) {
 
-            if (this.hasNumericRules(element) && /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value)) {
+            if (this.hasNumericRules(element) && this.is_numeric(value)) {
                 return parseFloat(value);
             } else if ($.isArray(value)) {
                 return parseFloat(value.length);
@@ -207,6 +207,17 @@ $.extend(true, laravelValidation, {
             return strtotime(text, now)
         },
 
+        /**
+         * Returns if value is numeric
+         * http://php.net/manual/es/var.is_numeric.php
+         * http://phpjs.org/functions/is_numeric/
+         *
+         * @param mixed_var
+         * @returns {*}
+         */
+        is_numeric: function (mixed_var) {
+            return is_numeric(mixed_var)
+        },
 
         /**
          * Returns Array diff based on PHP function array_diff
