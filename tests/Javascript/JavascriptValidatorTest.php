@@ -95,15 +95,6 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @depends testToArray
-     */
-    public function testToString()
-    {
-        $this->testRender();
-    }
-
-
 
     public function testGet()
     {
@@ -171,4 +162,50 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected,$viewData);
     }
 
+    public function testRemote() {
+        $remote = true;
+        $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
+            ->disableOriginalConstructor()
+            ->setMethods(['validationData'])
+            ->getMock();
+
+        $mockHandler->expects($this->once())
+            ->method('validationData')
+            ->with($remote)
+            ->willReturn([]);
+
+        $validator = new JavascriptValidator($mockHandler);
+        $validator->remote(true);
+        $data = $validator->toArray();
+
+        $this->assertEquals(['selector'=>'form'],$data);
+    }
+
+
+    public function testToString()
+    {
+
+
+        $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        View::shouldReceive('make')
+            ->with('jsvalidation::bootstrap', ['validator' => ['selector' => 'form']])
+            ->once()
+            ->andReturn(
+                m::mock('Illuminate\Contracts\View\Factory')
+                    ->shouldReceive('render')
+                    ->once()
+                    ->andReturn('return')
+                    ->getMock());
+
+
+        $validator = new JavascriptValidator($mockHandler);
+
+        $txtRender = $validator->render();
+        $txt = $validator->__toString();
+        $this->assertEquals($txtRender, $txt);
+
+    }
 }

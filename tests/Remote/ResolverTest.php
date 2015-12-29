@@ -1,75 +1,12 @@
 <?php
 
 
-namespace Proengsoft\JsValidation\Remote;
+namespace Proengsoft\JsValidation\Tests\Remote;
 
-class CustomValidatorStubTest implements \Illuminate\Contracts\Validation\Factory{
+use Illuminate\Http\Exception\HttpResponseException;
+use Proengsoft\JsValidation\Remote\Resolver;
 
-    protected $resolver;
-
-    public function __construct($translator)
-    {
-        $this->resolver = function() use ($translator) {
-            $m=\Mockery::mock('Illuminate\Validation\Validator[sometimes]',[$translator,[],[]])
-                ->shouldAllowMockingMethod('sometimes');
-            $m->shouldReceive('sometimes')
-                ->once();
-            return $m;
-        };
-    }
-
-    /**
-     * Create a new Validator instance.
-     *
-     * @param  array $data
-     * @param  array $rules
-     * @param  array $messages
-     * @param  array $customAttributes
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    public function make(array $data, array $rules, array $messages = [], array $customAttributes = [])
-    {
-        // TODO: Implement make() method.
-    }
-
-    /**
-     * Register a custom validator extension.
-     *
-     * @param  string $rule
-     * @param  \Closure|string $extension
-     * @param  string $message
-     * @return void
-     */
-    public function extend($rule, $extension, $message = null)
-    {
-        // TODO: Implement extend() method.
-    }
-
-    /**
-     * Register a custom implicit validator extension.
-     *
-     * @param  string $rule
-     * @param  \Closure|string $extension
-     * @param  string $message
-     * @return void
-     */
-    public function extendImplicit($rule, $extension, $message = null)
-    {
-        // TODO: Implement extendImplicit() method.
-    }
-
-    /**
-     * Register a custom implicit validator message replacer.
-     *
-     * @param  string $rule
-     * @param  \Closure|string $replacer
-     * @return void
-     */
-    public function replacer($rule, $replacer)
-    {
-        // TODO: Implement replacer() method.
-    }
-}
+require_once __DIR__.'/../stubs/ResolverTest.php';
 
 class ResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -97,6 +34,7 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver = $this->resolverObject->resolver('filed');
 
+
         $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
         $validator = $resolver($translator,[],[],[],[]);
 
@@ -121,9 +59,33 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testValidatorIsClosure() {
 
-
         $resolver = $this->resolverObject->validator();
         $this->assertInstanceOf('Closure', $resolver);
+
+    }
+
+    public function testResolvesAndValidated() {
+        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        $resolverObject = new Resolver(new CustomValidatorStubTest($translator));
+
+        $resolver = $resolverObject->resolver('filed');
+
+        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        $validator = $resolver($translator,['field'=>'value'],['field'=>'required'],[],[]);
+        $validator->getRules();
+
+        $resolverValidator = $this->resolverObject->validator();
+
+
+        try {
+            $resolverValidator('__jsvalidation','field',[],$validator);
+            $this->fail('This test shloud throw Exception');
+        } catch (HttpResponseException $e){
+            $response = $e->getResponse();
+            $this->assertEquals('true',$response->getContent());
+            $this->assertEquals(200, $response->getStatusCode());
+        }
+        //$this->assertInstanceOf('Closure', $resolver);
 
     }
 
