@@ -153,7 +153,7 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
                     ->will($this->returnValue([]));
                 $newApp['config'] = $mockedConfig;
                 $factory = $callback($newApp);
-                $this->assertInstanceOf(JsValidatorFactory::class,$factory);
+                $this->assertInstanceOf('Proengsoft\JsValidation\JsValidatorFactory',$factory);
             });
 
 
