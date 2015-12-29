@@ -1,12 +1,8 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Albert
- * Date: 25/12/2015
- * Time: 21:31
- */
-class JavascriptRulesTraitTest extends PHPUnit_Framework_TestCase
+namespace Proengsoft\JsValidation\Tests\Javascript;
+
+class JavascriptRulesTraitTest extends \PHPUnit_Framework_TestCase
 {
     protected $mockTrait;
 

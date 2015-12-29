@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Albert
- * Date: 25/12/2015
- * Time: 4:57
- */
 
 namespace Proengsoft\JsValidation\Support;
 

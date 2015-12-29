@@ -1,6 +1,6 @@
 <?php
 
-namespace Proengsoft\JsValidation;
+namespace Proengsoft\JsValidation\Tests;
 
 
 class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase

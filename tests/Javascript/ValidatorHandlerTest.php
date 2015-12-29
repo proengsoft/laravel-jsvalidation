@@ -1,7 +1,10 @@
 <?php
 
-namespace Proengsoft\JsValidation\Javascript;
+namespace Proengsoft\JsValidation\Tests\Javascript;
 
+
+use Proengsoft\JsValidation\Javascript\RuleParser;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
 class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 {

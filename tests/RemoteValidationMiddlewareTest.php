@@ -1,6 +1,6 @@
 <?php
 
-namespace Proengsoft\JsValidation\Test;
+namespace Proengsoft\JsValidation\Tests;
 
 use Proengsoft\JsValidation\Remote\Validator;
 use Proengsoft\JsValidation\RemoteValidationMiddleware;
