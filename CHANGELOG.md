@@ -1,7 +1,7 @@
-## features/delegated-factory
+## dev-master
 
 Features:
- - Add ignore method to override default configuration  #
+ - Add ignore method to override default configuration
  - Add remote_validation_field config option
  - Allow using with other validation packages
 
