@@ -16,9 +16,9 @@
     "authors": [
         {
             "name": "Albert Moreno",
-            "email": "a.moreno@proengsoft.com",
-            "homepage": "http://www.proengsoft.com",
-            "role": "Developer"
+            "email": "albert@memorylimit.net",
+            "homepage": "http://memorylimit.net",
+            "role": "DevOps"
         }
     ],
     "require": {
