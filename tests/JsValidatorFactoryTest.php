@@ -255,7 +255,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
     }
 
-   
+
 
 
 }

@@ -106,6 +106,17 @@ class JsValidatorFactory
         return $this->validator($validator, $selector);
     }
 
+
+    protected function parseFormRequestName($class) {
+        $params = [];
+        if (is_array($class)) {
+            $params = empty($class[1])?$params:$class[1];
+            $class = $class[0];
+        }
+        return [$class,$params];
+
+    }
+
     /**
      *  Creates and initializes an Form Request instance.
      *
@@ -118,12 +129,7 @@ class JsValidatorFactory
          * @var $formRequest \Illuminate\Foundation\Http\FormRequest
          * @var $request Request
          */
-
-        $params = [];
-        if (is_array($class)) {
-            $params = empty($class[1])?$params:$class[1];
-            $class = $class[0];
-        }
+        list($class, $params) = $this->parseFormRequestName($class);
 
         $request = $this->app->__get('request');
         $formRequest = $this->app->build($class, $params);
