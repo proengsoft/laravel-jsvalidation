@@ -1,3 +1,8 @@
+## dev-master
+
+Features:
+ - Allow Dependency Injection in FormRequest Validations
+
 ## 1.3.0 (2015-12-29)
 
 Features:

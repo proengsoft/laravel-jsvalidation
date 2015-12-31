@@ -17,7 +17,7 @@ class JsValidatorFactory
     /**
      * The application instance.
      *
-     * @var \Illuminate\Contracts\Container\Container
+     * @var \Illuminate\Container\Container
      */
     protected $app;
 
@@ -31,7 +31,7 @@ class JsValidatorFactory
     /**
      * Create a new Validator factory instance.
      *
-     * @param \Illuminate\Contracts\Container\Container $app
+     * @param \Illuminate\Container\Container $app
      * @param array                                        $options
      */
     public function __construct($app, array $options = [])
@@ -69,7 +69,10 @@ class JsValidatorFactory
     /**
      * Get the validator instance for the request.
      *
-     * @return \Illuminate\Validation\Validator
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
+     * @return Validator
      */
     protected function getValidatorInstance(array $rules, array $messages = array(), array $customAttributes = array())
     {
@@ -88,16 +91,11 @@ class JsValidatorFactory
      * @param null $selector
      *
      * @return JavascriptValidator
-     *
      * @throws FormRequestArgumentException
      */
     public function formRequest($formRequest, $selector = null)
     {
-        if (! is_subclass_of($formRequest, 'Illuminate\\Foundation\\Http\\FormRequest')) {
-            throw new FormRequestArgumentException((string) $formRequest);
-        }
-
-        if (is_string($formRequest)) {
+        if (! is_object($formRequest)) {
             $formRequest = $this->createFormRequest($formRequest);
         }
 
@@ -108,25 +106,40 @@ class JsValidatorFactory
         return $this->validator($validator, $selector);
     }
 
+    protected function parseFormRequestName($class)
+    {
+        $params = [];
+        if (is_array($class)) {
+            $params = empty($class[1]) ? $params : $class[1];
+            $class = $class[0];
+        }
+
+        return [$class, $params];
+    }
+
     /**
      *  Creates and initializes an Form Request instance.
      *
      * @param string $class
-     *
      * @return FormRequest
      */
     protected function createFormRequest($class)
     {
+        /*
+         * @var $formRequest \Illuminate\Foundation\Http\FormRequest
+         * @var $request Request
+         */
+        list($class, $params) = $this->parseFormRequestName($class);
+
         $request = $this->app->__get('request');
-        $formRequest = call_user_func([$class, 'createFromBase'], $request);
+        $formRequest = $this->app->build($class, $params);
 
         if ($session = $request->getSession()) {
             $formRequest->setSession($session);
         }
-
         $formRequest->setUserResolver($request->getUserResolver());
-
         $formRequest->setRouteResolver($request->getRouteResolver());
+        $formRequest->setContainer($this->app);
 
         return $formRequest;
     }
