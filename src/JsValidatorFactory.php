@@ -95,7 +95,7 @@ class JsValidatorFactory
      */
     public function formRequest($formRequest, $selector = null)
     {
-        if (!is_object($formRequest)) {
+        if (! is_object($formRequest)) {
             $formRequest = $this->createFormRequest($formRequest);
         }
 
@@ -106,15 +106,15 @@ class JsValidatorFactory
         return $this->validator($validator, $selector);
     }
 
-
-    protected function parseFormRequestName($class) {
+    protected function parseFormRequestName($class)
+    {
         $params = [];
         if (is_array($class)) {
-            $params = empty($class[1])?$params:$class[1];
+            $params = empty($class[1]) ? $params : $class[1];
             $class = $class[0];
         }
-        return [$class,$params];
 
+        return [$class, $params];
     }
 
     /**
@@ -125,7 +125,7 @@ class JsValidatorFactory
      */
     protected function createFormRequest($class)
     {
-        /**
+        /*
          * @var $formRequest \Illuminate\Foundation\Http\FormRequest
          * @var $request Request
          */
