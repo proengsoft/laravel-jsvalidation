@@ -211,6 +211,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
 
         $app = $this->getMock('\Illuminate\Container\Container');
+
         $app->expects($this->once())
             ->method('make')
             ->with('Illuminate\Contracts\Validation\Factory')
@@ -232,8 +233,6 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn($mockedRequest);
 
 
-        $factory = new JsValidatorFactory($app, $options);
-        /*
         $mockForm = $this->getMockForAbstractClass('\Illuminate\Foundation\Http\FormRequest',[],'',true,true,true,['messages','attributes']);
         $mockForm->expects($this->once())
             ->method('messages')
@@ -241,36 +240,22 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $mockForm->expects($this->once())
             ->method('attributes')
             ->willReturn([]);
-        */
-        //$r= new \Proengsoft\JsValidation\Tests\StubFormRequest();
 
-        $jsValidator = $factory->formRequest('Proengsoft\JsValidation\Tests\StubFormRequest' , $selector);
+        $app->expects($this->once())
+            ->method('build')
+            ->with('Proengsoft\JsValidation\Tests\StubFormRequest')
+            ->willReturn($mockForm);
+
+        $factory = new JsValidatorFactory($app, $options);
+
+
+
+        $jsValidator = $factory->formRequest(['Proengsoft\JsValidation\Tests\StubFormRequest'] , $selector);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
     }
 
-    public function testFormRequestException() {
-        $app = $this->getMock('\Illuminate\Container\Container');
-        $options['disable_remote_validation'] = false;
-        $options['view'] = 'jsvalidation::bootstrap';
-        $options['form_selector'] = 'form';
-
-        try {
-            $mock=m::mock('Object');
-            $factory = new JsValidatorFactory($app, $options);
-
-            $js=$factory->formRequest($mock);
-            $this->assertNotInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator',$js);
-        }
-        catch (FormRequestArgumentException $expected) {
-            $this->assertTrue(true);
-            return;
-        }
-
-        $this->fail('An expected exception has not been raised.');
-
-
-    }
+   
 
 
 }

@@ -6,6 +6,7 @@ namespace  Illuminate\Foundation\Http {
             public function setSession(){}
             public function setUserResolver(){}
             public function setRouteResolver() {}
+            public function setContainer() {}
         }
     }
 }
