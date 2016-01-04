@@ -2239,9 +2239,14 @@ laravelValidation = {
             previous.old = value;
             validator = this;
             this.startRequest( element );
-            data = {};
-            data[ element.name ] = value;
-            data['_jsvalidation']= attribute;
+
+            data = $(validator.currentForm).serializeArray();
+
+            data.push({
+                'name': '_jsvalidation',
+                'value': attribute
+            });
+            
             var formMethod = $(validator.currentForm).attr('method');
             if($(validator.currentForm).find('input[name="_method"]').length) {
                 formMethod = $(validator.currentForm).find('input[name="_method"]').val();
