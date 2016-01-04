@@ -86,7 +86,7 @@ Take a look to [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/
 
 #### Known issues
 - DateFormat rule don't support timezone format 
-- Extra fields in remote rules are not supported. Issue #88
+
 
 #### License
 

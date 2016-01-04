@@ -1,7 +1,8 @@
-## dev-master
+## 1.3.1 (2016-01-04)
 
 Features:
  - Allow Dependency Injection in FormRequest Validations
+ - Add extra field values to ajax request on remote validation. #88 #89
 
 ## 1.3.0 (2015-12-29)
 
