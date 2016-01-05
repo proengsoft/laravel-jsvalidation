@@ -108,7 +108,6 @@ class ValidatorHandler
         return $jsRule && ($includeRemote || $jsRule !== RuleParser::REMOTE_RULE);
     }
 
-
     /**
      * Check if JS Validation is disabled for attribute.
      *
@@ -139,13 +138,14 @@ class ValidatorHandler
     }
 
     /**
-     * Validate Conditional Validations using Ajax in specified fields
+     * Validate Conditional Validations using Ajax in specified fields.
      *
      * @param  string|array  $attribute
      * @param  string|array  $rules
      */
-    public function sometimes($attribute, $rules=[]) {
-        $this->validator->sometimes($attribute, $rules, function() {
+    public function sometimes($attribute, $rules = [])
+    {
+        $this->validator->sometimes($attribute, $rules, function () {
             return true;
         });
         foreach ((array) $attribute as $key) {
@@ -156,16 +156,15 @@ class ValidatorHandler
     }
 
     /**
-     * Determine if rule is passed with sometimes
+     * Determine if rule is passed with sometimes.
      *
      * @param $attribute
      * @param $rule
      * @return bool
      */
-    protected function isConditionalRule($attribute, $rule) {
-
+    protected function isConditionalRule($attribute, $rule)
+    {
         return isset($this->conditional[$attribute]) &&
             in_array($rule, $this->conditional[$attribute]);
     }
-
 }
