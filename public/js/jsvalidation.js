@@ -2210,7 +2210,8 @@ laravelValidation = {
             var implicit = false,
                 check = params[0][1],
                 attribute = check[0],
-                token = check[1];
+                token = check[1],
+                validate_all = check[2];
 
             $.each(params, function (i, parameters) {
                 implicit = implicit || parameters[3];
@@ -2246,7 +2247,12 @@ laravelValidation = {
                 'name': '_jsvalidation',
                 'value': attribute
             });
-            
+
+            data.push({
+                'name': '_jsvalidation_validate_all',
+                'value': validate_all
+            });
+
             var formMethod = $(validator.currentForm).attr('method');
             if($(validator.currentForm).find('input[name="_method"]').length) {
                 formMethod = $(validator.currentForm).find('input[name="_method"]').val();

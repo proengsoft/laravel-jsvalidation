@@ -27,6 +27,8 @@ class Validator
      */
     protected $validator;
 
+    protected $validateAll = false;
+
     /**
      * RemoteValidator constructor.
      *
@@ -37,8 +39,9 @@ class Validator
         $this->validator = $validator;
     }
 
-    public function validate($attribute, $value, $parameters)
+    public function validate($attribute, $value, $parameters, $validateAll=false)
     {
+        $this->validateAll = $validateAll;
         $validationData = $this->parseJsRemoteRequest($attribute, $value, $parameters);
         $validationResult = $this->validateJsRemoteRequest($validationData[1]);
         throw new HttpResponseException(
@@ -107,11 +110,13 @@ class Validator
     protected function purgeNonRemoteRules($rules, $validator)
     {
         $disabled = $this->validationDisabled($rules);
+        if (!$disabled && $this->validateAll) return $rules;
+
         $protectedValidator = $this->createProtectedCaller($validator);
 
         foreach ($rules as $i => $rule) {
             $parsedRule = call_user_func($protectedValidator, 'parseRule', [$rule]);
-            if ($disabled || ! $this->isRemoteRule($parsedRule[0])) {
+            if ($disabled || ! $this->isRemoteRule($parsedRule[0]) ) {
                 unset($rules[$i]);
             }
         }

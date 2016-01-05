@@ -165,6 +165,30 @@ class DelegatedValidator
     }
 
     /**
+     * Explode the rules into an array of rules.
+     *
+     * @param  string|array  $rules
+     * @return array
+     */
+    public function explodeRules($rules)
+    {
+        return $this->callValidator('explodeRules', [$rules]);
+    }
+
+    /**
+     * Add conditions to a given field based on a Closure.
+     *
+     * @param  string|array  $attribute
+     * @param  string|array  $rules
+     * @param  callable  $callback
+     * @return void
+     */
+    public function sometimes($attribute, $rules, callable $callback)
+    {
+        $this->validator->sometimes($attribute, $rules, $callback);
+    }
+
+    /**
      * Delegate method calls to validator instance.
      *
      * @param $method

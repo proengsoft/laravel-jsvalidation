@@ -26,6 +26,8 @@ class ValidatorHandler
      */
     protected $messages;
 
+    protected $conditional = [];
+
     /**
      * Create a new JsValidation instance.
      *
@@ -80,8 +82,9 @@ class ValidatorHandler
     {
         $jsRules = [];
         foreach ($rules as $rawRule) {
+            $forceRemote = $this->isConditionalRule($attribute, $rawRule);
             list($rule, $parameters) = $this->validator->parseRule($rawRule);
-            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters);
+            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters, $forceRemote);
             if ($this->isValidatable($jsRule, $includeRemote)) {
                 $jsRules[$jsAttribute][$jsRule][] = array($rule, $jsParams,
                     $this->messages->getMessage($attribute, $rule, $parameters),
@@ -104,6 +107,7 @@ class ValidatorHandler
     {
         return $jsRule && ($includeRemote || $jsRule !== RuleParser::REMOTE_RULE);
     }
+
 
     /**
      * Check if JS Validation is disabled for attribute.
@@ -133,4 +137,28 @@ class ValidatorHandler
             'messages' => $jsMessages,
         ];
     }
+
+    /**
+     * Validate Conditional Validations using Ajax in specified fields
+     *
+     * @param  string|array  $attribute
+     * @param  string|array  $rules
+     */
+    public function sometimes($attribute, $rules=[]) {
+        $this->validator->sometimes($attribute, $rules, function() {
+            return true;
+        });
+        foreach ((array) $attribute as $key) {
+            $current = isset($this->conditional[$key]) ? $this->conditional[$key] : [];
+            $merge = head($this->validator->explodeRules([$rules]));
+            $this->conditional[$key] = array_merge($current, $merge);
+        }
+    }
+
+    protected function isConditionalRule($attribute, $rule) {
+
+        return isset($this->conditional[$attribute]) &&
+            in_array($rule, $this->conditional[$attribute]);
+    }
+
 }
