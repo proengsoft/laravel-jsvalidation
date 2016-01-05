@@ -155,6 +155,13 @@ class ValidatorHandler
         }
     }
 
+    /**
+     * Determine if rule is passed with sometimes
+     *
+     * @param $attribute
+     * @param $rule
+     * @return bool
+     */
     protected function isConditionalRule($attribute, $rule) {
 
         return isset($this->conditional[$attribute]) &&

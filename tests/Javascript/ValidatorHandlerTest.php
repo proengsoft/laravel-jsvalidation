@@ -109,5 +109,72 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testSometimes() {
+
+        $attribute = 'field';
+        $rule = 'required_if:field2,value2';
+
+
+        $mockDelegated = $this->getMockBuilder('Proengsoft\JsValidation\Support\DelegatedValidator')
+            ->disableOriginalConstructor()
+            ->setMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
+            ->getMock();
+
+        $mockDelegated->expects($this->once())
+            ->method('sometimes')
+            ->with($attribute, $rule, function() {return true;})
+            ->willReturn(null);
+
+        $mockDelegated->expects($this->once())
+            ->method('explodeRules')
+            ->with([$rule])
+            ->willReturn([[$rule]]);
+
+        $mockDelegated->expects($this->any())
+            ->method('getRules')
+            ->willReturn([$attribute=>[$rule]]);
+
+        $mockDelegated->expects($this->any())
+            ->method('hasRule')
+            ->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)
+            ->willReturn(false);
+
+        $mockDelegated->expects($this->once())
+            ->method('parseRule')
+            ->with($rule)
+            ->willReturn(['RequiredIf',['field2','value2']]);
+
+        $mockDelegated->expects($this->once())
+            ->method('isImplicit')
+            ->with('RequiredIf')
+            ->willReturn(false);
+
+
+        $mockRule = $this->getMock('Proengsoft\JsValidation\Javascript\RuleParser',[], [$mockDelegated] );
+        $mockRule->expects($this->once())
+            ->method('getRule')
+            ->with($attribute, 'RequiredIf', ['field2','value2'])
+            ->willReturn([$attribute, RuleParser::REMOTE_RULE, ['field2','value2']]);
+
+        $mockMessages = $this->getMock('Proengsoft\JsValidation\Javascript\MessageParser', [], [$mockDelegated] );
+        $mockMessages->expects($this->once())
+            ->method('getMessage')
+            ->with($attribute, 'RequiredIf', ['field2','value2'])
+            ->willReturn('Field is required if');
+
+
+        $handler = new ValidatorHandler($mockRule, $mockMessages);
+        $handler->setDelegatedValidator($mockDelegated);
+        $handler->sometimes($attribute, $rule);
+
+        $data = $handler->validationData();
+        $expected = [
+            'rules' => array('field'=>['laravelValidationRemote'=>[['RequiredIf',['field2','value2'],'Field is required if',false]]]),
+            'messages' =>  array(),
+        ];
+
+        $this->assertEquals($expected, $data);
+    }
+
 
 }

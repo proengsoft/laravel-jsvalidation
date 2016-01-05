@@ -24,7 +24,7 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
     public function testResolverIsClosure() {
 
 
-        $resolver = $this->resolverObject->resolver('filed');
+        $resolver = $this->resolverObject->resolver('field');
         $this->assertInstanceOf('Closure', $resolver);
 
     }
@@ -32,7 +32,7 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
     public function testResolvesNewValidator() {
 
 
-        $resolver = $this->resolverObject->resolver('filed');
+        $resolver = $this->resolverObject->resolver('field');
 
 
         $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
@@ -48,7 +48,7 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
         $resolverObject = new Resolver(new CustomValidatorStubTest($translator));
 
-        $resolver = $resolverObject->resolver('filed');
+        $resolver = $resolverObject->resolver('field');
 
         $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
         $validator = $resolver($translator,[],[],[],[]);
@@ -68,17 +68,22 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
         $resolverObject = new Resolver(new CustomValidatorStubTest($translator));
 
-        $resolver = $resolverObject->resolver('filed');
+        $resolver = $resolverObject->resolver('field');
 
         $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
-        $validator = $resolver($translator,['field'=>'value'],['field'=>'required'],[],[]);
-        $validator->getRules();
+        $validator = $resolver($translator,
+            ['field'=>'value', '_jsvalidation_validate_all'=>false],
+            ['field'=>'required'],
+            [],
+            []
+        );
+        $validator->setData(['field'=>'value', '_jsvalidation_validate_all'=>false]);
 
         $resolverValidator = $this->resolverObject->validator();
 
 
         try {
-            $resolverValidator('__jsvalidation','field',[],$validator);
+            $resolverValidator('_jsvalidation','field',[],$validator);
             $this->fail('This test shloud throw Exception');
         } catch (HttpResponseException $e){
             $response = $e->getResponse();
