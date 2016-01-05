@@ -74,8 +74,6 @@ class RuleParser
         return $this->validator->getRules();
     }
 
-
-
     /**
      * Returns Javascript parameters for remote validated rules.
      *
@@ -110,7 +108,7 @@ class RuleParser
         $params = [
             $attribute,
             $this->remoteToken,
-            $forceRemote
+            $forceRemote,
         ];
 
         return [$attribute, $params];
