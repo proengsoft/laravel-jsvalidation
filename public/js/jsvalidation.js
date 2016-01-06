@@ -2287,7 +2287,6 @@ laravelValidation = {
                         return;
                     }
 
-
                     validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
 
                     if ( valid ) {
@@ -3375,7 +3374,7 @@ $.extend(true, laravelValidation, {
          */
         Digits: function(value, element, params) {
             return ($.validator.methods.number.call(this, value, element, true)
-                && value.length===parseInt(params));
+                && value.length===parseInt(params, 10));
         },
 
         /**
