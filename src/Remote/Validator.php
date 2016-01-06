@@ -57,7 +57,7 @@ class Validator
      */
     protected function parseJsRemoteRequest($attribute, $value, $parameters)
     {
-        parse_str("$value=", $attr_parts);
+        parse_str($value, $attr_parts);
         $attr_parts = is_null($attr_parts) ? [] : $attr_parts;
         $newAttr = array_keys(Arr::dot($attr_parts));
 
