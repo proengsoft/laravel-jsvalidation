@@ -2597,7 +2597,7 @@ $.extend(true, laravelValidation, {
          * @returns {string[]}
          */
         parseErrorResponse: function (response) {
-            var newResponse = ["Whoops, looks like something went wrong."];
+            var newResponse = ['Whoops, looks like something went wrong.'];
             if ('responseText' in response) {
                 var errorMsg = response.responseText.match(/<h1\s*>(.*)<\/h1\s*>/i);
                 if ($.isArray(errorMsg)) {
@@ -3373,8 +3373,10 @@ $.extend(true, laravelValidation, {
          * The field under validation must be numeric and must have an exact length of value.
          */
         Digits: function(value, element, params) {
-            return ($.validator.methods.number.call(this, value, element, true)
-                && value.length===parseInt(params, 10));
+            return (
+                $.validator.methods.number.call(this, value, element, true) &&
+                value.length === parseInt(params, 10)
+            );
         },
 
         /**
