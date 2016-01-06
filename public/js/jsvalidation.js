@@ -2275,19 +2275,12 @@ laravelValidation = {
 
 
             }, param )
-            ).always(function( response, textStatus, errorThrown ) {
+            ).always(function( response, textStatus ) {
                     var errors, message, submitted, valid;
 
                     if (textStatus === 'error') {
                         valid = false;
-                        if ('responseText' in response) {
-                            var errorMsg = response.responseText.match(/<h1\s*>(.*)<\/h1\s*>/i);
-                            if ($.isArray(errorMsg)) {
-                                response = [errorMsg[1]];
-                            }
-                        } else {
-                            response = ["Whoops, looks like something went wrong."];
-                        }
+                        response = laravelValidation.helpers.parseErrorResponse(response);
                     } else if (textStatus === 'success') {
                         valid = response === true || response === "true";
                     } else {
@@ -2565,6 +2558,14 @@ $.extend(true, laravelValidation, {
         },
 
 
+        /**
+         * Makes element dependant from other
+         *
+         * @param validator
+         * @param element
+         * @param name
+         * @returns {*}
+         */
         dependentElement: function(validator, element, name) {
 
             var el=validator.findByName(name);
@@ -2588,8 +2589,24 @@ $.extend(true, laravelValidation, {
             }
 
             return el[0];
-        }
+        },
 
+        /**
+         * Parses error Ajax response and gets the message
+         *
+         * @param response
+         * @returns {string[]}
+         */
+        parseErrorResponse: function (response) {
+            var newResponse = ["Whoops, looks like something went wrong."];
+            if ('responseText' in response) {
+                var errorMsg = response.responseText.match(/<h1\s*>(.*)<\/h1\s*>/i);
+                if ($.isArray(errorMsg)) {
+                    newResponse = [errorMsg[1]];
+                }
+            }
+            return newResponse;
+        }
 
 
     }

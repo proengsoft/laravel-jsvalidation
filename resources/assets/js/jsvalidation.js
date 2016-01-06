@@ -156,25 +156,17 @@ laravelValidation = {
 
 
             }, param )
-            ).always(function( response, textStatus, errorThrown ) {
+            ).always(function( response, textStatus ) {
                     var errors, message, submitted, valid;
 
                     if (textStatus === 'error') {
                         valid = false;
-                        if ('responseText' in response) {
-                            var errorMsg = response.responseText.match(/<h1\s*>(.*)<\/h1\s*>/i);
-                            if ($.isArray(errorMsg)) {
-                                response = [errorMsg[1]];
-                            }
-                        } else {
-                            response = ["Whoops, looks like something went wrong."];
-                        }
+                        response = laravelValidation.helpers.parseErrorResponse(response);
                     } else if (textStatus === 'success') {
                         valid = response === true || response === "true";
                     } else {
                         return;
                     }
-
 
                     validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
 
