@@ -1,6 +1,8 @@
 ## dev-master
+
 Features:
- - Support for Laravel [Conditional Rules] (https://laravel.com/docs/5.1/validation#conditionally-adding-rules)
+ - Support for Laravel [Conditional Rules] (https://laravel.com/docs/5.2/validation#conditionally-adding-rules)
+ - Support for [RequiredUnless](https://laravel.com/docs/5.2/validation#rule-required-unless) Rule
 
 
 ## 1.3.1 (2016-01-04)
