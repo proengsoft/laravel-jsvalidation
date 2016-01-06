@@ -3261,6 +3261,13 @@ $.extend(true, laravelValidation, {
 
         },
 
+        /**
+         * Validate that an attribute exists when another attribute does not have a given value.
+         * @return {boolean}
+         */
+        RequiredUnless: function(value, element, params) {
+            return ! laravelValidation.methods.RequiredIf.call(this, value, element, params);
+        },
 
         /**
          * Validate that an attribute has a matching confirmation.
