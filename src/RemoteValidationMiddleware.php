@@ -7,6 +7,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Proengsoft\JsValidation\Remote\Resolver;
 use Proengsoft\JsValidation\Remote\Validator;
+use \Illuminate\Http\Request;
 
 class RemoteValidationMiddleware
 {
@@ -44,7 +45,7 @@ class RemoteValidationMiddleware
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if ($request->has($this->field)) {
             $this->wrapValidator();
