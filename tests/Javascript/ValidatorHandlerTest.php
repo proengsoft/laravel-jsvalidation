@@ -113,7 +113,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 
         $attribute = 'field';
         $rule = 'required_if:field2,value2';
-
+        $callbackTrue = function(){return true;};
 
         $mockDelegated = $this->getMockBuilder('Proengsoft\JsValidation\Support\DelegatedValidator')
             ->disableOriginalConstructor()
@@ -122,7 +122,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 
         $mockDelegated->expects($this->once())
             ->method('sometimes')
-            ->with($attribute, $rule, function() {return true;})
+            ->with($attribute, $rule, $callbackTrue)
             ->willReturn(null);
 
         $mockDelegated->expects($this->once())

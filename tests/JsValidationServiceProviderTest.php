@@ -140,10 +140,12 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testRegister() {
         $app = $this->getMock('Illuminate\Contracts\Container\Container');
+
         $app->expects($this->once())
             ->method('singleton')
             ->with('jsvalidator', $this->isInstanceOf('Closure'))
             ->willReturnCallback(function($name, $callback)  {
+                $callbackTrue = function(){return true;};
                 $mockedConfig = $this->getMockForAbstractClass('Illuminate\Contracts\Config\Repository',[],'',false);
                 $mockedConfig->expects($this->once())
                     ->method('get')
@@ -154,7 +156,7 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
                 $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
                 $mockedValidator->expects($this->once())
                     ->method('extend')
-                    ->with('NoJsValidation',function(){return true;})
+                    ->with('NoJsValidation',$callbackTrue)
                     ->will($this->returnValue(null));
 
                 $newApp['config'] = $mockedConfig;
