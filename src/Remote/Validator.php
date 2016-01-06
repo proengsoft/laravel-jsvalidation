@@ -94,6 +94,12 @@ class Validator
     {
         $rules = $validator->getRules();
         $rules = isset($rules[$attribute])?$rules[$attribute]:[];
+        
+        if ($this->validationDisabled($rules)) {
+            $validator->setRules([$attribute => []]);
+            return $validator;
+        }
+
         $rules = $this->purgeNonRemoteRules($rules, $validator);
         $validator->setRules([$attribute => $rules]);
 
@@ -109,16 +115,13 @@ class Validator
      */
     protected function purgeNonRemoteRules($rules, $validator)
     {
-        $disabled = $this->validationDisabled($rules);
-        if (! $disabled && $this->validateAll) {
-            return $rules;
-        }
+        if ($this->validateAll) return $rules;
 
         $protectedValidator = $this->createProtectedCaller($validator);
 
         foreach ($rules as $i => $rule) {
             $parsedRule = call_user_func($protectedValidator, 'parseRule', [$rule]);
-            if ($disabled || ! $this->isRemoteRule($parsedRule[0])) {
+            if (! $this->isRemoteRule($parsedRule[0])) {
                 unset($rules[$i]);
             }
         }
