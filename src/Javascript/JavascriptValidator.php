@@ -205,4 +205,19 @@ class JavascriptValidator implements Arrayable
 
         return $this;
     }
+
+    /**
+     * Validate Conditional Validations using Ajax in specified fields.
+     *
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     
+     * @return JavascriptValidator
+     */
+    public function sometimes($attribute, $rules)
+    {
+        $this->validator->sometimes($attribute, $rules);
+
+        return $this;
+    }
 }

@@ -26,6 +26,8 @@ class ValidatorHandler
      */
     protected $messages;
 
+    protected $conditional = [];
+
     /**
      * Create a new JsValidation instance.
      *
@@ -72,7 +74,7 @@ class ValidatorHandler
      *
      * @param $attribute
      * @param $rules
-     * @param $includeRemote
+     * @param bool $includeRemote
      *
      * @return array
      */
@@ -80,8 +82,9 @@ class ValidatorHandler
     {
         $jsRules = [];
         foreach ($rules as $rawRule) {
+            $forceRemote = $this->isConditionalRule($attribute, $rawRule);
             list($rule, $parameters) = $this->validator->parseRule($rawRule);
-            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters);
+            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters, $forceRemote);
             if ($this->isValidatable($jsRule, $includeRemote)) {
                 $jsRules[$jsAttribute][$jsRule][] = array($rule, $jsParams,
                     $this->messages->getMessage($attribute, $rule, $parameters),
@@ -132,5 +135,35 @@ class ValidatorHandler
             'rules' => $jsValidations,
             'messages' => $jsMessages,
         ];
+    }
+
+    /**
+     * Validate Conditional Validations using Ajax in specified fields.
+     *
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     */
+    public function sometimes($attribute, $rules = [])
+    {
+        $callback = function () {return true; };
+        $this->validator->sometimes($attribute, $rules, $callback);
+        foreach ((array) $attribute as $key) {
+            $current = isset($this->conditional[$key]) ? $this->conditional[$key] : [];
+            $merge = head($this->validator->explodeRules([$rules]));
+            $this->conditional[$key] = array_merge($current, $merge);
+        }
+    }
+
+    /**
+     * Determine if rule is passed with sometimes.
+     *
+     * @param $attribute
+     * @param $rule
+     * @return bool
+     */
+    protected function isConditionalRule($attribute, $rule)
+    {
+        return isset($this->conditional[$attribute]) &&
+            in_array($rule, $this->conditional[$attribute]);
     }
 }

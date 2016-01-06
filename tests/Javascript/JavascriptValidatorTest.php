@@ -182,6 +182,29 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['selector'=>'form'],$data);
     }
 
+    public function testSometimes() {
+        $remote = true;
+        $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
+            ->disableOriginalConstructor()
+            ->setMethods(['validationData','sometimes'])
+            ->getMock();
+
+        $mockHandler->expects($this->once())
+            ->method('sometimes')
+            ->with('field','required')
+            ->willReturn([]);
+
+        $mockHandler->expects($this->once())
+            ->method('validationData')
+            ->with($remote)
+            ->willReturn([]);
+
+        $validator = new JavascriptValidator($mockHandler);
+        //$validator->remote(true);
+         $validator->sometimes('field','required');
+        $data = $validator->toArray();
+        $this->assertEquals(['selector'=>'form'],$data);
+    }
 
     public function testToString()
     {

@@ -91,7 +91,8 @@ laravelValidation = {
             var implicit = false,
                 check = params[0][1],
                 attribute = check[0],
-                token = check[1];
+                token = check[1],
+                validateAll = check[2];
 
             $.each(params, function (i, parameters) {
                 implicit = implicit || parameters[3];
@@ -126,6 +127,11 @@ laravelValidation = {
             data.push({
                 'name': '_jsvalidation',
                 'value': attribute
+            });
+
+            data.push({
+                'name': '_jsvalidation_validate_all',
+                'value': validateAll
             });
 
             var formMethod = $(validator.currentForm).attr('method');

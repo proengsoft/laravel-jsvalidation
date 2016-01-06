@@ -45,13 +45,15 @@ class RuleParser
      * @param string $attribute
      * @param string $rule
      * @param $parameters
+     * @param $forceRemote
      *
      * @return array
      */
-    public function getRule($attribute, $rule, $parameters)
+    public function getRule($attribute, $rule, $parameters, $forceRemote = false)
     {
-        if ($this->isRemoteRule($rule)) {
-            list($attribute, $parameters) = $this->remoteRule($attribute);
+        $remote = $forceRemote || $this->isRemoteRule($rule);
+        if ($remote) {
+            list($attribute, $parameters) = $this->remoteRule($attribute, $forceRemote);
             $jsRule = self::REMOTE_RULE;
         } else {
             list($jsRule, $attribute, $parameters) = $this->clientRule($attribute, $rule, $parameters);
@@ -67,7 +69,7 @@ class RuleParser
      *
      * @return array
      */
-    public function getRules()
+    public function getValidatorRules()
     {
         return $this->validator->getRules();
     }
@@ -97,14 +99,16 @@ class RuleParser
      * Returns Javascript parameters for remote validated rules.
      *
      * @param string $attribute
+     * @param bool $forceRemote
      *
      * @return array
      */
-    protected function remoteRule($attribute)
+    protected function remoteRule($attribute, $forceRemote)
     {
         $params = [
             $attribute,
             $this->remoteToken,
+            $forceRemote,
         ];
 
         return [$attribute, $params];

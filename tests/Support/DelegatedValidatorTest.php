@@ -56,6 +56,16 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test Sometimes method.
+     */
+    public function testSometimes()
+    {
+        $expected = null;
+
+        $this->callValidatorMethod('sometimes',$expected,['field','required',function(){}]);
+    }
+
+    /**
      * Test Get the files under validation.
      */
     public function testGetFiles()
@@ -76,7 +86,16 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * Test Explode rules.
+     *
+     */
+    public function testExplodeRules()
+    {
+        $arg='required|url';
+        $this->callValidatorProtectedMethod('explodeRules',$arg);
 
+    }
     /**
      * Test if a given rule implies the attribute is required.
      */
@@ -153,7 +172,7 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
      *
      * @return mixed
      */
-    private function callValidatorMethod($method, $return = null) {
+    private function callValidatorMethod($method, $return = null, $args=[]) {
 
         $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
             ->disableOriginalConstructor()
@@ -164,7 +183,8 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
             ->willReturn($return);
 
         $delegated = new DelegatedValidator($validator);
-        $value= $delegated->$method();
+        //$value= $delegated->$method();
+        $value=call_user_func_array([$delegated, $method],$args);
 
         $this->assertEquals($return, $value);
 

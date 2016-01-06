@@ -80,8 +80,11 @@ class Resolver
     public function validator()
     {
         return function ($attribute, $value, $parameters, $validator) {
+
+            $data = $validator->getData();
+            $validateAll = $data[$attribute.'_validate_all'];
             $remoteValidator = new Validator($validator);
-            $remoteValidator->validate($attribute, $value, $parameters);
+            $remoteValidator->validate($attribute, $value, $parameters, $validateAll);
         };
     }
 }

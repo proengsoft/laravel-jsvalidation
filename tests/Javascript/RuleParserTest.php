@@ -60,7 +60,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parser = new RuleParser($delegated, $token);
 
         $values = $parser->getRule($attribute, $rule, $parameters);
-        $expected = [$attribute,RuleParser::REMOTE_RULE,[$attribute, $token]];
+        $expected = [$attribute,RuleParser::REMOTE_RULE,[$attribute, $token, false]];
 
         $this->assertEquals($expected, $values);
     }
@@ -80,7 +80,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
 
         $parser = new RuleParser($delegated, null);
 
-        $this->assertEquals($expects, $parser->getRules());
+        $this->assertEquals($expects, $parser->getValidatorRules());
     }
 
     public function testGetRuleWithAttributeArray()
