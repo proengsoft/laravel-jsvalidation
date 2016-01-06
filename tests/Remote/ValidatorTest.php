@@ -43,37 +43,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testValidateRemoteBadAttribute()
-    {
-        $rules = ['field' => 'active_url|required'];
-        $data = ['field' => 'http://nonexistentdomain'];
-        $validator = $this->getRealValidator($rules, [],$data);
-
-        try {
-            $validator->validate('_jsvalidation','undefined',[]);
-            $this->fail();
-        } catch (BadRequestHttpException $ex) {
-            $this->assertEquals("Undefined 'undefined' attribute", $ex->getMessage());
-        }
-
-    }
-
-    public function testValidateRemoteBadRules()
-    {
-        $rules = ['field' => 'required'];
-        $data = ['field' => 'http://www.google.es'];
-        $validator = $this->getRealValidator($rules, [],$data);
-
-        try {
-            $validator->validate('_jsvalidation','field',[]);
-            $this->fail();
-        } catch (BadRequestHttpException $ex) {
-            $this->assertEquals("No validations available for 'field'", $ex->getMessage());
-        }
-
-    }
-
-
     protected function getRealTranslator()
     {
         $trans = new \Symfony\Component\Translation\Translator('en', new \Symfony\Component\Translation\MessageSelector);
