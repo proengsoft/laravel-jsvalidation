@@ -136,6 +136,15 @@ class JavascriptRulesTraitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testRuleRequiredUnless() {
+
+        $values = $this->callProtected('ruleRequiredUnless','field',['field2']);
+        $expected = ['field', ['field2']];
+
+        $this->assertEquals($expected,$values);
+
+    }
+
 
     protected function callProtected($method, $attribute, $parameters=[])
     {
