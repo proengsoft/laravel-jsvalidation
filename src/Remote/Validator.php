@@ -92,21 +92,21 @@ class Validator
      */
     protected function setRemoteValidation($attribute, BaseValidator $validator)
     {
-        if (! array_key_exists($attribute, $validator->getRules())) {
-            throw new BadRequestHttpException("Undefined '$attribute' attribute");
-        }
-
-        $rules = $validator->getRules()[$attribute];
+        $rules = $validator->getRules();
+        $rules = isset($rules[$attribute])?$rules[$attribute]:[];
         $rules = $this->purgeNonRemoteRules($rules, $validator);
         $validator->setRules([$attribute => $rules]);
-
-        if (empty($validator->getRules()[$attribute])) {
-            throw new BadRequestHttpException("No validations available for '$attribute'");
-        }
 
         return $validator;
     }
 
+    /**
+     * Remove rules that should not be validated remotely
+     *
+     * @param $rules
+     * @param $validator
+     * @return mixed
+     */
     protected function purgeNonRemoteRules($rules, $validator)
     {
         $disabled = $this->validationDisabled($rules);
