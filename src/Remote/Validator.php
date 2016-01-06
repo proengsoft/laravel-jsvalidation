@@ -93,8 +93,7 @@ class Validator
     {
         $rules = $validator->getRules();
         $rules = isset($rules[$attribute]) ? $rules[$attribute] : [];
-
-        if ($this->validationDisabled($rules)) {
+        if (in_array('no_js_validation',$rules)) {
             $validator->setRules([$attribute => []]);
 
             return $validator;

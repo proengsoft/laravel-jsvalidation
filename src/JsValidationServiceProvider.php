@@ -3,6 +3,7 @@
 namespace Proengsoft\JsValidation;
 
 use Illuminate\Support\ServiceProvider;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
 class JsValidationServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,9 @@ class JsValidationServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('jsvalidator', function ($app) {
+            $app['validator']->extend(ValidatorHandler::JSVALIDATION_DISABLE, function() {
+                return true;
+            });
             $config = $app['config']->get('jsvalidation');
 
             return new JsValidatorFactory($app, $config);

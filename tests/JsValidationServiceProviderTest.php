@@ -150,6 +150,16 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
                     ->with('jsvalidation')
                     ->will($this->returnValue([]));
                 $newApp['config'] = $mockedConfig;
+
+                $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
+                $mockedValidator->expects($this->once())
+                    ->method('extend')
+                    ->with('NoJsValidation',function(){return true;})
+                    ->will($this->returnValue(null));
+
+                $newApp['config'] = $mockedConfig;
+                $newApp['validator'] = $mockedValidator;
+
                 $factory = $callback($newApp);
                 $this->assertInstanceOf('Proengsoft\JsValidation\JsValidatorFactory',$factory);
             });
