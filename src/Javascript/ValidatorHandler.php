@@ -145,9 +145,8 @@ class ValidatorHandler
      */
     public function sometimes($attribute, $rules = [])
     {
-        $this->validator->sometimes($attribute, $rules, function () {
-            return true;
-        });
+        $callback = function () {return true; };
+        $this->validator->sometimes($attribute, $rules, $callback);
         foreach ((array) $attribute as $key) {
             $current = isset($this->conditional[$key]) ? $this->conditional[$key] : [];
             $merge = head($this->validator->explodeRules([$rules]));
