@@ -32,6 +32,9 @@ class DelegatedValidator
         $this->validatorMethod = $this->createProtectedCaller($validator);
     }
 
+    /**
+     * @param string $method
+     */
     private function callValidator($method, $args = [])
     {
         return $this->callProtected($this->validatorMethod, $method, $args);
