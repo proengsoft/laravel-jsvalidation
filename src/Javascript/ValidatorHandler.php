@@ -140,7 +140,7 @@ class ValidatorHandler
     /**
      * Validate Conditional Validations using Ajax in specified fields.
      *
-     * @param  string|array  $attribute
+     * @param  string  $attribute
      * @param  string|array  $rules
      */
     public function sometimes($attribute, $rules = [])

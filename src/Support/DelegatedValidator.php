@@ -181,7 +181,7 @@ class DelegatedValidator
     /**
      * Add conditions to a given field based on a Closure.
      *
-     * @param  array  $attribute
+     * @param  string  $attribute
      * @param  string|array  $rules
      * @param  callable  $callback
      * @return void
