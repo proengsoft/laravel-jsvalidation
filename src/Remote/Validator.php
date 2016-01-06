@@ -6,7 +6,6 @@ use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator as BaseValidator;
-use Proengsoft\JsValidation\Exceptions\BadRequestHttpException;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 use Proengsoft\JsValidation\Support\RuleListTrait;
 
@@ -93,10 +92,11 @@ class Validator
     protected function setRemoteValidation($attribute, BaseValidator $validator)
     {
         $rules = $validator->getRules();
-        $rules = isset($rules[$attribute])?$rules[$attribute]:[];
-        
+        $rules = isset($rules[$attribute]) ? $rules[$attribute] : [];
+
         if ($this->validationDisabled($rules)) {
             $validator->setRules([$attribute => []]);
+
             return $validator;
         }
 
@@ -107,7 +107,7 @@ class Validator
     }
 
     /**
-     * Remove rules that should not be validated remotely
+     * Remove rules that should not be validated remotely.
      *
      * @param $rules
      * @param $validator
@@ -115,7 +115,9 @@ class Validator
      */
     protected function purgeNonRemoteRules($rules, $validator)
     {
-        if ($this->validateAll) return $rules;
+        if ($this->validateAll) {
+            return $rules;
+        }
 
         $protectedValidator = $this->createProtectedCaller($validator);
 
