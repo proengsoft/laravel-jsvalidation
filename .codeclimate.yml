@@ -1,0 +1,30 @@
+---
+engines:
+  duplication:
+    enabled: false
+    config:
+      languages:
+      - javascript
+      - php
+    exclude_fingerprints:
+    - 833a4a37e3112811e59a5b092e63996f
+    - d90920269fa34d35432b628f9743662f
+    - 5547d17547861d344eccea6fcadcb06e
+    - 6f2d47f9dfa927ed087783607b2733c3
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  phpmd:
+    enabled: true
+ratings:
+  paths:
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+exclude_paths:
+- config/**/*
+- tests/**/*
+- public/js/*

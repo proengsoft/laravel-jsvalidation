@@ -79,7 +79,7 @@ class Resolver
      */
     public function validator()
     {
-        return function ($attribute, $value, $parameters, $validator) {
+        return function ($attribute, $value, $parameters, BaseValidator $validator) {
 
             $data = $validator->getData();
             $validateAll = $data[$attribute.'_validate_all'];

@@ -3,9 +3,7 @@
 namespace Proengsoft\JsValidation;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
-use Proengsoft\JsValidation\Exceptions\FormRequestArgumentException;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Javascript\RuleParser;
