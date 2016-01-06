@@ -74,7 +74,7 @@ class ValidatorHandler
      *
      * @param $attribute
      * @param $rules
-     * @param boolean $includeRemote
+     * @param bool $includeRemote
      *
      * @return array
      */

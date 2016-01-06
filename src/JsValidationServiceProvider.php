@@ -27,7 +27,7 @@ class JsValidationServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('jsvalidator', function ($app) {
-            $callback = function() { return true; };
+            $callback = function () { return true; };
             $app['validator']->extend(ValidatorHandler::JSVALIDATION_DISABLE, $callback);
             $config = $app['config']->get('jsvalidation');
 
