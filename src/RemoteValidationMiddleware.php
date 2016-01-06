@@ -7,7 +7,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Proengsoft\JsValidation\Remote\Resolver;
 use Proengsoft\JsValidation\Remote\Validator;
-use \Illuminate\Http\Request;
+use Illuminate\Http\Request;
 
 class RemoteValidationMiddleware
 {
