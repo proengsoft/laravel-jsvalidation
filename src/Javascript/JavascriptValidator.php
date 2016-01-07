@@ -114,11 +114,11 @@ class JavascriptValidator implements Arrayable
     public function __get($name)
     {
         $data = $this->getViewData();
-        if (array_key_exists($name, $data)) {
-            return $data[$name];
-        } else {
+        if (!array_key_exists($name, $data)) {
             throw new PropertyNotFoundException($name, get_class());
         }
+
+        return $data[$name];
     }
 
     /**
@@ -128,7 +128,8 @@ class JavascriptValidator implements Arrayable
      */
     protected function getViewData()
     {
-        $data = $this->validator->validationData($this->remote);
+        $this->validator->setRemote($this->remote);
+        $data = $this->validator->validationData();
         $data['selector'] = $this->selector;
 
         if (! is_null($this->ignore)) {

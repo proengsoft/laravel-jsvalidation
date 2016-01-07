@@ -26,7 +26,11 @@ class ValidatorHandler
      */
     protected $messages;
 
-    protected $conditional = [];
+
+    /**
+     * @var bool $remote
+     */
+    protected $remote = true;
 
     /**
      * Create a new JsValidation instance.
@@ -53,7 +57,22 @@ class ValidatorHandler
         $this->messages->setDelegatedValidator($validator);
     }
 
-    protected function generateJavascriptValidations($includeRemote = true)
+    /**
+     *  Enable or disables remote validations
+     *
+     * @param $enabled
+     */
+    public function setRemote($enabled)
+    {
+        $this->remote = $enabled;
+    }
+
+    /**
+     * Generate Javascript Validations
+     *
+     * @return array
+     */
+    protected function generateJavascriptValidations()
     {
         $jsValidations = array();
 
@@ -62,7 +81,7 @@ class ValidatorHandler
                 continue;
             }
 
-            $newRules = $this->jsConvertRules($attribute, $rules, $includeRemote);
+            $newRules = $this->jsConvertRules($attribute, $rules, $this->remote);
             $jsValidations = array_merge($jsValidations, $newRules);
         }
 
@@ -82,9 +101,8 @@ class ValidatorHandler
     {
         $jsRules = [];
         foreach ($rules as $rawRule) {
-            $forceRemote = $this->isConditionalRule($attribute, $rawRule);
             list($rule, $parameters) = $this->validator->parseRule($rawRule);
-            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters, $forceRemote);
+            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters, $rawRule);
             if ($this->isValidatable($jsRule, $includeRemote)) {
                 $jsRules[$jsAttribute][$jsRule][] = array($rule, $jsParams,
                     $this->messages->getMessage($attribute, $rule, $parameters),
@@ -123,13 +141,12 @@ class ValidatorHandler
     /**
      * Returns view data to render javascript.
      *
-     * @param bool $remote
      * @return array
      */
-    public function validationData($remote = true)
+    public function validationData()
     {
         $jsMessages = array();
-        $jsValidations = $this->generateJavascriptValidations($remote);
+        $jsValidations = $this->generateJavascriptValidations();
 
         return [
             'rules' => $jsValidations,
@@ -147,23 +164,8 @@ class ValidatorHandler
     {
         $callback = function () {return true; };
         $this->validator->sometimes($attribute, $rules, $callback);
-        foreach ((array) $attribute as $key) {
-            $current = isset($this->conditional[$key]) ? $this->conditional[$key] : [];
-            $merge = head($this->validator->explodeRules([$rules]));
-            $this->conditional[$key] = array_merge($current, $merge);
-        }
+        $this->rules->addConditionalRules($attribute, $rules);
     }
 
-    /**
-     * Determine if rule is passed with sometimes.
-     *
-     * @param $attribute
-     * @param $rule
-     * @return bool
-     */
-    protected function isConditionalRule($attribute, $rule)
-    {
-        return isset($this->conditional[$attribute]) &&
-            in_array($rule, $this->conditional[$attribute]);
-    }
+
 }

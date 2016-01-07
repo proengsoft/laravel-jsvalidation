@@ -28,6 +28,13 @@ class RuleParser
     protected $remoteToken;
 
     /**
+     * Conditional Validations
+     *
+     * @var array $conditional
+     */
+    protected $conditional = [];
+
+    /**
      * Create a new JsValidation instance.
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
@@ -45,15 +52,18 @@ class RuleParser
      * @param string $attribute
      * @param string $rule
      * @param $parameters
-     * @param $forceRemote
+     * @param $rawRule
      *
      * @return array
      */
-    public function getRule($attribute, $rule, $parameters, $forceRemote = false)
+    public function getRule($attribute, $rule, $parameters, $rawRule)
     {
-        $remote = $forceRemote || $this->isRemoteRule($rule);
-        if ($remote) {
-            list($attribute, $parameters) = $this->remoteRule($attribute, $forceRemote);
+
+        $isConditional = $this->isConditionalRule($attribute, $rawRule);
+        $isRemote = $this->isRemoteRule($rule);
+
+        if ($isConditional || $isRemote ) {
+            list($attribute, $parameters) = $this->remoteRule($attribute, $isConditional);
             $jsRule = self::REMOTE_RULE;
         } else {
             list($jsRule, $attribute, $parameters) = $this->clientRule($attribute, $rule, $parameters);
@@ -65,13 +75,41 @@ class RuleParser
     }
 
     /**
-     * Gets rules.
+     * Gets rules from Validator instance.
      *
      * @return array
      */
     public function getValidatorRules()
     {
         return $this->validator->getRules();
+    }
+
+    /**
+     * Add conditional rules
+     *
+     * @param $attribute
+     * @param array $rules
+     */
+    public function addConditionalRules($attribute, $rules = [])
+    {
+        foreach ((array) $attribute as $key) {
+            $current = isset($this->conditional[$key]) ? $this->conditional[$key] : [];
+            $merge = head($this->validator->explodeRules([$rules]));
+            $this->conditional[$key] = array_merge($current, $merge);
+        }
+    }
+
+    /**
+     * Determine if rule is passed with sometimes.
+     *
+     * @param $attribute
+     * @param $rule
+     * @return bool
+     */
+    protected function isConditionalRule($attribute, $rule)
+    {
+        return isset($this->conditional[$attribute]) &&
+        in_array($rule, $this->conditional[$attribute]);
     }
 
     /**

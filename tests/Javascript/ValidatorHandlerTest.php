@@ -123,10 +123,6 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('sometimes')
             ->willReturn(null);
 
-        $mockDelegated->expects($this->once())
-            ->method('explodeRules')
-            ->with([$rule])
-            ->willReturn([[$rule]]);
 
         $mockDelegated->expects($this->any())
             ->method('getRules')
@@ -168,6 +164,60 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
         $data = $handler->validationData();
         $expected = [
             'rules' => array('field'=>['laravelValidationRemote'=>[['RequiredIf',['field2','value2'],'Field is required if',false]]]),
+            'messages' =>  array(),
+        ];
+
+        $this->assertEquals($expected, $data);
+    }
+
+
+    public function testDisableRemote() {
+
+        $attribute = 'field';
+        $rule = 'active_url';
+
+        $mockDelegated = $this->getMockBuilder('Proengsoft\JsValidation\Support\DelegatedValidator')
+            ->disableOriginalConstructor()
+            ->setMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
+            ->getMock();
+
+
+
+
+        $mockDelegated->expects($this->any())
+            ->method('getRules')
+            ->willReturn([$attribute=>[$rule]]);
+
+        $mockDelegated->expects($this->any())
+            ->method('hasRule')
+            ->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)
+            ->willReturn(false);
+
+        $mockDelegated->expects($this->once())
+            ->method('parseRule')
+            ->with($rule)
+            ->willReturn(['ActiveUrl',['token',false,false]]);
+
+
+
+        $mockRule = $this->getMock('Proengsoft\JsValidation\Javascript\RuleParser',[], [$mockDelegated] );
+        $mockRule->expects($this->once())
+            ->method('getRule')
+            ->with($attribute, 'ActiveUrl', ['token',false,false])
+            ->willReturn([$attribute, RuleParser::REMOTE_RULE, ['token',false,false]]);
+
+        $mockMessages = $this->getMock('Proengsoft\JsValidation\Javascript\MessageParser', [], [$mockDelegated] );
+
+
+
+        $handler = new ValidatorHandler($mockRule, $mockMessages);
+        $handler->setDelegatedValidator($mockDelegated);
+        $handler->setRemote(false);
+        //$handler->sometimes($attribute, $rule);
+
+        $data = $handler->validationData();
+        $expected = [
+            'rules' => array(),
             'messages' =>  array(),
         ];
 
