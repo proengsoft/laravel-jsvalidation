@@ -4,7 +4,6 @@ namespace Proengsoft\JsValidation\Remote;
 
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 use Proengsoft\JsValidation\Support\RuleListTrait;
@@ -26,6 +25,9 @@ class Validator
      */
     protected $validator;
 
+    /**
+     * @var bool
+     */
     protected $validateAll = false;
 
     /**
@@ -38,9 +40,25 @@ class Validator
         $this->validator = $validator;
     }
 
-    public function validate($attribute, $value, $parameters, $validateAll = false)
+    /**
+     * Force validate all rules.
+     *
+     * @param $validateAll
+     */
+    public function setValidateAll($validateAll)
     {
         $this->validateAll = $validateAll;
+    }
+
+    /**
+     * Validate request.
+     *
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     */
+    public function validate($attribute, $value, $parameters)
+    {
         $validationData = $this->parseJsRemoteRequest($attribute, $value, $parameters);
         $validationResult = $this->validateJsRemoteRequest($validationData[1]);
         throw new HttpResponseException(
@@ -59,7 +77,7 @@ class Validator
     {
         parse_str($value, $attrParts);
         $attrParts = is_null($attrParts) ? [] : $attrParts;
-        $newAttr = array_keys(Arr::dot($attrParts));
+        $newAttr = array_keys(array_dot($attrParts));
 
         return [$attribute, array_pop($newAttr), $parameters];
     }

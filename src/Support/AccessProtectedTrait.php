@@ -15,11 +15,13 @@ trait AccessProtectedTrait
      */
     protected function createProtectedCaller($instance)
     {
-        return Closure::bind(function ($method, $args) {
+        $closure = function ($method, $args) {
             $callable = array($this, $method);
 
             return call_user_func_array($callable, $args);
-        }, $instance, $instance);
+        };
+
+        return $closure->bindTo($instance, $instance);
     }
 
     /**
@@ -32,11 +34,12 @@ trait AccessProtectedTrait
      */
     protected function getProtected($instance, $property)
     {
-        $closure = Closure::bind(function ($property) {
+        $closure = function ($property) {
             return $this->$property;
-        }, $instance, $instance);
+        };
+        $callback = $closure->bindTo($instance, $instance);
 
-        return $closure($property);
+        return $callback($property);
     }
 
     /**

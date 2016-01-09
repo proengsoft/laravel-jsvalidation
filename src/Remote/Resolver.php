@@ -60,16 +60,32 @@ class Resolver
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)
     {
-        if (is_null($this->resolver)) {
-            $validator = new BaseValidator($translator, $data, $rules, $messages, $customAttributes);
-        } else {
-            $validator = call_user_func($this->resolver, $translator, $data, $rules, $messages, $customAttributes);
-        }
+        $validator = $this->createValidator($translator, $data, $rules, $messages, $customAttributes);
+
         $validator->sometimes($field, Validator::EXTENSION_NAME, function () {
             return true;
         });
 
         return $validator;
+    }
+
+    /**
+     * Create new validator instance.
+     *
+     * @param $translator
+     * @param $data
+     * @param $rules
+     * @param $messages
+     * @param $customAttributes
+     * @return BaseValidator
+     */
+    protected function createValidator($translator, $data, $rules, $messages, $customAttributes)
+    {
+        if (is_null($this->resolver)) {
+            return new BaseValidator($translator, $data, $rules, $messages, $customAttributes);
+        }
+
+        return call_user_func($this->resolver, $translator, $data, $rules, $messages, $customAttributes);
     }
 
     /**
@@ -84,7 +100,8 @@ class Resolver
             $data = $validator->getData();
             $validateAll = $data[$attribute.'_validate_all'];
             $remoteValidator = new Validator($validator);
-            $remoteValidator->validate($attribute, $value, $parameters, $validateAll);
+            $remoteValidator->setValidateAll($validateAll);
+            $remoteValidator->validate($attribute, $value, $parameters);
         };
     }
 }

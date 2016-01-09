@@ -21,7 +21,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
 
         $parser = new RuleParser($delegated, $token);
 
-        $values = $parser->getRule($attribute, $rule, $parameters);
+        $values = $parser->getRule($attribute, $rule, $parameters,'required');
         $expected = [$attribute,RuleParser::JAVASCRIPT_RULE,$parameters];
 
         $this->assertEquals($expected, $values);
@@ -40,7 +40,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
 
         $parser = new RuleParser($delegated, $token);
 
-        $values = $parser->getRule($attribute, $rule, $parameters);
+        $values = $parser->getRule($attribute, $rule, $parameters, 'required_if:field2,value2');
         $expected = [$attribute,RuleParser::JAVASCRIPT_RULE,$parameters];
 
         $this->assertEquals($expected, $values);
@@ -59,7 +59,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
 
         $parser = new RuleParser($delegated, $token);
 
-        $values = $parser->getRule($attribute, $rule, $parameters);
+        $values = $parser->getRule($attribute, $rule, $parameters,'active_url');
         $expected = [$attribute,RuleParser::REMOTE_RULE,[$attribute, $token, false]];
 
         $this->assertEquals($expected, $values);
@@ -97,8 +97,32 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
 
         $parser = new RuleParser($delegated, $token);
 
-        $values = $parser->getRule($attribute, $rule, $parameters);
+        $values = $parser->getRule($attribute, $rule, $parameters,'required');
         $expected = ['field[key]',RuleParser::JAVASCRIPT_RULE,$parameters];
+
+        $this->assertEquals($expected, $values);
+    }
+
+    public function testAddConditionalRules() {
+        $attribute = 'field';
+        $rule = 'Required';
+        $parameters = [];
+        $token ='my token';
+
+        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $delegated->expects($this->once())
+            ->method('explodeRules')
+            ->with(['required'])
+            ->willReturn([['required']]);
+
+        $parser = new RuleParser($delegated, $token);
+
+        $parser->addConditionalRules($attribute,'required');
+        $values = $parser->getRule($attribute, $rule, $parameters,'required');
+        $expected = [$attribute,RuleParser::REMOTE_RULE,[$attribute, $token, true]];
 
         $this->assertEquals($expected, $values);
     }

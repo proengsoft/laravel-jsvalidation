@@ -80,12 +80,17 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
-            ->setMethods(['validationData'])
+            ->setMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
-            ->method('validationData')
+            ->method('setRemote')
             ->with(true)
+            ->willReturn([]);
+
+        $mockHandler->expects($this->once())
+            ->method('validationData')
+            ->with()
             ->willReturn([]);
 
         $validator = new JavascriptValidator($mockHandler);
@@ -101,13 +106,19 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
-            ->setMethods(['validationData'])
+            ->setMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
             ->method('validationData')
+            ->with()
+            ->willReturn([]);
+
+        $mockHandler->expects($this->once())
+            ->method('setRemote')
             ->with(true)
             ->willReturn([]);
+
 
         $validator = new JavascriptValidator($mockHandler);
 
@@ -119,11 +130,16 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
-            ->setMethods(['validationData'])
+            ->setMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
             ->method('validationData')
+            ->with()
+            ->willReturn([]);
+
+        $mockHandler->expects($this->once())
+            ->method('setRemote')
             ->with(true)
             ->willReturn([]);
 
@@ -145,11 +161,16 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
     public function testIgnore() {
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
-            ->setMethods(['validationData'])
+            ->setMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
             ->method('validationData')
+            ->with()
+            ->willReturn([]);
+
+        $mockHandler->expects($this->once())
+            ->method('setRemote')
             ->with(true)
             ->willReturn([]);
 
@@ -167,16 +188,21 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $remote = true;
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
-            ->setMethods(['validationData'])
+            ->setMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
             ->method('validationData')
+            ->with()
+            ->willReturn([]);
+
+        $mockHandler->expects($this->once())
+            ->method('setRemote')
             ->with($remote)
             ->willReturn([]);
 
         $validator = new JavascriptValidator($mockHandler);
-        $validator->remote(true);
+        $validator->remote($remote);
         $data = $validator->toArray();
 
         $this->assertEquals(['selector'=>'form'],$data);
@@ -186,7 +212,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $remote = true;
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','sometimes'])
+            ->setMethods(['validationData','sometimes','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -196,6 +222,10 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
         $mockHandler->expects($this->once())
             ->method('validationData')
+            ->with()
+            ->willReturn([]);
+        $mockHandler->expects($this->once())
+            ->method('setRemote')
             ->with($remote)
             ->willReturn([]);
 
