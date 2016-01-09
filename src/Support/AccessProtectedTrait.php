@@ -15,7 +15,6 @@ trait AccessProtectedTrait
      */
     protected function createProtectedCaller($instance)
     {
-
         $closure = function ($method, $args) {
             $callable = array($this, $method);
 
