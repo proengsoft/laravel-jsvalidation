@@ -59,7 +59,7 @@ class ValidatorHandler
     /**
      *  Enable or disables remote validations.
      *
-     * @param $enabled
+     * @param bool $enabled
      */
     public function setRemote($enabled)
     {
@@ -117,7 +117,7 @@ class ValidatorHandler
      * Check if rule should be validated with javascript.
      *
      * @param $jsRule
-     * @param $includeRemote
+     * @param bool $includeRemote
      * @return bool
      */
     protected function isValidatable($jsRule, $includeRemote)
