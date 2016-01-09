@@ -100,7 +100,8 @@ class Resolver
             $data = $validator->getData();
             $validateAll = $data[$attribute.'_validate_all'];
             $remoteValidator = new Validator($validator);
-            $remoteValidator->validate($attribute, $value, $parameters, $validateAll);
+            $remoteValidator->setValidateAll($validateAll);
+            $remoteValidator->validate($attribute, $value, $parameters);
         };
     }
 }

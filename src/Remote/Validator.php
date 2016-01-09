@@ -26,6 +26,9 @@ class Validator
      */
     protected $validator;
 
+    /**
+     * @var bool
+     */
     protected $validateAll = false;
 
     /**
@@ -38,9 +41,25 @@ class Validator
         $this->validator = $validator;
     }
 
-    public function validate($attribute, $value, $parameters, $validateAll = false)
+    /**
+     * Force validate all rules
+     *
+     * @param $validateAll
+     */
+    public function setValidateAll($validateAll)
     {
         $this->validateAll = $validateAll;
+    }
+
+    /**
+     * Validate request
+     *
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     */
+    public function validate($attribute, $value, $parameters)
+    {
         $validationData = $this->parseJsRemoteRequest($attribute, $value, $parameters);
         $validationResult = $this->validateJsRemoteRequest($validationData[1]);
         throw new HttpResponseException(
