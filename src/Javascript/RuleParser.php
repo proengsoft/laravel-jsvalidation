@@ -28,9 +28,9 @@ class RuleParser
     protected $remoteToken;
 
     /**
-     * Conditional Validations
+     * Conditional Validations.
      *
-     * @var array $conditional
+     * @var array
      */
     protected $conditional = [];
 
@@ -58,11 +58,10 @@ class RuleParser
      */
     public function getRule($attribute, $rule, $parameters, $rawRule)
     {
-
         $isConditional = $this->isConditionalRule($attribute, $rawRule);
         $isRemote = $this->isRemoteRule($rule);
 
-        if ($isConditional || $isRemote ) {
+        if ($isConditional || $isRemote) {
             list($attribute, $parameters) = $this->remoteRule($attribute, $isConditional);
             $jsRule = self::REMOTE_RULE;
         } else {
@@ -85,7 +84,7 @@ class RuleParser
     }
 
     /**
-     * Add conditional rules
+     * Add conditional rules.
      *
      * @param $attribute
      * @param array $rules

@@ -4,7 +4,6 @@ namespace Proengsoft\JsValidation\Remote;
 
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 use Proengsoft\JsValidation\Support\RuleListTrait;
@@ -42,7 +41,7 @@ class Validator
     }
 
     /**
-     * Force validate all rules
+     * Force validate all rules.
      *
      * @param $validateAll
      */
@@ -52,7 +51,7 @@ class Validator
     }
 
     /**
-     * Validate request
+     * Validate request.
      *
      * @param $attribute
      * @param $value

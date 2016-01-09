@@ -70,7 +70,7 @@ class Resolver
     }
 
     /**
-     * Create new validator instance
+     * Create new validator instance.
      *
      * @param $translator
      * @param $data
@@ -79,8 +79,8 @@ class Resolver
      * @param $customAttributes
      * @return BaseValidator
      */
-    protected function createValidator($translator, $data, $rules, $messages, $customAttributes) {
-
+    protected function createValidator($translator, $data, $rules, $messages, $customAttributes)
+    {
         if (is_null($this->resolver)) {
             return new BaseValidator($translator, $data, $rules, $messages, $customAttributes);
         }

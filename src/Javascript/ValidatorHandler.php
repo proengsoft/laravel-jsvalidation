@@ -26,9 +26,8 @@ class ValidatorHandler
      */
     protected $messages;
 
-
     /**
-     * @var bool $remote
+     * @var bool
      */
     protected $remote = true;
 
@@ -58,7 +57,7 @@ class ValidatorHandler
     }
 
     /**
-     *  Enable or disables remote validations
+     *  Enable or disables remote validations.
      *
      * @param $enabled
      */
@@ -68,7 +67,7 @@ class ValidatorHandler
     }
 
     /**
-     * Generate Javascript Validations
+     * Generate Javascript Validations.
      *
      * @return array
      */
@@ -166,6 +165,4 @@ class ValidatorHandler
         $this->validator->sometimes($attribute, $rules, $callback);
         $this->rules->addConditionalRules($attribute, $rules);
     }
-
-
 }
