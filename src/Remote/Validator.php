@@ -78,7 +78,7 @@ class Validator
     {
         parse_str($value, $attrParts);
         $attrParts = is_null($attrParts) ? [] : $attrParts;
-        $newAttr = array_keys(Arr::dot($attrParts));
+        $newAttr = array_keys(array_dot($attrParts));
 
         return [$attribute, array_pop($newAttr), $parameters];
     }
