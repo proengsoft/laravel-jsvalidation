@@ -15,7 +15,7 @@
                 }
             },
             highlight: function(element) {
-                $(element).closest('.form-group').addClass('has-error'); // add the Bootstrap error class to the control group
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error'); // add the Bootstrap error class to the control group
             },
 
             <?php if (isset($validator['ignore']) && is_string($validator['ignore'])): ?>
