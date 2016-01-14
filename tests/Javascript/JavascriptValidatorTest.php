@@ -262,4 +262,45 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($txtRender, $txt);
 
     }
+
+    function store_error($error_number, $error_message) {
+        $this->_last_error_number = $error_number;
+        $this->_last_error_message = $error_message;
+    }
+
+    function assertError($error_message, $error_number = E_USER_ERROR) {
+        $this->assertSame($error_message, $this->_last_error_message);
+        $this->assertSame($error_number, $this->_last_error_number);
+    }
+
+    public function testToStringException()
+    {
+
+        set_error_handler([$this, 'store_error']);
+        $exception = new \Exception("Simulated exception for Testing");
+
+        $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockHandler->expects($this->once())
+            ->method('validationData')
+            ->willThrowException($exception);
+
+        View::shouldReceive('make')
+            ->with('jsvalidation::bootstrap', ['validator' => ['selector' => 'form']])
+            ->once()
+            ->andReturn(
+                m::mock('Illuminate\Contracts\View\Factory')
+                    ->shouldReceive('render')
+                    ->once()
+                    ->andReturn('return')
+                    ->getMock());
+
+        $validator = new JavascriptValidator($mockHandler);
+
+        $validator->__toString();
+        $this->assertError($exception->__toString());
+
+    }
+
 }

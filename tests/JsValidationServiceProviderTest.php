@@ -150,7 +150,6 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
                     ->method('get')
                     ->with('jsvalidation')
                     ->will($this->returnValue([]));
-                $newApp['config'] = $mockedConfig;
 
                 $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
                 $mockedValidator->expects($this->once())
