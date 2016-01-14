@@ -5,6 +5,11 @@ Features:
  - Support for [RequiredUnless](https://laravel.com/docs/5.2/validation#rule-required-unless) Rule
 
 
+Bugfixes:
+
+ - Issues resolved:
+     -  Convert Exceptions to E_USER_ERROR in __toString(). #126
+
 ## 1.3.1 (2016-01-04)
 
 Features:
