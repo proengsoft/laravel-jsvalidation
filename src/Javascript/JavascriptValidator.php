@@ -7,7 +7,6 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\View;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
-
 class JavascriptValidator implements Arrayable
 {
     /**
@@ -45,7 +44,6 @@ class JavascriptValidator implements Arrayable
      */
     protected $ignore;
 
-
     /**
      * @param ValidatorHandler $validator
      * @param array $options
@@ -54,7 +52,6 @@ class JavascriptValidator implements Arrayable
     {
         $this->validator = $validator;
         $this->setDefaults($options);
-
     }
 
     /**
@@ -68,7 +65,6 @@ class JavascriptValidator implements Arrayable
         $this->view = empty($options['view']) ? 'jsvalidation::bootstrap' : $options['view'];
         $this->remote = empty($options['remote']) ? true : $options['remote'];
     }
-
 
     /**
      * Render the specified view with validator data.
@@ -107,11 +103,9 @@ class JavascriptValidator implements Arrayable
         try {
             return $this->render();
         } catch (Exception $exception) {
-            return trigger_error($exception->__toString(),E_USER_ERROR);
+            return trigger_error($exception->__toString(), E_USER_ERROR);
         }
-
     }
-
 
     /**
      * Gets value from view data.
