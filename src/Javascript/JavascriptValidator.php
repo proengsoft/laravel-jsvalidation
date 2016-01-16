@@ -217,7 +217,7 @@ class JavascriptValidator implements Arrayable
      *
      * @param  string  $attribute
      * @param  string|array  $rules
-     
+     *
      * @return JavascriptValidator
      */
     public function sometimes($attribute, $rules)
