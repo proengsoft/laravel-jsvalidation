@@ -65,6 +65,27 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $values);
     }
 
+
+    public function testGetRemoteRuleArray() {
+        $attribute = 'field.name.array';
+        $attributeHtml = 'field[name][array]';
+        $rule = 'ActiveUrl';
+        $parameters = [];
+        $token ='my token';
+
+        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $parser = new RuleParser($delegated, $token);
+
+        $values = $parser->getRule($attribute, $rule, $parameters);
+        $expected = [$attributeHtml,RuleParser::REMOTE_RULE,[$attributeHtml, $token]];
+
+        $this->assertEquals($expected, $values);
+    }
+
     public function testGetRules() {
 
         $expects = ['somefield'=>'required'];
