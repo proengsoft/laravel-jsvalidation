@@ -142,8 +142,9 @@ class RuleParser
      */
     protected function remoteRule($attribute, $forceRemote)
     {
+        $attrHtmlName = $this->getAttributeName($attribute);
         $params = [
-            $attribute,
+            $attrHtmlName,
             $this->remoteToken,
             $forceRemote,
         ];
