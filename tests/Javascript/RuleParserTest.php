@@ -81,7 +81,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parser = new RuleParser($delegated, $token);
 
         $values = $parser->getRule($attribute, $rule, $parameters,'active_url');
-        $expected = [$attributeHtml,RuleParser::REMOTE_RULE,[$attributeHtml, $token]];
+        $expected = [$attributeHtml,RuleParser::REMOTE_RULE,[$attributeHtml, $token, false]];
 
         $this->assertEquals($expected, $values);
     }
