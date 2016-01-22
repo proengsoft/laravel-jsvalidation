@@ -22,6 +22,14 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
         $app['config']=$mockedConfig;
 
+        $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
+        $mockedValidator->expects($this->once())
+            ->method('extend')
+            ->will($this->returnValue(null));
+
+        $app['validator'] = $mockedValidator;
+
+
 
         $mock = $this->getMock(
             'Proengsoft\JsValidation\JsValidationServiceProvider',
@@ -51,6 +59,13 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
             ->with('jsvalidation.disable_remote_validation')
             ->will($this->returnValue(true));
         $app['config']=$mockedConfig;
+
+        $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
+        $mockedValidator->expects($this->once())
+            ->method('extend')
+            ->will($this->returnValue(null));
+
+        $app['validator'] = $mockedValidator;
 
         $mock = $this->getMock(
             'Proengsoft\JsValidation\JsValidationServiceProvider',
@@ -89,6 +104,13 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
         $app['config']=$mockedConfig;
 
+        $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
+        $mockedValidator->expects($this->once())
+            ->method('extend')
+            ->will($this->returnValue(null));
+
+        $app['validator'] = $mockedValidator;
+
         $mock = $this->getMock(
             'Proengsoft\JsValidation\JsValidationServiceProvider',
             ['loadViewsFrom','publishes','mergeConfigFrom'],
@@ -121,6 +143,13 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false));
         $app['config']=$mockedConfig;
 
+        $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
+        $mockedValidator->expects($this->once())
+            ->method('extend')
+            ->will($this->returnValue(null));
+
+        $app['validator'] = $mockedValidator;
+
 
         $mockKernel = $this->getMockForAbstractClass('Illuminate\Contracts\Http\Kernel',[],'',true,true,true,['pushMiddleware']);
 
@@ -151,13 +180,7 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
                     ->with('jsvalidation')
                     ->will($this->returnValue([]));
 
-                $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
-                $mockedValidator->expects($this->once())
-                    ->method('extend')
-                    ->will($this->returnValue(null));
-
                 $newApp['config'] = $mockedConfig;
-                $newApp['validator'] = $mockedValidator;
 
                 $factory = $callback($newApp);
                 $this->assertInstanceOf('Proengsoft\JsValidation\JsValidatorFactory',$factory);
@@ -170,6 +193,11 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
             [$app]
         );
         $mock->register();
+
+    }
+
+    public function testExtendValidator()
+    {
 
     }
 

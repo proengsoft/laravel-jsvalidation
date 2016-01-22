@@ -14,6 +14,7 @@ class JsValidationServiceProvider extends ServiceProvider
     {
         $this->bootstrapConfigs();
         $this->bootstrapViews();
+        $this->bootstrapValidator();
         $this->publishAssets();
 
         if ($this->app['config']->get('jsvalidation.disable_remote_validation') === false) {
@@ -27,8 +28,6 @@ class JsValidationServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('jsvalidator', function ($app) {
-            $callback = function () { return true; };
-            $app['validator']->extend(ValidatorHandler::JSVALIDATION_DISABLE, $callback);
             $config = $app['config']->get('jsvalidation');
 
             return new JsValidatorFactory($app, $config);
@@ -47,6 +46,15 @@ class JsValidationServiceProvider extends ServiceProvider
         $this->publishes([
             $viewPath => $this->app['path.base'].'/resources/views/vendor/jsvalidation',
         ], 'views');
+    }
+
+    /**
+     *  Configure Laravel Validator
+     */
+    protected function bootstrapValidator()
+    {
+        $callback = function () { return true; };
+        $this->app['validator']->extend(ValidatorHandler::JSVALIDATION_DISABLE, $callback);
     }
 
     /**
