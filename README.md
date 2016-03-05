@@ -86,6 +86,7 @@ Take a look to [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/
 
 #### Known issues
 - DateFormat rule don't support timezone format 
+- Validating Arrays using wildcards *['person.\*.email' => 'email|unique:users']* is not supported. #139
 
 
 #### License
