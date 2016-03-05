@@ -49,7 +49,7 @@ class JsValidationServiceProvider extends ServiceProvider
     }
 
     /**
-     *  Configure Laravel Validator
+     *  Configure Laravel Validator.
      */
     protected function bootstrapValidator()
     {
