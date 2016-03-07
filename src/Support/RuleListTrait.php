@@ -93,7 +93,7 @@ trait RuleListTrait
      * Check if rules is for input file type.
      *
      * @param $rule
-     
+     *
      * @return bool
      */
     protected function isFileRule($rule)
