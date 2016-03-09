@@ -172,11 +172,13 @@ $.extend(true, laravelValidation, {
 
             if (target!==undefined) {
                 var val=String(this.elementValue(target));
-                var data=params.slice(1);
-                if ($.inArray(val,data)!== -1) {
-                    return $.validator.methods.required.call(
-                        this, value, element, true
-                    );
+                if (typeof val !== 'undefined') {
+                    var data = params.slice(1);
+                    if ($.inArray(val, data) !== -1) {
+                        return $.validator.methods.required.call(
+                            this, value, element, true
+                        );
+                    }
                 }
             }
 
@@ -190,8 +192,25 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         RequiredUnless: function(value, element, params) {
-            var requiredIf = laravelValidation.methods.RequiredIf;
-            return ! requiredIf.call(this, value, element, params);
+
+            var target=laravelValidation.helpers.dependentElement(
+                this, element, params[0]
+            );
+
+            if (target!==undefined) {
+                var val=String(this.elementValue(target));
+                if (typeof val !== 'undefined') {
+                    var data = params.slice(1);
+                    if ($.inArray(val, data) !== -1) {
+                        return true;
+                    }
+                }
+            }
+
+            return $.validator.methods.required.call(
+                this, value, element, true
+            );
+
         },
 
         /**
