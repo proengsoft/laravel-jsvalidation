@@ -19,14 +19,9 @@ laravelValidation = {
 
         // Disable class rules and attribute rules
         $.validator.classRuleSettings = {};
-        $.validator.elements = function () {
+        $.validator.attributeRules = function () {
             rules = {}
         };
-        /*
-        $.validator.dataRules = function () {
-            rules = {}
-        };
-        */
 
         $.validator.dataRules = this.arrayRules;
         $.validator.prototype.arrayRulesCache = {};
