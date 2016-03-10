@@ -281,8 +281,16 @@ $.extend(true, laravelValidation, {
                 }
             }
             return newResponse;
-        }
+        },
 
+        /**
+         * Scapes string to use as Regular Expression
+         * @param str
+         * @returns string
+         */
+        escapeRegExp: function escapeRegExp(str) {
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        }
 
     }
 });
