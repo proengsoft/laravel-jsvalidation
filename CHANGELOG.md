@@ -2,13 +2,15 @@
 
 Features:
  - Support for Laravel [Conditional Rules] (https://laravel.com/docs/5.2/validation#conditionally-adding-rules)
+ - Support for [Array Validations](https://laravel.com/docs/5.2/validation#validating-arrays)
  - Support for [RequiredUnless](https://laravel.com/docs/5.2/validation#rule-required-unless) Rule
 
 
 Bugfixes:
 
  - Issues resolved:
-     -  Convert Exceptions to E_USER_ERROR in __toString(). #126
+     - Convert Exceptions to E_USER_ERROR in __toString(). #126
+     - Chrome and IE case fix in mime types. PR #136 
 
 ## 1.3.1 (2016-01-04)
 
