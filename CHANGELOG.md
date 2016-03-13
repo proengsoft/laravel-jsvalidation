@@ -11,6 +11,7 @@ Bugfixes:
  - Issues resolved:
      - Convert Exceptions to E_USER_ERROR in __toString(). #126
      - Chrome and IE case fix in mime types. PR #136 
+     - Fix Turn off remote validation #145
 
 ## 1.3.1 (2016-01-04)
 
