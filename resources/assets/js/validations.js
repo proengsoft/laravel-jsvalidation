@@ -395,7 +395,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Mimes: function(value, element, params) {
-            var lowerParams = $.map(params, function(item, index) {
+            var lowerParams = $.map(params, function(item) {
                 return item.toLowerCase();
             });
             
@@ -458,7 +458,7 @@ $.extend(true, laravelValidation, {
             // Converting php regular expression
             var phpReg= new RegExp('^(?:\/)(.*\\\/?[^\/]*|[^\/]*)(?:\/)([gmixXsuUAJ]*)?$');
             var matches=params[0].match(phpReg);
-            if (matches==null) {
+            if (matches === null) {
                 return false;
             }
             // checking modifiers

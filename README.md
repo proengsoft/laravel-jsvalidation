@@ -42,7 +42,7 @@ You can validate forms automatically referencing it to your defined validations.
 
 #### Supported Rules
 
-**All [Validation Rules][] provided by Laravel and other packages are supported**.
+**Almost all [Validation Rules][] provided by Laravel and other packages are supported**.
 
 Almost are validated in client-side using Javascript, but in some cases, the validation should to be done in server-side via AJAX:
  - [ActiveURL](http://laravel.com/docs/5.1/validation#rule-active-url)
@@ -50,6 +50,16 @@ Almost are validated in client-side using Javascript, but in some cases, the val
  - [Exists](http://laravel.com/docs/5.1/validation#rule-exists)
  - [Custom Validation Rules][]
  - Validations provided by other packages
+
+##### Unsupported Rules and Features
+
+Some Laravel features and validations are not implemented yet. Pull Requests are welcome!
+
+- ~~Validating Arrays using wildcards **['person.*.email' => 'email|unique:users']** is not supported. #139~~ (supported in *master* branch)
+- [Distinct](https://laravel.com/docs/5.2/validation#rule-distinct) rule
+- [Present](https://laravel.com/docs/5.2/validation#rule-present) rule
+- [InArray](https://laravel.com/docs/5.2/validation#rule-in-array) rule
+- [DateFormat](https://laravel.com/docs/5.2/validation#rule-date-format) rule don't support timezone format 
 
 
 #### Getting started
@@ -82,11 +92,6 @@ Take a look to [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/
 #### Documentation
 
 **To get more info refer to [Project Wiki](https://github.com/proengsoft/laravel-jsvalidation/wiki/Home)**
-
-
-#### Known issues
-- DateFormat rule don't support timezone format 
-- Validating Arrays using wildcards *['person.\*.email' => 'email|unique:users']* is not supported. #139
 
 
 #### License

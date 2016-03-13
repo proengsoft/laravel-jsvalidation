@@ -19,11 +19,57 @@ laravelValidation = {
 
         // Disable class rules and attribute rules
         $.validator.classRuleSettings = {};
-        $.validator.normalizeAttributeRule = function(){};
+        $.validator.attributeRules = function () {
+            this.rules = {}
+        };
 
+        $.validator.dataRules = this.arrayRules;
+        $.validator.prototype.arrayRulesCache = {};
         // Register validations methods
         this.setupValidations();
         
+    },
+
+
+    arrayRules: function(element) {
+
+        var rules = {},
+            validator = $.data( element.form, "validator"),
+            cache = validator.arrayRulesCache;
+
+        // Is not an Array
+        if (element.name.indexOf('[') === -1 ) {
+            return rules;
+        }
+
+        if (! (element.name in cache) ) {
+            cache[element.name]={};
+        }
+
+        $.each(validator.settings.rules, function(name, tmpRules){
+            if (name in cache[element.name]) {
+                $.extend(rules, cache[element.name][name]);
+            } else {
+                cache[element.name][name]={};
+                var nameParts = name.split("[*]");
+                var regexpParts = nameParts.map(function(currentValue, index) {
+                    if (index % 2 === 0) {
+                        currentValue = currentValue + '[';
+                    } else {
+                        currentValue = ']' +currentValue;
+                    }
+                    return laravelValidation.helpers.escapeRegExp(currentValue);
+                });
+                var nameRegExp = new RegExp('^'+regexpParts.join('.*')+'$');
+                if (element.name.match(nameRegExp)) {
+                    var newRules = $.validator.normalizeRule( tmpRules ) || {};
+                    cache[element.name][name]=newRules;
+                    $.extend(rules, newRules);
+                }
+            }
+        });
+
+        return rules;
     },
 
 

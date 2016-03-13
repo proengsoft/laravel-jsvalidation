@@ -2138,11 +2138,67 @@ laravelValidation = {
 
         // Disable class rules and attribute rules
         $.validator.classRuleSettings = {};
-        $.validator.normalizeAttributeRule = function(){};
+        $.validator.attributeRules = function () {
+            rules = {}
+        };
 
+        $.validator.dataRules = this.arrayRules;
+        $.validator.prototype.arrayRulesCache = {};
         // Register validations methods
         this.setupValidations();
         
+    },
+
+
+    arrayRules: function(element) {
+
+        var rules = {},
+            validator = $.data( element.form, "validator");
+            //cache = validator.arrayRulesCache;
+        var cache={};
+
+        // Is not an Array
+        if (element.name.indexOf('[') === -1 ) {
+            return rules;
+        }
+
+        if (! (element.name in cache) ) {
+            cache[element.name]={};
+        }
+
+
+        $.each(validator.settings.rules, function(name, tmpRules){
+            if (name in cache[element.name]) {
+                $.extend(rules, cache[element.name][name]);
+            } else {
+                cache[element.name][name]={};
+                var nameParts = name.split("[*]");
+                var regexpParts = nameParts.map(function(currentValue, index) {
+                    if (index % 2 === 0) {
+                        currentValue = currentValue + '[';
+                    } else {
+                        currentValue = ']' +currentValue;
+                    }
+                    return laravelValidation.helpers.escapeRegExp(currentValue);
+                });
+                var nameRegExp = new RegExp('^'+regexpParts.join('.*')+'$');
+                console.log("regexp");
+                if (element.name.match(nameRegExp)) {
+                    var newRules = $.validator.normalizeRule( tmpRules ) || {};
+                    cache[element.name][name]=newRules;
+                    $.extend(rules, newRules);
+                }
+            }
+        });
+
+        //validator.arrayRulesCache = cache;
+
+        return rules;
+
+
+
+
+
     },
 
 
@@ -2605,8 +2661,16 @@ $.extend(true, laravelValidation, {
                 }
             }
             return newResponse;
-        }
+        },
 
+        /**
+         * Scapes string to use as Regular Expression
+         * @param str
+         * @returns string
+         */
+        escapeRegExp: function escapeRegExp(str) {
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        }
 
     }
 });
@@ -3303,7 +3367,7 @@ $.extend(true, laravelValidation, {
             return $.validator.methods.required.call(
                 this, value, element, true
             );
-            
+
         },
 
         /**
@@ -3488,7 +3552,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Mimes: function(value, element, params) {
-            var lowerParams = $.map(params, function(item, index) {
+            var lowerParams = $.map(params, function(item) {
                 return item.toLowerCase();
             });
             
