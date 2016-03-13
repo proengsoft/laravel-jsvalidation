@@ -61,7 +61,6 @@ laravelValidation = {
                     return laravelValidation.helpers.escapeRegExp(currentValue);
                 });
                 var nameRegExp = new RegExp('^'+regexpParts.join('.*')+'$');
-                console.log("regexp");
                 if (element.name.match(nameRegExp)) {
                     var newRules = $.validator.normalizeRule( tmpRules ) || {};
                     cache[element.name][name]=newRules;
