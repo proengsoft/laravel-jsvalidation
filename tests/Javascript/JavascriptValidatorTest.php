@@ -17,7 +17,6 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     }
 
-
     public function testRender()
     {
 
@@ -50,13 +49,15 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $options = [
             'selector' => 'form-test',
             'view' => 'jsvalidation::test',
-            'remote' => true,
+            'remote' => false,
         ];
 
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
             ->getMock();
-
+        $mockHandler->expects($this->once())
+            ->method('setRemote')
+            ->with($options['remote']);
         View::shouldReceive('make')
             ->with($options['view'],['validator'=>['selector'=>$options['selector']]])
             ->once()
