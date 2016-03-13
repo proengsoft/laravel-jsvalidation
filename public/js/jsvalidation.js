@@ -2153,11 +2153,12 @@ laravelValidation = {
     arrayRules: function(element) {
 
         var rules = {},
-            validator = $.data( element.form, "validator"),
-            cache = validator.arrayRulesCache;
+            validator = $.data( element.form, "validator");
+            //cache = validator.arrayRulesCache;
+        var cache={};
 
         // Is not an Array
-        if (element.name.indexOf('[') == -1 ) {
+        if (element.name.indexOf('[') === -1 ) {
             return rules;
         }
 
@@ -3551,7 +3552,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Mimes: function(value, element, params) {
-            var lowerParams = $.map(params, function(item, index) {
+            var lowerParams = $.map(params, function(item) {
                 return item.toLowerCase();
             });
             

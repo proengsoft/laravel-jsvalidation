@@ -20,7 +20,7 @@ laravelValidation = {
         // Disable class rules and attribute rules
         $.validator.classRuleSettings = {};
         $.validator.attributeRules = function () {
-            rules = {}
+            this.rules = {}
         };
 
         $.validator.dataRules = this.arrayRules;
@@ -38,14 +38,13 @@ laravelValidation = {
             cache = validator.arrayRulesCache;
 
         // Is not an Array
-        if (element.name.indexOf('[') == -1 ) {
+        if (element.name.indexOf('[') === -1 ) {
             return rules;
         }
 
         if (! (element.name in cache) ) {
             cache[element.name]={};
         }
-
 
         $.each(validator.settings.rules, function(name, tmpRules){
             if (name in cache[element.name]) {
@@ -71,14 +70,7 @@ laravelValidation = {
             }
         });
 
-        //validator.arrayRulesCache = cache;
-
         return rules;
-
-
-
-
-
     },
 
 

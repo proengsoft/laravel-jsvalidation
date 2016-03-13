@@ -395,7 +395,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Mimes: function(value, element, params) {
-            var lowerParams = $.map(params, function(item, index) {
+            var lowerParams = $.map(params, function(item) {
                 return item.toLowerCase();
             });
             
