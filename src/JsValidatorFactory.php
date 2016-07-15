@@ -138,6 +138,7 @@ class JsValidatorFactory
         $formRequest->setUserResolver($request->getUserResolver());
         $formRequest->setRouteResolver($request->getRouteResolver());
         $formRequest->setContainer($this->app);
+        $formRequest->query = $request->query;
 
         return $formRequest;
     }
