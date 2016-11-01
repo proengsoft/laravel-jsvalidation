@@ -2,8 +2,8 @@
 
 namespace Proengsoft\JsValidation\Javascript;
 
-use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\RuleListTrait;
+use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 
 class RuleParser
@@ -161,11 +161,24 @@ class RuleParser
      */
     protected function getAttributeName($attribute)
     {
-        $attributeArray = explode('.', $attribute);
-        if (count($attributeArray) > 1) {
-            return $attributeArray[0].'['.implode('][', array_slice($attributeArray, 1)).']';
+        if (stripos($attribute, '.') === false) {
+            return $attribute;
         }
 
-        return $attribute;
+        $attributes = explode('.', $attribute);
+
+        return $attributes[0].
+            '['.
+            implode(
+                '][',
+                array_map(function ($attribute) {
+                    if ($attribute === '*') {
+                        return '';
+                    }
+
+                    return $attribute;
+                }, array_slice($attributes, 1))
+            ).
+            ']';
     }
 }

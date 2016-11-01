@@ -2,13 +2,13 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
-use Proengsoft\JsValidation\Javascript\JavascriptValidator;
-use Proengsoft\JsValidation\Javascript\MessageParser;
+use Illuminate\Foundation\Http\FormRequest;
 use Proengsoft\JsValidation\Javascript\RuleParser;
-use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 
 class JsValidatorFactory
 {
@@ -61,7 +61,7 @@ class JsValidatorFactory
     {
         $validator = $this->getValidatorInstance($rules, $messages, $customAttributes);
 
-        return $this->validator($validator, $selector);
+        return $this->validator($validator, $selector, $this->wildcardRules($rules));
     }
 
     /**
@@ -89,7 +89,6 @@ class JsValidatorFactory
      * @param null $selector
      *
      * @return JavascriptValidator
-     * @throws FormRequestArgumentException
      */
     public function formRequest($formRequest, $selector = null)
     {
@@ -101,7 +100,28 @@ class JsValidatorFactory
 
         $validator = $this->getValidatorInstance($rules, $formRequest->messages(), $formRequest->attributes());
 
-        return $this->validator($validator, $selector);
+        return $this->validator($validator, $selector, $this->wildcardRules($rules));
+    }
+
+    /**
+     * Find Laravel >= 5.2 wildcard validation rules removed by
+     * Illuminate\Validation\Validator@explodeRules() but required for
+     * JavaScript validation.
+     *
+     * @param array $rules
+     *
+     * @return array
+     */
+    protected function wildcardRules(array $rules)
+    {
+        return array_map(
+            function ($attribute) use ($rules) {
+                return is_array($rules[$attribute]) ? $rules[$attribute] : explode('|', (string) $rules[$attribute]);
+            },
+            array_filter(array_keys($rules), function ($attribute) {
+                return $attribute !== '' && mb_strpos($attribute, '*') !== false;
+            })
+        );
     }
 
     protected function parseFormRequestName($class)
@@ -148,12 +168,13 @@ class JsValidatorFactory
      *
      * @param \Illuminate\Validation\Validator $validator
      * @param string|null                      $selector
+     * @param array                            $wildcardRules
      *
      * @return JavascriptValidator
      */
-    public function validator(Validator $validator, $selector = null)
+    public function validator(Validator $validator, $selector = null, array $wildcardRules = [])
     {
-        return $this->jsValidator($validator, $selector);
+        return $this->jsValidator($validator, $selector, $wildcardRules);
     }
 
     /**
@@ -161,16 +182,17 @@ class JsValidatorFactory
      *
      * @param \Illuminate\Validation\Validator $validator
      * @param string|null                      $selector
+     * @param array                            $wildcardRules
      *
      * @return JavascriptValidator
      */
-    protected function jsValidator(Validator $validator, $selector = null)
+    protected function jsValidator(Validator $validator, $selector = null, array $wildcardRules = [])
     {
         $remote = ! $this->options['disable_remote_validation'];
         $view = $this->options['view'];
         $selector = is_null($selector) ? $this->options['form_selector'] : $selector;
 
-        $delegated = new DelegatedValidator($validator);
+        $delegated = new DelegatedValidator($validator, $wildcardRules);
         $rules = new RuleParser($delegated, $this->getSessionToken());
         $messages = new MessageParser($delegated);
 

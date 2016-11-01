@@ -103,6 +103,48 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
 
+
+    public function  testToArrayWildcards()
+    {
+        $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
+            ->disableOriginalConstructor()
+            ->setMethods(['validationData','setRemote','getDelegatedValidator'])
+            ->getMock();
+
+        $mockHandler->expects($this->once())
+            ->method('setRemote')
+            ->with(true)
+            ->willReturn([]);
+
+        $mockHandler->expects($this->once())
+            ->method('validationData')
+            ->with()
+            ->willReturn([]);
+
+        $mockDelegated = $this->getMockBuilder('Proengsoft\JsValidation\Support\DelegatedValidator')
+            ->disableOriginalConstructor()
+            ->setMethods(['getWildcardRules'])
+            ->getMock();
+
+        $mockDelegated->expects($this->once())
+            ->method('getWildcardRules')
+            ->with()
+            ->willReturn(['person.*.email' => ['Required', 'Email']]);
+
+        $mockHandler->expects($this->exactly(2))
+            ->method('getDelegatedValidator')
+            ->with()
+            ->willReturn($mockDelegated);
+
+        $validator = new JavascriptValidator($mockHandler);
+
+        $expected=['selector'=>'form','wildcards' => ['person.*.email' => ['Required', 'Email']]];
+        $viewData=$validator->toArray();
+        $this->assertEquals($expected,$viewData);
+
+    }
+
+
     public function testGet()
     {
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')

@@ -3,8 +3,8 @@
 namespace Proengsoft\JsValidation\Javascript;
 
 use Exception;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\View;
+use Illuminate\Contracts\Support\Arrayable;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
 class JavascriptValidator implements Arrayable
@@ -136,6 +136,10 @@ class JavascriptValidator implements Arrayable
         $this->validator->setRemote($this->remote);
         $data = $this->validator->validationData();
         $data['selector'] = $this->selector;
+
+        if (! is_null($this->validator->getDelegatedValidator())) {
+            $data['wildcards'] = $this->validator->getDelegatedValidator()->getWildcardRules();
+        }
 
         if (! is_null($this->ignore)) {
             $data['ignore'] = $this->ignore;

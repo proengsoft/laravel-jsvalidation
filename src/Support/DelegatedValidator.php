@@ -8,6 +8,7 @@ use Illuminate\Validation\Validator as BaseValidator;
 class DelegatedValidator
 {
     use AccessProtectedTrait;
+
     /**
      * The Validator resolved instance.
      *
@@ -23,14 +24,23 @@ class DelegatedValidator
     protected $validatorMethod;
 
     /**
+     * Array validation rules with * wildcard matching.
+     *
+     * @var array
+     */
+    protected $wildcardRules;
+
+    /**
      * DelegatedValidator constructor.
      *
      * @param \Illuminate\Validation\Validator $validator
+     * @param array                            $wildcardRules
      */
-    public function __construct(BaseValidator $validator)
+    public function __construct(BaseValidator $validator, array $wildcardRules = [])
     {
         $this->validator = $validator;
         $this->validatorMethod = $this->createProtectedCaller($validator);
+        $this->wildcardRules = $wildcardRules;
     }
 
     /**
@@ -38,6 +48,7 @@ class DelegatedValidator
      *
      * @param string $method
      * @param array $args
+     *
      * @return mixed
      */
     private function callValidator($method, $args = [])
@@ -82,7 +93,17 @@ class DelegatedValidator
      */
     public function getRules()
     {
-        return $this->validator->getRules();
+        return $this->validator->getRules() + $this->wildcardRules;
+    }
+
+    /**
+     * Get the validation rules with '*' wildcard.
+     *
+     * @return array
+     */
+    public function getWildcardRules()
+    {
+        return $this->wildcardRules;
     }
 
     /**
