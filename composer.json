@@ -1,5 +1,5 @@
 {
-    "name": "proengsoft/laravel-jsvalidation",
+    "name": "proengsoft-fork/laravel-jsvalidation",
     "type": "library",
     "description": "Validate forms transparently with Javascript reusing your Laravel Validation Rules, Messages, and FormRequest",
     "keywords": [
