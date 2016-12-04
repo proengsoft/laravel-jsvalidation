@@ -111,7 +111,7 @@ class DelegatedValidator
         if (method_exists($this->validator, 'setFiles')) {
             return $this->validator->setFiles($files);
         }
-    
+
         return $this->validator;
     }
 
