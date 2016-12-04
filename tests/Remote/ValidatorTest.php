@@ -75,17 +75,21 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
     protected function getRealTranslator()
     {
-        $trans = new \Symfony\Component\Translation\Translator('en', new \Symfony\Component\Translation\MessageSelector);
-        $trans->addLoader('array', new \Symfony\Component\Translation\Loader\ArrayLoader);
-        $trans->addResource(
-            'array',
-            [
-                'validation.required' => ':attribute required!',
-                'validation.active_url' => ':attribute active_url!'
-            ],
-            'en',
-            'messages'
-        );
+        $messages = [
+            'validation.required' => ':attribute required!',
+            'validation.active_url' => ':attribute active_url!'
+        ];
+
+        if (method_exists('\Illuminate\Translation\Translator','addLines')) {
+            $trans = new \Illuminate\Translation\Translator(
+                new \Illuminate\Translation\ArrayLoader, 'en'
+            );
+            $trans->addLines( $messages, 'en');
+        } else {
+            $trans = new \Symfony\Component\Translation\Translator('en', new \Symfony\Component\Translation\MessageSelector);
+            $trans->addLoader('array', new \Symfony\Component\Translation\Loader\ArrayLoader);
+            $trans->addResource('array', $messages , 'en', 'messages' );
+        }
 
         return $trans;
     }
