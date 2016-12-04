@@ -24,6 +24,7 @@ class DelegatedValidator
 
     /**
      * DelegatedValidator constructor.
+     *
      * @param \Illuminate\Validation\Validator $validator
      */
     public function __construct(BaseValidator $validator)
@@ -33,7 +34,11 @@ class DelegatedValidator
     }
 
     /**
+     * Call validator method
+     *
      * @param string $method
+     * @param array $args
+     * @return mixed
      */
     private function callValidator($method, $args = [])
     {
@@ -87,7 +92,11 @@ class DelegatedValidator
      */
     public function getFiles()
     {
-        return $this->validator->getFiles();
+        if (method_exists($this->validator,'getFiles')) {
+            return $this->validator->getFiles();
+        }
+
+        return [];
     }
 
     /**
@@ -99,7 +108,11 @@ class DelegatedValidator
      */
     public function setFiles(array $files)
     {
-        return $this->validator->setFiles($files);
+        if (method_exists($this->validator,'setFiles')) {
+            return $this->validator->setFiles($files);
+        }
+
+        return $this->validator;
     }
 
     /**
