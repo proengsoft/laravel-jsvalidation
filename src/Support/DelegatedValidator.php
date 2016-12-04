@@ -34,7 +34,7 @@ class DelegatedValidator
     }
 
     /**
-     * Call validator method
+     * Call validator method.
      *
      * @param string $method
      * @param array $args
@@ -92,7 +92,7 @@ class DelegatedValidator
      */
     public function getFiles()
     {
-        if (method_exists($this->validator,'getFiles')) {
+        if (method_exists($this->validator, 'getFiles')) {
             return $this->validator->getFiles();
         }
 
@@ -108,10 +108,10 @@ class DelegatedValidator
      */
     public function setFiles(array $files)
     {
-        if (method_exists($this->validator,'setFiles')) {
+        if (method_exists($this->validator, 'setFiles')) {
             return $this->validator->setFiles($files);
         }
-
+    
         return $this->validator;
     }
 
