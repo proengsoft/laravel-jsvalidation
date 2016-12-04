@@ -21,6 +21,14 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    protected function getMockedTranslator() {
+        $translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+            ->getMock();
+
+        return $translator;
+
+    }
+
     public function testResolverIsClosure() {
 
 
@@ -35,7 +43,8 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
         $resolver = $this->resolverObject->resolver('field');
 
 
-        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        $translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+            ->getMock();
         $validator = $resolver($translator,[],[],[],[]);
 
         $this->assertInstanceOf('Illuminate\Validation\Validator', $validator);
@@ -45,12 +54,13 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
     public function testResolvesValidatorExists() {
 
 
-        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        $translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+            ->getMock();
         $resolverObject = new Resolver(new CustomValidatorStubTest($translator));
 
         $resolver = $resolverObject->resolver('field');
-
-        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        $translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+            ->getMock();
         $validator = $resolver($translator,[],[],[],[]);
 
         $this->assertInstanceOf('Illuminate\Validation\Validator', $validator);
@@ -65,12 +75,14 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testResolvesAndValidated() {
-        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        $translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+            ->getMock();
         $resolverObject = new Resolver(new CustomValidatorStubTest($translator));
 
         $resolver = $resolverObject->resolver('field');
 
-        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        $translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+            ->getMock();
         $validator = $resolver($translator,
             ['field'=>'value', '_jsvalidation_validate_all'=>false],
             ['field'=>'required'],

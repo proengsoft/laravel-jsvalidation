@@ -71,7 +71,38 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     public function testGetFiles()
     {
         $expected = ['field'=>'data'];
-        $this->callValidatorMethod('getFiles',$expected);
+
+        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+            ->disableOriginalConstructor()
+            ->setMethods(['getFiles'])
+            ->getMock();
+
+        $validator->expects($this->once())
+            ->method('getFiles')
+            ->willReturn($expected);
+
+        $delegated = new DelegatedValidator($validator);
+        $files = $delegated->getFiles();
+
+        $this->assertEquals($expected, $files);
+    }
+
+    /**
+     * Test Get the files in Laravel >= 5.3.21
+     */
+    public function testGetFilesMethodNotExists() {
+        $expected = [];
+        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $validator->method($this->anything())
+            ->willReturn($expected);
+
+        $delegated = new DelegatedValidator($validator);
+        $files = $delegated->getFiles();
+
+
+        $this->assertEquals($expected, $files);
     }
 
     /**
@@ -80,12 +111,47 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testSetFiles()
     {
-        $expected = ['field'=>'data'];
-        $this->callValidatorMethodWithArg('setFiles',$expected, null);
+        $return = true;
+        $arg=[];
 
+        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+            ->disableOriginalConstructor()
+            ->setMethods(['setFiles'])
+            ->getMock();
+
+        $validator->expects($this->once())
+            ->method('setFiles')
+            ->with($arg)
+            ->willReturn($return );
+
+        $delegated = new DelegatedValidator($validator);
+        $result = $delegated->setFiles($arg);
+
+        $this->assertEquals($return , $result);
 
     }
 
+    /**
+     * Test Set the files in Laravel >= 5.3.21
+     *
+     */
+    public function testSetFilesMethodNotExists()
+    {
+        $arg=[];
+
+        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $validator->method($this->anything())
+            ->willReturn($validator);
+
+        $delegated = new DelegatedValidator($validator);
+        $result = $delegated->setFiles($arg);
+
+        $this->assertEquals($validator , $result);
+
+    }
     /**
      * Test Explode rules.
      *
@@ -183,7 +249,6 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
             ->willReturn($return);
 
         $delegated = new DelegatedValidator($validator);
-        //$value= $delegated->$method();
         $value=call_user_func_array([$delegated, $method],$args);
 
         $this->assertEquals($return, $value);
@@ -229,8 +294,10 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $delegated = $this->getMock('\Proengsoft\JsValidation\Support\DelegatedValidator',['callProtected'],[$validator]);
-
+        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+            ->setConstructorArgs([$validator])
+            ->setMethods(['callProtected'])
+            ->getMock();
         $delegated->expects($this->once())
             ->method('callProtected')
             ->with($this->isInstanceOf('Closure'), $method, $this->isType('array'))

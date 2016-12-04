@@ -10,37 +10,46 @@ require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
 class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testMake() {
-        $rules=['name'=>'required'];
-        $messages = [];
-        $customAttributes = [];
-        $selector = null;
+    protected function mockedApp($rules, $messages, $customAttributes) {
 
+        $mockValidator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+            ->disableOriginalConstructor()
+            ->setMethods(['addCustomAttributes'])
+            ->getMock();
 
-        $mockValidator = $this->getMock(
-            '\Illuminate\Validation\Validator',['addCustomAttributes'],
-            [], '', false
-        );
         $mockValidator->expects($this->once())
             ->method('addCustomAttributes')
             ->with($customAttributes);
 
+        $mockFactory = $this->getMockBuilder('Illuminate\Contracts\Validation\Factory')
+            ->disableOriginalConstructor()
+            ->setMethods(['make','extend','extendImplicit','replacer'])
+            ->getMock();
 
-        $mockFactory = $this->getMock(
-            'Illuminate\Contracts\Validation\Factory',
-            ['make','extend','extendImplicit','replacer'], [], '', false
-        );
         $mockFactory->expects($this->once())
             ->method('make')
             ->with([], $rules, $messages, $customAttributes)
             ->willReturn($mockValidator);
 
 
-        $app = $this->getMock('\Illuminate\Container\Container');
+        $app = $this->getMockBuilder('\Illuminate\Container\Container')
+            ->getMock();
         $app->expects($this->once())
             ->method('make')
             ->with('Illuminate\Contracts\Validation\Factory')
             ->willReturn($mockFactory);
+
+        return $app;
+
+    }
+
+    public function testMake() {
+        $rules=['name'=>'required'];
+        $messages = [];
+        $customAttributes = [];
+        $selector = null;
+
+        $app = $this->mockedApp($rules, $messages, $customAttributes);
 
         $app->expects($this->at(1))
             ->method('__get')
@@ -71,43 +80,23 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $customAttributes = [];
         $selector = null;
 
-
-        $mockValidator = $this->getMock(
-            '\Illuminate\Validation\Validator',['addCustomAttributes'],
-            [], '', false
-        );
-        $mockValidator->expects($this->once())
-            ->method('addCustomAttributes')
-            ->with($customAttributes);
-
-
-        $mockFactory = $this->getMock(
-            'Illuminate\Contracts\Validation\Factory',
-            ['make','extend','extendImplicit','replacer'], [], '', false
-        );
-        $mockFactory->expects($this->once())
-            ->method('make')
-            ->with([], $rules, $messages, $customAttributes)
-            ->willReturn($mockValidator);
-
-
-        $app = $this->getMock('\Illuminate\Container\Container');
-        $app->expects($this->once())
-            ->method('make')
-            ->with('Illuminate\Contracts\Validation\Factory')
-            ->willReturn($mockFactory);
-
-        $sessionMock = $this->getMock('stdObject',['token']);
+        $sessionMock = $this->getMockBuilder('stdObject')
+            ->setMethods(['token'])
+            ->getMock();
         $sessionMock->expects($this->once())
             ->method('token')
             ->willReturn('token');
+
+        $app = $this->mockedApp($rules, $messages, $customAttributes);
 
         $app->expects($this->at(1))
             ->method('__get')
             ->with('session')
             ->willReturn($sessionMock);
 
-        $encrypterMock = $this->getMock('stdObject',['encrypt']);
+        $encrypterMock = $this->getMockBuilder('stdObject')
+            ->setMethods(['encrypt'])
+            ->getMock();
         $encrypterMock->expects($this->once())
             ->method('encrypt')
             ->with('token')
@@ -131,7 +120,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testCreateFromFormRequestInstance() {
-        $rules=['name'=>'required'];
+        $rules=[];
         $messages = [];
         $customAttributes = [];
         $selector = null;
@@ -140,31 +129,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $options['view'] = 'jsvalidation::bootstrap';
         $options['form_selector'] = 'form';
 
-        $mockValidator = $this->getMock(
-            '\Illuminate\Validation\Validator',['addCustomAttributes'],
-            [], '', false
-        );
-        $mockValidator->expects($this->once())
-            ->method('addCustomAttributes')
-            ->with($customAttributes);
-
-
-        $mockFactory = $this->getMock(
-            'Illuminate\Contracts\Validation\Factory',
-            ['make','extend','extendImplicit','replacer'], [], '', false
-        );
-        $mockFactory->expects($this->once())
-            ->method('make')
-            ->with([], [], $messages, $customAttributes)
-            ->willReturn($mockValidator);
-
-
-        $app = $this->getMock('\Illuminate\Container\Container');
-        $app->expects($this->once())
-            ->method('make')
-            ->with('Illuminate\Contracts\Validation\Factory')
-            ->willReturn($mockFactory);
-
+        $app = $this->mockedApp($rules, $messages, $customAttributes);
 
         $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
         $mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
@@ -182,7 +147,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
 
     public function testCreateFromFormRequestClassName() {
-        $rules=['name'=>'required'];
+        $rules=[];
         $messages = [];
         $customAttributes = [];
         $selector = null;
@@ -191,33 +156,11 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $options['view'] = 'jsvalidation::bootstrap';
         $options['form_selector'] = 'form';
 
-        $mockValidator = $this->getMock(
-            '\Illuminate\Validation\Validator',['addCustomAttributes'],
-            [], '', false
-        );
-        $mockValidator->expects($this->once())
-            ->method('addCustomAttributes')
-            ->with($customAttributes);
 
+        $app = $this->mockedApp($rules, $messages, $customAttributes);
 
-        $mockFactory = $this->getMock(
-            'Illuminate\Contracts\Validation\Factory',
-            ['make','extend','extendImplicit','replacer'], [], '', false
-        );
-        $mockFactory->expects($this->once())
-            ->method('make')
-            ->with([], [], $messages, $customAttributes)
-            ->willReturn($mockValidator);
-
-
-        $app = $this->getMock('\Illuminate\Container\Container');
-
-        $app->expects($this->once())
-            ->method('make')
-            ->with('Illuminate\Contracts\Validation\Factory')
-            ->willReturn($mockFactory);
-
-        $sessionMock = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface',[]);
+        $sessionMock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')
+            ->getMock();
 
 
         $mockedRequest = m::mock('\Symfony\Component\HttpFoundation\Request');

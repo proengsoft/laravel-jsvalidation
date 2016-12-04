@@ -6,14 +6,7 @@ namespace Proengsoft\JsValidation\Tests;
 class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
 
-
-
-    public function testBootstrapConfigs() {
-
-        $app=array();
-        $app['path.config']=dirname(__FILE__.'/../config');
-        $app['path.base']=dirname(__FILE__.'/../');
-        $app['path.public']=dirname(__FILE__.'/../public');
+    protected function getMockedService($app) {
 
         $mockedConfig = $this->getMockForAbstractClass('Illuminate\Contracts\Config\Repository',[],'',false);
         $mockedConfig->expects($this->once())
@@ -29,13 +22,24 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app['validator'] = $mockedValidator;
 
+        $mock = $this->getMockBuilder('Proengsoft\JsValidation\JsValidationServiceProvider')
+            ->setMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
+            ->setConstructorArgs([$app])
+            ->getMock();
+
+        return $mock;
+    }
 
 
-        $mock = $this->getMock(
-            'Proengsoft\JsValidation\JsValidationServiceProvider',
-            ['loadViewsFrom','publishes','mergeConfigFrom'],
-            [$app]
-        );
+
+    public function testBootstrapConfigs() {
+
+        $app=array();
+        $app['path.config']=dirname(__FILE__.'/../config');
+        $app['path.base']=dirname(__FILE__.'/../');
+        $app['path.public']=dirname(__FILE__.'/../public');
+
+        $mock = $this->getMockedService($app);
 
         $mock->expects($this->at(1))
             ->method('publishes')
@@ -53,27 +57,7 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app['path.base']=dirname(__FILE__.'/../');
         $app['path.public']=dirname(__FILE__.'/../public');
 
-        $mockedConfig = $this->getMockForAbstractClass('Illuminate\Contracts\Config\Repository',[],'',false);
-        $mockedConfig->expects($this->once())
-            ->method('get')
-            ->with('jsvalidation.disable_remote_validation')
-            ->will($this->returnValue(true));
-        $app['config']=$mockedConfig;
-
-        $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
-        $mockedValidator->expects($this->once())
-            ->method('extend')
-            ->will($this->returnValue(null));
-
-        $app['validator'] = $mockedValidator;
-
-        $mock = $this->getMock(
-            'Proengsoft\JsValidation\JsValidationServiceProvider',
-            ['loadViewsFrom','publishes','mergeConfigFrom'],
-            [$app]
-        );
-
-
+        $mock = $this->getMockedService($app);
 
         $mock->expects($this->once())
             ->method('loadViewsFrom')
@@ -97,26 +81,7 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app['path.base']=dirname(__FILE__.'/../');
         $app['path.public']=dirname(__FILE__.'/../public');
 
-        $mockedConfig = $this->getMockForAbstractClass('Illuminate\Contracts\Config\Repository',[],'',false);
-        $mockedConfig->expects($this->once())
-            ->method('get')
-            ->with('jsvalidation.disable_remote_validation')
-            ->will($this->returnValue(true));
-        $app['config']=$mockedConfig;
-
-        $mockedValidator = $this->getMockForAbstractClass('Illuminate\Contracts\Validation\Factory',[],'',false);
-        $mockedValidator->expects($this->once())
-            ->method('extend')
-            ->will($this->returnValue(null));
-
-        $app['validator'] = $mockedValidator;
-
-        $mock = $this->getMock(
-            'Proengsoft\JsValidation\JsValidationServiceProvider',
-            ['loadViewsFrom','publishes','mergeConfigFrom'],
-            [$app]
-        );
-
+        $mock = $this->getMockedService($app);
 
         $mock->expects($this->at(4))
             ->method('publishes')
@@ -135,6 +100,7 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app['path.config']=dirname(__FILE__.'/../config');
         $app['path.base']=dirname(__FILE__.'/../');
         $app['path.public']=dirname(__FILE__.'/../public');
+
 
         $mockedConfig = $this->getMockForAbstractClass('Illuminate\Contracts\Config\Repository',[],'',false);
         $mockedConfig->expects($this->once())
@@ -155,20 +121,18 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app['Illuminate\Contracts\Http\Kernel'] = $mockKernel;
 
-
-        $mock = $this->getMock(
-            'Proengsoft\JsValidation\JsValidationServiceProvider',
-            ['loadViewsFrom','publishes','mergeConfigFrom'],
-            [$app]
-        );
-
+        $mock = $this->getMockBuilder('Proengsoft\JsValidation\JsValidationServiceProvider')
+            ->setConstructorArgs([$app])
+            ->setMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
+            ->getMock();
 
         $mock->boot();
 
     }
 
     public function testRegister() {
-        $app = $this->getMock('Illuminate\Contracts\Container\Container');
+        $app = $this->getMockBuilder('Illuminate\Contracts\Container\Container')
+            ->getMock();
 
         $app->expects($this->once())
             ->method('singleton')
@@ -187,11 +151,11 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
             });
 
 
-        $mock = $this->getMock(
-            'Proengsoft\JsValidation\JsValidationServiceProvider',
-            ['loadViewsFrom','publishes','mergeConfigFrom'],
-            [$app]
-        );
+        $mock = $this->getMockBuilder('Proengsoft\JsValidation\JsValidationServiceProvider')
+            ->setConstructorArgs([$app])
+            ->setMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
+            ->getMock();
+
         $mock->register();
 
     }
