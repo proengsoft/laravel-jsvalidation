@@ -55,7 +55,7 @@ Almost are validated in client-side using Javascript, but in some cases, the val
 
 Some Laravel features and validations are not implemented yet. Pull Requests are welcome!
 
-- ~~Validating Arrays using wildcards **['person.*.email' => 'email|unique:users']** is not supported. #139~~ (supported in *master* branch)
+- Validating Arrays using wildcards **['person.*.email' => 'email|unique:users']** is not supported. #139
 - [Distinct](https://laravel.com/docs/5.2/validation#rule-distinct) rule
 - [Present](https://laravel.com/docs/5.2/validation#rule-present) rule
 - [InArray](https://laravel.com/docs/5.2/validation#rule-in-array) rule
