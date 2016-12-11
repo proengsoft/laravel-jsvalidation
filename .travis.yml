@@ -7,16 +7,21 @@ php:
   - hhvm
 env:
   matrix:
-  - COMPOSER=tests/composer-5.0.json
-  - COMPOSER=tests/composer-5.1.json
-  - COMPOSER=tests/composer-5.2.json
-  - COMPOSER=tests/composer-5.3.json
+  - LARAVEL=5.0
+  - LARAVEL=5.1
+  - LARAVEL=5.2
+  - LARAVEL=5.3
 matrix:
   include:
   - php: 5.4
-    env: COMPOSER=tests/composer-5.0.json
+    env: LARAVEL=5.0
+  exclude:
+  - php: 5.5
+    env: LARAVEL=5.3
+
 
 before_script:
+  - export COMPOSER=tests/composer-$LARAVEL.json
   - travis_retry composer self-update
   - travis_retry composer install --no-interaction --prefer-source
 
