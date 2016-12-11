@@ -3,6 +3,7 @@
 namespace Proengsoft\JsValidation;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\Javascript\MessageParser;
@@ -76,10 +77,33 @@ class JsValidatorFactory
     {
         $factory = $this->app->make('Illuminate\Contracts\Validation\Factory');
 
-        $validator = $factory->make([], $rules, $messages, $customAttributes);
+        $data = $this->getValidationData($rules, $customAttributes);
+        $validator = $factory->make($data, $rules, $messages, $customAttributes);
         $validator->addCustomAttributes($customAttributes);
 
         return $validator;
+    }
+
+    /**
+     * gets fake data when validator has wildcard rules
+     * @param array $rules
+     *
+     * @return array
+     */
+
+    protected function getValidationData(array $rules, array $customAttributes = []) {
+
+        $attributes = array_filter(array_keys($rules), function ($attribute) {
+            return $attribute !== '' && mb_strpos($attribute, '*') !== false;
+        });
+
+        $attributes = array_merge(array_keys($customAttributes), $attributes);
+        $data = array_reduce($attributes, function ($data, $attribute) {
+            Arr::set($data, $attribute, true);
+            return $data;
+        }, array());
+
+        return $data;
     }
 
     /**
