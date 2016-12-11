@@ -3,8 +3,8 @@
 namespace Proengsoft\JsValidation\Javascript;
 
 use Exception;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\View;
+use Illuminate\Contracts\Support\Arrayable;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
 class JavascriptValidator implements Arrayable
