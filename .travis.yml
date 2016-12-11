@@ -11,6 +11,7 @@ env:
   - LARAVEL=5.1
   - LARAVEL=5.2
   - LARAVEL=5.3
+
 matrix:
   include:
   - php: 5.4
@@ -18,7 +19,6 @@ matrix:
   exclude:
   - php: 5.5
     env: LARAVEL=5.3
-
 
 before_script:
   - export COMPOSER=tests/composer-$LARAVEL.json
@@ -28,7 +28,7 @@ before_script:
 script:
   - phpunit --coverage-clover=coverage.clover
 
-#after_script:
-#  - bash -c 'if [ "${TRAVIS_PHP_VERSION:0:4}" != "hhvm" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi;'
-#  - bash -c 'if [ "${TRAVIS_PHP_VERSION:0:4}" != "hhvm-nightly" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi;'
+after_script:
+  - bash -c 'if [ "${TRAVIS_PHP_VERSION:0:4}" != "hhvm" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi;'
+  - bash -c 'if [ "${TRAVIS_PHP_VERSION:0:4}" != "hhvm-nightly" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi;'
 
