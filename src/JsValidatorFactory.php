@@ -2,13 +2,13 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
-use Proengsoft\JsValidation\Javascript\JavascriptValidator;
-use Proengsoft\JsValidation\Javascript\MessageParser;
+use Illuminate\Foundation\Http\FormRequest;
 use Proengsoft\JsValidation\Javascript\RuleParser;
-use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 
 class JsValidatorFactory
 {
