@@ -2,14 +2,14 @@
 
 namespace Proengsoft\JsValidation;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator;
-use Proengsoft\JsValidation\Javascript\JavascriptValidator;
-use Proengsoft\JsValidation\Javascript\MessageParser;
+use Illuminate\Foundation\Http\FormRequest;
 use Proengsoft\JsValidation\Javascript\RuleParser;
-use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 
 class JsValidatorFactory
 {
@@ -85,14 +85,13 @@ class JsValidatorFactory
     }
 
     /**
-     * gets fake data when validator has wildcard rules
+     * gets fake data when validator has wildcard rules.
      * @param array $rules
      *
      * @return array
      */
-
-    protected function getValidationData(array $rules, array $customAttributes = []) {
-
+    protected function getValidationData(array $rules, array $customAttributes = [])
+    {
         $attributes = array_filter(array_keys($rules), function ($attribute) {
             return $attribute !== '' && mb_strpos($attribute, '*') !== false;
         });
@@ -100,6 +99,7 @@ class JsValidatorFactory
         $attributes = array_merge(array_keys($customAttributes), $attributes);
         $data = array_reduce($attributes, function ($data, $attribute) {
             Arr::set($data, $attribute, true);
+
             return $data;
         }, array());
 
