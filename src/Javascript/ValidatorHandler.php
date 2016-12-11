@@ -161,7 +161,9 @@ class ValidatorHandler
      */
     public function sometimes($attribute, $rules = [])
     {
-        $callback = function () {return true; };
+        $callback = function () {
+            return true;
+        };
         $this->validator->sometimes($attribute, $rules, $callback);
         $this->rules->addConditionalRules($attribute, (array) $rules);
     }

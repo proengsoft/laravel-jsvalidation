@@ -2,11 +2,11 @@
 
 namespace Proengsoft\JsValidation\Remote;
 
-use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Proengsoft\JsValidation\Support\RuleListTrait;
+use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
-use Proengsoft\JsValidation\Support\RuleListTrait;
 
 /**
  * Class RemoteValidator.

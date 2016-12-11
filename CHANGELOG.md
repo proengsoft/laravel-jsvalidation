@@ -5,6 +5,7 @@ Features:
  - Support for [Array Validations](https://laravel.com/docs/5.2/validation#validating-arrays)
  - Support for [RequiredUnless](https://laravel.com/docs/5.2/validation#rule-required-unless) Rule
 
+## 1.3.2 (2016-12-11)
 
 Bugfixes:
 
@@ -12,6 +13,8 @@ Bugfixes:
      - Convert Exceptions to E_USER_ERROR in __toString(). #126
      - Chrome and IE case fix in mime types. PR #136 
      - Fix Turn off remote validation #145
+     - Support for Laravel 5.3.21 and greater
+     
 
 ## 1.3.1 (2016-01-04)
 

@@ -31,7 +31,6 @@ class JsValidationServiceProvider extends ServiceProvider
             $config = $app['config']->get('jsvalidation');
 
             return new JsValidatorFactory($app, $config);
-
         });
     }
 
@@ -53,7 +52,9 @@ class JsValidationServiceProvider extends ServiceProvider
      */
     protected function bootstrapValidator()
     {
-        $callback = function () { return true; };
+        $callback = function () {
+            return true;
+        };
         $this->app['validator']->extend(ValidatorHandler::JSVALIDATION_DISABLE, $callback);
     }
 
