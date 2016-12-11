@@ -10,7 +10,7 @@ require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
 class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
 
-    protected function mockedApp($rules, $messages, $customAttributes) {
+    protected function mockedApp($rules, $messages, $customAttributes, $data=[]) {
 
         $mockValidator = $this->getMockBuilder('\Illuminate\Validation\Validator')
             ->disableOriginalConstructor()
@@ -28,7 +28,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $mockFactory->expects($this->once())
             ->method('make')
-            ->with([], $rules, $messages, $customAttributes)
+            ->with($data, $rules, $messages, $customAttributes)
             ->willReturn($mockValidator);
 
 
@@ -73,6 +73,68 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testMakeArrayRules() {
+        $rules=['name.*'=>'required'];
+        $data['name']['*']=true;
+        $messages = [];
+        $customAttributes = [];
+        $selector = null;
+
+        $app = $this->mockedApp($rules, $messages, $customAttributes, $data);
+
+        $app->expects($this->at(1))
+            ->method('__get')
+            ->with('session')
+            ->willReturn(null);
+
+        $app->expects($this->at(2))
+            ->method('__get')
+            ->with('encrypter')
+            ->willReturn(null);
+
+        $options['disable_remote_validation'] = false;
+        $options['view'] = 'jsvalidation::bootstrap';
+        $options['form_selector'] = 'form';
+
+        $factory = new JsValidatorFactory($app, $options);
+
+        $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
+
+        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
+
+    }
+
+    public function testMakeArrayRulesAndAttributes() {
+        $rules=['name.*'=>'required'];
+        $data['name']['*']=true;
+        $data['name']['key0']=true;
+        $messages = [];
+        $customAttributes = ['name.*'=>'Name', 'name.key0'=>'Name Key 0'];
+        $selector = null;
+
+        $app = $this->mockedApp($rules, $messages, $customAttributes, $data);
+
+        $app->expects($this->at(1))
+            ->method('__get')
+            ->with('session')
+            ->willReturn(null);
+
+        $app->expects($this->at(2))
+            ->method('__get')
+            ->with('encrypter')
+            ->willReturn(null);
+
+        $options['disable_remote_validation'] = false;
+        $options['view'] = 'jsvalidation::bootstrap';
+        $options['form_selector'] = 'form';
+
+        $factory = new JsValidatorFactory($app, $options);
+
+        $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
+
+        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
+
+    }
 
     public function testMakeWithToken() {
         $rules=['name'=>'required'];
