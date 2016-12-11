@@ -6,18 +6,19 @@ php:
   - 7.0
   - hhvm
 env:
-  - LARAVEL=5.0
-  - LARAVEL=5.1
-  - LARAVEL=5.2
-  - LARAVEL=5.3
+  matrix:
+  - COMPOSER=tests/composer-5.0.json
+  - COMPOSER=tests/composer-5.1.json
+  - COMPOSER=tests/composer-5.2.json
+  - COMPOSER=tests/composer-5.3.json
 matrix:
   include:
   - php: 5.4
-    env: LARAVEL=5.0
+    env: COMPOSER=tests/composer-5.0.json
 
 before_script:
-  - travis_retry COMPOSER=tests/composer-$LARAVEL.json composer self-update
-  - travis_retry COMPOSER=tests/composer-$LARAVEL.json composer install --no-interaction --prefer-source
+  - travis_retry composer self-update
+  - travis_retry composer install --no-interaction --prefer-source
 
 script:
   - phpunit --coverage-clover=coverage.clover
