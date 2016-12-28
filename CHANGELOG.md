@@ -1,13 +1,14 @@
 ## dev-master
 
-Features:
- - Support for Laravel [Conditional Rules] (https://laravel.com/docs/5.2/validation#conditionally-adding-rules)
- - Support for [Array Validations](https://laravel.com/docs/5.2/validation#validating-arrays)
- - Support for [RequiredUnless](https://laravel.com/docs/5.2/validation#rule-required-unless) Rule
 
-## 1.3.2 (2016-12-11)
+## 1.4.0 (2016-12-28)
 
 Bugfixes:
+
+ - Features:
+     - Support for Laravel [Conditional Rules](https://laravel.com/docs/5.2/validation#conditionally-adding-rules)
+     - Support for [Array Validations](https://laravel.com/docs/5.2/validation#validating-arrays)
+     - Support for [RequiredUnless](https://laravel.com/docs/5.2/validation#rule-required-unless) Rule
 
  - Issues resolved:
      - Convert Exceptions to E_USER_ERROR in __toString(). #126
@@ -46,7 +47,7 @@ Bugfixes:
 Features:
 
  - Allow validate rule "In" for type array 
- - Added JSON validator [3f508c1] (https://github.com/laravel/framework/commit/3f508c1c88897bd6b8fe15137ec77d3023bbcd9f#diff-38fd116b7c7b8ac1bdd8362250d04d57)
+ - Added JSON validator [3f508c1](https://github.com/laravel/framework/commit/3f508c1c88897bd6b8fe15137ec77d3023bbcd9f#diff-38fd116b7c7b8ac1bdd8362250d04d57)
  - Allow disable remote validations
  - Add support for other validation packages. #69
 

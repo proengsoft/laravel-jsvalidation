@@ -48,18 +48,24 @@ Almost are validated in client-side using Javascript, but in some cases, the val
  - [ActiveURL](http://laravel.com/docs/5.1/validation#rule-active-url)
  - [Unique](http://laravel.com/docs/5.1/validation#rule-unique)
  - [Exists](http://laravel.com/docs/5.1/validation#rule-exists)
- - [Custom Validation Rules][]
+ - [Custom Validation Rules](https://laravel.com/docs/5.3/validation#custom-validation-rules)
  - Validations provided by other packages
 
-##### Unsupported Rules and Features
+Rules not implemented yet in Javascript are validated using AJAX :
+ - [Distinct](https://laravel.com/docs/5.2/validation#rule-distinct)
+ - [Filled](https://laravel.com/docs/5.3/validation#rule-filled)
+ - [InArray](https://laravel.com/docs/5.2/validation#rule-in-array) 
+ - [Nullable](https://laravel.com/docs/5.3/validation#rule-nullable)
+ - [Present](https://laravel.com/docs/5.2/validation#rule-present) 
 
-Some Laravel features and validations are not implemented yet. Pull Requests are welcome!
+##### Unsupported Rules
 
-- Validating Arrays using wildcards **['person.*.email' => 'email|unique:users']** is not supported. #139
-- [Distinct](https://laravel.com/docs/5.2/validation#rule-distinct) rule
-- [Present](https://laravel.com/docs/5.2/validation#rule-present) rule
-- [InArray](https://laravel.com/docs/5.2/validation#rule-in-array) rule
-- [DateFormat](https://laravel.com/docs/5.2/validation#rule-date-format) rule don't support timezone format 
+Some Laravel validations are not implemented yet.
+    
+- [DateFormat](https://laravel.com/docs/5.2/validation#rule-date-format) rule don't support timezone format
+- [Dimensions](https://laravel.com/docs/5.3/validation#rule-dimensions)
+- [File](https://laravel.com/docs/5.3/validation#rule-file) 
+- [MIME Types](https://laravel.com/docs/5.3/validation#rule-mimetypes)
 
 
 #### Getting started
