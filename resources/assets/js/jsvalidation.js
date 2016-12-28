@@ -136,7 +136,7 @@ laravelValidation = {
 
             var implicit = false,
                 check = params[0][1],
-                attribute = check[0],
+                attribute = element.name,
                 token = check[1],
                 validateAll = check[2];
 
