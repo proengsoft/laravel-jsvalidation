@@ -27,10 +27,10 @@ elixir(function(mix) {
         mix.scripts(
             [
                     bowerPath + 'jquery-validation/dist/jquery.validate.js',
-                    bowerPath + 'phpjs/src/php/strings/strlen.js',
-                    bowerPath + 'phpjs/src/php/array/array_diff.js',
-                    bowerPath + 'phpjs/src/php/datetime/strtotime.js',
-                    bowerPath + 'phpjs/src/php/var/is_numeric.js',
+                    bowerPath + 'phpjs/functions/strings/strlen.js',
+                    bowerPath + 'phpjs/functions/array/array_diff.js',
+                    bowerPath + 'phpjs/functions/datetime/strtotime.js',
+                    bowerPath + 'phpjs/functions/var/is_numeric.js',
                     bowerPath + 'php-date-formatter/js/php-date-formatter.js',
                     'assets/js/jsvalidation.js',
                     'assets/js/helpers.js',
