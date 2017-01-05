@@ -21,14 +21,14 @@
         }
     ],
     "require": {
-        "php" : ">=5.4.0",
-        "illuminate/support": "~5.0",
-        "illuminate/validation": "~5.0",
-        "illuminate/contracts": "~5.0",
-        "illuminate/view": "~5.0",
-        "illuminate/config": "~5.0",
-        "illuminate/http": "~5.0",
-        "illuminate/translation": "~5.0"
+        "php": ">=5.5.9",
+        "illuminate/support": "5.1.*",
+        "illuminate/validation": "5.1.*",
+        "illuminate/contracts": "5.1.*",
+        "illuminate/view": "5.1.*",
+        "illuminate/config": "5.1.*",
+        "illuminate/http": "5.1.*",
+        "illuminate/translation": "5.1.*"
 
     },
     "require-dev": {
