@@ -1,5 +1,18 @@
 ## dev-master
 
+ - Issues resolved:
+     - Add support for the "bail" keyword. #179
+     - Fix remote custom validation. #175 
+
+## 1.4.1 (2016-12-28)
+
+Bugfixes:
+ - Fix javascript build files
+
+## 1.4.1 (2016-12-28)
+
+Bugfixes:
+ - Fix javascript build files
 
 ## 1.4.0 (2016-12-28)
 
