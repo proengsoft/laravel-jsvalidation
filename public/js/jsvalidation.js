@@ -3452,6 +3452,14 @@ $.extend(true, laravelValidation, {
             return true;
         },
 
+        /**
+         * Bail This is the default behaivour os JSValidation.
+         * Always returns true, just lets us put sometimes in rules.*
+         * @return {boolean}
+         */
+        Bail: function() {
+            return true;
+        },
 
         /**
          * Validate the given attribute is filled if it is present.
