@@ -3,6 +3,7 @@
  - Features:
      - Add support for the "bail" keyword. #179
      - Add support to validate array fields using non array rules. #180 #158
+     - Remote validation return HttpResponseException  #130
 
  - Issues resolved:
      - Fix remote custom validation. #175 
