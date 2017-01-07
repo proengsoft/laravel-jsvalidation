@@ -399,6 +399,17 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * The field under validation must be a successfully uploaded file.
+         * @return {boolean}
+         */
+        File: function(value, element) {
+            if ('files' in element ) {
+                return (element.files.length > 0);
+            }
+            return false;
+        },
+
+        /**
          * Validate the MIME type of a file upload attribute is in a set of MIME types.
          * @return {boolean}
          */
