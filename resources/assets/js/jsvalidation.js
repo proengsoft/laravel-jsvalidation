@@ -52,6 +52,9 @@ laravelValidation = {
             } else {
                 cache[element.name][name]={};
                 var nameParts = name.split("[*]");
+                if (nameParts.length==1) {
+                    nameParts.push('');
+                }
                 var regexpParts = nameParts.map(function(currentValue, index) {
                     if (index % 2 === 0) {
                         currentValue = currentValue + '[';
