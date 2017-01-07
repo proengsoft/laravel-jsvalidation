@@ -129,7 +129,7 @@ $.extend(true, laravelValidation, {
             } else if ($.isArray(value)) {
                 return parseFloat(value.length);
             } else if (element.type === 'file') {
-                return parseFloat(Math.ceil(this.fileinfo(element).size));
+                return parseFloat(Math.floor(this.fileinfo(element).size));
             }
 
             return parseFloat(this.strlen(value));
