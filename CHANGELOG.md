@@ -1,5 +1,7 @@
 ## dev-master
- 
+
+## 1.4.3 (2017-01-07)
+
  - Features:
      - Add support for the "bail" keyword. #179
      - Add support to validate array fields using non array rules. #180 #158
