@@ -86,36 +86,6 @@ class DelegatedValidator
     }
 
     /**
-     * Get the files under validation.
-     *
-     * @return array
-     */
-    public function getFiles()
-    {
-        if (method_exists($this->validator, 'getFiles')) {
-            return $this->validator->getFiles();
-        }
-
-        return [];
-    }
-
-    /**
-     * Set the files under validation.
-     *
-     * @param array $files
-     *
-     * @return BaseValidator
-     */
-    public function setFiles(array $files)
-    {
-        if (method_exists($this->validator, 'setFiles')) {
-            return $this->validator->setFiles($files);
-        }
-
-        return $this->validator;
-    }
-
-    /**
      * Determine if a given rule implies the attribute is required.
      *
      * @param string $rule

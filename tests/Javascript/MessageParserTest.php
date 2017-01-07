@@ -27,16 +27,8 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
             ->willReturn($data);
 
         $delegated->expects($this->once())
-            ->method('getFiles')
-            ->willReturn($files);
-
-        $delegated->expects($this->once())
             ->method('setData')
             ->with($data);
-
-        $delegated->expects($this->once())
-            ->method('setFiles')
-            ->with($files);
 
         $delegated->expects($this->once())
             ->method('getMessage')
@@ -71,10 +63,6 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $delegated->expects($this->once())
             ->method('getData')
             ->willReturn($data);
-
-        $delegated->expects($this->once())
-            ->method('getFiles')
-            ->willReturn($files);
 
         $delegated->expects($this->exactly(2))
             ->method('setData')
@@ -118,16 +106,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
             ->method('getData')
             ->willReturn($data);
 
-        $delegated->expects($this->once())
-            ->method('getFiles')
-            ->willReturn($files);
 
-        $delegated->expects($this->exactly(2))
-            ->method('setFiles')
-            ->with($this->logicalOr(
-                $this->equalTo([$attribute=>false]),
-                $this->equalTo($files)
-            ));
         $delegated->expects($this->once())
             ->method('hasRule')
             ->with($attribute, array('Mimes', 'Image'))

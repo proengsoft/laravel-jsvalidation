@@ -1,5 +1,25 @@
 ## dev-master
 
+## 1.4.3 (2017-01-07)
+
+ - Features:
+     - Add support for the "bail" keyword. #179
+     - Add support to validate array fields using non array rules. #180 #158
+     - Remote validation return HttpResponseException  #130
+
+ - Issues resolved:
+     - Fix remote custom validation. #175 
+     - File Size doesn't work with JavaScript Validator. #156
+
+## 1.4.2 (2016-12-28)
+
+Bugfixes:
+ - Fix javascript build files
+
+## 1.4.1 (2016-12-28)
+
+Bugfixes:
+ - Fix javascript build files
 
 ## 1.4.0 (2016-12-28)
 

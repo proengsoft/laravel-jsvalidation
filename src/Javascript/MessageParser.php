@@ -3,6 +3,7 @@
 namespace Proengsoft\JsValidation\Javascript;
 
 use Proengsoft\JsValidation\Support\DelegatedValidator;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 
 class MessageParser
@@ -35,7 +36,7 @@ class MessageParser
         $message = $this->validator->getMessage($attribute, $rule);
         $message = $this->validator->doReplacements($message, $attribute, $rule, $parameters);
 
-        $this->setValidationData($data);
+        $this->validator->setData($data);
 
         return $message;
     }
@@ -52,13 +53,12 @@ class MessageParser
      */
     protected function fakeValidationData($attribute, $rule, $parameters)
     {
-        $files = $this->validator->getFiles();
         $data = $this->validator->getData();
 
-        $this->fakeFileData($files, $attribute);
+        $this->fakeFileData($data, $attribute);
         $this->fakeRequiredIfData($data, $rule, $parameters);
 
-        return compact('data', 'files');
+        return $data;
     }
 
     /**
@@ -82,28 +82,27 @@ class MessageParser
     /**
      * Generate fake data to get file type messages.
      *
-     * @param $files
+     * @param $data
      * @param $attribute
      */
-    private function fakeFileData($files, $attribute)
+    private function fakeFileData($data, $attribute)
     {
         if (! $this->validator->hasRule($attribute, array('Mimes', 'Image'))) {
             return;
         }
 
-        $newFiles = $files;
-        $newFiles[$attribute] = false;
-        $this->validator->setFiles($newFiles);
+        $newFiles = $data;
+        $newFiles[$attribute] = $this->createUploadedFile();
+        $this->validator->setData($newFiles);
     }
 
     /**
-     * Sets validation data.
+     * Create fake UploadedFile to generate file messages.
      *
-     * @param array $data
+     * @return UploadedFile
      */
-    protected function setValidationData($data)
+    protected function createUploadedFile()
     {
-        $this->validator->setFiles($data['files']);
-        $this->validator->setData($data['data']);
+        return new UploadedFile('fakefile', 'fakefile', null, null, 'fakefile', true);
     }
 }

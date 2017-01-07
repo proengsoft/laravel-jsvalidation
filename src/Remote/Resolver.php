@@ -56,15 +56,12 @@ class Resolver
      * @param $customAttributes
      * @param $field
      *
-     * @return Validator
+     * @return \Illuminate\Validation\Validator
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)
     {
+        $rules = [$field => Validator::EXTENSION_NAME] + $rules;
         $validator = $this->createValidator($translator, $data, $rules, $messages, $customAttributes);
-
-        $validator->sometimes($field, Validator::EXTENSION_NAME, function () {
-            return true;
-        });
 
         return $validator;
     }
@@ -97,7 +94,7 @@ class Resolver
     {
         return function ($attribute, $value, $parameters, BaseValidator $validator) {
             $data = $validator->getData();
-            $validateAll = $data[$attribute.'_validate_all'];
+            $validateAll = $data[$attribute.'_validate_all'] === 'true' ? true : false;
             $remoteValidator = new Validator($validator);
             $remoteValidator->setValidateAll($validateAll);
             $remoteValidator->validate($attribute, $value, $parameters);

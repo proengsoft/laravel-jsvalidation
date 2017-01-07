@@ -78,16 +78,27 @@ $.extend(true, laravelValidation, {
             }
 
             var validator = $.data(element.form, "validator");
-            var objRules = validator.settings.rules[element.name];
-            if ('laravelValidation' in objRules) {
-                var _rules=objRules.laravelValidation;
-                for (var i = 0; i < _rules.length; i++) {
-                    if ($.inArray(_rules[i][0],rules) !== -1) {
-                        found = true;
-                        break;
+            var listRules = [];
+            var cache = validator.arrayRulesCache;
+            if (element.name in cache) {
+                $.each(cache[element.name], function (index, arrayRule) {
+                    listRules.push(arrayRule);
+                });
+            }
+            if (element.name in validator.settings.rules) {
+                listRules.push(validator.settings.rules[element.name]);
+            }
+            $.each(listRules, function(index,objRules){
+                if ('laravelValidation' in objRules) {
+                    var _rules=objRules.laravelValidation;
+                    for (var i = 0; i < _rules.length; i++) {
+                        if ($.inArray(_rules[i][0],rules) !== -1) {
+                            found = true;
+                            return false;
+                        }
                     }
                 }
-            }
+            });
 
             return found;
         },
@@ -119,7 +130,7 @@ $.extend(true, laravelValidation, {
             } else if ($.isArray(value)) {
                 return parseFloat(value.length);
             } else if (element.type === 'file') {
-                return parseFloat(Math.ceil(this.fileinfo(element).size));
+                return parseFloat(Math.floor(this.fileinfo(element).size));
             }
 
             return parseFloat(this.strlen(value));
