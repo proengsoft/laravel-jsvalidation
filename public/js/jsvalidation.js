@@ -2448,6 +2448,9 @@ laravelValidation = {
             } else {
                 cache[element.name][name]={};
                 var nameParts = name.split("[*]");
+                if (nameParts.length==1) {
+                    nameParts.push('');
+                }
                 var regexpParts = nameParts.map(function(currentValue, index) {
                     if (index % 2 === 0) {
                         currentValue = currentValue + '[';
@@ -2725,16 +2728,26 @@ $.extend(true, laravelValidation, {
             }
 
             var validator = $.data(element.form, "validator");
-            var objRules = validator.settings.rules[element.name];
-            if ('laravelValidation' in objRules) {
-                var _rules=objRules.laravelValidation;
-                for (var i = 0; i < _rules.length; i++) {
-                    if ($.inArray(_rules[i][0],rules) !== -1) {
-                        found = true;
-                        break;
+            var listRules = [];
+            if (element.name in validator.arrayRulesCache) {
+                $.each(validator.arrayRulesCache[element.name], function (index, arrayRule) {
+                    listRules.push(arrayRule);
+                });
+            }
+            if (element.name in validator.settings.rules) {
+                listRules.push(validator.settings.rules[element.name]);
+            }
+            $.each(listRules, function(index,objRules){
+                if ('laravelValidation' in objRules) {
+                    var _rules=objRules.laravelValidation;
+                    for (var i = 0; i < _rules.length; i++) {
+                        if ($.inArray(_rules[i][0],rules) !== -1) {
+                            found = true;
+                            return false;
+                        }
                     }
                 }
-            }
+            });
 
             return found;
         },
