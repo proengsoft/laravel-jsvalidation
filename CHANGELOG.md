@@ -3,8 +3,9 @@
  - Issues resolved:
      - Add support for the "bail" keyword. #179
      - Fix remote custom validation. #175 
+     - Add support to validate array fields using non array rules. #180
 
-## 1.4.1 (2016-12-28)
+## 1.4.2 (2016-12-28)
 
 Bugfixes:
  - Fix javascript build files
