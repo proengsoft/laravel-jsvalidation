@@ -60,7 +60,7 @@ class Resolver
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)
     {
-        $rules= [$field=>Validator::EXTENSION_NAME] + $rules;
+        $rules = [$field => Validator::EXTENSION_NAME] + $rules;
         $validator = $this->createValidator($translator, $data, $rules, $messages, $customAttributes);
 
         return $validator;
@@ -94,7 +94,7 @@ class Resolver
     {
         return function ($attribute, $value, $parameters, BaseValidator $validator) {
             $data = $validator->getData();
-            $validateAll = $data[$attribute.'_validate_all']==='true'?true:false;
+            $validateAll = $data[$attribute.'_validate_all'] === 'true' ? true : false;
             $remoteValidator = new Validator($validator);
             $remoteValidator->setValidateAll($validateAll);
             $remoteValidator->validate($attribute, $value, $parameters);
