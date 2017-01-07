@@ -105,5 +105,4 @@ class MessageParser
     {
         return new UploadedFile('fakefile', 'fakefile', null, null, 'fakefile', true);
     }
-
 }

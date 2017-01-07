@@ -85,7 +85,6 @@ class DelegatedValidator
         return $this->validator->getRules();
     }
 
-    
     /**
      * Determine if a given rule implies the attribute is required.
      *
