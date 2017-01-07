@@ -79,8 +79,9 @@ $.extend(true, laravelValidation, {
 
             var validator = $.data(element.form, "validator");
             var listRules = [];
-            if (element.name in validator.arrayRulesCache) {
-                $.each(validator.arrayRulesCache[element.name], function (index, arrayRule) {
+            var cache = validator.arrayRulesCache;
+            if (element.name in cache) {
+                $.each(cache[element.name], function (index, arrayRule) {
                     listRules.push(arrayRule);
                 });
             }

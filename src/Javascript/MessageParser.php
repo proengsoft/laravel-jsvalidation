@@ -3,8 +3,8 @@
 namespace Proengsoft\JsValidation\Javascript;
 
 use Proengsoft\JsValidation\Support\DelegatedValidator;
-use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 
 class MessageParser
 {
@@ -97,11 +97,12 @@ class MessageParser
     }
 
     /**
-     * Create fake UploadedFile to generate file messages
+     * Create fake UploadedFile to generate file messages.
      *
      * @return UploadedFile
      */
-    protected function createUploadedFile() {
+    protected function createUploadedFile()
+    {
         return new UploadedFile('fakefile','fakefile',null,null,'fakefile',true);
     }
 
