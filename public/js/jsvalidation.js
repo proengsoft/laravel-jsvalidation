@@ -2448,7 +2448,7 @@ laravelValidation = {
             } else {
                 cache[element.name][name]={};
                 var nameParts = name.split("[*]");
-                if (nameParts.length==1) {
+                if (nameParts.length === 1) {
                     nameParts.push('');
                 }
                 var regexpParts = nameParts.map(function(currentValue, index) {
@@ -3834,6 +3834,17 @@ $.extend(true, laravelValidation, {
          */
         Url: function(value, element) {
             return $.validator.methods.url.call(this, value, element, true);
+        },
+
+        /**
+         * The field under validation must be a successfully uploaded file.
+         * @return {boolean}
+         */
+        File: function(value, element) {
+            if ('files' in element ) {
+                return (element.files.length > 0);
+            }
+            return false;
         },
 
         /**
