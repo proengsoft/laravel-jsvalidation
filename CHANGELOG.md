@@ -1,5 +1,8 @@
 ## dev-master
-
+ 
+ - Features:
+     - Add support for [File Rule](https://laravel.com/docs/5.3/validation#rule-file)
+ 
 ## 1.4.3 (2017-01-07)
 
  - Features:
