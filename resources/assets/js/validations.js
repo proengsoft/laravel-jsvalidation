@@ -38,6 +38,15 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * "Indicate" validation should pass if value is null.
+         * Always returns true, just lets us put "nullable" in rules.
+         * @return {boolean}
+         */
+        Nullable: function() {
+            return true;
+        },
+        
+        /**
          * Validate the given attribute is filled if it is present.
          */
         Filled: function(value, element) {
