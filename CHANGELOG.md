@@ -1,9 +1,10 @@
 ## dev-master
  
  - Features:
-     - Add support for [File Rule](https://laravel.com/docs/5.3/validation#rule-file)
-     - Add support for [Mimetypes Rule](https://laravel.com/docs/5.3/validation#rule-mimetypes)
-     - Add support for [Nullable Rule](https://laravel.com/docs/5.3/validation#rule-nullable)
+     - Javascript validation for [File](https://laravel.com/docs/5.3/validation#rule-file) rule
+     - Javascript validation for [Mimetypes](https://laravel.com/docs/5.3/validation#rule-mimetypes) rule
+     - Javascript validation for [Nullable](https://laravel.com/docs/5.3/validation#rule-nullable) rule
+     - Javascript validation for [Filled](https://laravel.com/docs/5.3/validation#rule-filled) rule
  
 ## 1.4.3 (2017-01-07)
 
