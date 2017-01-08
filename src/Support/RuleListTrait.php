@@ -12,7 +12,7 @@ trait RuleListTrait
     protected $clientRules = ['Accepted', 'After', 'Alpha', 'AlphaDash',
         'AlphaNum', 'Array', 'Bail', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
         'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'File','Image',
-        'In', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
+        'In', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Mimetypes', 'Min', 'NotIn', 'Numeric',
         'Regex', 'Required', 'RequiredIf', 'RequiredUnless', 'RequiredWith', 'RequiredWithAll',
         'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes',
         'String', 'Timezone', 'Url', ];
@@ -29,7 +29,7 @@ trait RuleListTrait
      *
      * @var array
      */
-    protected $fileRules = ['Image', 'Mimes'];
+    protected $fileRules = ['Image', 'Mimes', 'Mimetypes'];
 
     /**
      * Rule used to disable validations.

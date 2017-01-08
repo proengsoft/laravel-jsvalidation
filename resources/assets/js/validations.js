@@ -403,6 +403,9 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         File: function(value, element) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
             if ('files' in element ) {
                 return (element.files.length > 0);
             }
@@ -414,12 +417,31 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Mimes: function(value, element, params) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
             var lowerParams = $.map(params, function(item) {
                 return item.toLowerCase();
             });
-            
-            return (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-                lowerParams.indexOf(laravelValidation.helpers.fileinfo(element).extension.toLowerCase())!==-1;
+
+            var fileinfo = laravelValidation.helpers.fileinfo(element);
+            return (fileinfo !== false && lowerParams.indexOf(fileinfo.extension.toLowerCase())!==-1);
+        },
+
+        /**
+         * The file under validation must match one of the given MIME types
+         * @return {boolean}
+         */
+        Mimetypes: function(value, element, params) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            var lowerParams = $.map(params, function(item) {
+                return item.toLowerCase();
+            });
+
+            var fileinfo = laravelValidation.helpers.fileinfo(element);
+            return (fileinfo !== false && lowerParams.indexOf(fileinfo.type.toLowerCase())!==-1);
         },
 
         /**
