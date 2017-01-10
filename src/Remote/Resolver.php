@@ -60,7 +60,7 @@ class Resolver
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)
     {
-        $rules = [$field => Validator::EXTENSION_NAME] + $rules;
+        $rules = [ $field => 'bail|'.Validator::EXTENSION_NAME ] + $rules;
         $validator = $this->createValidator($translator, $data, $rules, $messages, $customAttributes);
 
         return $validator;
