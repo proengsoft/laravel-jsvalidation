@@ -29,7 +29,7 @@ $.extend(true, laravelValidation, {
             var FileName = fieldObj.value;
             index = typeof index !== 'undefined' ? index : 0;
             if ( fieldObj.files !== null ) {
-                if ( typeof fieldObj.files[index] !== 'undefined') {
+                if (typeof fieldObj.files[index] !== 'undefined') {
                     return {
                         file: FileName,
                         extension: FileName.substr(FileName.lastIndexOf('.') + 1),
