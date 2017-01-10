@@ -10,7 +10,7 @@ trait RuleListTrait
      * @var array
      */
     protected $clientRules = ['Accepted', 'After', 'Alpha', 'AlphaDash',
-        'AlphaNum', 'Array', 'Bail', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
+        'AlphaNum', 'Array', 'Bail', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date', 'Dimensions',
         'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'File', 'Filled','Image',
         'In', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Mimetypes', 'Min', 'NotIn', 'Nullable', 'Numeric',
         'Regex', 'Required', 'RequiredIf', 'RequiredUnless', 'RequiredWith', 'RequiredWithAll',

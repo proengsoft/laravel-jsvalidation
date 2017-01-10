@@ -168,4 +168,21 @@ class RuleParser
 
         return $attribute;
     }
+
+    /**
+     * Parse named parameters to $key => $value items.
+     *
+     * @param  array  $parameters
+     * @return array
+     */
+    protected function parseNamedParameters($parameters)
+    {
+        return array_reduce($parameters, function ($result, $item) {
+            list($key, $value) = array_pad(explode('=', $item, 2), 2, null);
+
+            $result[$key] = $value;
+
+            return $result;
+        });
+    }
 }
