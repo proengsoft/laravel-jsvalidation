@@ -78,7 +78,7 @@ class Validator
     protected function throwValidationException($result, $validator) {
         $response =  new JsonResponse($result, 200);
 
-        if (class_exists('\Illuminate\Validation\ValidationException')) {
+        if ($result!==true && class_exists('\Illuminate\Validation\ValidationException')) {
             throw new \Illuminate\Validation\ValidationException($validator, $response);
         }
         throw new HttpResponseException($response);
