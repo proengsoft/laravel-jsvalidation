@@ -20,6 +20,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         try {
             $validator->validate('_jsvalidation','field',[]);
             $this->fail();
+        } catch (\Illuminate\Validation\ValidationException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('true', $ex->getResponse()->getContent());
         } catch (HttpResponseException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
             $this->assertEquals('true', $ex->getResponse()->getContent());
@@ -36,6 +39,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         try {
             $validator->validate('_jsvalidation','field',[]);
             $this->fail();
+        } catch (\Illuminate\Validation\ValidationException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('["field active_url!"]', $ex->getResponse()->getContent());
         } catch (HttpResponseException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
             $this->assertEquals('["field active_url!"]', $ex->getResponse()->getContent());
@@ -51,6 +57,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         try {
             $validator->validate('_jsvalidation','field',[]);
             $this->fail();
+        } catch (\Illuminate\Validation\ValidationException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('true', $ex->getResponse()->getContent());
         } catch (HttpResponseException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
             $this->assertEquals('true', $ex->getResponse()->getContent());
@@ -66,6 +75,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $validator->setValidateAll(true);
             $validator->validate('_jsvalidation','field',[]);
             $this->fail();
+        } catch (\Illuminate\Validation\ValidationException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('["validation.alpha"]', $ex->getResponse()->getContent());
         } catch (HttpResponseException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
             $this->assertEquals('["validation.alpha"]', $ex->getResponse()->getContent());
