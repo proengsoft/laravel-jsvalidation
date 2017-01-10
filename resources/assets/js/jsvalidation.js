@@ -85,6 +85,7 @@ laravelValidation = {
         $.validator.addMethod("laravelValidation", function (value, element, params) {
             var validator = this;
             var validated = true;
+            var previous = this.previousValue( element );
 
             // put Implicit rules in front
             var rules=[];
@@ -106,13 +107,25 @@ laravelValidation = {
                     return false;
                 }
 
-
                 if (laravelValidation.methods[rule]!==undefined) {
-                    validated = laravelValidation.methods[rule].call(validator, value, element, param[1]);
-                    /*
-                } else if($.validator.methods[rule]!==undefined) {
-                    validated = $.validator.methods[rule].call(validator, value, element, param[1]);
-                    */
+                    validated = laravelValidation.methods[rule].call(validator, value, element, param[1], function(valid) {
+                        validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
+                        if ( valid ) {
+                            var submitted = validator.formSubmitted;
+                            validator.prepareElement( element );
+                            validator.formSubmitted = submitted;
+                            validator.successList.push( element );
+                            delete validator.invalid[ element.name ];
+                            validator.showErrors();
+                        } else {
+                            var errors = {};
+                            errors[ element.name ] = previous.message = $.isFunction( message ) ? message( value ) : message;
+                            validator.invalid[ element.name ] = true;
+                            validator.showErrors( errors );
+                        }
+                        validator.showErrors(validator.errorMap);
+                        previous.valid = valid;
+                    });
                 } else {
                     validated=false;
                 }
