@@ -22,7 +22,6 @@ matrix:
 
 before_script:
   - export COMPOSER=tests/composer-$LARAVEL.json
-  - travis_retry composer self-update
   - travis_retry composer install --no-interaction --prefer-source
 
 script:
