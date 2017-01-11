@@ -1,11 +1,17 @@
 ## dev-master
-
+ 
+ - Features:
+     - Javascript validation for [File](https://laravel.com/docs/5.3/validation#rule-file) rule
+     - Javascript validation for [Mimetypes](https://laravel.com/docs/5.3/validation#rule-mimetypes) rule
+     - Javascript validation for [Nullable](https://laravel.com/docs/5.3/validation#rule-nullable) rule
+     - Javascript validation for [Filled](https://laravel.com/docs/5.3/validation#rule-filled) rule
+     - Javascript validation for [Dimensions](https://laravel.com/docs/5.3/validation#rule-dimensions) rule
+ 
 ## 1.4.3 (2017-01-07)
 
  - Features:
      - Add support for the "bail" keyword. #179
      - Add support to validate array fields using non array rules. #180 #158
-     - Remote validation return HttpResponseException  #130
 
  - Issues resolved:
      - Fix remote custom validation. #175 

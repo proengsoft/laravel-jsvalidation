@@ -38,6 +38,15 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * "Indicate" validation should pass if value is null.
+         * Always returns true, just lets us put "nullable" in rules.
+         * @return {boolean}
+         */
+        Nullable: function() {
+            return true;
+        },
+        
+        /**
          * Validate the given attribute is filled if it is present.
          */
         Filled: function(value, element) {
@@ -399,16 +408,49 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * The field under validation must be a successfully uploaded file.
+         * @return {boolean}
+         */
+        File: function(value, element) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            if ('files' in element ) {
+                return (element.files.length > 0);
+            }
+            return false;
+        },
+
+        /**
          * Validate the MIME type of a file upload attribute is in a set of MIME types.
          * @return {boolean}
          */
         Mimes: function(value, element, params) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
             var lowerParams = $.map(params, function(item) {
                 return item.toLowerCase();
             });
-            
-            return (!window.File || !window.FileReader || !window.FileList || !window.Blob) ||
-                lowerParams.indexOf(laravelValidation.helpers.fileinfo(element).extension.toLowerCase())!==-1;
+
+            var fileinfo = laravelValidation.helpers.fileinfo(element);
+            return (fileinfo !== false && lowerParams.indexOf(fileinfo.extension.toLowerCase())!==-1);
+        },
+
+        /**
+         * The file under validation must match one of the given MIME types
+         * @return {boolean}
+         */
+        Mimetypes: function(value, element, params) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            var lowerParams = $.map(params, function(item) {
+                return item.toLowerCase();
+            });
+
+            var fileinfo = laravelValidation.helpers.fileinfo(element);
+            return (fileinfo !== false && lowerParams.indexOf(fileinfo.type.toLowerCase())!==-1);
         },
 
         /**
@@ -416,6 +458,46 @@ $.extend(true, laravelValidation, {
          */
         Image: function(value, element) {
             return laravelValidation.methods.Mimes.call(this, value, element, ['jpg', 'png', 'gif', 'bmp', 'svg']);
+        },
+
+        /**
+         * Validate dimensions of Image
+         * @return {boolean|string}
+         */
+        Dimensions: function(value, element, params, callback) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            if (element.files === null || typeof element.files[0] === 'undefined') {
+                return false;
+            }
+
+
+            var fr = new FileReader;
+            fr.onload = function () {
+                var img = new Image();
+                img.onload = function () {
+                    var height = parseFloat(img.naturalHeight);
+                    var width = parseFloat(img.naturalWidth);
+                    var ratio = width / height;
+                    var not_valid = ((params['width']) && parseFloat(params['width'] !== width)) ||
+                        ((params['min_width']) && parseFloat(params['min_width']) > width) ||
+                        ((params['max_width']) && parseFloat(params['max_width']) < width) ||
+                        ((params['height']) && parseFloat(params['height']) !== height) ||
+                        ((params['min_height']) && parseFloat(params['min_height']) > height) ||
+                        ((params['max_height']) && parseFloat(params['max_height']) < height) ||
+                        ((params['ratio']) && ratio !== parseFloat(eval(params['ratio']))
+                        );
+                    callback(! not_valid);
+                };
+                img.onerror = function() {
+                    callback(false);
+                };
+                img.src = fr.result;
+            };
+            fr.readAsDataURL(element.files[0]);
+
+            return 'pending';
         },
 
 

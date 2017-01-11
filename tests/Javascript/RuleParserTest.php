@@ -150,4 +150,25 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $values);
     }
 
+    public function testParseNamedParameters()
+    {
+        $parameters = ['min_height=100','ratio=1/3'];
+        $token =null;
+
+        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $parser = new RuleParser($delegated, $token);
+
+        $values = $parser->parseNamedParameters($parameters);
+        $expected = array(
+            'min_height' =>100,
+            'ratio' => '1/3'
+        );
+
+        $this->assertEquals($expected, $values);
+    }
+
 }

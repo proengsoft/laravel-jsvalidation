@@ -97,6 +97,10 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
         try {
             $resolverValidator('_jsvalidation','field',[],$validator);
             $this->fail('This test shloud throw Exception');
+        } catch (\Illuminate\Validation\ValidationException $e){
+            $response = $e->getResponse();
+            $this->assertEquals('true',$response->getContent());
+            $this->assertEquals(200, $response->getStatusCode());
         } catch (HttpResponseException $e){
             $response = $e->getResponse();
             $this->assertEquals('true',$response->getContent());

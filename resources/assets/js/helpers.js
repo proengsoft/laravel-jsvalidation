@@ -22,15 +22,23 @@ $.extend(true, laravelValidation, {
          * Gets the file information from file input
          *
          * @param fieldObj
+         * @param index
          * @returns {{file: *, extension: string, size: number}}
          */
-        fileinfo: function (fieldObj) {
+        fileinfo: function (fieldObj, index) {
             var FileName = fieldObj.value;
-            return {
-                file: FileName,
-                extension: FileName.substr(FileName.lastIndexOf('.') + 1),
-                size: fieldObj.files[0].size / 1024
-            };
+            index = typeof index !== 'undefined' ? index : 0;
+            if ( fieldObj.files !== null ) {
+                if (typeof fieldObj.files[index] !== 'undefined') {
+                    return {
+                        file: FileName,
+                        extension: FileName.substr(FileName.lastIndexOf('.') + 1),
+                        size: fieldObj.files[index].size / 1024,
+                        type: fieldObj.files[index].type
+                    };
+                }
+            }
+            return false;
         },
 
 

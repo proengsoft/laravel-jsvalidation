@@ -59,27 +59,44 @@ class Validator
      */
     public function validate($attribute, $value, $parameters)
     {
-        $validationData = $this->parseJsRemoteRequest($attribute, $value, $parameters);
-        $validationResult = $this->validateJsRemoteRequest($validationData[1]);
-        throw new HttpResponseException(
-            new JsonResponse($validationResult, 200));
+        $validationData = $this->parseJsRemoteRequest($value);
+
+        $validationResult = $this->validateJsRemoteRequest($validationData);
+        $this->throwValidationException($validationResult, $this->validator);
+
+    }
+
+    /**
+     * Throw the failed validation exception.
+     *
+     * @param  mixed $result
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException|\Illuminate\Http\Exception\HttpResponseException
+     */
+    protected function throwValidationException($result, $validator) {
+        $response =  new JsonResponse($result, 200);
+
+        if ($result!==true && class_exists('\Illuminate\Validation\ValidationException')) {
+            throw new \Illuminate\Validation\ValidationException($validator, $response);
+        }
+        throw new HttpResponseException($response);
     }
 
     /**
      *  Parse Validation input request data.
      *
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param $data
      * @return array
      */
-    protected function parseJsRemoteRequest($attribute, $value, $parameters)
+    protected function parseJsRemoteRequest($data)
     {
-        parse_str($value, $attrParts);
+        parse_str($data, $attrParts);
         $attrParts = is_null($attrParts) ? [] : $attrParts;
         $newAttr = array_keys(array_dot($attrParts));
 
-        return [$attribute, array_pop($newAttr), $parameters];
+        return array_pop($newAttr);
     }
 
     /**
