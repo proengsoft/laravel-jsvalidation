@@ -11,7 +11,7 @@ trait RuleListTrait
      */
     protected $clientRules = ['Accepted', 'After', 'Alpha', 'AlphaDash',
         'AlphaNum', 'Array', 'Bail', 'Before', 'Between', 'Boolean', 'Confirmed', 'Date',
-        'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'Image',
+        'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Email', 'File', 'Image',
         'In', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Min', 'NotIn', 'Numeric',
         'Regex', 'Required', 'RequiredIf', 'RequiredUnless', 'RequiredWith', 'RequiredWithAll',
         'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes',
