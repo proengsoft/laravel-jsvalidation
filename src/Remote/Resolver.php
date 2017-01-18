@@ -4,6 +4,7 @@ namespace Proengsoft\JsValidation\Remote;
 
 use Closure;
 use Illuminate\Contracts\Validation\Factory;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
@@ -94,7 +95,7 @@ class Resolver
     {
         return function ($attribute, $value, $parameters, BaseValidator $validator) {
             $data = $validator->getData();
-            $validateAll = $data[$attribute.'_validate_all'] === 'true' ? true : false;
+            $validateAll = Arr::get($data, $attribute.'_validate_all', false);
             $remoteValidator = new Validator($validator);
             $remoteValidator->setValidateAll($validateAll);
             $remoteValidator->validate($attribute, $value, $parameters);
