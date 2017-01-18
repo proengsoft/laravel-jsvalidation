@@ -464,6 +464,46 @@ $.extend(true, laravelValidation, {
             return laravelValidation.methods.Mimes.call(this, value, element, ['jpg', 'png', 'gif', 'bmp', 'svg']);
         },
 
+        /**
+         * Validate dimensions of Image
+         * @return {boolean|string}
+         */
+        Dimensions: function(value, element, params, callback) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            if (element.files === null || typeof element.files[0] === 'undefined') {
+                return false;
+            }
+
+
+            var fr = new FileReader;
+            fr.onload = function () {
+                var img = new Image();
+                img.onload = function () {
+                    var height = parseFloat(img.naturalHeight);
+                    var width = parseFloat(img.naturalWidth);
+                    var ratio = width / height;
+                    var not_valid = ((params['width']) && parseFloat(params['width'] !== width)) ||
+                        ((params['min_width']) && parseFloat(params['min_width']) > width) ||
+                        ((params['max_width']) && parseFloat(params['max_width']) < width) ||
+                        ((params['height']) && parseFloat(params['height']) !== height) ||
+                        ((params['min_height']) && parseFloat(params['min_height']) > height) ||
+                        ((params['max_height']) && parseFloat(params['max_height']) < height) ||
+                        ((params['ratio']) && ratio !== parseFloat(eval(params['ratio']))
+                        );
+                    callback(! not_valid);
+                };
+                img.onerror = function() {
+                    callback(false);
+                };
+                img.src = fr.result;
+            };
+            fr.readAsDataURL(element.files[0]);
+
+            return 'pending';
+        },
+
 
         /**
          * Validate that an attribute contains only alphabetic characters.

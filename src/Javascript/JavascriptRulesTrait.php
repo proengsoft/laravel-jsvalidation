@@ -14,6 +14,14 @@ trait JavascriptRulesTrait
     abstract protected function getAttributeName($attribute);
 
     /**
+     * Parse named parameters to $key => $value items.
+     *
+     * @param  array  $parameters
+     * @return array
+     */
+    abstract public function parseNamedParameters($parameters);
+
+    /**
      * Confirmed rule is applied to confirmed attribute.
      *
      * @param $attribute
@@ -167,5 +175,20 @@ trait JavascriptRulesTrait
     protected function ruleRequiredUnless($attribute, array $parameters)
     {
         return $this->ruleRequiredIf($attribute, $parameters);
+    }
+
+    /**
+     * Validate the dimensions of an image matches the given values.
+     *
+     * @param  string $attribute
+     * @param  array $parameters
+     *
+     * @return array
+     */
+    protected function ruleDimensions($attribute, $parameters)
+    {
+        $parameters = $this->parseNamedParameters($parameters);
+
+        return [$attribute, $parameters];
     }
 }

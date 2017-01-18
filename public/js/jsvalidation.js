@@ -2481,6 +2481,7 @@ laravelValidation = {
         $.validator.addMethod("laravelValidation", function (value, element, params) {
             var validator = this;
             var validated = true;
+            var previous = this.previousValue( element );
 
             // put Implicit rules in front
             var rules=[];
@@ -2502,13 +2503,25 @@ laravelValidation = {
                     return false;
                 }
 
-
                 if (laravelValidation.methods[rule]!==undefined) {
-                    validated = laravelValidation.methods[rule].call(validator, value, element, param[1]);
-                    /*
-                } else if($.validator.methods[rule]!==undefined) {
-                    validated = $.validator.methods[rule].call(validator, value, element, param[1]);
-                    */
+                    validated = laravelValidation.methods[rule].call(validator, value, element, param[1], function(valid) {
+                        validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
+                        if ( valid ) {
+                            var submitted = validator.formSubmitted;
+                            validator.prepareElement( element );
+                            validator.formSubmitted = submitted;
+                            validator.successList.push( element );
+                            delete validator.invalid[ element.name ];
+                            validator.showErrors();
+                        } else {
+                            var errors = {};
+                            errors[ element.name ] = previous.message = $.isFunction( message ) ? message( value ) : message;
+                            validator.invalid[ element.name ] = true;
+                            validator.showErrors( errors );
+                        }
+                        validator.showErrors(validator.errorMap);
+                        previous.valid = valid;
+                    });
                 } else {
                     validated=false;
                 }
@@ -2679,7 +2692,7 @@ $.extend(true, laravelValidation, {
             var FileName = fieldObj.value;
             index = typeof index !== 'undefined' ? index : 0;
             if ( fieldObj.files !== null ) {
-                if ( typeof fieldObj.files[index] !== 'undefined') {
+                if (typeof fieldObj.files[index] !== 'undefined') {
                     return {
                         file: FileName,
                         extension: FileName.substr(FileName.lastIndexOf('.') + 1),
@@ -3491,6 +3504,7 @@ $.extend(true, laravelValidation, {
         Nullable: function() {
             return true;
         },
+        
         /**
          * Validate the given attribute is filled if it is present.
          */
@@ -3907,6 +3921,46 @@ $.extend(true, laravelValidation, {
          */
         Image: function(value, element) {
             return laravelValidation.methods.Mimes.call(this, value, element, ['jpg', 'png', 'gif', 'bmp', 'svg']);
+        },
+
+        /**
+         * Validate dimensions of Image
+         * @return {boolean|string}
+         */
+        Dimensions: function(value, element, params, callback) {
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                return true;
+            }
+            if (element.files === null || typeof element.files[0] === 'undefined') {
+                return false;
+            }
+
+
+            var fr = new FileReader;
+            fr.onload = function () {
+                var img = new Image();
+                img.onload = function () {
+                    var height = parseFloat(img.naturalHeight);
+                    var width = parseFloat(img.naturalWidth);
+                    var ratio = width / height;
+                    var not_valid = ((params['width']) && parseFloat(params['width'] !== width)) ||
+                        ((params['min_width']) && parseFloat(params['min_width']) > width) ||
+                        ((params['max_width']) && parseFloat(params['max_width']) < width) ||
+                        ((params['height']) && parseFloat(params['height']) !== height) ||
+                        ((params['min_height']) && parseFloat(params['min_height']) > height) ||
+                        ((params['max_height']) && parseFloat(params['max_height']) < height) ||
+                        ((params['ratio']) && ratio !== parseFloat(eval(params['ratio']))
+                        );
+                    callback(! not_valid);
+                };
+                img.onerror = function() {
+                    callback(false);
+                };
+                img.src = fr.result;
+            };
+            fr.readAsDataURL(element.files[0]);
+
+            return 'pending';
         },
 
 
