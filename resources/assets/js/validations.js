@@ -484,7 +484,7 @@ $.extend(true, laravelValidation, {
                     var height = parseFloat(img.naturalHeight);
                     var width = parseFloat(img.naturalWidth);
                     var ratio = width / height;
-                    var not_valid = ((params['width']) && parseFloat(params['width'] !== width)) ||
+                    var notValid = ((params['width']) && parseFloat(params['width'] !== width)) ||
                         ((params['min_width']) && parseFloat(params['min_width']) > width) ||
                         ((params['max_width']) && parseFloat(params['max_width']) < width) ||
                         ((params['height']) && parseFloat(params['height']) !== height) ||
@@ -492,7 +492,7 @@ $.extend(true, laravelValidation, {
                         ((params['max_height']) && parseFloat(params['max_height']) < height) ||
                         ((params['ratio']) && ratio !== parseFloat(eval(params['ratio']))
                         );
-                    callback(! not_valid);
+                    callback(! notValid);
                 };
                 img.onerror = function() {
                     callback(false);
