@@ -441,7 +441,11 @@ $.extend(true, laravelValidation, {
             });
 
             var fileinfo = laravelValidation.helpers.fileinfo(element);
-            return (fileinfo !== false && lowerParams.indexOf(fileinfo.type.toLowerCase())!==-1);
+            if (fileinfo === false ) {
+                return false;
+            }
+
+            return (lowerParams.indexOf(fileinfo.type.toLowerCase()) !== -1);
         },
 
         /**
