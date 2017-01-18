@@ -2,6 +2,7 @@
  
  - Features:
      - Add support for [File Rule](https://laravel.com/docs/5.3/validation#rule-file)
+     - Add support for [Mimetypes Rule](https://laravel.com/docs/5.3/validation#rule-mimetypes)
  
 ## 1.4.3 (2017-01-07)
 

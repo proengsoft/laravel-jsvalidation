@@ -29,7 +29,7 @@ trait RuleListTrait
      *
      * @var array
      */
-    protected $fileRules = ['Image', 'Mimes'];
+    protected $fileRules = ['Image', 'Mimes', 'Mimetypes'];
 
     /**
      * Rule used to disable validations.
