@@ -2,11 +2,11 @@
 
 namespace Proengsoft\JsValidation\Remote;
 
-use Illuminate\Http\JsonResponse;
-use Proengsoft\JsValidation\Support\RuleListTrait;
 use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
+use Proengsoft\JsValidation\Support\RuleListTrait;
 
 /**
  * Class RemoteValidator.
@@ -43,7 +43,7 @@ class Validator
     /**
      * Force validate all rules.
      *
-     * @param $validateAll
+     * @param boolean $validateAll
      */
     public function setValidateAll($validateAll)
     {
@@ -144,7 +144,7 @@ class Validator
      * Remove rules that should not be validated remotely.
      *
      * @param $rules
-     * @param $validator
+     * @param BaseValidator $validator
      * @return mixed
      */
     protected function purgeNonRemoteRules($rules, $validator)
