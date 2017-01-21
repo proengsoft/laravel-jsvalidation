@@ -69,7 +69,7 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testValidatorIsClosure() {
 
-        $resolver = $this->resolverObject->validator();
+        $resolver = $this->resolverObject->validatorClosure();
         $this->assertInstanceOf('Closure', $resolver);
 
     }
@@ -91,7 +91,7 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
         );
         $validator->setData(['field'=>'value', '_jsvalidation_validate_all'=>false]);
 
-        $resolverValidator = $this->resolverObject->validator();
+        $resolverValidator = $this->resolverObject->validatorClosure();
 
 
         try {

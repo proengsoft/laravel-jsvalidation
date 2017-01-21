@@ -15,10 +15,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $rules = ['field' => 'active_url|required'];
         $data = ['field' => 'http://www.google.com'];
+        $params= ['false'];
         $validator = $this->getRealValidator($rules, [],$data);
 
         try {
-            $validator->validate('_jsvalidation','field',[]);
+            $validator->validate('field',$params);
             $this->fail();
         } catch (HttpResponseException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
@@ -31,10 +32,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $rules = ['field' => 'active_url|required'];
         $data = ['field' => 'http://nonexistentdomain'];
+        $params= ['false'];
         $validator = $this->getRealValidator($rules, [],$data);
 
         try {
-            $validator->validate('_jsvalidation','field',[]);
+            $validator->validate('field',$params);
             $this->fail();
         } catch (\Illuminate\Validation\ValidationException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
@@ -49,10 +51,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateRemoteDisabled() {
         $rules = ['field' => 'active_url|required|alpha|no_js_validation'];
         $data = ['field' => 'http://nonexistentdomain'];
+        $params= ['false'];
         $validator = $this->getRealValidator($rules, [],$data);
 
         try {
-            $validator->validate('_jsvalidation','field',[]);
+            $validator->validate('field',$params);
             $this->fail();
         } catch (HttpResponseException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
@@ -63,11 +66,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateRemoteAllFields() {
         $rules = ['field' => 'required|active_url|alpha'];
         $data = ['field' => 'http://www.google.com'];
+        $params= ['true'];
         $validator = $this->getRealValidator($rules, [],$data);
 
         try {
-            $validator->setValidateAll(true);
-            $validator->validate('_jsvalidation','field',[]);
+            $validator->validate('field',$params);
             $this->fail();
         } catch (\Illuminate\Validation\ValidationException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
