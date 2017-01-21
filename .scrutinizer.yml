@@ -21,6 +21,7 @@ tools:
     php_code_coverage: false
     external_code_coverage:
             timeout: 600    # Timeout in seconds.
+            runs: 12      # HHVM is not supported
     php_code_sniffer:
         config:
             standard: PSR2

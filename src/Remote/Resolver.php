@@ -3,8 +3,8 @@
 namespace Proengsoft\JsValidation\Remote;
 
 use Closure;
-use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Support\Arr;
+use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
@@ -61,7 +61,9 @@ class Resolver
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)
     {
-        $rules = [ $field => 'bail|'.Validator::EXTENSION_NAME ] + $rules;
+        $validateAll = Arr::get($data, $field.'_validate_all', false);
+        $validationRule = 'bail|'.Validator::EXTENSION_NAME.':'.$validateAll;
+        $rules = [$field => $validationRule] + $rules;
         $validator = $this->createValidator($translator, $data, $rules, $messages, $customAttributes);
 
         return $validator;
@@ -91,14 +93,13 @@ class Resolver
      *
      * @return Closure
      */
-    public function validator()
+    public function validatorClosure()
     {
         return function ($attribute, $value, $parameters, BaseValidator $validator) {
-            $data = $validator->getData();
-            $validateAll = Arr::get($data, $attribute.'_validate_all', false);
             $remoteValidator = new Validator($validator);
-            $remoteValidator->setValidateAll($validateAll);
-            $remoteValidator->validate($attribute, $value, $parameters);
+            $remoteValidator->validate($value, $parameters);
+
+            return $attribute;
         };
     }
 }
