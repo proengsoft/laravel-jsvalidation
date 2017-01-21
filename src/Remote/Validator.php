@@ -2,11 +2,11 @@
 
 namespace Proengsoft\JsValidation\Remote;
 
-use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Proengsoft\JsValidation\Support\RuleListTrait;
+use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
-use Proengsoft\JsValidation\Support\RuleListTrait;
 
 /**
  * Class RemoteValidator.
@@ -41,14 +41,13 @@ class Validator
      * @param $field
      * @param $parameters
      */
-    public function validate($field, $parameters=[])
+    public function validate($field, $parameters = [])
     {
         $attribute = $this->parseAttributeName($field);
         $validationParams = $this->parseParameters($parameters);
         $validationResult = $this->validateJsRemoteRequest($attribute, $validationParams);
 
         $this->throwValidationException($validationResult, $this->validator);
-
     }
 
     /**
@@ -60,10 +59,11 @@ class Validator
      *
      * @throws \Illuminate\Validation\ValidationException|\Illuminate\Http\Exception\HttpResponseException
      */
-    protected function throwValidationException($result, $validator) {
-        $response =  new JsonResponse($result, 200);
+    protected function throwValidationException($result, $validator)
+    {
+        $response = new JsonResponse($result, 200);
 
-        if ($result!==true && class_exists('\Illuminate\Validation\ValidationException')) {
+        if ($result !== true && class_exists('\Illuminate\Validation\ValidationException')) {
             throw new \Illuminate\Validation\ValidationException($validator, $response);
         }
         throw new HttpResponseException($response);
@@ -92,9 +92,9 @@ class Validator
      */
     protected function parseParameters($parameters)
     {
-        $newParams = [ 'validate_all' => false ];
+        $newParams = ['validate_all' => false];
         if (isset($parameters[0])) {
-            $newParams['validate_all'] = ($parameters[0]==='true')? true: false;
+            $newParams['validate_all'] = ($parameters[0] === 'true') ? true : false;
         }
 
         return $newParams;
@@ -135,11 +135,10 @@ class Validator
 
             return;
         }
-        if (!$validateAll) {
+        if (! $validateAll) {
             $rules = $this->purgeNonRemoteRules($rules, $validator);
         }
         $validator->setRules([$attribute => $rules]);
-
     }
 
     /**
