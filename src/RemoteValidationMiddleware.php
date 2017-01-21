@@ -61,6 +61,6 @@ class RemoteValidationMiddleware
     {
         $resolver = new Resolver($this->factory);
         $this->factory->resolver($resolver->resolver($this->field));
-        $this->factory->extend(Validator::EXTENSION_NAME, $resolver->validator());
+        $this->factory->extend(Validator::EXTENSION_NAME, $resolver->validatorClosure());
     }
 }

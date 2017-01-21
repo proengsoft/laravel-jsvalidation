@@ -26,11 +26,6 @@ class Validator
     protected $validator;
 
     /**
-     * @var bool
-     */
-    protected $validateAll = false;
-
-    /**
      * RemoteValidator constructor.
      *
      * @param \Illuminate\Validation\Validator $validator
@@ -41,27 +36,17 @@ class Validator
     }
 
     /**
-     * Force validate all rules.
-     *
-     * @param boolean $validateAll
-     */
-    public function setValidateAll($validateAll)
-    {
-        $this->validateAll = $validateAll;
-    }
-
-    /**
      * Validate request.
      *
-     * @param $attribute
-     * @param $value
+     * @param $field
      * @param $parameters
      */
-    public function validate($attribute, $value, $parameters)
+    public function validate($field, $parameters=[])
     {
-        $validationData = $this->parseJsRemoteRequest($value);
+        $attribute = $this->parseAttributeName($field);
+        $validationParams = $this->parseParameters($parameters);
+        $validationResult = $this->validateJsRemoteRequest($attribute, $validationParams);
 
-        $validationResult = $this->validateJsRemoteRequest($validationData);
         $this->throwValidationException($validationResult, $this->validator);
 
     }
@@ -90,7 +75,7 @@ class Validator
      * @param $data
      * @return array
      */
-    protected function parseJsRemoteRequest($data)
+    protected function parseAttributeName($data)
     {
         parse_str($data, $attrParts);
         $attrParts = is_null($attrParts) ? [] : $attrParts;
@@ -100,16 +85,33 @@ class Validator
     }
 
     /**
+     *  Parse Validation parameters.
+     *
+     * @param $parameters
+     * @return array
+     */
+    protected function parseParameters($parameters)
+    {
+        $newParams = [ 'validate_all' => false ];
+        if (isset($parameters[0])) {
+            $newParams['validate_all'] = ($parameters[0]==='true')? true: false;
+        }
+
+        return $newParams;
+    }
+
+    /**
      * Validate remote Javascript Validations.
      *
      * @param $attribute
+     * @param array $parameters
      * @return array|bool
      */
-    protected function validateJsRemoteRequest($attribute)
+    protected function validateJsRemoteRequest($attribute, $parameters)
     {
-        $validator = $this->validator;
-        $validator = $this->setRemoteValidation($attribute, $validator);
+        $this->setRemoteValidation($attribute, $parameters['validate_all']);
 
+        $validator = $this->validator;
         if ($validator->passes()) {
             return true;
         }
@@ -121,23 +123,23 @@ class Validator
      * Sets data for validate remote rules.
      *
      * @param $attribute
-     *
-     * @return \Illuminate\Validation\Validator
+     * @param bool $validateAll
      */
-    protected function setRemoteValidation($attribute, BaseValidator $validator)
+    protected function setRemoteValidation($attribute, $validateAll = false)
     {
+        $validator = $this->validator;
         $rules = $validator->getRules();
         $rules = isset($rules[$attribute]) ? $rules[$attribute] : [];
         if (in_array('no_js_validation', $rules)) {
             $validator->setRules([$attribute => []]);
 
-            return $validator;
+            return;
         }
-
-        $rules = $this->purgeNonRemoteRules($rules, $validator);
+        if (!$validateAll) {
+            $rules = $this->purgeNonRemoteRules($rules, $validator);
+        }
         $validator->setRules([$attribute => $rules]);
 
-        return $validator;
     }
 
     /**
@@ -149,10 +151,6 @@ class Validator
      */
     protected function purgeNonRemoteRules($rules, $validator)
     {
-        if ($this->validateAll) {
-            return $rules;
-        }
-
         $protectedValidator = $this->createProtectedCaller($validator);
 
         foreach ($rules as $i => $rule) {
