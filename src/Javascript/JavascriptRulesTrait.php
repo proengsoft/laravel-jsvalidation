@@ -204,4 +204,18 @@ trait JavascriptRulesTrait
 
         return [$attribute, $parameters];
     }
+
+    /**
+     * Validate an attribute is unique among other values.
+     *
+     * @param  string  $attribute
+     * @param  array   $parameters
+     * @return array
+     */
+    protected function ruleDistinct($attribute, array $parameters)
+    {
+        $parameters[0] = $attribute;
+
+        return $this->ruleRequiredIf($attribute, $parameters);
+    }
 }
