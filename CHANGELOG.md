@@ -1,24 +1,27 @@
-## dev-master
+## 1.5.0 (2017-01-22)
  
- - Features:
-     - Javascript validation for [File](https://laravel.com/docs/5.3/validation#rule-file) rule
-     - Javascript validation for [Mimetypes](https://laravel.com/docs/5.3/validation#rule-mimetypes) rule
-     - Javascript validation for [Nullable](https://laravel.com/docs/5.3/validation#rule-nullable) rule
-     - Javascript validation for [Filled](https://laravel.com/docs/5.3/validation#rule-filled) rule
-     - Javascript validation for [Dimensions](https://laravel.com/docs/5.3/validation#rule-dimensions) rule
-     - Javascript validation for [InArray](https://laravel.com/docs/5.3/validation#rule-inarray) rule
-     - Javascript validation for [Distinct](https://laravel.com/docs/5.3/validation#rule-distinct) rule
-     
+Features:
+   - Javascript validation for [File](https://laravel.com/docs/5.3/validation#rule-file) rule
+   - Javascript validation for [Mimetypes](https://laravel.com/docs/5.3/validation#rule-mimetypes) rule
+   - Javascript validation for [Nullable](https://laravel.com/docs/5.3/validation#rule-nullable) rule
+   - Javascript validation for [Filled](https://laravel.com/docs/5.3/validation#rule-filled) rule
+   - Javascript validation for [Dimensions](https://laravel.com/docs/5.3/validation#rule-dimensions) rule
+   - Javascript validation for [InArray](https://laravel.com/docs/5.3/validation#rule-inarray) rule
+   - Javascript validation for [Distinct](https://laravel.com/docs/5.3/validation#rule-distinct) rule
+
+Issues resolved:
+  - Fix issue with HttpResponseException #130
+  - Fix Undefined index: _jsvalidation_validate_all #201
  
 ## 1.4.3 (2017-01-07)
 
- - Features:
-     - Add support for the "bail" keyword. #179
-     - Add support to validate array fields using non array rules. #180 #158
+Features:
+   - Add support for the "bail" keyword. #179
+   - Add support to validate array fields using non array rules. #180 #158
 
- - Issues resolved:
-     - Fix remote custom validation. #175 
-     - File Size doesn't work with JavaScript Validator. #156
+Issues resolved:
+   - Fix remote custom validation. #175 
+   - File Size doesn't work with JavaScript Validator. #156
 
 ## 1.4.2 (2016-12-28)
 
