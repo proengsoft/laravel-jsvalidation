@@ -3752,6 +3752,34 @@ $.extend(true, laravelValidation, {
             return found;
         },
 
+        /**
+         * Validate an attribute is unique among other values.
+         * @param value
+         * @param element
+         * @param params
+         * @returns {boolean}
+         */
+        Distinct: function (value, element, params) {
+            if (typeof params[0] === 'undefined') {
+                return false;
+            }
+
+            var elements = this.elements();
+            var found = false;
+            var nameRegExp = laravelValidation.helpers.regexFromWildcard(params[0]);
+
+            for ( var i = 0; i < elements.length ; i++ ) {
+                var targetName = elements[i].name;
+                if (targetName !== element.name && targetName.match(nameRegExp)) {
+                    var equals = laravelValidation.methods.Same.call(this,value, element, [targetName]);
+                    found = found || equals;
+                }
+            }
+
+            return !found;
+        },
+
+
 
         /**
          * Validate that an attribute is different from another attribute.
