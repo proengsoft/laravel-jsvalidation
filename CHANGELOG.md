@@ -7,6 +7,7 @@
      - Javascript validation for [Filled](https://laravel.com/docs/5.3/validation#rule-filled) rule
      - Javascript validation for [Dimensions](https://laravel.com/docs/5.3/validation#rule-dimensions) rule
      - Javascript validation for [InArray](https://laravel.com/docs/5.3/validation#rule-inarray) rule
+     - Javascript validation for [Distinct](https://laravel.com/docs/5.3/validation#rule-distinct) rule
      
  
 ## 1.4.3 (2017-01-07)
