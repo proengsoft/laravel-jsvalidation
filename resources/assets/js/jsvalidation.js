@@ -51,19 +51,7 @@ laravelValidation = {
                 $.extend(rules, cache[element.name][name]);
             } else {
                 cache[element.name][name]={};
-                var nameParts = name.split("[*]");
-                if (nameParts.length === 1) {
-                    nameParts.push('');
-                }
-                var regexpParts = nameParts.map(function(currentValue, index) {
-                    if (index % 2 === 0) {
-                        currentValue = currentValue + '[';
-                    } else {
-                        currentValue = ']' +currentValue;
-                    }
-                    return laravelValidation.helpers.escapeRegExp(currentValue);
-                });
-                var nameRegExp = new RegExp('^'+regexpParts.join('.*')+'$');
+                var nameRegExp = laravelValidation.helpers.regexFromWildcard(name);
                 if (element.name.match(nameRegExp)) {
                     var newRules = $.validator.normalizeRule( tmpRules ) || {};
                     cache[element.name][name]=newRules;

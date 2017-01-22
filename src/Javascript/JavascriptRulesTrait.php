@@ -16,7 +16,7 @@ trait JavascriptRulesTrait
     /**
      * Parse named parameters to $key => $value items.
      *
-     * @param  array  $parameters
+     * @param  array $parameters
      * @return array
      */
     abstract public function parseNamedParameters($parameters);
@@ -47,7 +47,7 @@ trait JavascriptRulesTrait
      */
     protected function ruleAfter($attribute, array $parameters)
     {
-        if (! ($date = strtotime($parameters[0]))) {
+        if (!($date = strtotime($parameters[0]))) {
             $date = $this->getAttributeName($parameters[0]);
         }
 
@@ -71,7 +71,7 @@ trait JavascriptRulesTrait
      * Validate that two attributes match.
      *
      * @param string $attribute
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return array
      */
@@ -86,7 +86,7 @@ trait JavascriptRulesTrait
      * Validate that an attribute is different from another attribute.
      *
      * @param string $attribute
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return array
      */
@@ -99,7 +99,7 @@ trait JavascriptRulesTrait
      * Validate that an attribute exists when any other attribute exists.
      *
      * @param string $attribute
-     * @param mixed  $parameters
+     * @param mixed $parameters
      *
      * @return array
      */
@@ -114,7 +114,7 @@ trait JavascriptRulesTrait
      * Validate that an attribute exists when all other attributes exists.
      *
      * @param string $attribute
-     * @param mixed  $parameters
+     * @param mixed $parameters
      *
      * @return array
      */
@@ -127,7 +127,7 @@ trait JavascriptRulesTrait
      * Validate that an attribute exists when another attribute does not.
      *
      * @param string $attribute
-     * @param mixed  $parameters
+     * @param mixed $parameters
      *
      * @return array
      */
@@ -140,7 +140,7 @@ trait JavascriptRulesTrait
      * Validate that an attribute exists when all other attributes do not.
      *
      * @param string $attribute
-     * @param mixed  $parameters
+     * @param mixed $parameters
      *
      * @return array
      */
@@ -153,7 +153,7 @@ trait JavascriptRulesTrait
      * Validate that an attribute exists when another attribute has a given value.
      *
      * @param string $attribute
-     * @param mixed  $parameters
+     * @param mixed $parameters
      *
      * @return array
      */
@@ -168,11 +168,24 @@ trait JavascriptRulesTrait
      * Validate that an attribute exists when another attribute does not have a given value.
      *
      * @param string $attribute
-     * @param mixed  $parameters
+     * @param mixed $parameters
      *
      * @return array
      */
     protected function ruleRequiredUnless($attribute, array $parameters)
+    {
+        return $this->ruleRequiredIf($attribute, $parameters);
+    }
+
+    /**
+     * Validate that the values of an attribute is in another attribute.
+     *
+     * @param string $attribute
+     * @param mixed  $parameters
+     *
+     * @return array
+     */
+    protected function ruleInArray($attribute, array $parameters)
     {
         return $this->ruleRequiredIf($attribute, $parameters);
     }
@@ -191,4 +204,5 @@ trait JavascriptRulesTrait
 
         return [$attribute, $parameters];
     }
+
 }
