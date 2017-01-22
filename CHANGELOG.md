@@ -6,6 +6,8 @@
      - Javascript validation for [Nullable](https://laravel.com/docs/5.3/validation#rule-nullable) rule
      - Javascript validation for [Filled](https://laravel.com/docs/5.3/validation#rule-filled) rule
      - Javascript validation for [Dimensions](https://laravel.com/docs/5.3/validation#rule-dimensions) rule
+     - Javascript validation for [InArray](https://laravel.com/docs/5.3/validation#rule-inarray) rule
+     
  
 ## 1.4.3 (2017-01-07)
 

@@ -303,13 +303,37 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Scapes string to use as Regular Expression
+         * Escape string to use as Regular Expression
          * @param str
          * @returns string
          */
-        escapeRegExp: function escapeRegExp(str) {
+        escapeRegExp: function (str) {
             return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        },
+
+        /**
+         * Generate RegExp from wildcard attributes
+         * @param name
+         * @returns {RegExp}
+         */
+        regexFromWildcard: function(name) {
+            var nameParts = name.split("[*]");
+            if (nameParts.length === 1) {
+                nameParts.push('');
+            }
+            var regexpParts = nameParts.map(function(currentValue, index) {
+                if (index % 2 === 0) {
+                    currentValue = currentValue + '[';
+                } else {
+                    currentValue = ']' +currentValue;
+                }
+
+                return laravelValidation.helpers.escapeRegExp(currentValue);
+            });
+
+            return new RegExp('^'+regexpParts.join('.*')+'$');
         }
+
 
     }
 });

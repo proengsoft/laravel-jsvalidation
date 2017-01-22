@@ -145,6 +145,15 @@ class JavascriptRulesTraitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testRuleInArray() {
+
+        $values = $this->callProtected('ruleInArray','field',['field.*']);
+        $expected = ['field', ['field.*']];
+
+        $this->assertEquals($expected,$values);
+
+    }
+
     public function testRuleDimensions() {
 
         $values = $this->callProtected('ruleDimensions','field',['min_width=100','ratio=16/9']);

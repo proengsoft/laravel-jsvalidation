@@ -2447,19 +2447,7 @@ laravelValidation = {
                 $.extend(rules, cache[element.name][name]);
             } else {
                 cache[element.name][name]={};
-                var nameParts = name.split("[*]");
-                if (nameParts.length === 1) {
-                    nameParts.push('');
-                }
-                var regexpParts = nameParts.map(function(currentValue, index) {
-                    if (index % 2 === 0) {
-                        currentValue = currentValue + '[';
-                    } else {
-                        currentValue = ']' +currentValue;
-                    }
-                    return laravelValidation.helpers.escapeRegExp(currentValue);
-                });
-                var nameRegExp = new RegExp('^'+regexpParts.join('.*')+'$');
+                var nameRegExp = laravelValidation.helpers.regexFromWildcard(name);
                 if (element.name.match(nameRegExp)) {
                     var newRules = $.validator.normalizeRule( tmpRules ) || {};
                     cache[element.name][name]=newRules;
@@ -2966,13 +2954,37 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Scapes string to use as Regular Expression
+         * Escape string to use as Regular Expression
          * @param str
          * @returns string
          */
-        escapeRegExp: function escapeRegExp(str) {
+        escapeRegExp: function (str) {
             return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        },
+
+        /**
+         * Generate RegExp from wildcard attributes
+         * @param name
+         * @returns {RegExp}
+         */
+        regexFromWildcard: function(name) {
+            var nameParts = name.split("[*]");
+            if (nameParts.length === 1) {
+                nameParts.push('');
+            }
+            var regexpParts = nameParts.map(function(currentValue, index) {
+                if (index % 2 === 0) {
+                    currentValue = currentValue + '[';
+                } else {
+                    currentValue = ']' +currentValue;
+                }
+
+                return laravelValidation.helpers.escapeRegExp(currentValue);
+            });
+
+            return new RegExp('^'+regexpParts.join('.*')+'$');
         }
+
 
     }
 });
@@ -3714,6 +3726,34 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * Validate that the values of an attribute is in another attribute.
+         * @param value
+         * @param element
+         * @param params
+         * @returns {boolean}
+         * @constructor
+         */
+        InArray: function (value, element, params) {
+            if (typeof params[0] === 'undefined') {
+                return false;
+            }
+            var elements = this.elements();
+            var found = false;
+            var nameRegExp = laravelValidation.helpers.regexFromWildcard(params[0]);
+
+            for ( var i = 0; i < elements.length ; i++ ) {
+                var targetName = elements[i].name;
+                if (targetName.match(nameRegExp)) {
+                    var equals = laravelValidation.methods.Same.call(this,value, element, [targetName]);
+                    found = found || equals;
+                }
+            }
+
+            return found;
+        },
+
+
+        /**
          * Validate that an attribute is different from another attribute.
          * @return {boolean}
          */
@@ -3909,11 +3949,11 @@ $.extend(true, laravelValidation, {
             });
 
             var fileinfo = laravelValidation.helpers.fileinfo(element);
-            if (fileinfo === false ) {
+
+            if (fileinfo === false) {
                 return false;
             }
-            
-            return (lowerParams.indexOf(fileinfo.type.toLowerCase()) !== -1);
+            return (lowerParams.indexOf(fileinfo.type.toLowerCase())!==-1);
         },
 
         /**
@@ -3943,7 +3983,7 @@ $.extend(true, laravelValidation, {
                     var height = parseFloat(img.naturalHeight);
                     var width = parseFloat(img.naturalWidth);
                     var ratio = width / height;
-                    var not_valid = ((params['width']) && parseFloat(params['width'] !== width)) ||
+                    var notValid = ((params['width']) && parseFloat(params['width'] !== width)) ||
                         ((params['min_width']) && parseFloat(params['min_width']) > width) ||
                         ((params['max_width']) && parseFloat(params['max_width']) < width) ||
                         ((params['height']) && parseFloat(params['height']) !== height) ||
@@ -3951,7 +3991,7 @@ $.extend(true, laravelValidation, {
                         ((params['max_height']) && parseFloat(params['max_height']) < height) ||
                         ((params['ratio']) && ratio !== parseFloat(eval(params['ratio']))
                         );
-                    callback(! not_valid);
+                    callback(! notValid);
                 };
                 img.onerror = function() {
                     callback(false);
@@ -3962,7 +4002,6 @@ $.extend(true, laravelValidation, {
 
             return 'pending';
         },
-
 
         /**
          * Validate that an attribute contains only alphabetic characters.

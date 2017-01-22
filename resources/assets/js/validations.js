@@ -255,6 +255,34 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * Validate that the values of an attribute is in another attribute.
+         * @param value
+         * @param element
+         * @param params
+         * @returns {boolean}
+         * @constructor
+         */
+        InArray: function (value, element, params) {
+            if (typeof params[0] === 'undefined') {
+                return false;
+            }
+            var elements = this.elements();
+            var found = false;
+            var nameRegExp = laravelValidation.helpers.regexFromWildcard(params[0]);
+
+            for ( var i = 0; i < elements.length ; i++ ) {
+                var targetName = elements[i].name;
+                if (targetName.match(nameRegExp)) {
+                    var equals = laravelValidation.methods.Same.call(this,value, element, [targetName]);
+                    found = found || equals;
+                }
+            }
+
+            return found;
+        },
+
+
+        /**
          * Validate that an attribute is different from another attribute.
          * @return {boolean}
          */
@@ -503,7 +531,6 @@ $.extend(true, laravelValidation, {
 
             return 'pending';
         },
-
 
         /**
          * Validate that an attribute contains only alphabetic characters.
