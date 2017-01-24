@@ -3,7 +3,7 @@ namespace  Illuminate\Foundation\Http {
     if (!class_exists('FormRequest')) {
         class  FormRequest {
             public function initialize(){}
-            public function setSession(){}
+            public function setLaravelSession(){}
             public function setUserResolver(){}
             public function setRouteResolver() {}
             public function setContainer() {}
@@ -20,7 +20,7 @@ namespace Proengsoft\JsValidation\Tests {
         public static function createFromBase() {
             //$sessionMock =  m::mock('Symfony\Component\HttpFoundation\Session\SessionInterface',[]);
             $mockedRequest = m::mock('\Symfony\Component\HttpFoundation\Request');
-            $mockedRequest->shouldReceive('setSession')
+            $mockedRequest->shouldReceive('setLaravelSession')
                 ->shouldReceive('setUserResolver')
                 ->shouldReceive('setRouteResolver')
                 ->shouldReceive('messages')->andReturn([])

@@ -2,7 +2,7 @@
 
 namespace Proengsoft\JsValidation\Tests\Remote;
 
-use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Validator as LaravelValidator;
 use Proengsoft\JsValidation\Exceptions\BadRequestHttpException;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
