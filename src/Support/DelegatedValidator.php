@@ -4,6 +4,7 @@ namespace Proengsoft\JsValidation\Support;
 
 use Closure;
 use Illuminate\Validation\Validator as BaseValidator;
+use Illuminate\Validation\ValidationRuleParser;
 
 class DelegatedValidator
 {
@@ -147,7 +148,7 @@ class DelegatedValidator
      */
     public function parseRule($rules)
     {
-        return $this->callValidator('parseRule', [$rules]);
+        return ValidationRuleParser::parse($rules);
     }
 
     /**
