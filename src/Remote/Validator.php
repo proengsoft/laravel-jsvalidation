@@ -5,7 +5,7 @@ namespace Proengsoft\JsValidation\Remote;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationRuleParser;
 use Proengsoft\JsValidation\Support\RuleListTrait;
-use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
@@ -58,7 +58,7 @@ class Validator
      * @param  \Illuminate\Validation\Validator  $validator
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException|\Illuminate\Http\Exception\HttpResponseException
+     * @throws \Illuminate\Validation\ValidationException|\Illuminate\Http\Exceptions\HttpResponseException
      */
     protected function throwValidationException($result, $validator)
     {
