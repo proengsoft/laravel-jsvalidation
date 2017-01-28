@@ -110,7 +110,7 @@ class DelegatedValidator
      */
     public function doReplacements($message, $attribute, $rule, $parameters)
     {
-        return $this->callValidator('doReplacements', [$message, $attribute, $rule, $parameters]);
+        return $this->callValidator('makeReplacements', [$message, $attribute, $rule, $parameters]);
     }
 
     /**
