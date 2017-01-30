@@ -34,7 +34,7 @@ class MessageParser
         $data = $this->fakeValidationData($attribute, $rule, $parameters);
 
         $message = $this->validator->getMessage($attribute, $rule);
-        $message = $this->validator->doReplacements($message, $attribute, $rule, $parameters);
+        $message = $this->validator->makeReplacements($message, $attribute, $rule, $parameters);
 
         $this->validator->setData($data);
 
