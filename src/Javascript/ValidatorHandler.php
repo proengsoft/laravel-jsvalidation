@@ -3,6 +3,7 @@
 namespace Proengsoft\JsValidation\Javascript;
 
 use Illuminate\Validation\Validator;
+use Illuminate\Validation\ValidationRuleParser;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 
@@ -100,7 +101,7 @@ class ValidatorHandler
     {
         $jsRules = [];
         foreach ($rules as $rawRule) {
-            list($rule, $parameters) = $this->validator->parseRule($rawRule);
+            list($rule, $parameters) = ValidationRuleParser::parse($rawRule);
             list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters, $rawRule);
             if ($this->isValidatable($jsRule, $includeRemote)) {
                 $jsRules[$jsAttribute][$jsRule][] = array($rule, $jsParams,
