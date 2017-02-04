@@ -36,7 +36,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
             ->willReturn("$attribute $rule");
 
         $delegated->expects($this->once())
-            ->method('doReplacements')
+            ->method('makeReplacements')
             ->with("$attribute $rule",$attribute,$rule, $params)
             ->willReturn("$attribute $rule");
 
@@ -78,7 +78,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
             ->willReturn("$attribute $rule");
 
         $delegated->expects($this->once())
-            ->method('doReplacements')
+            ->method('makeReplacements')
             ->with("$attribute $rule",$attribute,$rule, $params)
             ->willReturn("$attribute $rule");
 
@@ -119,7 +119,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
             ->willReturn("$attribute $rule");
 
         $delegated->expects($this->once())
-            ->method('doReplacements')
+            ->method('makeReplacements')
             ->with("$attribute $rule",$attribute,$rule, $params)
             ->willReturn("$attribute $rule");
 

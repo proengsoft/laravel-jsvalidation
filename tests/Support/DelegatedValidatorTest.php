@@ -173,9 +173,9 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     /**
      *  Test Replace all error message place-holders with actual values.
      */
-    public function testDoReplacements()
+    public function testMakeReplacements()
     {
-        $this->callValidatorProtectedMethod('doReplacements', ['message','attribute','rule',[]]);
+        $this->callValidatorProtectedMethod('makeReplacements', ['message','attribute','rule',[]]);
     }
 
     /**

@@ -22,13 +22,13 @@
     ],
     "require": {
         "php" : ">=5.4.0",
-        "illuminate/support": "~5.0",
-        "illuminate/validation": "~5.0",
-        "illuminate/contracts": "~5.0",
-        "illuminate/view": "~5.0",
-        "illuminate/config": "~5.0",
-        "illuminate/http": "~5.0",
-        "illuminate/translation": "~5.0"
+        "illuminate/support": "~5.4",
+        "illuminate/validation": "~5.4",
+        "illuminate/contracts": "~5.4",
+        "illuminate/view": "~5.4",
+        "illuminate/config": "~5.4",
+        "illuminate/http": "~5.4",
+        "illuminate/translation": "~5.4"
 
     },
     "require-dev": {

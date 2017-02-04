@@ -3,7 +3,7 @@
 
 namespace Proengsoft\JsValidation\Tests\Remote;
 
-use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Proengsoft\JsValidation\Remote\Resolver;
 
 require_once __DIR__.'/../stubs/ResolverTest.php';

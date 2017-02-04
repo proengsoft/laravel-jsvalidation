@@ -157,8 +157,9 @@ class JsValidatorFactory
         $formRequest = $this->app->build($class, $params);
 
         if ($session = $request->getSession()) {
-            $formRequest->setSession($session);
+            $formRequest->setLaravelSession($session);
         }
+
         $formRequest->setUserResolver($request->getUserResolver());
         $formRequest->setRouteResolver($request->getRouteResolver());
         $formRequest->setContainer($this->app);
