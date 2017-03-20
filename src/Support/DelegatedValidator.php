@@ -16,6 +16,13 @@ class DelegatedValidator
     protected $validator;
 
     /**
+     * Validation rule parser instance.
+     *
+     * @var \Proengsoft\JsValidation\Support\ValidationRuleParserProxy
+     */
+    protected $ruleParser;
+
+    /**
      *  Closure to invoke non accessible Validator methods.
      *
      * @var Closure
@@ -26,10 +33,12 @@ class DelegatedValidator
      * DelegatedValidator constructor.
      *
      * @param \Illuminate\Validation\Validator $validator
+     * @param \Proengsoft\JsValidation\Support\ValidationRuleParserProxy $ruleParser
      */
-    public function __construct(BaseValidator $validator)
+    public function __construct(BaseValidator $validator, ValidationRuleParserProxy $ruleParser)
     {
         $this->validator = $validator;
+        $this->ruleParser = $ruleParser;
         $this->validatorMethod = $this->createProtectedCaller($validator);
     }
 
@@ -107,9 +116,9 @@ class DelegatedValidator
      *
      * @return string
      */
-    public function doReplacements($message, $attribute, $rule, $parameters)
+    public function makeReplacements($message, $attribute, $rule, $parameters)
     {
-        return $this->callValidator('doReplacements', [$message, $attribute, $rule, $parameters]);
+        return $this->callValidator('makeReplacements', [$message, $attribute, $rule, $parameters]);
     }
 
     /**
@@ -147,7 +156,7 @@ class DelegatedValidator
      */
     public function parseRule($rules)
     {
-        return $this->callValidator('parseRule', [$rules]);
+        return $this->ruleParser->parse($rules);
     }
 
     /**

@@ -10,6 +10,7 @@ use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
+use Proengsoft\JsValidation\Support\ValidationRuleParserProxy;
 
 class JsValidatorFactory
 {
@@ -157,7 +158,7 @@ class JsValidatorFactory
         $formRequest = $this->app->build($class, $params);
 
         if ($session = $request->getSession()) {
-            $formRequest->setSession($session);
+            $formRequest->setLaravelSession($session);
         }
         $formRequest->setUserResolver($request->getUserResolver());
         $formRequest->setRouteResolver($request->getRouteResolver());
@@ -194,7 +195,7 @@ class JsValidatorFactory
         $view = $this->options['view'];
         $selector = is_null($selector) ? $this->options['form_selector'] : $selector;
 
-        $delegated = new DelegatedValidator($validator);
+        $delegated = new DelegatedValidator($validator, new ValidationRuleParserProxy());
         $rules = new RuleParser($delegated, $this->getSessionToken());
         $messages = new MessageParser($delegated);
 
