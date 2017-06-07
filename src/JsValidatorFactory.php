@@ -155,7 +155,7 @@ class JsValidatorFactory
         list($class, $params) = $this->parseFormRequestName($class);
 
         $request = $this->app->__get('request');
-        $formRequest = $this->app->build($class, $params);
+        $formRequest = new $class;
 
         if ($session = $request->getSession()) {
             $formRequest->setLaravelSession($session);
