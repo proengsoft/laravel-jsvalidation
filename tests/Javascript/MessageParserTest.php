@@ -7,11 +7,8 @@ use Proengsoft\JsValidation\Javascript\MessageParser;
 
 class MessageParserTest extends \PHPUnit_Framework_TestCase
 {
-
-
-
-    public function testGetMessage() {
-
+    public function testGetMessage()
+    {
         $attribute = 'field';
         $rule = 'Required';
         $params=[];
@@ -36,7 +33,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
             ->willReturn("$attribute $rule");
 
         $delegated->expects($this->once())
-            ->method('doReplacements')
+            ->method('makeReplacements')
             ->with("$attribute $rule",$attribute,$rule, $params)
             ->willReturn("$attribute $rule");
 
@@ -78,7 +75,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
             ->willReturn("$attribute $rule");
 
         $delegated->expects($this->once())
-            ->method('doReplacements')
+            ->method('makeReplacements')
             ->with("$attribute $rule",$attribute,$rule, $params)
             ->willReturn("$attribute $rule");
 
@@ -119,7 +116,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
             ->willReturn("$attribute $rule");
 
         $delegated->expects($this->once())
-            ->method('doReplacements')
+            ->method('makeReplacements')
             ->with("$attribute $rule",$attribute,$rule, $params)
             ->willReturn("$attribute $rule");
 
