@@ -40,6 +40,16 @@
             "Proengsoft\\JsValidation\\": "src",
             "Proengsoft\\JsValidation\\Tests\\": "tests"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Proengsoft\\JsValidation\\JsValidationServiceProvider"
+            ],
+            "aliases": {
+                "JsValidator": "Proengsoft\\JsValidation\\Facades\\JsValidatorFacade"
+            }
+        }
     }
 
 }
