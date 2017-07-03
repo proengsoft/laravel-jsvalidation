@@ -22,7 +22,9 @@ matrix:
 
 before_script:
   - export COMPOSER=tests/composer-$LARAVEL.json
-  - travis_retry composer install --no-interaction --prefer-source
+  - composer install illuminate/validation
+  - composer install
+  - composer dump-autoload
 
 script:
   - vendor/bin/phpunit --coverage-clover=coverage.clover

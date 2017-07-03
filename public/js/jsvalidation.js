@@ -3988,7 +3988,8 @@ $.extend(true, laravelValidation, {
          * Validate the MIME type of a file upload attribute is in a set of MIME types.
          */
         Image: function(value, element) {
-            return laravelValidation.methods.Mimes.call(this, value, element, ['jpg', 'png', 'gif', 'bmp', 'svg']);
+		//fixing request for validation of jpeg files
+            return laravelValidation.methods.Mimes.call(this, value, element, ['jpg', 'png', 'gif', 'bmp', 'svg','jpeg']);
         },
 
         /**
