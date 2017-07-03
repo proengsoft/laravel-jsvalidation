@@ -22,6 +22,7 @@ matrix:
 
 before_script:
   - export COMPOSER=tests/composer-$LARAVEL.json
+  - composer require illuminate/validation
   - composer install
   - composer dump-autoload
 
