@@ -73,7 +73,7 @@ class ValidatorHandler
      */
     protected function generateJavascriptValidations()
     {
-        $jsValidations = array();
+        $jsValidations = [];
 
         foreach ($this->validator->getRules() as $attribute => $rules) {
             if (! $this->jsValidationEnabled($attribute)) {
@@ -103,10 +103,10 @@ class ValidatorHandler
             list($rule, $parameters) = $this->validator->parseRule($rawRule);
             list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters, $rawRule);
             if ($this->isValidatable($jsRule, $includeRemote)) {
-                $jsRules[$jsAttribute][$jsRule][] = array($rule, $jsParams,
+                $jsRules[$jsAttribute][$jsRule][] = [$rule, $jsParams,
                     $this->messages->getMessage($attribute, $rule, $parameters),
                     $this->validator->isImplicit($rule),
-                );
+                ];
             }
         }
 
@@ -144,7 +144,7 @@ class ValidatorHandler
      */
     public function validationData()
     {
-        $jsMessages = array();
+        $jsMessages = [];
         $jsValidations = $this->generateJavascriptValidations();
 
         return [
@@ -156,8 +156,8 @@ class ValidatorHandler
     /**
      * Validate Conditional Validations using Ajax in specified fields.
      *
-     * @param  string  $attribute
-     * @param  string|array  $rules
+     * @param string $attribute
+     * @param string|array $rules
      */
     public function sometimes($attribute, $rules = [])
     {

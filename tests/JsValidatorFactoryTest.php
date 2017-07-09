@@ -9,10 +9,9 @@ require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
 
 class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
-    protected function mockedApp($rules, $messages, $customAttributes, $data=[]) {
-
-        $mockValidator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+    protected function mockedApp($rules, $messages, $customAttributes, $data = [])
+    {
+        $mockValidator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->setMethods(['addCustomAttributes'])
             ->getMock();
@@ -21,7 +20,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('addCustomAttributes')
             ->with($customAttributes);
 
-        $mockFactory = $this->getMockBuilder('Illuminate\Contracts\Validation\Factory')
+        $mockFactory = $this->getMockBuilder(\Illuminate\Contracts\Validation\Factory::class)
             ->disableOriginalConstructor()
             ->setMethods(['make','extend','extendImplicit','replacer'])
             ->getMock();
@@ -32,18 +31,18 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn($mockValidator);
 
 
-        $app = $this->getMockBuilder('\Illuminate\Container\Container')
+        $app = $this->getMockBuilder(\Illuminate\Container\Container::class)
             ->getMock();
         $app->expects($this->once())
             ->method('make')
-            ->with('Illuminate\Contracts\Validation\Factory')
+            ->with(\Illuminate\Contracts\Validation\Factory::class)
             ->willReturn($mockFactory);
 
         return $app;
-
     }
 
-    public function testMake() {
+    public function testMake()
+    {
         $rules=['name'=>'required'];
         $messages = [];
         $customAttributes = [];
@@ -69,11 +68,11 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
 
-        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
-
+        $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
     }
 
-    public function testMakeArrayRules() {
+    public function testMakeArrayRules()
+    {
         $rules=['name.*'=>'required'];
         $data['name']['*']=true;
         $messages = [];
@@ -100,11 +99,11 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
 
-        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
-
+        $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
     }
 
-    public function testMakeArrayRulesAndAttributes() {
+    public function testMakeArrayRulesAndAttributes()
+    {
         $rules=['name.*'=>'required'];
         $data['name']['*']=true;
         $data['name']['key0']=true;
@@ -132,11 +131,11 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
 
-        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
-
+        $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
     }
 
-    public function testMakeWithToken() {
+    public function testMakeWithToken()
+    {
         $rules=['name'=>'required'];
         $messages = [];
         $customAttributes = [];
@@ -177,11 +176,11 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
 
-        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
-
+        $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
     }
 
-    public function testCreateFromFormRequestInstance() {
+    public function testCreateFromFormRequestInstance()
+    {
         $rules=[];
         $messages = [];
         $customAttributes = [];
@@ -193,7 +192,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $app = $this->mockedApp($rules, $messages, $customAttributes);
 
-        $mockFormRequest=m::mock('Illuminate\Foundation\Http\FormRequest');
+        $mockFormRequest=m::mock(\Illuminate\Foundation\Http\FormRequest::class);
         $mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
         $mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
         $mockFormRequest->shouldReceive('attributes')->once()->andReturn([]);
@@ -204,11 +203,12 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $jsValidator = $factory->formRequest($mockFormRequest, $selector);
 
 
-        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
+        $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
     }
 
 
-    public function testCreateFromFormRequestClassName() {
+    public function testCreateFromFormRequestClassName()
+    {
         $rules=[];
         $messages = [];
         $customAttributes = [];
@@ -221,11 +221,11 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $app = $this->mockedApp($rules, $messages, $customAttributes);
 
-        $sessionMock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')
+        $sessionMock = $this->getMockBuilder(\Symfony\Component\HttpFoundation\Session\SessionInterface::class)
             ->getMock();
 
 
-        $mockedRequest = m::mock('\Symfony\Component\HttpFoundation\Request');
+        $mockedRequest = m::mock(\Symfony\Component\HttpFoundation\Request::class);
         $mockedRequest->shouldReceive('getSession')->andReturn($sessionMock)
             ->shouldReceive('getUserResolver')->andReturn(function(){})
             ->shouldReceive('getRouteResolver')->andReturn(function(){});
@@ -238,7 +238,7 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn($mockedRequest);
 
 
-        $mockForm = $this->getMockForAbstractClass('\Illuminate\Foundation\Http\FormRequest',[],'',true,true,true,['messages','attributes']);
+        $mockForm = $this->getMockForAbstractClass(\Illuminate\Foundation\Http\FormRequest::class,[],'',true,true,true,['messages','attributes']);
         $mockForm->expects($this->once())
             ->method('messages')
             ->willReturn([]);
@@ -248,19 +248,13 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $app->expects($this->once())
             ->method('build')
-            ->with('Proengsoft\JsValidation\Tests\StubFormRequest')
+            ->with(\Proengsoft\JsValidation\Tests\StubFormRequest::class)
             ->willReturn($mockForm);
 
         $factory = new JsValidatorFactory($app, $options);
 
+        $jsValidator = $factory->formRequest([\Proengsoft\JsValidation\Tests\StubFormRequest::class] , $selector);
 
-
-        $jsValidator = $factory->formRequest(['Proengsoft\JsValidation\Tests\StubFormRequest'] , $selector);
-
-        $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
+        $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
     }
-
-
-
-
 }

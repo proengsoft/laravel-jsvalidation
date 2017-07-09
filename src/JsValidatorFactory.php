@@ -11,6 +11,7 @@ use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\Support\ValidationRuleParserProxy;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 class JsValidatorFactory
 {
@@ -59,7 +60,7 @@ class JsValidatorFactory
      *
      * @return JavascriptValidator
      */
-    public function make(array $rules, array $messages = array(), array $customAttributes = array(), $selector = null)
+    public function make(array $rules, array $messages = [], array $customAttributes = [], $selector = null)
     {
         $validator = $this->getValidatorInstance($rules, $messages, $customAttributes);
 
@@ -74,9 +75,9 @@ class JsValidatorFactory
      * @param array $customAttributes
      * @return Validator
      */
-    protected function getValidatorInstance(array $rules, array $messages = array(), array $customAttributes = array())
+    protected function getValidatorInstance(array $rules, array $messages = [], array $customAttributes = [])
     {
-        $factory = $this->app->make('Illuminate\Contracts\Validation\Factory');
+        $factory = $this->app->make(ValidationFactory::class);
 
         $data = $this->getValidationData($rules, $customAttributes);
         $validator = $factory->make($data, $rules, $messages, $customAttributes);
@@ -102,7 +103,7 @@ class JsValidatorFactory
             Arr::set($data, $attribute, true);
 
             return $data;
-        }, array());
+        }, []);
 
         return $data;
     }

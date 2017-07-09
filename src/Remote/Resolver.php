@@ -4,30 +4,30 @@ namespace Proengsoft\JsValidation\Remote;
 
 use Closure;
 use Illuminate\Support\Arr;
-use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 class Resolver
 {
     use AccessProtectedTrait;
 
     /**
-     * @var Closure
+     * @var \Closure
      */
     protected $resolver;
 
     /**
-     * @var Factory
+     * @var \Illuminate\Contracts\Validation\Factory
      */
     protected $factory;
 
     /**
      * RemoteValidator constructor.
      *
-     * @param Factory $factory
+     * @param \Illuminate\Contracts\Validation\Factory $factory
      */
-    public function __construct(Factory $factory)
+    public function __construct(ValidationFactory $factory)
     {
         $this->factory = $factory;
         $this->resolver = $this->getProtected($factory, 'resolver');
@@ -38,7 +38,7 @@ class Resolver
      *
      * @param $field
      *
-     * @return Closure
+     * @return \Closure
      */
     public function resolver($field)
     {
@@ -77,7 +77,7 @@ class Resolver
      * @param $rules
      * @param $messages
      * @param $customAttributes
-     * @return BaseValidator
+     * @return \Illuminate\Validation\Validator
      */
     protected function createValidator($translator, $data, $rules, $messages, $customAttributes)
     {
@@ -91,7 +91,7 @@ class Resolver
     /**
      * Closure used to trigger JsValidations.
      *
-     * @return Closure
+     * @return \Closure
      */
     public function validatorClosure()
     {

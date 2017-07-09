@@ -11,12 +11,12 @@ trait AccessProtectedTrait
      *
      * @param $instance
      *
-     * @return Closure
+     * @return \Closure
      */
     protected function createProtectedCaller($instance)
     {
         $closure = function ($method, $args) {
-            $callable = array($this, $method);
+            $callable = [$this, $method];
 
             return call_user_func_array($callable, $args);
         };
@@ -30,7 +30,7 @@ trait AccessProtectedTrait
      * @param $instance
      * @param $property
      *
-     * @return Closure
+     * @return \Closure
      */
     protected function getProtected($instance, $property)
     {
@@ -45,7 +45,7 @@ trait AccessProtectedTrait
     /**
      * Calls inaccessible method.
      *
-     * @param object|Closure $instance
+     * @param object|\Closure $instance
      * @param $method
      * @param $args
      *

@@ -2,15 +2,13 @@
 
 namespace Proengsoft\JsValidation\Support;
 
-
 class RuleListTraitTest extends \PHPUnit_Framework_TestCase
 {
-
     private $mockTrait;
 
     public function setUp()
     {
-        $this->mockTrait = $this->getMockForTrait('Proengsoft\JsValidation\Support\RuleListTrait');
+        $this->mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Support\RuleListTrait::class);
     }
 
     public function testIsImplemented() {
@@ -39,16 +37,14 @@ class RuleListTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->callProtected('isFileRule',['RequiredIf']));
     }
 
-
-
-    protected function callProtected($method, $args=[]) {
+    protected function callProtected($method, $args = [])
+    {
         $caller = function ($method, $args) {
-            return call_user_func_array([$this,$method],$args);
+            return call_user_func_array([$this, $method], $args);
 
         };
         $testCaller = $caller->bindTo($this->mockTrait, $this->mockTrait);
 
         return $testCaller($method, $args);
     }
-
 }

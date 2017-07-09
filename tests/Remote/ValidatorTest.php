@@ -10,7 +10,6 @@ use Proengsoft\JsValidation\Remote\Validator;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testValidateRemoteRulePasses()
     {
         $rules = ['field' => 'active_url|required'];
@@ -25,7 +24,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
             $this->assertEquals('true', $ex->getResponse()->getContent());
         }
-
     }
 
     public function testValidateRemoteRuleFails()
@@ -45,10 +43,10 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
             $this->assertEquals('["field active_url!"]', $ex->getResponse()->getContent());
         }
-
     }
 
-    public function testValidateRemoteDisabled() {
+    public function testValidateRemoteDisabled()
+    {
         $rules = ['field' => 'active_url|required|alpha|no_js_validation'];
         $data = ['field' => 'http://nonexistentdomain'];
         $params= ['false'];
@@ -63,7 +61,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testValidateRemoteAllFields() {
+    public function testValidateRemoteAllFields()
+    {
         $rules = ['field' => 'required|active_url|alpha'];
         $data = ['field' => 'http://www.google.com'];
         $params= ['true'];
@@ -81,7 +80,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-
     protected function getRealTranslator()
     {
         $messages = [
@@ -89,7 +87,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'validation.active_url' => ':attribute active_url!'
         ];
 
-        if (method_exists('\Illuminate\Translation\Translator','addLines')) {
+        if (method_exists(\Illuminate\Translation\Translator::class,'addLines')) {
             $trans = new \Illuminate\Translation\Translator(
                 new \Illuminate\Translation\ArrayLoader, 'en'
             );
@@ -103,7 +101,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         return $trans;
     }
 
-    protected function getRealValidator($rules, $messages = array(), $data=[])
+    protected function getRealValidator($rules, $messages = [], $data = [])
     {
         $trans = $this->getRealTranslator();
         $laravelValidator = new LaravelValidator($trans, $data, $rules, $messages );
@@ -112,5 +110,4 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         });
         return new Validator($laravelValidator);
     }
-
 }

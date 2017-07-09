@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 
-Copyright (c) 2016 Albert Moreno <albert@memorylimit.net>
+Copyright (c) 2017 Albert Moreno <albert@memorylimit.net>
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal

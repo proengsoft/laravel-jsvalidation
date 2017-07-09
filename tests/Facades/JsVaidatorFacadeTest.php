@@ -13,7 +13,6 @@ class JsValidatorFacadeTest extends \PHPUnit_Framework_TestCase {
         m::close();
     }
 
-
     function testGetFacadeAccessor()
     {
         /*
@@ -51,8 +50,5 @@ class JsValidatorFacadeTest extends \PHPUnit_Framework_TestCase {
         $facade->setFacadeApplication(null);
         unset($app);
         unset($facade);
-
-
     }
-
 }

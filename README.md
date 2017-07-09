@@ -7,34 +7,41 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/proengsoft/laravel-jsvalidation.svg?style=flat-square)](https://packagist.org/packages/proengsoft/laravel-jsvalidation)
 
 [JQuery Validation Plugin]: http://jqueryvalidation.org/
-[FormRequest]: http://laravel.com/docs/5.3/validation#form-request-validation
-[Validators]: http://laravel.com/docs/5.3/validation#form-request-validation
-[Validation Rules]: http://laravel.com/docs/5.3/validation#available-validation-rules
-[Custom Validations]: http://laravel.com/docs/5.3/validation#custom-validation-rules
-[Messages]: http://laravel.com/docs/5.3/validation#error-messages-and-views
-[Laravel Localization]: http://laravel.com/docs/5.3/localization
-[Validation]: http://laravel.com/docs/5.3/validation
-[Custom Validation Rules]: http://laravel.com/docs/5.3/validation#custom-validation-rules
+[FormRequest]: http://laravel.com/docs/5.4/validation#form-request-validation
+[Validators]: http://laravel.com/docs/5.4/validation#form-request-validation
+[Validation Rules]: http://laravel.com/docs/5.4/validation#available-validation-rules
+[Custom Validations]: http://laravel.com/docs/5.4/validation#custom-validation-rules
+[Messages]: http://laravel.com/docs/5.4/validation#error-messages-and-views
+[Laravel Localization]: http://laravel.com/docs/5.4/localization
+[Validation]: http://laravel.com/docs/5.4/validation
+[Custom Validation Rules]: http://laravel.com/docs/5.4/validation#custom-validation-rules
 [JQueryValidation]: http://jqueryvalidation.org/
-[FormRequest]: http://laravel.com/docs/5.3/validation#form-request-validation
-[Validators]: http://laravel.com/docs/5.3/validation#form-request-validation
-[Validation Rules]: http://laravel.com/docs/5.3/validation#available-validation-rules
-[Custom Validations]: http://laravel.com/docs/5.3/validation#custom-validation-rules
-[Messages]: http://laravel.com/docs/5.3/validation#error-messages-and-views
-[Laravel Localization]: http://laravel.com/docs/5.3/localization 
-[Validation]: http://laravel.com/docs/5.3/validation 
-[Validation Rules]: http://laravel.com/docs/5.3/validation#available-validation-rules
-[Custom Validation Rules]: http://laravel.com/docs/5.3/validation#custom-validation-rules
+[FormRequest]: http://laravel.com/docs/5.4/validation#form-request-validation
+[Validators]: http://laravel.com/docs/5.4/validation#form-request-validation
+[Validation Rules]: http://laravel.com/docs/5.4/validation#available-validation-rules
+[Custom Validations]: http://laravel.com/docs/5.4/validation#custom-validation-rules
+[Messages]: http://laravel.com/docs/5.4/validation#error-messages-and-views
+[Laravel Localization]: http://laravel.com/docs/5.4/localization 
+[Validation]: http://laravel.com/docs/5.4/validation 
+[Validation Rules]: http://laravel.com/docs/5.4/validation#available-validation-rules
+[Custom Validation Rules]: http://laravel.com/docs/5.4/validation#custom-validation-rules
 **Laravel Javascript Validation** package allows to reuse your Laravel [Validation Rules][], [Messages][], [FormRequest][] and [Validators][] to validate forms automatically in client side without need to write any Javascript code or use HTML Builder Class. 
 
 You can validate forms automatically referencing it to your defined validations. The messages are loaded from your  validations and translated according your Localization preferences.
-  
+
+
+#### Version matrix
+
+| Laravel Version     | Package Version |
+| ------------------- | --------------- |
+| `5.0`, `5.2`, `5.3` | `1.x`           |
+| `5.4`               | `2.x`           | 
 
 #### Feature overview
 
 - Automatic creation of Javascript validation based on your [Validation Rules][] or [FormRequest][], no Javascript coding required.
 - Supports other validation packages. 
-- AJAX validation for [ActiveURL](http://laravel.com/docs/5.3/validation#rule-active-url), [Unique](http://laravel.com/docs/5.3/validation#rule-unique) and [Exists](http://laravel.com/docs/5.3/validation#rule-exists) Rules, [Custom Validation Rules][] and other validation packages
+- AJAX validation for [ActiveURL](http://laravel.com/docs/5.4/validation#rule-active-url), [Unique](http://laravel.com/docs/5.4/validation#rule-unique) and [Exists](http://laravel.com/docs/5.4/validation#rule-exists) Rules, [Custom Validation Rules][] and other validation packages
 - Unobtrusive integration, you can use without Laravel Form Builder
 - The package uses [Jquery Validation Plugin](http://jqueryvalidation.org/)  bundled in provided script.
 - Uses Laravel Localization to translate messages.
@@ -45,10 +52,10 @@ You can validate forms automatically referencing it to your defined validations.
 **Almost all [Validation Rules][] provided by Laravel and other packages are supported**.
 
 Almost are validated in client-side using Javascript, but in some cases, the validation should to be done in server-side via AJAX:
- - [ActiveURL](http://laravel.com/docs/5.3/validation#rule-active-url)
- - [Unique](http://laravel.com/docs/5.3/validation#rule-unique)
- - [Exists](http://laravel.com/docs/5.3/validation#rule-exists)
- - [Custom Validation Rules](https://laravel.com/docs/5.3/validation#custom-validation-rules)
+ - [ActiveURL](http://laravel.com/docs/5.4/validation#rule-active-url)
+ - [Unique](http://laravel.com/docs/5.4/validation#rule-unique)
+ - [Exists](http://laravel.com/docs/5.4/validation#rule-exists)
+ - [Custom Validation Rules](https://laravel.com/docs/5.4/validation#custom-validation-rules)
  - Validations provided by other packages
 
 
@@ -56,12 +63,12 @@ Almost are validated in client-side using Javascript, but in some cases, the val
 
 Some Laravel validations are not implemented yet.
     
-- [Present](https://laravel.com/docs/5.3/validation#rule-present) 
-- [DateFormat](https://laravel.com/docs/5.3/validation#rule-date-format) rule don't support timezone format
+- [Present](https://laravel.com/docs/5.4/validation#rule-present) 
+- [DateFormat](https://laravel.com/docs/5.4/validation#rule-date-format) rule don't support timezone format
 
 
 #### Getting started
-The easiest way to create Javascript validations is using [Laravel Form Request Validation](http://laravel.com/docs/5.3/validation#form-request-validation).
+The easiest way to create Javascript validations is using [Laravel Form Request Validation](http://laravel.com/docs/5.4/validation#form-request-validation).
 
 ##### Installation
 Follow the [Installation Guide](https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation) to install the package. **The default config shlould work out-of-box**

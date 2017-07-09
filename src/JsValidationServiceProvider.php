@@ -2,6 +2,7 @@
 
 namespace Proengsoft\JsValidation;
 
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
@@ -18,7 +19,7 @@ class JsValidationServiceProvider extends ServiceProvider
         $this->publishAssets();
 
         if ($this->app['config']->get('jsvalidation.disable_remote_validation') === false) {
-            $this->app['Illuminate\Contracts\Http\Kernel']->pushMiddleware('Proengsoft\JsValidation\RemoteValidationMiddleware');
+            $this->app[Kernel::class]->pushMiddleware(RemoteValidationMiddleware::class);
         }
     }
 

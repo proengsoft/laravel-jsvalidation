@@ -15,7 +15,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $data = [];
         $files = [];
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -42,10 +42,10 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $message = $parser->getMessage($attribute,$rule,$params);
 
         $this->assertEquals("$attribute $rule", $message);
-
     }
 
-    public function testGetMessageRequiredIf() {
+    public function testGetMessageRequiredIf()
+    {
 
         $attribute = 'field';
         $rule = 'RequiredIf';
@@ -53,7 +53,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $data = [];
         $files = [];
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -84,10 +84,10 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $message = $parser->getMessage($attribute,$rule,$params);
 
         $this->assertEquals("$attribute $rule", $message);
-
     }
 
-    public function testGetMessageFiles() {
+    public function testGetMessageFiles()
+    {
 
         $attribute = 'field';
         $rule = 'Image';
@@ -95,7 +95,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $data = [];
         $files = [];
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -106,7 +106,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
 
         $delegated->expects($this->once())
             ->method('hasRule')
-            ->with($attribute, array('Mimes', 'Image'))
+            ->with($attribute, ['Mimes', 'Image'])
             ->willReturn(true);
 
 
@@ -125,6 +125,5 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $message = $parser->getMessage($attribute,$rule,$params);
 
         $this->assertEquals("$attribute $rule", $message);
-
     }
 }

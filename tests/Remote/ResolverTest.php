@@ -10,49 +10,42 @@ require_once __DIR__.'/../stubs/ResolverTest.php';
 
 class ResolverTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
-        $this->mockFactory = $this->getMockBuilder('Illuminate\Validation\Factory')
+        $this->mockFactory = $this->getMockBuilder(\Illuminate\Validation\Factory::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->resolverObject = new Resolver($this->mockFactory);
-
     }
 
-    protected function getMockedTranslator() {
-        $translator = $this->getMockBuilder('Illuminate\Contracts\Translation\Translator')
+    protected function getMockedTranslator()
+    {
+        $translator = $this->getMockBuilder(\Illuminate\Contracts\Translation\Translator::class)
             ->getMock();
 
         return $translator;
-
     }
 
-    public function testResolverIsClosure() {
-
-
+    public function testResolverIsClosure()
+    {
         $resolver = $this->resolverObject->resolver('field');
         $this->assertInstanceOf('Closure', $resolver);
-
     }
 
-    public function testResolvesNewValidator() {
-
-
+    public function testResolvesNewValidator()
+    {
         $resolver = $this->resolverObject->resolver('field');
 
 
         $translator = $this->getMockedTranslator();
         $validator = $resolver($translator,[],[],[],[]);
 
-        $this->assertInstanceOf('Illuminate\Validation\Validator', $validator);
-
+        $this->assertInstanceOf(\Illuminate\Validation\Validator::class, $validator);
     }
 
-    public function testResolvesValidatorExists() {
-
-
+    public function testResolvesValidatorExists()
+    {
         $translator = $this->getMockedTranslator();
         $resolverObject = new Resolver(new CustomValidatorStubTest($translator));
 
@@ -60,18 +53,17 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMockedTranslator();
         $validator = $resolver($translator,[],[],[],[]);
 
-        $this->assertInstanceOf('Illuminate\Validation\Validator', $validator);
-
+        $this->assertInstanceOf(\Illuminate\Validation\Validator::class, $validator);
     }
 
-    public function testValidatorIsClosure() {
-
+    public function testValidatorIsClosure()
+    {
         $resolver = $this->resolverObject->validatorClosure();
-        $this->assertInstanceOf('Closure', $resolver);
-
+        $this->assertInstanceOf(\Closure::class, $resolver);
     }
 
-    public function testResolvesAndValidated() {
+    public function testResolvesAndValidated()
+    {
         $translator = $this->getMockedTranslator();
         $resolverObject = new Resolver(new CustomValidatorStubTest($translator));
 
@@ -88,7 +80,6 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolverValidator = $this->resolverObject->validatorClosure();
 
-
         try {
             $resolverValidator('_jsvalidation','field',[],$validator);
             $this->fail('This test shloud throw Exception');
@@ -102,8 +93,5 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(200, $response->getStatusCode());
         }
         //$this->assertInstanceOf('Closure', $resolver);
-
     }
-
-
 }

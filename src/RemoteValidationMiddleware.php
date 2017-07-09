@@ -5,8 +5,8 @@ namespace Proengsoft\JsValidation;
 use Closure;
 use Illuminate\Http\Request;
 use Proengsoft\JsValidation\Remote\Resolver;
-use Proengsoft\JsValidation\Remote\Validator;
 use Illuminate\Contracts\Config\Repository as Config;
+use Proengsoft\JsValidation\Remote\Validator as RemoteValidator;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 class RemoteValidationMiddleware
@@ -55,12 +55,12 @@ class RemoteValidationMiddleware
     }
 
     /**
-     * Wraps Validaroe resolver with RemoteValidator resolver.
+     * Wraps Validator resolver with RemoteValidator resolver.
      */
     protected function wrapValidator()
     {
         $resolver = new Resolver($this->factory);
         $this->factory->resolver($resolver->resolver($this->field));
-        $this->factory->extend(Validator::EXTENSION_NAME, $resolver->validatorClosure());
+        $this->factory->extend(RemoteValidator::EXTENSION_NAME, $resolver->validatorClosure());
     }
 }

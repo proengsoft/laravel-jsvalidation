@@ -2,10 +2,12 @@
 
 namespace Proengsoft\JsValidation\Support;
 
-
-class ProtectedClassStubTest {
+class ProtectedClassStubTest
+{
     protected $protectedProperty = true;
-    protected function protectedMethod() {
+
+    protected function protectedMethod()
+    {
         return true;
     }
 }
@@ -17,10 +19,9 @@ class AccessProtectedTraitTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mockTrait = $this->getMockForTrait('Proengsoft\JsValidation\Support\AccessProtectedTrait');
+        $this->mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Support\AccessProtectedTrait::class);
         $this->stubInstance = new ProtectedClassStubTest();
     }
-
 
     public function testCreateProtectedCaller()
     {
@@ -32,9 +33,7 @@ class AccessProtectedTraitTest extends \PHPUnit_Framework_TestCase
         $testCaller = $caller->bindTo($this->mockTrait, $this->mockTrait);
 
         $this->assertInstanceOf('Closure', $testCaller());
-
     }
-
 
     public function testGetProtected()
     {
@@ -46,9 +45,7 @@ class AccessProtectedTraitTest extends \PHPUnit_Framework_TestCase
         $testCaller = $caller->bindTo($this->mockTrait, $this->mockTrait);
 
         $this->assertTrue($testCaller());
-
     }
-
 
     public function testCallProtected()
     {
@@ -60,7 +57,5 @@ class AccessProtectedTraitTest extends \PHPUnit_Framework_TestCase
         $testCaller = $caller->bindTo($this->mockTrait, $this->mockTrait);
 
         $this->assertTrue($testCaller());
-
     }
-
 }

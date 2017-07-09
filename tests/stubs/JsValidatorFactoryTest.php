@@ -1,4 +1,5 @@
 <?php
+
 namespace  Illuminate\Foundation\Http {
     if (!class_exists('FormRequest')) {
         class  FormRequest {
@@ -10,6 +11,7 @@ namespace  Illuminate\Foundation\Http {
         }
     }
 }
+
 namespace Proengsoft\JsValidation\Tests {
     use Mockery as m;
     class  StubFormRequest extends \Illuminate\Foundation\Http\FormRequest {
@@ -19,7 +21,7 @@ namespace Proengsoft\JsValidation\Tests {
 
         public static function createFromBase() {
             //$sessionMock =  m::mock('Symfony\Component\HttpFoundation\Session\SessionInterface',[]);
-            $mockedRequest = m::mock('\Symfony\Component\HttpFoundation\Request');
+            $mockedRequest = m::mock(\Symfony\Component\HttpFoundation\Request::class);
             $mockedRequest->shouldReceive('setSession')
                 ->shouldReceive('setUserResolver')
                 ->shouldReceive('setRouteResolver')
