@@ -29,7 +29,6 @@
 
 You can validate forms automatically referencing it to your defined validations. The messages are loaded from your  validations and translated according your Localization preferences.
 
-
 #### Version matrix
 
 | Laravel Version     | Package Version |
@@ -46,7 +45,6 @@ You can validate forms automatically referencing it to your defined validations.
 - The package uses [Jquery Validation Plugin](http://jqueryvalidation.org/)  bundled in provided script.
 - Uses Laravel Localization to translate messages.
 
-
 #### Supported Rules
 
 **Almost all [Validation Rules][] provided by Laravel and other packages are supported**.
@@ -58,7 +56,6 @@ Almost are validated in client-side using Javascript, but in some cases, the val
  - [Custom Validation Rules](https://laravel.com/docs/5.4/validation#custom-validation-rules)
  - Validations provided by other packages
 
-
 ##### Unsupported Rules
 
 Some Laravel validations are not implemented yet.
@@ -66,30 +63,31 @@ Some Laravel validations are not implemented yet.
 - [Present](https://laravel.com/docs/5.4/validation#rule-present) 
 - [DateFormat](https://laravel.com/docs/5.4/validation#rule-date-format) rule don't support timezone format
 
-
 #### Getting started
+
 The easiest way to create Javascript validations is using [Laravel Form Request Validation](http://laravel.com/docs/5.4/validation#form-request-validation).
 
 ##### Installation
+
 Follow the [Installation Guide](https://github.com/proengsoft/laravel-jsvalidation/wiki/Installation) to install the package. **The default config shlould work out-of-box**
 
 ##### Validating Form Request
+
 Call [JsValidator](https://github.com/proengsoft/laravel-jsvalidation/wiki/Facade) Facade in your view to validate any [FormRequest](https://laravel.com/docs/master/validation)
  
 ```html
- <form>
+<form>
     <!-- ... My form stuff ... -->
- <form>
+</form>
 
- <!-- Javascript Requirements -->
- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
- <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<!-- Javascript Requirements -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
- <!-- Laravel Javascript Validation -->
- <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+<!-- Laravel Javascript Validation -->
+<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
 
 {!! JsValidator::formRequest('App\Http\Requests\MyFormRequest') !!}
-
 ```
 
 Take a look to [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/wiki/Basic-Usage) or [Examples](https://github.com/proengsoft/laravel-jsvalidation/wiki/Validating-Examples) to get more information.
@@ -98,8 +96,18 @@ Take a look to [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/
 
 **To get more info refer to [Project Wiki](https://github.com/proengsoft/laravel-jsvalidation/wiki/Home)**
 
+#### Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+#### Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+#### Credits
+
+[Laravel Javascript Validation contributors list](../../contributors)
 
 #### License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-

@@ -1,4 +1,4 @@
-## 2.0.0 (2017-07-10)
+## [2.0.0] - 2017-07-10
 
 ### Added
 
@@ -13,7 +13,7 @@
 - Laravel <= 5.3 support. Will be maintained in 1.x releases #258
 - PHP < 5.6.4 support (Laravel 5.4 minimum requirement)
 
-## 1.5.0 (2017-01-22)
+## [1.5.0] - 2017-01-22
  
 Features:
    - Javascript validation for [File](https://laravel.com/docs/5.3/validation#rule-file) rule
@@ -28,7 +28,7 @@ Issues resolved:
   - Fix issue with HttpResponseException #130
   - Fix Undefined index: _jsvalidation_validate_all #201
  
-## 1.4.3 (2017-01-07)
+## [1.4.3] - 2017-01-07
 
 Features:
    - Add support for the "bail" keyword. #179
@@ -38,17 +38,17 @@ Issues resolved:
    - Fix remote custom validation. #175 
    - File Size doesn't work with JavaScript Validator. #156
 
-## 1.4.2 (2016-12-28)
+## [1.4.2] - 2016-12-28
 
 Bugfixes:
  - Fix javascript build files
 
-## 1.4.1 (2016-12-28)
+## [1.4.1] - 2016-12-28
 
 Bugfixes:
  - Fix javascript build files
 
-## 1.4.0 (2016-12-28)
+## [1.4.0] - 2016-12-28
 
 Bugfixes:
 
@@ -62,22 +62,20 @@ Bugfixes:
      - Chrome and IE case fix in mime types. PR #136 
      - Fix Turn off remote validation #145
      - Support for Laravel 5.3.21 and greater
-     
 
-## 1.3.1 (2016-01-04)
+## [1.3.1] - 2016-01-04
 
 Features:
  - Allow Dependency Injection in FormRequest Validations
  - Add extra field values to ajax request on remote validation. #88 #99
 
-## 1.3.0 (2015-12-29)
+## [1.3.0] - 2015-12-29
 
 Features:
  - Add ignore method to override default configuration
  - Add remote_validation_field config option
  - Allow using with other validation packages
  - Improved performance and refactoring
- 
 
 Bugfixes:
 
@@ -88,8 +86,7 @@ Bugfixes:
     - Multiple Instances of JSValidation #87
     - Error when using FormRequest validation #96 
 
-
-## 1.2.0 (2015-09-30)
+## [1.2.0] - 2015-09-30
 
 Features:
 
@@ -104,8 +101,7 @@ Bugfixes:
     - Fix some validations when field is array #75 
     - Updated validateAlpha logic [c31a38d](https://github.com/laravel/framework/commit/c31a38d596c1913696ace0cd77201cf675748fe8)
 
-
-## 1.1.4 (2015-09-10)
+## [1.1.4] - 2015-09-10
 
 Bugfixes:
 
@@ -113,17 +109,14 @@ Bugfixes:
     -  String validation fails on length. #71
     -  Default validation messages can't be changed. #27
 
-
-
-## 1.1.3 (2015-09-07)
+## [1.1.3] - 2015-09-07
 
 Bugfixes:
 
  - Issues resolved:
     - DateFormat generate javascript error if date is not valid
 
-
-## 1.1.2 (2015-09-05)
+## [1.1.2] - 2015-09-05
 
 Features:
 
@@ -140,9 +133,8 @@ Bugfixes:
 	- Hidden input raising an error #58
 	- Non radio-list show error messages from other radio-list #57 
 	- date_format:m rule always return not valid #66 
-	
 
-## 1.1.1 (2015-08-15)
+## [1.1.1] - 2015-08-15
 
 Bugfixes: 
 
@@ -150,8 +142,7 @@ Bugfixes:
      - Rules that depends from other rules they are not validated in some cases. #47
      - Route Model Binding Form Request Validation Error. #44
 
-
-## 1.1.0 (2015-08-11)
+## [1.1.0] - 2015-08-11
 
 Features:
 
@@ -164,28 +155,25 @@ Bugfixes:
  - Issues resolved:
    -  Some bugs resolved: #14, #17, #26, #29, #38, #39
 
-
-## 1.0.5 (2015-06-13)
+## [1.0.5] - 2015-06-13
 
 Features:
 
  - Laravel 5.1 support
 
-
-## 1.0.4 (2015-05-09)
+## [1.0.4] - 2015-05-09
 
 Refactoring:
 
  - Renamed JsValidation class name to avoid problems with IDE's code completion
 
-## 1.0.3 (2015-04-11)
+## [1.0.3] - 2015-04-11
 
 Bugfixes:
 
  - Input custom attributes from Requests are not applied.
 
-
-## 1.0.2 (2015-03-27)
+## [1.0.2] - 2015-03-27
 
 Features:
 
@@ -196,15 +184,13 @@ Bugfixes:
 
  - The config key form_selector is not loaded when package boots
 
-
-## 1.0.1 (2015-03-17)
+## [1.0.1] - 2015-03-17
 
 Bufixes:
 
  - jQuery Validation Plugin debug doesn't work. disabled
  
- 
-## 1.0.0 (2015-03-17)
+## [1.0.0] - 2015-03-17
 
 Features:
  
@@ -214,3 +200,22 @@ Features:
  - Uses Laravel Localization to translate messages
  - Can be configured in controllers or views.
  
+[2.0.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.5.0...2.0.0
+[1.5.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.4.3...1.5.0
+[1.4.3]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.4.2...1.4.3
+[1.4.2]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.4.1...1.4.2
+[1.4.1]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.4.0...1.4.1
+[1.4.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.3.1...1.4.0
+[1.3.1]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.3.0...1.3.1
+[1.3.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.2.0...1.3.0
+[1.2.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.1.4...1.2.0
+[1.1.4]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.1.3...1.1.4
+[1.1.3]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.1.2...1.1.3
+[1.1.2]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.1.1...1.1.2
+[1.1.1]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.1.0...1.1.1
+[1.1.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.0.5...1.1.0
+[1.0.5]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.0.4...1.0.5
+[1.0.4]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.0.3...1.0.4
+[1.0.3]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.0.2...1.0.3
+[1.0.2]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.0.1...1.0.2
+[1.0.1]: https://github.com/proengsoft/laravel-jsvalidation/compare/1.0.0...1.0.1
