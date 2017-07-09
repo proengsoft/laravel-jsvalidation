@@ -1,10 +1,13 @@
 language: php
 
+sudo: false
+
 php:
   - 5.5
   - 5.6
   - 7.0
-  - hhvm
+  - 7.1
+
 env:
   matrix:
   - LARAVEL=5.0
@@ -30,4 +33,3 @@ script:
 after_script:
   - bash -c 'if [ "${TRAVIS_PHP_VERSION:0:4}" != "hhvm" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi;'
   - bash -c 'if [ "${TRAVIS_PHP_VERSION:0:4}" != "hhvm-nightly" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi;'
-
