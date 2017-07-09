@@ -22,7 +22,9 @@ matrix:
     env: LARAVEL=5.0
   exclude:
   - php: 5.5
-    env: LARAVEL=5.3
+    env:
+    - LARAVEL=5.3
+    - LARAVEL=5.4
 
 before_script:
   - export COMPOSER=tests/composer-$LARAVEL.json
