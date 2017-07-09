@@ -32,10 +32,10 @@ You can validate forms automatically referencing it to your defined validations.
 
 #### Version matrix
 
-| Laravel Version | Package Version |
-| --------------- | --------------- |
-| `5.0` >= `5.3`  | `1.x`           |
-| `5.4`           | `2.x`           | 
+| Laravel Version     | Package Version |
+| ------------------- | --------------- |
+| `5.0`, `5.2`, `5.3` | `1.x`           |
+| `5.4`               | `2.x`           | 
 
 #### Feature overview
 
