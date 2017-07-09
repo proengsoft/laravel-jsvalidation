@@ -4,6 +4,10 @@
 
 - Laravel 5.4 support #224
 
+### Changed
+
+- Typo in `resources/assets/js/helpers.js` method `gess` fixed. Method renamed to `guess` #250
+
 ### Removed
 
 - Laravel <= 5.3 support. Will be maintained in 1.x releases #258

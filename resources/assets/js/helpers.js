@@ -204,11 +204,12 @@ $.extend(true, laravelValidation, {
 
         /**
          * This method allows you to intelligently guess the date by closely matching the specific format.
+         *
          * @param value
          * @param format
          * @returns {Date}
          */
-        gessDate: function (value, format) {
+        guessDate: function (value, format) {
             var fmt = new DateFormatter();
             return fmt.guessDate(value, format)
         },
