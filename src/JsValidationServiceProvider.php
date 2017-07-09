@@ -18,7 +18,18 @@ class JsValidationServiceProvider extends ServiceProvider
         $this->publishAssets();
 
         if ($this->app['config']->get('jsvalidation.disable_remote_validation') === false) {
-            $this->app['Illuminate\Contracts\Http\Kernel']->pushMiddleware('Proengsoft\JsValidation\RemoteValidationMiddleware');
+            // TODO: Remove it when Laravel <= 5.3 support will be dropped
+            if (method_exists($this->app, 'version')) {
+                $laravelVersion = (float)$this->app->version();
+            }
+
+            if (isset($laravelVersion) && $laravelVersion < 5.4) {
+                $this->app['Illuminate\Contracts\Http\Kernel']
+                    ->pushMiddleware('Proengsoft\JsValidation\RemoteValidationMiddlewareFallback');
+            } else {
+                $this->app['Illuminate\Contracts\Http\Kernel']
+                    ->pushMiddleware('Proengsoft\JsValidation\RemoteValidationMiddleware');
+            }
         }
     }
 
