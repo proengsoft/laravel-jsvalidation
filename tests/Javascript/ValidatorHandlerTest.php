@@ -2,14 +2,13 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
-
 use Proengsoft\JsValidation\Javascript\RuleParser;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
 class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testValidationData() {
+    public function testValidationData()
+    {
 
         $attribute = 'field';
         $rule = 'required_if:field2,value2';
@@ -65,18 +64,15 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 
         $data = $handler->validationData();
         $expected = [
-            'rules' => array('field'=>['laravelValidation'=>[['RequiredIf',['field2','value2'],'Field is required if',false]]]),
-            'messages' =>  array(),
+            'rules' => ['field'=>['laravelValidation'=>[['RequiredIf',['field2','value2'],'Field is required if',false]]]],
+            'messages' =>  [],
         ];
 
         $this->assertEquals($expected, $data);
-
-
     }
 
-
-    public function testValidationDataDisabled() {
-
+    public function testValidationDataDisabled()
+    {
         $attribute = 'field';
         $rule = 'required_if:field2,value2|no_js_validation';
 
@@ -110,17 +106,15 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 
         $data = $handler->validationData();
         $expected = [
-            'rules' => array(),
-            'messages' =>  array(),
+            'rules' => [],
+            'messages' => [],
         ];
 
         $this->assertEquals($expected, $data);
-
-
     }
 
-    public function testSometimes() {
-
+    public function testSometimes()
+    {
         $attribute = 'field';
         $rule = 'required_if:field2,value2';
 
@@ -179,16 +173,15 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 
         $data = $handler->validationData();
         $expected = [
-            'rules' => array('field'=>['laravelValidationRemote'=>[['RequiredIf',['field2','value2'],'Field is required if',false]]]),
-            'messages' =>  array(),
+            'rules' => ['field'=>['laravelValidationRemote'=>[['RequiredIf',['field2','value2'],'Field is required if',false]]]],
+            'messages' => [],
         ];
 
         $this->assertEquals($expected, $data);
     }
 
-
-    public function testDisableRemote() {
-
+    public function testDisableRemote()
+    {
         $attribute = 'field';
         $rule = 'active_url';
 
@@ -196,9 +189,6 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
             ->getMock();
-
-
-
 
         $mockDelegated->expects($this->any())
             ->method('getRules')
@@ -214,8 +204,6 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->with($rule)
             ->willReturn(['ActiveUrl',['token',false,false]]);
 
-
-
         $mockRule = $this->getMockBuilder('Proengsoft\JsValidation\Javascript\RuleParser')
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
@@ -229,9 +217,6 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
-
-
-
         $handler = new ValidatorHandler($mockRule, $mockMessages);
         $handler->setDelegatedValidator($mockDelegated);
         $handler->setRemote(false);
@@ -239,12 +224,10 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 
         $data = $handler->validationData();
         $expected = [
-            'rules' => array(),
-            'messages' =>  array(),
+            'rules' => [],
+            'messages' => [],
         ];
 
         $this->assertEquals($expected, $data);
     }
-
-
 }

@@ -193,7 +193,7 @@ class DelegatedValidator
      */
     public function __call($method, $params)
     {
-        $arrCaller = array($this->validator, $method);
+        $arrCaller = [$this->validator, $method];
 
         return call_user_func_array($arrCaller, $params);
     }

@@ -2,7 +2,6 @@
 namespace Proengsoft\JsValidation\Support;
 
 //use Proengsoft\JsValidation\Support\DelegatedValidator;
-use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
 class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
@@ -12,11 +11,11 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testGetValidator()
     {
-        $expected = $this->getMockBuilder('\Illuminate\Validation\Validator')
+        $expected = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -32,7 +31,7 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     public function testGetData()
     {
         $expected = ['field'=>'data'];
-        $this->callValidatorMethod('getData',$expected);
+        $this->callValidatorMethod('getData', $expected);
     }
 
     /**
@@ -51,7 +50,7 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     {
         $expected = ['field'=>'required'];
 
-        $this->callValidatorMethod('getRules',$expected);
+        $this->callValidatorMethod('getRules', $expected);
     }
 
     /**
@@ -61,7 +60,11 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     {
         $expected = null;
 
-        $this->callValidatorMethod('sometimes',$expected,['field','required',function(){}]);
+        $this->callValidatorMethod('sometimes', $expected, [
+            'field',
+            'required',
+            function () {},
+        ]);
     }
 
     /**
@@ -71,12 +74,12 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     {
         $expected = ['field'=>'data'];
 
-        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->setMethods(['getFiles'])
             ->getMock();
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -96,13 +99,13 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     public function testGetFilesMethodNotExists()
     {
         $expected = [];
-        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->getMock();
         $validator->method($this->anything())
             ->willReturn($expected);
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -114,14 +117,13 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test Set the files under validation.
-     *
      */
     public function testSetFiles()
     {
         $return = true;
-        $arg=[];
+        $arg = [];
 
-        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->setMethods(['setFiles'])
             ->getMock();
@@ -131,7 +133,7 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
             ->with($arg)
             ->willReturn($return);
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -139,25 +141,23 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
         $result = $delegated->setFiles($arg);
 
         $this->assertEquals($return , $result);
-
     }
 
     /**
      * Test Set the files in Laravel >= 5.3.21
-     *
      */
     public function testSetFilesMethodNotExists()
     {
         $arg=[];
 
-        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $validator->method($this->anything())
             ->willReturn($validator);
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -165,8 +165,8 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
         $result = $delegated->setFiles($arg);
 
         $this->assertEquals($validator , $result);
-
     }
+
     /**
      * Test Explode rules.
      *
@@ -175,8 +175,8 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     {
         $arg='required|url';
         $this->callValidatorProtectedMethod('explodeRules',$arg);
-
     }
+
     /**
      * Test if a given rule implies the attribute is required.
      */
@@ -218,11 +218,11 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
         $method = 'parseRule';
         $args = ['required'];
 
-        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -230,7 +230,7 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
             ->method('parse')
             ->willReturn(true);
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->setConstructorArgs([$validator, $parser])
             ->setMethods(['callProtected'])
             ->getMock();
@@ -244,18 +244,17 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($v);
     }
 
-
     /**
      * Test method calls to validator instance.
      */
     public function testCall()
     {
-        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->setMethods(['fakeMethod'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -278,13 +277,13 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
      *
      * @return mixed
      */
-    private function callValidatorMethod($method, $return = null, $args=[])
+    private function callValidatorMethod($method, $return = null, $args = [])
     {
-        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -296,7 +295,6 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
         $value=call_user_func_array([$delegated, $method],$args);
 
         $this->assertEquals($return, $value);
-
     }
 
     /**
@@ -308,13 +306,13 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
      *
      * @return mixed
      */
-    private function callValidatorMethodWithArg($method, $arg= null, $return = null) {
-
-        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+    private function callValidatorMethodWithArg($method, $arg= null, $return = null)
+    {
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -327,31 +325,29 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
 
         $value = $delegated->$method($arg);
         $this->assertNull($value);
-
     }
-
 
     /**
      * Test if a given rule implies the attribute is required.
      */
     private function callValidatorProtectedMethod($method, $args = null)
     {
-        $validator = $this->getMockBuilder('\Illuminate\Validation\Validator')
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $parser = $this->getMockBuilder('\Proengsoft\JsValidation\Support\ValidationRuleParserProxy')
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->setConstructorArgs([$validator, $parser])
             ->setMethods(['callProtected'])
             ->getMock();
 
         $delegated->expects($this->once())
             ->method('callProtected')
-            ->with($this->isInstanceOf('Closure'), $method, $this->isType('array'))
+            ->with($this->isInstanceOf(\Closure::class), $method, $this->isType('array'))
             ->willReturn(true);
 
         if (is_array($args)) {

@@ -10,8 +10,6 @@ use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 
 class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public function setUp()
     {
 
@@ -19,8 +17,6 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-
-
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
             ->getMock();
@@ -41,7 +37,6 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $txt=$validator->render();
         $this->assertEquals('return',$txt);
     }
-
 
     public function testCustomOptions()
     {
@@ -75,9 +70,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('return',$txt);
     }
 
-
-
-    public function  testToArray()
+    public function testToArray()
     {
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
@@ -99,9 +92,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $expected=['selector'=>'form'];
         $viewData=$validator->toArray();
         $this->assertEquals($expected,$viewData);
-
     }
-
 
     public function testGet()
     {
@@ -125,7 +116,6 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('form',$validator->selector);
     }
-
 
     public function testGetException()
     {
@@ -155,11 +145,10 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->fail('An expected exception has not been raised.');
-
-
     }
 
-    public function testIgnore() {
+    public function testIgnore()
+    {
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
             ->setMethods(['validationData','setRemote'])
@@ -185,7 +174,8 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected,$viewData);
     }
 
-    public function testRemote() {
+    public function testRemote()
+    {
         $remote = true;
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
@@ -209,7 +199,8 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['selector'=>'form'],$data);
     }
 
-    public function testSometimes() {
+    public function testSometimes()
+    {
         $remote = true;
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
@@ -239,8 +230,6 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testToString()
     {
-
-
         $mockHandler = $this->getMockBuilder('\Proengsoft\JsValidation\Javascript\ValidatorHandler')
             ->disableOriginalConstructor()
             ->getMock();
@@ -261,22 +250,22 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         $txtRender = $validator->render();
         $txt = $validator->__toString();
         $this->assertEquals($txtRender, $txt);
-
     }
 
-    function store_error($error_number, $error_message) {
+    function store_error($error_number, $error_message)
+    {
         $this->_last_error_number = $error_number;
         $this->_last_error_message = $error_message;
     }
 
-    function assertError($error_message, $error_number = E_USER_ERROR) {
+    function assertError($error_message, $error_number = E_USER_ERROR)
+    {
         $this->assertSame($error_message, $this->_last_error_message);
         $this->assertSame($error_number, $this->_last_error_number);
     }
 
     public function testToStringException()
     {
-
         set_error_handler([$this, 'store_error']);
         $exception = new \Exception("Simulated exception for Testing");
 
@@ -301,7 +290,5 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
         $validator->__toString();
         $this->assertError($exception->__toString());
-
     }
-
 }

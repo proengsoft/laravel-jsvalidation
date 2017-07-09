@@ -3,6 +3,7 @@
 namespace Proengsoft\JsValidation\Remote;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\ValidationRuleParser;
 use Proengsoft\JsValidation\Support\RuleListTrait;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -64,9 +65,10 @@ class Validator
     {
         $response = new JsonResponse($result, 200);
 
-        if ($result !== true && class_exists('\Illuminate\Validation\ValidationException')) {
-            throw new \Illuminate\Validation\ValidationException($validator, $response);
+        if ($result !== true && class_exists(ValidationException::class)) {
+            throw new ValidationException($validator, $response);
         }
+
         throw new HttpResponseException($response);
     }
 

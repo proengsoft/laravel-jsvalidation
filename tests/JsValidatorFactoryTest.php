@@ -9,8 +9,8 @@ require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
 
 class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
-    protected function mockedApp($rules, $messages, $customAttributes, $data=[]) {
+    protected function mockedApp($rules, $messages, $customAttributes, $data = [])
+    {
 
         $mockValidator = $this->getMockBuilder('\Illuminate\Validation\Validator')
             ->disableOriginalConstructor()
@@ -40,10 +40,10 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn($mockFactory);
 
         return $app;
-
     }
 
-    public function testMake() {
+    public function testMake()
+    {
         $rules=['name'=>'required'];
         $messages = [];
         $customAttributes = [];
@@ -70,10 +70,10 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
-
     }
 
-    public function testMakeArrayRules() {
+    public function testMakeArrayRules()
+    {
         $rules=['name.*'=>'required'];
         $data['name']['*']=true;
         $messages = [];
@@ -101,10 +101,10 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
-
     }
 
-    public function testMakeArrayRulesAndAttributes() {
+    public function testMakeArrayRulesAndAttributes()
+    {
         $rules=['name.*'=>'required'];
         $data['name']['*']=true;
         $data['name']['key0']=true;
@@ -133,10 +133,10 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
-
     }
 
-    public function testMakeWithToken() {
+    public function testMakeWithToken()
+    {
         $rules=['name'=>'required'];
         $messages = [];
         $customAttributes = [];
@@ -178,10 +178,10 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
         $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
-
     }
 
-    public function testCreateFromFormRequestInstance() {
+    public function testCreateFromFormRequestInstance()
+    {
         $rules=[];
         $messages = [];
         $customAttributes = [];
@@ -208,7 +208,8 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testCreateFromFormRequestClassName() {
+    public function testCreateFromFormRequestClassName()
+    {
         $rules=[];
         $messages = [];
         $customAttributes = [];
@@ -253,14 +254,8 @@ class JsValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $factory = new JsValidatorFactory($app, $options);
 
-
-
         $jsValidator = $factory->formRequest(['Proengsoft\JsValidation\Tests\StubFormRequest'] , $selector);
 
         $this->assertInstanceOf('Proengsoft\JsValidation\Javascript\JavascriptValidator', $jsValidator);
     }
-
-
-
-
 }

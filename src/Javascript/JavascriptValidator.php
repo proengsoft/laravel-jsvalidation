@@ -45,7 +45,7 @@ class JavascriptValidator implements Arrayable
     protected $ignore;
 
     /**
-     * @param ValidatorHandler $validator
+     * @param \Proengsoft\JsValidation\Javascript\ValidatorHandler $validator
      * @param array $options
      */
     public function __construct(ValidatorHandler $validator, $options = [])
@@ -114,7 +114,7 @@ class JavascriptValidator implements Arrayable
      *
      * @return string
      *
-     * @throws PropertyNotFoundException
+     * @throws \Proengsoft\JsValidation\Exceptions\PropertyNotFoundException
      */
     public function __get($name)
     {
@@ -161,7 +161,7 @@ class JavascriptValidator implements Arrayable
      *
      * @param string $selector
      *
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function selector($selector)
     {
@@ -175,7 +175,7 @@ class JavascriptValidator implements Arrayable
      *
      * @param string $ignore
      *
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function ignore($ignore)
     {
@@ -189,7 +189,7 @@ class JavascriptValidator implements Arrayable
      *
      * @param \Illuminate\Contracts\View\View|string|null $view
      *
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function view($view)
     {
@@ -203,7 +203,7 @@ class JavascriptValidator implements Arrayable
      *
      * @param bool|null $enabled
      *
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function remote($enabled = true)
     {
@@ -218,7 +218,7 @@ class JavascriptValidator implements Arrayable
      * @param  string  $attribute
      * @param  string|array  $rules
      *
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function sometimes($attribute, $rules)
     {

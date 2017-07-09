@@ -1,3 +1,14 @@
+## 2.0.0 (2017-07-10)
+
+### Added
+
+- Laravel 5.4 support #224
+
+### Removed
+
+- Laravel <= 5.3 support. Will be maintained in 1.x releases #258
+- PHP < 5.6.4 support (Laravel 5.4 minimum requirement)
+
 ## 1.5.0 (2017-01-22)
  
 Features:

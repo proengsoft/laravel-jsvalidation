@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
      * Default view used to render Javascript validation code
@@ -37,4 +37,4 @@ return array(
      */
     'remote_validation_field' => '_jsvalidation',
 
-);
+];

@@ -2,12 +2,10 @@
 
 namespace Proengsoft\JsValidation\Tests;
 
-
 class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
-
-    protected function getMockedService($app) {
-
+    protected function getMockedService($app)
+    {
         $mockedConfig = $this->getMockForAbstractClass('Illuminate\Contracts\Config\Repository',[],'',false);
         $mockedConfig->expects($this->once())
             ->method('get')
@@ -30,11 +28,9 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
         return $mock;
     }
 
-
-
-    public function testBootstrapConfigs() {
-
-        $app=array();
+    public function testBootstrapConfigs()
+    {
+        $app = [];
         $app['path.config']=dirname(__FILE__.'/../config');
         $app['path.base']=dirname(__FILE__.'/../');
         $app['path.public']=dirname(__FILE__.'/../public');
@@ -48,11 +44,9 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
         $mock->boot();
     }
 
-
-
-    public function testBootstrapViews() {
-
-        $app=array();
+    public function testBootstrapViews()
+    {
+        $app = [];
         $app['path.config']=dirname(__FILE__.'/../config');
         $app['path.base']=dirname(__FILE__.'/../');
         $app['path.public']=dirname(__FILE__.'/../public');
@@ -74,9 +68,9 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
         $mock->boot();
     }
 
-    public function testPublishAssets() {
-
-        $app=array();
+    public function testPublishAssets()
+    {
+        $app = [];
         $app['path.config']=dirname(__FILE__.'/../config');
         $app['path.base']=dirname(__FILE__.'/../');
         $app['path.public']=dirname(__FILE__.'/../public');
@@ -94,9 +88,9 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testPushMiddleware() {
-
-        $app=array();
+    public function testPushMiddleware()
+    {
+        $app = [];
         $app['path.config']=dirname(__FILE__.'/../config');
         $app['path.base']=dirname(__FILE__.'/../');
         $app['path.public']=dirname(__FILE__.'/../public');
@@ -130,7 +124,8 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testRegister() {
+    public function testRegister()
+    {
         $app = $this->getMockBuilder('Illuminate\Contracts\Container\Container')
             ->getMock();
 
@@ -157,12 +152,10 @@ class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mock->register();
-
     }
 
     public function testExtendValidator()
     {
 
     }
-
 }

@@ -177,7 +177,6 @@ class RuleParser
      */
     public function parseNamedParameters($parameters)
     {
-
         return array_reduce($parameters, function ($result, $item) {
             list($key, $value) = array_pad(explode('=', $item, 2), 2, null);
 

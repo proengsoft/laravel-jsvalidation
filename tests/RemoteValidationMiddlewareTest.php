@@ -7,13 +7,13 @@ use Proengsoft\JsValidation\RemoteValidationMiddleware;
 
 class RemoteValidationMiddlewareTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function setUp() {
+    public function setUp()
+    {
 
     }
 
-    public function testHandle() {
-
+    public function testHandle()
+    {
         $mockedFactory = $this->getMockBuilder('Illuminate\Contracts\Validation\Factory')
             ->disableOriginalConstructor()
             ->setMethods(['resolver','extend','make','extendImplicit','replacer'])
@@ -49,12 +49,11 @@ class RemoteValidationMiddlewareTest extends \PHPUnit_Framework_TestCase
         $result = $middleware->handle($mockedRequest, $stubClosure);
 
         $this->assertTrue($result);
-
     }
 
 
-    public function testHandleShouldNotValidate() {
-
+    public function testHandleShouldNotValidate()
+    {
         $mockedFactory = $this->getMockBuilder('Illuminate\Contracts\Validation\Factory')
             ->disableOriginalConstructor()
             ->getMock();
@@ -82,5 +81,4 @@ class RemoteValidationMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($result);
     }
-
 }

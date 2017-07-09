@@ -2,13 +2,12 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
-
 use Proengsoft\JsValidation\Javascript\RuleParser;
 
 class RuleParserTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testGetClientRule() {
+    public function testGetClientRule()
+    {
         $attribute = 'field';
         $rule = 'Required';
         $parameters = [];
@@ -27,7 +26,8 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $values);
     }
 
-    public function testGetClientCustomRule() {
+    public function testGetClientCustomRule()
+    {
         $attribute = 'field';
         $rule = 'RequiredIf';
         $parameters = ['field2','value2'];
@@ -46,7 +46,8 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $values);
     }
 
-    public function testGetRemoteRule() {
+    public function testGetRemoteRule()
+    {
         $attribute = 'field';
         $rule = 'ActiveUrl';
         $parameters = [];
@@ -65,8 +66,8 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $values);
     }
 
-
-    public function testGetRemoteRuleArray() {
+    public function testGetRemoteRuleArray()
+    {
         $attribute = 'field.name.array';
         $attributeHtml = 'field[name][array]';
         $rule = 'ActiveUrl';
@@ -86,10 +87,8 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $values);
     }
 
-
-
-    public function testGetRules() {
-
+    public function testGetRules()
+    {
         $expects = ['somefield'=>'required'];
 
         $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
@@ -126,7 +125,8 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $values);
     }
 
-    public function testAddConditionalRules() {
+    public function testAddConditionalRules()
+    {
         $attribute = 'field';
         $rule = 'Required';
         $parameters = [];
@@ -163,12 +163,11 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parser = new RuleParser($delegated, $token);
 
         $values = $parser->parseNamedParameters($parameters);
-        $expected = array(
+        $expected = [
             'min_height' =>100,
-            'ratio' => '1/3'
-        );
+            'ratio' => '1/3',
+        ];
 
         $this->assertEquals($expected, $values);
     }
-
 }

@@ -1,10 +1,9 @@
 <?php
 
-
 namespace Proengsoft\JsValidation\Tests\Remote;
 
-class CustomValidatorStubTest implements \Illuminate\Contracts\Validation\Factory{
-
+class CustomValidatorStubTest implements \Illuminate\Contracts\Validation\Factory
+{
     protected $resolver;
 
     public function __construct($translator)

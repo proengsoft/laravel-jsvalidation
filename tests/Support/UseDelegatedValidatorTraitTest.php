@@ -2,14 +2,12 @@
 
 namespace Proengsoft\JsValidation\Support;
 
-
 class UseDelegatedValidatorTraitTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGetterAndSetter()
     {
-        $mockTrait = $this->getMockForTrait('Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait');
-        $mockDelegated = $this->getMockBuilder('Proengsoft\JsValidation\Support\DelegatedValidator')
+        $mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait::class);
+        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -18,5 +16,4 @@ class UseDelegatedValidatorTraitTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($mockDelegated, $value);
     }
-
 }
