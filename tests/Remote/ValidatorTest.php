@@ -87,7 +87,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'validation.active_url' => ':attribute active_url!'
         ];
 
-        if (method_exists('\Illuminate\Translation\Translator','addLines')) {
+        if (method_exists(\Illuminate\Translation\Translator::class,'addLines')) {
             $trans = new \Illuminate\Translation\Translator(
                 new \Illuminate\Translation\ArrayLoader, 'en'
             );

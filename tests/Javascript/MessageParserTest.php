@@ -15,7 +15,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $data = [];
         $files = [];
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -53,7 +53,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $data = [];
         $files = [];
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -95,7 +95,7 @@ class MessageParserTest extends \PHPUnit_Framework_TestCase
         $data = [];
         $files = [];
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 

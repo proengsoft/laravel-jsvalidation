@@ -21,7 +21,7 @@ namespace Proengsoft\JsValidation\Tests {
 
         public static function createFromBase() {
             //$sessionMock =  m::mock('Symfony\Component\HttpFoundation\Session\SessionInterface',[]);
-            $mockedRequest = m::mock('\Symfony\Component\HttpFoundation\Request');
+            $mockedRequest = m::mock(\Symfony\Component\HttpFoundation\Request::class);
             $mockedRequest->shouldReceive('setSession')
                 ->shouldReceive('setUserResolver')
                 ->shouldReceive('setRouteResolver')

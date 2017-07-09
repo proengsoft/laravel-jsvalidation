@@ -19,7 +19,7 @@ class AccessProtectedTraitTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mockTrait = $this->getMockForTrait('Proengsoft\JsValidation\Support\AccessProtectedTrait');
+        $this->mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Support\AccessProtectedTrait::class);
         $this->stubInstance = new ProtectedClassStubTest();
     }
 

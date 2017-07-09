@@ -12,7 +12,7 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->mockFactory = $this->getMockBuilder('Illuminate\Validation\Factory')
+        $this->mockFactory = $this->getMockBuilder(\Illuminate\Validation\Factory::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -21,7 +21,7 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
 
     protected function getMockedTranslator()
     {
-        $translator = $this->getMockBuilder('Illuminate\Contracts\Translation\Translator')
+        $translator = $this->getMockBuilder(\Illuminate\Contracts\Translation\Translator::class)
             ->getMock();
 
         return $translator;
@@ -41,7 +41,7 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMockedTranslator();
         $validator = $resolver($translator,[],[],[],[]);
 
-        $this->assertInstanceOf('Illuminate\Validation\Validator', $validator);
+        $this->assertInstanceOf(\Illuminate\Validation\Validator::class, $validator);
     }
 
     public function testResolvesValidatorExists()
@@ -53,13 +53,13 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getMockedTranslator();
         $validator = $resolver($translator,[],[],[],[]);
 
-        $this->assertInstanceOf('Illuminate\Validation\Validator', $validator);
+        $this->assertInstanceOf(\Illuminate\Validation\Validator::class, $validator);
     }
 
     public function testValidatorIsClosure()
     {
         $resolver = $this->resolverObject->validatorClosure();
-        $this->assertInstanceOf('Closure', $resolver);
+        $this->assertInstanceOf(\Closure::class, $resolver);
     }
 
     public function testResolvesAndValidated()

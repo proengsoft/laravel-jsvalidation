@@ -8,7 +8,7 @@ class JavascriptRulesTraitTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mockTrait = $this->getMockForTrait('Proengsoft\JsValidation\Javascript\JavascriptRulesTrait');
+        $this->mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Javascript\JavascriptRulesTrait::class);
 
         $this->mockTrait->expects($this->any())
             ->method('getAttributeName')
@@ -23,7 +23,6 @@ class JavascriptRulesTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected,$values);
     }
 
-
     public function testRuleAfterDate()
     {
         $date = "10 September 2000";
@@ -33,7 +32,6 @@ class JavascriptRulesTraitTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected,$values);
     }
-
 
     public function testRuleAfterAttribute()
     {
@@ -45,7 +43,6 @@ class JavascriptRulesTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected,$values);
     }
 
-
     public function testRuleBeforeDate()
     {
         $date = "10 September 2000";
@@ -55,7 +52,6 @@ class JavascriptRulesTraitTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected,$values);
     }
-
 
     public function testRuleBeforeAttribute()
     {

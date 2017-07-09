@@ -14,26 +14,26 @@ class RemoteValidationMiddlewareTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $mockedFactory = $this->getMockBuilder('Illuminate\Contracts\Validation\Factory')
+        $mockedFactory = $this->getMockBuilder(\Illuminate\Contracts\Validation\Factory::class)
             ->disableOriginalConstructor()
             ->setMethods(['resolver','extend','make','extendImplicit','replacer'])
             ->getMock();
         $mockedFactory->resolver = function(){};
         $mockedFactory->expects($this->once())
             ->method('resolver')
-            ->with($this->isInstanceOf('Closure'));
+            ->with($this->isInstanceOf(\Closure::class));
 
         $mockedFactory->expects($this->once())
             ->method('extend')
             ->with(Validator::EXTENSION_NAME, $this->isInstanceOf('Closure'));
 
-        $mockedConfig = $this->getMockForAbstractClass('Illuminate\Contracts\Config\Repository',[],'',false);
+        $mockedConfig = $this->getMockForAbstractClass(\Illuminate\Contracts\Config\Repository::class, [],'',false);
         $mockedConfig->expects($this->once())
             ->method('get')
             ->with('jsvalidation.remote_validation_field')
             ->will($this->returnValue('_jsvalidation'));
 
-        $mockedRequest = $this->getMockBuilder('\Illuminate\Http\Request')
+        $mockedRequest = $this->getMockBuilder(\Illuminate\Http\Request::class)
             ->disableOriginalConstructor()
             ->setMethods(['has'])
             ->getMock();
@@ -54,17 +54,17 @@ class RemoteValidationMiddlewareTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleShouldNotValidate()
     {
-        $mockedFactory = $this->getMockBuilder('Illuminate\Contracts\Validation\Factory')
+        $mockedFactory = $this->getMockBuilder(\Illuminate\Contracts\Validation\Factory::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockedConfig = $this->getMockForAbstractClass('Illuminate\Contracts\Config\Repository',[],'',false);
+        $mockedConfig = $this->getMockForAbstractClass(\Illuminate\Contracts\Config\Repository::class,[],'',false);
         $mockedConfig->expects($this->once())
             ->method('get')
             ->with('jsvalidation.remote_validation_field')
             ->will($this->returnValue('_jsvalidation'));
 
-        $mockedRequest = $this->getMockBuilder('\Illuminate\Http\Request')
+        $mockedRequest = $this->getMockBuilder(\Illuminate\Http\Request::class)
             ->disableOriginalConstructor()
             ->setMethods(['has'])
             ->getMock();

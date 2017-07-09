@@ -15,7 +15,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 
         $rules = ['field'=>['required','array']];
 
-        $mockDelegated = $this->getMockBuilder('Proengsoft\JsValidation\Support\DelegatedValidator')
+        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->setMethods(['getRules','hasRule','parseRule','getRule','isImplicit'])
             ->getMock();
@@ -40,7 +40,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(false);
 
 
-        $mockRule = $this->getMockBuilder('Proengsoft\JsValidation\Javascript\RuleParser')
+        $mockRule = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\RuleParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
@@ -78,7 +78,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
 
         $rules = ['field'=>['required','array']];
 
-        $mockDelegated = $this->getMockBuilder('Proengsoft\JsValidation\Support\DelegatedValidator')
+        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->setMethods(['getRules','hasRule','parseRule','getRule','isImplicit'])
             ->getMock();
@@ -92,11 +92,11 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)
             ->willReturn(true);
 
-        $mockRule = $this->getMockBuilder('Proengsoft\JsValidation\Javascript\RuleParser')
+        $mockRule = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\RuleParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
-        $mockMessages = $this->getMockBuilder('Proengsoft\JsValidation\Javascript\MessageParser')
+        $mockMessages = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\MessageParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
@@ -118,7 +118,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
         $attribute = 'field';
         $rule = 'required_if:field2,value2';
 
-        $mockDelegated = $this->getMockBuilder('Proengsoft\JsValidation\Support\DelegatedValidator')
+        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->setMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
             ->getMock();
@@ -148,7 +148,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(false);
 
 
-        $mockRule = $this->getMockBuilder('Proengsoft\JsValidation\Javascript\RuleParser')
+        $mockRule = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\RuleParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
@@ -157,7 +157,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->with($attribute, 'RequiredIf', ['field2','value2'])
             ->willReturn([$attribute, RuleParser::REMOTE_RULE, ['field2','value2']]);
 
-        $mockMessages = $this->getMockBuilder('Proengsoft\JsValidation\Javascript\MessageParser')
+        $mockMessages = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\MessageParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
@@ -185,7 +185,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
         $attribute = 'field';
         $rule = 'active_url';
 
-        $mockDelegated = $this->getMockBuilder('Proengsoft\JsValidation\Support\DelegatedValidator')
+        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->setMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
             ->getMock();
@@ -204,7 +204,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->with($rule)
             ->willReturn(['ActiveUrl',['token',false,false]]);
 
-        $mockRule = $this->getMockBuilder('Proengsoft\JsValidation\Javascript\RuleParser')
+        $mockRule = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\RuleParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
@@ -213,7 +213,7 @@ class ValidatorHandlerTest extends \PHPUnit_Framework_TestCase
             ->with($attribute, 'ActiveUrl', ['token',false,false])
             ->willReturn([$attribute, RuleParser::REMOTE_RULE, ['token',false,false]]);
 
-        $mockMessages = $this->getMockBuilder('Proengsoft\JsValidation\Javascript\MessageParser')
+        $mockMessages = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\MessageParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 

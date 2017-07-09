@@ -5,8 +5,8 @@ namespace Proengsoft\JsValidation;
 use Closure;
 use Illuminate\Http\Request;
 use Proengsoft\JsValidation\Remote\Resolver;
-use Proengsoft\JsValidation\Remote\Validator as RemoteValidator;
 use Illuminate\Contracts\Config\Repository as Config;
+use Proengsoft\JsValidation\Remote\Validator as RemoteValidator;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 class RemoteValidationMiddleware

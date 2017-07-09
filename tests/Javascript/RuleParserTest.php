@@ -13,7 +13,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parameters = [];
         $token =null;
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -33,7 +33,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parameters = ['field2','value2'];
         $token =null;
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -53,7 +53,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parameters = [];
         $token ='my token';
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -74,7 +74,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parameters = [];
         $token ='my token';
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -91,7 +91,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
     {
         $expects = ['somefield'=>'required'];
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -112,7 +112,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parameters = [];
         $token =null;
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -132,7 +132,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parameters = [];
         $token ='my token';
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -155,7 +155,7 @@ class RuleParserTest extends \PHPUnit_Framework_TestCase
         $parameters = ['min_height=100','ratio=1/3'];
         $token =null;
 
-        $delegated = $this->getMockBuilder('\Proengsoft\JsValidation\Support\DelegatedValidator')
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
