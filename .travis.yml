@@ -14,6 +14,7 @@ env:
   - LARAVEL=5.1
   - LARAVEL=5.2
   - LARAVEL=5.3
+  - LARAVEL=5.4
 
 matrix:
   include:
