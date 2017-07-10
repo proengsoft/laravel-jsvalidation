@@ -6,7 +6,7 @@
 
 ### Changed
 
-- Typo in `resources/assets/js/helpers.js` method `gess` fixed. Method renamed to `guess` #250
+- Typo in `resources/assets/js/helpers.js` method `gess` fixed. Method renamed to `guess` (#250)
 
 ### Fixed
 
@@ -14,7 +14,7 @@
 
 ### Removed
 
-- Laravel <= 5.3 support. Will be maintained in 1.x releases #258
+- Laravel <= 5.3 support. Will be maintained in 1.x releases (#258)
 - PHP < 5.6.4 support (Laravel 5.4 minimum requirement)
 
 ## [1.5.0] - 2017-01-22
@@ -29,18 +29,18 @@ Features:
    - Javascript validation for [Distinct](https://laravel.com/docs/5.3/validation#rule-distinct) rule
 
 Issues resolved:
-  - Fix issue with HttpResponseException #130
-  - Fix Undefined index: _jsvalidation_validate_all #201
+  - Fix issue with HttpResponseException (#130)
+  - Fix Undefined index: _jsvalidation_validate_all (#201)
  
 ## [1.4.3] - 2017-01-07
 
 Features:
-   - Add support for the "bail" keyword. #179
-   - Add support to validate array fields using non array rules. #180 #158
+   - Add support for the "bail" keyword (#179)
+   - Add support to validate array fields using non array rules (#180, #158)
 
 Issues resolved:
-   - Fix remote custom validation. #175 
-   - File Size doesn't work with JavaScript Validator. #156
+   - Fix remote custom validation (#175) 
+   - File Size doesn't work with JavaScript Validator (#156)
 
 ## [1.4.2] - 2016-12-28
 
@@ -62,16 +62,16 @@ Bugfixes:
      - Support for [RequiredUnless](https://laravel.com/docs/5.2/validation#rule-required-unless) Rule
 
  - Issues resolved:
-     - Convert Exceptions to E_USER_ERROR in __toString(). #126
-     - Chrome and IE case fix in mime types. PR #136 
-     - Fix Turn off remote validation #145
+     - Convert Exceptions to E_USER_ERROR in __toString() (#126)
+     - Chrome and IE case fix in mime types (PR #136) 
+     - Fix Turn off remote validation (#145)
      - Support for Laravel 5.3.21 and greater
 
 ## [1.3.1] - 2016-01-04
 
 Features:
  - Allow Dependency Injection in FormRequest Validations
- - Add extra field values to ajax request on remote validation. #88 #99
+ - Add extra field values to ajax request on remote validation (#88, #99)
 
 ## [1.3.0] - 2015-12-29
 
@@ -84,11 +84,11 @@ Features:
 Bugfixes:
 
  - Issues resolved:
-    - Critical error with numeric min & max values #98 
-    - Error when using FormRequest validation #96
-    - Conflict with other Laravel funcionality ? #90
-    - Multiple Instances of JSValidation #87
-    - Error when using FormRequest validation #96 
+    - Critical error with numeric min & max values (#98) 
+    - Error when using FormRequest validation (#96)
+    - Conflict with other Laravel functionality? (#90)
+    - Multiple Instances of JSValidation (#87)
+    - Error when using FormRequest validation (#96) 
 
 ## [1.2.0] - 2015-09-30
 
@@ -97,12 +97,12 @@ Features:
  - Allow validate rule "In" for type array 
  - Added JSON validator [3f508c1](https://github.com/laravel/framework/commit/3f508c1c88897bd6b8fe15137ec77d3023bbcd9f#diff-38fd116b7c7b8ac1bdd8362250d04d57)
  - Allow disable remote validations
- - Add support for other validation packages. #69
+ - Add support for other validation packages (#69)
 
 Bugfixes:
 
  - Issues resolved:
-    - Fix some validations when field is array #75 
+    - Fix some validations when field is array (#75) 
     - Updated validateAlpha logic [c31a38d](https://github.com/laravel/framework/commit/c31a38d596c1913696ace0cd77201cf675748fe8)
 
 ## [1.1.4] - 2015-09-10
@@ -110,8 +110,8 @@ Bugfixes:
 Bugfixes:
 
  - Issues resolved:
-    -  String validation fails on length. #71
-    -  Default validation messages can't be changed. #27
+    -  String validation fails on length (#71)
+    -  Default validation messages can't be changed (#27)
 
 ## [1.1.3] - 2015-09-07
 
@@ -131,20 +131,20 @@ Features:
 Bugfixes:
 
  - Issues resolved:
-    - Wrong password confirmed rule conversion. #52
-    - Fix numeric check for min/max validation #54
-	- Validate PUT/PATCH methods on remote #69
-	- Hidden input raising an error #58
-	- Non radio-list show error messages from other radio-list #57 
-	- date_format:m rule always return not valid #66 
+    - Wrong password confirmed rule conversion (#52)
+    - Fix numeric check for min/max validation (#54)
+	- Validate PUT/PATCH methods on remote (#69)
+	- Hidden input raising an error (#58)
+	- Non radio-list show error messages from other radio-list (#57) 
+	- date_format:m rule always return not valid (#66) 
 
 ## [1.1.1] - 2015-08-15
 
 Bugfixes: 
 
  - Issues resolved:
-     - Rules that depends from other rules they are not validated in some cases. #47
-     - Route Model Binding Form Request Validation Error. #44
+     - Rules that depends from other rules they are not validated in some cases (#47)
+     - Route Model Binding Form Request Validation Error (#44)
 
 ## [1.1.0] - 2015-08-11
 
@@ -157,7 +157,7 @@ Features:
 Bugfixes:
 
  - Issues resolved:
-   -  Some bugs resolved: #14, #17, #26, #29, #38, #39
+   -  Some bugs resolved (#14, #17, #26, #29, #38, #39)
 
 ## [1.0.5] - 2015-06-13
 
