@@ -5,7 +5,7 @@
  *
  * Helper functions used by validators
  *
- * Copyright (c) 2014 Proengsoft
+ * Copyright (c) 2017 Proengsoft
  * Released under the MIT license
  */
 
@@ -19,7 +19,7 @@ $.extend(true, laravelValidation, {
         numericRules: ['Integer', 'Numeric'],
 
         /**
-         * Gets the file information from file input
+         * Gets the file information from file input.
          *
          * @param fieldObj
          * @param index
@@ -43,8 +43,7 @@ $.extend(true, laravelValidation, {
 
 
         /**
-         *
-         * Gets the selectors for th specified field names
+         * Gets the selectors for th specified field names.
          *
          * @param names
          * @returns {string}
@@ -62,7 +61,7 @@ $.extend(true, laravelValidation, {
 
 
         /**
-         * Check if element has numeric rules
+         * Check if element has numeric rules.
          *
          * @param element
          * @returns {boolean}
@@ -72,7 +71,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Check if element has passed ruls rules
+         * Check if element has passed rules.
          *
          * @param element
          * @param rules
@@ -112,7 +111,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Return the string length using PHP function
+         * Return the string length using PHP function.
          * http://php.net/manual/en/function.strlen.php
          * http://phpjs.org/functions/strlen/
          *
@@ -122,9 +121,8 @@ $.extend(true, laravelValidation, {
             return strlen(string);
         },
 
-
         /**
-         * Get the size of the object depending of his type
+         * Get the size of the object depending of his type.
          *
          * @param obj
          * @param element
@@ -146,7 +144,7 @@ $.extend(true, laravelValidation, {
 
 
         /**
-         * Return specified rule from element
+         * Return specified rule from element.
          *
          * @param rule
          * @param element
@@ -168,9 +166,8 @@ $.extend(true, laravelValidation, {
             return found;
         },
 
-
         /**
-         * Return he timestamp of value passed using format or default format in element*
+         * Return he timestamp of value passed using format or default format in element.
          *
          * @param value
          * @param format
@@ -215,7 +212,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Returns Unix timestamp based on PHP function strototime
+         * Returns Unix timestamp based on PHP function strototime.
          * http://php.net/manual/es/function.strtotime.php
          * http://phpjs.org/functions/strtotime/
          *
@@ -228,7 +225,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Returns if value is numeric
+         * Returns if value is numeric.
          * http://php.net/manual/es/var.is_numeric.php
          * http://phpjs.org/functions/is_numeric/
          *
@@ -240,7 +237,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Returns Array diff based on PHP function array_diff
+         * Returns Array diff based on PHP function array_diff.
          * http://php.net/manual/es/function.array_diff.php
          * http://phpjs.org/functions/array_diff/
          *
@@ -252,9 +249,8 @@ $.extend(true, laravelValidation, {
             return array_diff(arr1, arr2);
         },
 
-
         /**
-         * Makes element dependant from other
+         * Makes element dependant from other.
          *
          * @param validator
          * @param element
@@ -287,7 +283,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Parses error Ajax response and gets the message
+         * Parses error Ajax response and gets the message.
          *
          * @param response
          * @returns {string[]}
@@ -304,7 +300,8 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Escape string to use as Regular Expression
+         * Escape string to use as Regular Expression.
+         *
          * @param str
          * @returns string
          */
@@ -313,7 +310,8 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Generate RegExp from wildcard attributes
+         * Generate RegExp from wildcard attributes.
+         *
          * @param name
          * @returns {RegExp}
          */
@@ -334,7 +332,5 @@ $.extend(true, laravelValidation, {
 
             return new RegExp('^'+regexpParts.join('.*')+'$');
         }
-
-
     }
 });

@@ -3,7 +3,7 @@
  *
  * https://github.com/proengsoft/laravel-jsvalidation
  *
- * Copyright (c) 2014 Proengsoft
+ * Copyright (c) 2017 Proengsoft
  * Released under the MIT license
  */
 
@@ -13,7 +13,7 @@ laravelValidation = {
     implicitRules: ['Required','Confirmed'],
 
     /**
-     * Initialize laravel validations
+     * Initialize laravel validations.
      */
     init: function () {
 
@@ -27,9 +27,7 @@ laravelValidation = {
         $.validator.prototype.arrayRulesCache = {};
         // Register validations methods
         this.setupValidations();
-        
     },
-
 
     arrayRules: function(element) {
 
@@ -63,11 +61,10 @@ laravelValidation = {
         return rules;
     },
 
-
     setupValidations: function () {
 
         /**
-         * Create JQueryValidation check to validate Laravel rules
+         * Create JQueryValidation check to validate Laravel rules.
          */
 
         $.validator.addMethod("laravelValidation", function (value, element, params) {
@@ -129,13 +126,12 @@ laravelValidation = {
             });
             return validated;
 
-        }, "");
+        }, '');
 
 
         /**
-         * Create JQueryValidation check to validate Remote Laravel rules
+         * Create JQueryValidation check to validate Remote Laravel rules.
          */
-
         $.validator.addMethod("laravelValidationRemote", function (value, element, params) {
 
             var implicit = false,
@@ -203,8 +199,6 @@ laravelValidation = {
                         return xhr.setRequestHeader('X-XSRF-TOKEN', token);
                     }
                 }
-
-
             }, param )
             ).always(function( response, textStatus ) {
                     var errors, message, submitted, valid;
@@ -240,13 +234,8 @@ laravelValidation = {
                 }
             );
             return "pending";
-
-
-        }, "");
-
+        }, '');
     }
-
-
 };
 
 $(function() {
