@@ -2,11 +2,15 @@
 
 ### Added
 
-- Laravel 5.4 support #224
+- Laravel 5.4 support (#224)
 
 ### Changed
 
 - Typo in `resources/assets/js/helpers.js` method `gess` fixed. Method renamed to `guess` #250
+
+### Fixed
+
+- JPEG mime-type check in `image` rule (#239)
 
 ### Removed
 
