@@ -5,7 +5,7 @@
  *
  * Timezone Helper functions used by validators
  *
- * Copyright (c) 2014 Proengsoft
+ * Copyright (c) 2017 Proengsoft
  * Released under the MIT license
  */
 
@@ -14,7 +14,7 @@ $.extend(true, laravelValidation, {
     helpers: {
 
         /**
-         * Check if the specified timezone is valid
+         * Check if the specified timezone is valid.
          *
          * @param value
          * @returns {boolean}
@@ -473,9 +473,6 @@ $.extend(true, laravelValidation, {
             }
 
             return (continent in timezones && ( timezones[continent].length===0 || timezones[continent].indexOf(city)!==-1))
-
         }
     }
-
-
 });

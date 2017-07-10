@@ -1818,10 +1818,12 @@ function is_numeric (mixed_var) {
 }
 
 /*!
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
- * @version 1.3.3
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2017
+ * @version 1.3.4
  *
  * Date formatter utility library that allows formatting date/time variables or Date objects using PHP DateTime format.
+ * This library is a standalone javascript library and does not depend on other libraries or plugins like jQuery.
+ * 
  * @see http://php.net/manual/en/function.date.php
  *
  * For more JQuery plugins visit http://plugins.krajee.com
@@ -1831,15 +1833,16 @@ var DateFormatter;
 (function () {
     "use strict";
 
-    var _compare, _lpad, _extend, defaultSettings, DAY, HOUR;
+    var _compare, _lpad, _extend, _indexOf, defaultSettings, DAY, HOUR;
     DAY = 1000 * 60 * 60 * 24;
     HOUR = 3600;
 
     _compare = function (str1, str2) {
         return typeof(str1) === 'string' && typeof(str2) === 'string' && str1.toLowerCase() === str2.toLowerCase();
     };
-    _lpad = function (value, length, char) {
-        var chr = char || '0', val = value.toString();
+    _lpad = function (value, length, chr) {
+        var val = value.toString();
+        chr = chr || '0';
         return val.length < length ? _lpad(chr + val, length) : val;
     };
     _extend = function (out) {
@@ -1861,6 +1864,14 @@ var DateFormatter;
             }
         }
         return out;
+    };
+    _indexOf = function (val, arr) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].toLowerCase() === val.toLowerCase()) {
+                return i;
+            }
+        }
+        return -1;
     };
     defaultSettings = {
         dateSettings: {
@@ -1896,25 +1907,35 @@ var DateFormatter;
 
     DateFormatter.prototype = {
         constructor: DateFormatter,
+        getMonth: function (val) {
+            var self = this, i;
+            i = _indexOf(val, self.dateSettings.monthsShort) + 1;
+            if (i === 0) {
+                i = _indexOf(val, self.dateSettings.months) + 1;
+            }
+            return i;
+        },
         parseDate: function (vDate, vFormat) {
             var self = this, vFormatParts, vDateParts, i, vDateFlag = false, vTimeFlag = false, vDatePart, iDatePart,
                 vSettings = self.dateSettings, vMonth, vMeriIndex, vMeriOffset, len, mer,
                 out = {date: null, year: null, month: null, day: null, hour: 0, min: 0, sec: 0};
             if (!vDate) {
-                return undefined;
+                return null;
             }
             if (vDate instanceof Date) {
                 return vDate;
-            }
-            if (typeof vDate === 'number') {
-                return new Date(vDate);
             }
             if (vFormat === 'U') {
                 i = parseInt(vDate);
                 return i ? new Date(i * 1000) : vDate;
             }
-            if (typeof vDate !== 'string') {
-                return '';
+            switch (typeof vDate) {
+                case 'number':
+                    return new Date(vDate);
+                case 'string':
+                    break;
+                default:
+                    return null;
             }
             vFormatParts = vFormat.match(self.validParts);
             if (!vFormatParts || vFormatParts.length === 0) {
@@ -1927,11 +1948,11 @@ var DateFormatter;
                 switch (vFormatParts[i]) {
                     case 'y':
                     case 'Y':
-                        len = vDatePart.length;
-                        if (len === 2) {
-                            out.year = parseInt((iDatePart < 70 ? '20' : '19') + vDatePart);
-                        } else if (len === 4) {
-                            out.year = iDatePart;
+                        if (iDatePart) {
+                            len = vDatePart.length;
+                            out.year = len === 2 ? parseInt((iDatePart < 70 ? '20' : '19') + vDatePart) : iDatePart;
+                        } else {
+                            return null;
                         }
                         vDateFlag = true;
                         break;
@@ -1939,18 +1960,18 @@ var DateFormatter;
                     case 'n':
                     case 'M':
                     case 'F':
-                        if (isNaN(vDatePart)) {
-                            vMonth = vSettings.monthsShort.indexOf(vDatePart);
-                            if (vMonth > -1) {
-                                out.month = vMonth + 1;
-                            }
-                            vMonth = vSettings.months.indexOf(vDatePart);
-                            if (vMonth > -1) {
-                                out.month = vMonth + 1;
+                        if (isNaN(iDatePart)) {
+                            vMonth = self.getMonth(vDatePart);
+                            if (vMonth > 0) {
+                                out.month = vMonth;
+                            } else {
+                                return null;
                             }
                         } else {
                             if (iDatePart >= 1 && iDatePart <= 12) {
                                 out.month = iDatePart;
+                            } else {
+                                return null;
                             }
                         }
                         vDateFlag = true;
@@ -1959,6 +1980,8 @@ var DateFormatter;
                     case 'j':
                         if (iDatePart >= 1 && iDatePart <= 31) {
                             out.day = iDatePart;
+                        } else {
+                            return null;
                         }
                         vDateFlag = true;
                         break;
@@ -1967,16 +1990,22 @@ var DateFormatter;
                         vMeriIndex = (vFormatParts.indexOf('a') > -1) ? vFormatParts.indexOf('a') :
                             (vFormatParts.indexOf('A') > -1) ? vFormatParts.indexOf('A') : -1;
                         mer = vDateParts[vMeriIndex];
-                        if (vMeriIndex > -1) {
+                        if (vMeriIndex !== -1) {
                             vMeriOffset = _compare(mer, vSettings.meridiem[0]) ? 0 :
                                 (_compare(mer, vSettings.meridiem[1]) ? 12 : -1);
-                            if (iDatePart >= 1 && iDatePart <= 12 && vMeriOffset > -1) {
-                                out.hour = iDatePart + vMeriOffset - 1;
-                            } else if (iDatePart >= 0 && iDatePart <= 23) {
-                                out.hour = iDatePart;
+                            if (iDatePart >= 1 && iDatePart <= 12 && vMeriOffset !== -1) {
+                                out.hour = iDatePart % 12 === 0 ? vMeriOffset : iDatePart + vMeriOffset;
+                            } else {
+                                if (iDatePart >= 0 && iDatePart <= 23) {
+                                    out.hour = iDatePart;
+                                }
                             }
-                        } else if (iDatePart >= 0 && iDatePart <= 23) {
-                            out.hour = iDatePart;
+                        } else {
+                            if (iDatePart >= 0 && iDatePart <= 23) {
+                                out.hour = iDatePart;
+                            } else {
+                                return null;
+                            }
                         }
                         vTimeFlag = true;
                         break;
@@ -1984,18 +2013,24 @@ var DateFormatter;
                     case 'H':
                         if (iDatePart >= 0 && iDatePart <= 23) {
                             out.hour = iDatePart;
+                        } else {
+                            return null;
                         }
                         vTimeFlag = true;
                         break;
                     case 'i':
                         if (iDatePart >= 0 && iDatePart <= 59) {
                             out.min = iDatePart;
+                        } else {
+                            return null;
                         }
                         vTimeFlag = true;
                         break;
                     case 's':
                         if (iDatePart >= 0 && iDatePart <= 59) {
                             out.sec = iDatePart;
+                        } else {
+                            return null;
                         }
                         vTimeFlag = true;
                         break;
@@ -2005,7 +2040,7 @@ var DateFormatter;
                 out.date = new Date(out.year, out.month - 1, out.day, out.hour, out.min, out.sec, 0);
             } else {
                 if (vTimeFlag !== true) {
-                    return false;
+                    return null;
                 }
                 out.date = new Date(0, 0, 0, out.hour, out.min, out.sec, 0);
             }
@@ -2015,8 +2050,8 @@ var DateFormatter;
             if (typeof vDateStr !== 'string') {
                 return vDateStr;
             }
-            var self = this, vParts = vDateStr.replace(self.separators, '\0').split('\0'), vPattern = /^[djmn]/g,
-                vFormatParts = vFormat.match(self.validParts), vDate = new Date(), vDigit = 0, vYear, i, iPart, iSec;
+            var self = this, vParts = vDateStr.replace(self.separators, '\0').split('\0'), vPattern = /^[djmn]/g, len,
+                vFormatParts = vFormat.match(self.validParts), vDate = new Date(), vDigit = 0, vYear, i, n, iPart, iSec;
 
             if (!vPattern.test(vFormatParts[0])) {
                 return vDateStr;
@@ -2026,6 +2061,9 @@ var DateFormatter;
                 vDigit = 2;
                 iPart = vParts[i];
                 iSec = parseInt(iPart.substr(0, 2));
+                if (isNaN(iSec)) {
+                    return null;
+                }
                 switch (i) {
                     case 0:
                         if (vFormatParts[0] === 'm' || vFormatParts[0] === 'n') {
@@ -2043,13 +2081,13 @@ var DateFormatter;
                         break;
                     case 2:
                         vYear = vDate.getFullYear();
-                        if (iPart.length < 4) {
-                            vDate.setFullYear(parseInt(vYear.toString().substr(0, 4 - iPart.length) + iPart));
-                            vDigit = iPart.length;
-                        } else {
-                            vDate.setFullYear = parseInt(iPart.substr(0, 4));
-                            vDigit = 4;
+                        len = iPart.length;
+                        vDigit = len < 4 ? len : 4;
+                        vYear = parseInt(len < 4 ? vYear.toString().substr(0, 4 - len) + iPart : iPart.substr(0, 4));
+                        if (!vYear) {
+                            return null;
                         }
+                        vDate.setFullYear(vYear);
                         break;
                     case 3:
                         vDate.setHours(iSec);
@@ -2061,14 +2099,15 @@ var DateFormatter;
                         vDate.setSeconds(iSec);
                         break;
                 }
-                if (iPart.substr(vDigit).length > 0) {
-                    vParts.splice(i + 1, 0, iPart.substr(vDigit));
+                n = iPart.substr(vDigit);
+                if (n.length > 0) {
+                    vParts.splice(i + 1, 0, n);
                 }
             }
             return vDate;
         },
         parseFormat: function (vChar, vDate) {
-            var self = this, vSettings = self.dateSettings, fmt, backspace = /\\?(.?)/gi, doFormat = function (t, s) {
+            var self = this, vSettings = self.dateSettings, fmt, backslash = /\\?(.?)/gi, doFormat = function (t, s) {
                 return fmt[t] ? fmt[t]() : s;
             };
             fmt = {
@@ -2299,14 +2338,6 @@ var DateFormatter;
                     return str || 'Coordinated Universal Time';
                 },
                 /**
-                 * Timezone abbreviation: `e.g. EST, MDT, ...`
-                 * @return {string}
-                 */
-                T: function () {
-                    var str = (String(vDate).match(self.tzParts) || [""]).pop().replace(self.tzClip, "");
-                    return str || 'UTC';
-                },
-                /**
                  * DST observed? `0 or 1`
                  * @return {number}
                  */
@@ -2332,6 +2363,14 @@ var DateFormatter;
                     return (O.substr(0, 3) + ':' + O.substr(3, 2));
                 },
                 /**
+                 * Timezone abbreviation: `e.g. EST, MDT, ...`
+                 * @return {string}
+                 */
+                T: function () {
+                    var str = (String(vDate).match(self.tzParts) || [""]).pop().replace(self.tzClip, "");
+                    return str || 'UTC';
+                },
+                /**
                  * Timezone offset in seconds: `-43200...50400`
                  * @return {number}
                  */
@@ -2347,14 +2386,14 @@ var DateFormatter;
                  * @return {string}
                  */
                 c: function () {
-                    return 'Y-m-d\\TH:i:sP'.replace(backspace, doFormat);
+                    return 'Y-m-d\\TH:i:sP'.replace(backslash, doFormat);
                 },
                 /**
                  * RFC 2822 date
                  * @return {string}
                  */
                 r: function () {
-                    return 'D, d M Y H:i:s O'.replace(backspace, doFormat);
+                    return 'D, d M Y H:i:s O'.replace(backslash, doFormat);
                 },
                 /**
                  * Seconds since UNIX epoch
@@ -2367,23 +2406,27 @@ var DateFormatter;
             return doFormat(vChar, vChar);
         },
         formatDate: function (vDate, vFormat) {
-            var self = this, i, n, len, str, vChar, vDateStr = '';
+            var self = this, i, n, len, str, vChar, vDateStr = '', BACKSLASH = '\\';
             if (typeof vDate === 'string') {
                 vDate = self.parseDate(vDate, vFormat);
-                if (vDate === false) {
-                    return false;
+                if (!vDate) {
+                    return null;
                 }
             }
             if (vDate instanceof Date) {
                 len = vFormat.length;
                 for (i = 0; i < len; i++) {
                     vChar = vFormat.charAt(i);
-                    if (vChar === 'S') {
+                    if (vChar === 'S' || vChar === BACKSLASH) {
+                        continue;
+                    }
+                    if (i > 0 && vFormat.charAt(i - 1) === BACKSLASH) {
+                        vDateStr += vChar;
                         continue;
                     }
                     str = self.parseFormat(vChar, vDate);
                     if (i !== (len - 1) && self.intParts.test(vChar) && vFormat.charAt(i + 1) === 'S') {
-                        n = parseInt(str);
+                        n = parseInt(str) || 0;
                         str += self.dateSettings.ordinal(n);
                     }
                     vDateStr += str;
@@ -2399,7 +2442,7 @@ var DateFormatter;
  *
  * https://github.com/proengsoft/laravel-jsvalidation
  *
- * Copyright (c) 2014 Proengsoft
+ * Copyright (c) 2017 Proengsoft
  * Released under the MIT license
  */
 
@@ -2409,7 +2452,7 @@ laravelValidation = {
     implicitRules: ['Required','Confirmed'],
 
     /**
-     * Initialize laravel validations
+     * Initialize laravel validations.
      */
     init: function () {
 
@@ -2423,9 +2466,7 @@ laravelValidation = {
         $.validator.prototype.arrayRulesCache = {};
         // Register validations methods
         this.setupValidations();
-        
     },
-
 
     arrayRules: function(element) {
 
@@ -2459,11 +2500,10 @@ laravelValidation = {
         return rules;
     },
 
-
     setupValidations: function () {
 
         /**
-         * Create JQueryValidation check to validate Laravel rules
+         * Create JQueryValidation check to validate Laravel rules.
          */
 
         $.validator.addMethod("laravelValidation", function (value, element, params) {
@@ -2525,13 +2565,12 @@ laravelValidation = {
             });
             return validated;
 
-        }, "");
+        }, '');
 
 
         /**
-         * Create JQueryValidation check to validate Remote Laravel rules
+         * Create JQueryValidation check to validate Remote Laravel rules.
          */
-
         $.validator.addMethod("laravelValidationRemote", function (value, element, params) {
 
             var implicit = false,
@@ -2599,8 +2638,6 @@ laravelValidation = {
                         return xhr.setRequestHeader('X-XSRF-TOKEN', token);
                     }
                 }
-
-
             }, param )
             ).always(function( response, textStatus ) {
                     var errors, message, submitted, valid;
@@ -2636,13 +2673,8 @@ laravelValidation = {
                 }
             );
             return "pending";
-
-
-        }, "");
-
+        }, '');
     }
-
-
 };
 
 $(function() {
@@ -2656,7 +2688,7 @@ $(function() {
  *
  * Helper functions used by validators
  *
- * Copyright (c) 2014 Proengsoft
+ * Copyright (c) 2017 Proengsoft
  * Released under the MIT license
  */
 
@@ -2670,7 +2702,7 @@ $.extend(true, laravelValidation, {
         numericRules: ['Integer', 'Numeric'],
 
         /**
-         * Gets the file information from file input
+         * Gets the file information from file input.
          *
          * @param fieldObj
          * @param index
@@ -2694,8 +2726,7 @@ $.extend(true, laravelValidation, {
 
 
         /**
-         *
-         * Gets the selectors for th specified field names
+         * Gets the selectors for th specified field names.
          *
          * @param names
          * @returns {string}
@@ -2713,7 +2744,7 @@ $.extend(true, laravelValidation, {
 
 
         /**
-         * Check if element has numeric rules
+         * Check if element has numeric rules.
          *
          * @param element
          * @returns {boolean}
@@ -2723,7 +2754,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Check if element has passed ruls rules
+         * Check if element has passed rules.
          *
          * @param element
          * @param rules
@@ -2763,7 +2794,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Return the string length using PHP function
+         * Return the string length using PHP function.
          * http://php.net/manual/en/function.strlen.php
          * http://phpjs.org/functions/strlen/
          *
@@ -2773,9 +2804,8 @@ $.extend(true, laravelValidation, {
             return strlen(string);
         },
 
-
         /**
-         * Get the size of the object depending of his type
+         * Get the size of the object depending of his type.
          *
          * @param obj
          * @param element
@@ -2797,7 +2827,7 @@ $.extend(true, laravelValidation, {
 
 
         /**
-         * Return specified rule from element
+         * Return specified rule from element.
          *
          * @param rule
          * @param element
@@ -2819,9 +2849,8 @@ $.extend(true, laravelValidation, {
             return found;
         },
 
-
         /**
-         * Return he timestamp of value passed using format or default format in element*
+         * Return he timestamp of value passed using format or default format in element.
          *
          * @param value
          * @param format
@@ -2855,17 +2884,18 @@ $.extend(true, laravelValidation, {
 
         /**
          * This method allows you to intelligently guess the date by closely matching the specific format.
+         *
          * @param value
          * @param format
          * @returns {Date}
          */
-        gessDate: function (value, format) {
+        guessDate: function (value, format) {
             var fmt = new DateFormatter();
             return fmt.guessDate(value, format)
         },
 
         /**
-         * Returns Unix timestamp based on PHP function strototime
+         * Returns Unix timestamp based on PHP function strototime.
          * http://php.net/manual/es/function.strtotime.php
          * http://phpjs.org/functions/strtotime/
          *
@@ -2878,7 +2908,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Returns if value is numeric
+         * Returns if value is numeric.
          * http://php.net/manual/es/var.is_numeric.php
          * http://phpjs.org/functions/is_numeric/
          *
@@ -2890,7 +2920,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Returns Array diff based on PHP function array_diff
+         * Returns Array diff based on PHP function array_diff.
          * http://php.net/manual/es/function.array_diff.php
          * http://phpjs.org/functions/array_diff/
          *
@@ -2902,9 +2932,8 @@ $.extend(true, laravelValidation, {
             return array_diff(arr1, arr2);
         },
 
-
         /**
-         * Makes element dependant from other
+         * Makes element dependant from other.
          *
          * @param validator
          * @param element
@@ -2937,7 +2966,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Parses error Ajax response and gets the message
+         * Parses error Ajax response and gets the message.
          *
          * @param response
          * @returns {string[]}
@@ -2954,7 +2983,8 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Escape string to use as Regular Expression
+         * Escape string to use as Regular Expression.
+         *
          * @param str
          * @returns string
          */
@@ -2963,7 +2993,8 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Generate RegExp from wildcard attributes
+         * Generate RegExp from wildcard attributes.
+         *
          * @param name
          * @returns {RegExp}
          */
@@ -2984,10 +3015,9 @@ $.extend(true, laravelValidation, {
 
             return new RegExp('^'+regexpParts.join('.*')+'$');
         }
-
-
     }
 });
+
 /*!
  * Laravel Javascript Validation
  *
@@ -2995,7 +3025,7 @@ $.extend(true, laravelValidation, {
  *
  * Timezone Helper functions used by validators
  *
- * Copyright (c) 2014 Proengsoft
+ * Copyright (c) 2017 Proengsoft
  * Released under the MIT license
  */
 
@@ -3004,7 +3034,7 @@ $.extend(true, laravelValidation, {
     helpers: {
 
         /**
-         * Check if the specified timezone is valid
+         * Check if the specified timezone is valid.
          *
          * @param value
          * @returns {boolean}
@@ -3463,23 +3493,20 @@ $.extend(true, laravelValidation, {
             }
 
             return (continent in timezones && ( timezones[continent].length===0 || timezones[continent].indexOf(city)!==-1))
-
         }
     }
-
-
 });
+
 /*!
  * Laravel Javascript Validation
  *
  * https://github.com/proengsoft/laravel-jsvalidation
  *
- * Metjods that implement Laravel Validations
+ * Methods that implement Laravel Validations
  *
- * Copyright (c) 2014 Proengsoft
+ * Copyright (c) 2017 Proengsoft
  * Released under the MIT license
  */
-
 
 $.extend(true, laravelValidation, {
 
@@ -3489,10 +3516,10 @@ $.extend(true, laravelValidation, {
 
         jsRemoteTimer:0,
 
-
         /**
          * "Validate" optional attributes.
-         * Always returns true, just lets us put sometimes in rules.*
+         * Always returns true, just lets us put sometimes in rules.
+         *
          * @return {boolean}
          */
         Sometimes: function() {
@@ -3501,7 +3528,8 @@ $.extend(true, laravelValidation, {
 
         /**
          * Bail This is the default behaivour os JSValidation.
-         * Always returns true, just lets us put sometimes in rules.*
+         * Always returns true, just lets us put sometimes in rules.
+         *
          * @return {boolean}
          */
         Bail: function() {
@@ -3511,12 +3539,13 @@ $.extend(true, laravelValidation, {
         /**
          * "Indicate" validation should pass if value is null.
          * Always returns true, just lets us put "nullable" in rules.
+         *
          * @return {boolean}
          */
         Nullable: function() {
             return true;
         },
-        
+
         /**
          * Validate the given attribute is filled if it is present.
          */
@@ -3526,7 +3555,7 @@ $.extend(true, laravelValidation, {
 
 
         /**
-         *Validate that a required attribute exists.
+         * Validate that a required attribute exists.
          */
         Required: function(value, element) {
             return  $.validator.methods.required.call(this, value, element);
@@ -3534,6 +3563,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute exists when any other attribute exists.
+         *
          * @return {boolean}
          */
         RequiredWith: function(value, element, params) {
@@ -3562,6 +3592,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute exists when all other attribute exists.
+         *
          * @return {boolean}
          */
         RequiredWithAll: function(value, element, params) {
@@ -3588,9 +3619,9 @@ $.extend(true, laravelValidation, {
             return true;
         },
 
-
         /**
          * Validate that an attribute exists when any other attribute does not exists.
+         *
          * @return {boolean}
          */
         RequiredWithout: function(value, element, params) {
@@ -3617,9 +3648,9 @@ $.extend(true, laravelValidation, {
             return true;
         },
 
-
         /**
          * Validate that an attribute exists when all other attribute does not exists.
+         *
          * @return {boolean}
          */
         RequiredWithoutAll: function(value, element, params) {
@@ -3644,12 +3675,11 @@ $.extend(true, laravelValidation, {
                 return  $.validator.methods.required.call(this, value, element, true);
             }
             return true;
-
         },
-
 
         /**
          * Validate that an attribute exists when another attribute has a given value.
+         *
          * @return {boolean}
          */
         RequiredIf: function(value, element, params) {
@@ -3671,12 +3701,12 @@ $.extend(true, laravelValidation, {
             }
 
             return true;
-
         },
 
         /**
          * Validate that an attribute exists when another
          * attribute does not have a given value.
+         *
          * @return {boolean}
          */
         RequiredUnless: function(value, element, params) {
@@ -3703,6 +3733,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute has a matching confirmation.
+         *
          * @return {boolean}
          */
         Confirmed: function(value, element, params) {
@@ -3711,6 +3742,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that two attributes match.
+         *
          * @return {boolean}
          */
         Same: function(value, element, params) {
@@ -3727,6 +3759,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that the values of an attribute is in another attribute.
+         *
          * @param value
          * @param element
          * @param params
@@ -3754,6 +3787,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate an attribute is unique among other values.
+         *
          * @param value
          * @param element
          * @param params
@@ -3780,9 +3814,9 @@ $.extend(true, laravelValidation, {
         },
 
 
-
         /**
          * Validate that an attribute is different from another attribute.
+         *
          * @return {boolean}
          */
         Different: function(value, element, params) {
@@ -3792,6 +3826,7 @@ $.extend(true, laravelValidation, {
         /**
          * Validate that an attribute was "accepted".
          * This validation rule implies the attribute is "required".
+         *
          * @return {boolean}
          */
         Accepted: function(value) {
@@ -3808,6 +3843,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute is a boolean.
+         *
          * @return {boolean}
          */
         Boolean: function(value) {
@@ -3817,6 +3853,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute is an integer.
+         *
          * @return {boolean}
          */
         Integer: function(value) {
@@ -3833,6 +3870,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute is a string.
+         *
          * @return {boolean}
          */
         String: function(value) {
@@ -3859,6 +3897,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate the size of an attribute.
+         *
          * @return {boolean}
          */
         Size: function(value, element, params) {
@@ -3867,6 +3906,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate the size of an attribute is between a set of values.
+         *
          * @return {boolean}
          */
         Between: function(value, element, params) {
@@ -3876,6 +3916,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate the size of an attribute is greater than a minimum value.
+         *
          * @return {boolean}
          */
         Min: function(value, element, params) {
@@ -3884,6 +3925,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate the size of an attribute is less than a maximum value.
+         *
          * @return {boolean}
          */
         Max: function(value, element, params) {
@@ -3891,7 +3933,8 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         *  Validate an attribute is contained within a list of values.
+         * Validate an attribute is contained within a list of values.
+         *
          * @return {boolean}
          */
         In: function(value, element, params) {
@@ -3903,16 +3946,17 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         *  Validate an attribute is not contained within a list of values.
+         * Validate an attribute is not contained within a list of values.
+         *
          * @return {boolean}
          */
         NotIn: function(value, element, params) {
             return params.indexOf(value.toString()) === -1;
         },
 
-
         /**
-         *  Validate that an attribute is a valid IP.
+         * Validate that an attribute is a valid IP.
+         *
          * @return {boolean}
          */
         Ip: function(value) {
@@ -3921,7 +3965,7 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         *  Validate that an attribute is a valid e-mail address.
+         * Validate that an attribute is a valid e-mail address.
          */
         Email: function(value, element) {
             return $.validator.methods.email.call(this, value, element, true);
@@ -3936,6 +3980,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * The field under validation must be a successfully uploaded file.
+         *
          * @return {boolean}
          */
         File: function(value, element) {
@@ -3950,6 +3995,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate the MIME type of a file upload attribute is in a set of MIME types.
+         *
          * @return {boolean}
          */
         Mimes: function(value, element, params) {
@@ -3965,7 +4011,8 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * The file under validation must match one of the given MIME types
+         * The file under validation must match one of the given MIME types.
+         *
          * @return {boolean}
          */
         Mimetypes: function(value, element, params) {
@@ -3988,11 +4035,14 @@ $.extend(true, laravelValidation, {
          * Validate the MIME type of a file upload attribute is in a set of MIME types.
          */
         Image: function(value, element) {
-            return laravelValidation.methods.Mimes.call(this, value, element, ['jpg', 'png', 'gif', 'bmp', 'svg']);
+            return laravelValidation.methods.Mimes.call(this, value, element, [
+                'jpg', 'png', 'gif', 'bmp', 'svg', 'jpeg'
+            ]);
         },
 
         /**
-         * Validate dimensions of Image
+         * Validate dimensions of Image.
+         *
          * @return {boolean|string}
          */
         Dimensions: function(value, element, params, callback) {
@@ -4002,7 +4052,6 @@ $.extend(true, laravelValidation, {
             if (element.files === null || typeof element.files[0] === 'undefined') {
                 return false;
             }
-
 
             var fr = new FileReader;
             fr.onload = function () {
@@ -4033,6 +4082,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute contains only alphabetic characters.
+         *
          * @return {boolean}
          */
         Alpha: function(value) {
@@ -4047,6 +4097,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute contains only alpha-numeric characters.
+         *
          * @return {boolean}
          */
         AlphaNum: function(value) {
@@ -4059,6 +4110,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute contains only alphabetic characters.
+         *
          * @return {boolean}
          */
         AlphaDash: function(value) {
@@ -4071,6 +4123,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute passes a regular expression check.
+         *
          * @return {boolean}
          */
         Regex: function(value, element, params) {
@@ -4097,6 +4150,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute is a valid date.
+         *
          * @return {boolean}
          */
         Date: function(value) {
@@ -4105,6 +4159,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute matches a date format.
+         *
          * @return {boolean}
          */
         DateFormat: function(value, element, params) {
@@ -4113,6 +4168,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate the date is before a given date.
+         *
          * @return {boolean}
          */
         Before: function(value, element, params) {
@@ -4133,6 +4189,7 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate the date is after a given date.
+         *
          * @return {boolean}
          */
         After: function(value, element, params) {
@@ -4174,11 +4231,7 @@ $.extend(true, laravelValidation, {
             }
             return result;
         }
-
-
     }
-    
 });
-
 
 //# sourceMappingURL=jsvalidation.js.map
