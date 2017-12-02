@@ -64,7 +64,7 @@ class JsValidatorFactory
     {
         $validator = $this->getValidatorInstance($rules, $messages, $customAttributes);
 
-        return $this->validator($validator, $selector);
+        return str_replace('[#]', '[*]', $this->validator($validator, $selector)->render());
     }
 
     /**
@@ -99,6 +99,9 @@ class JsValidatorFactory
         });
 
         $attributes = array_merge(array_keys($customAttributes), $attributes);
+        
+        $attributes = str_replace('*', '#', $attributes);
+        
         $data = array_reduce($attributes, function ($data, $attribute) {
             Arr::set($data, $attribute, true);
 
