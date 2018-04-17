@@ -10,12 +10,10 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
-/**
- * Class RemoteValidator.
- */
 class Validator
 {
-    use AccessProtectedTrait, RuleListTrait;
+    use AccessProtectedTrait;
+    use RuleListTrait;
 
     /**
      * Validator extension name.

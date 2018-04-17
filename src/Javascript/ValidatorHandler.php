@@ -2,7 +2,6 @@
 
 namespace Proengsoft\JsValidation\Javascript;
 
-use Illuminate\Validation\Validator;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 

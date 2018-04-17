@@ -4,7 +4,6 @@ namespace Proengsoft\JsValidation;
 
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
 use Proengsoft\JsValidation\Javascript\RuleParser;
 use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
@@ -61,7 +60,7 @@ class JsValidatorFactory
      * @param array $messages
      * @param array $customAttributes
      * @param null|string $selector
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function make(array $rules, array $messages = [], array $customAttributes = [], $selector = null)
     {
@@ -76,7 +75,7 @@ class JsValidatorFactory
      * @param array $rules
      * @param array $messages
      * @param array $customAttributes
-     * @return Validator
+     * @return \Illuminate\Validation\Validator
      */
     protected function getValidatorInstance(array $rules, array $messages = [], array $customAttributes = [])
     {
@@ -116,7 +115,9 @@ class JsValidatorFactory
      *
      * @param $formRequest
      * @param null $selector
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function formRequest($formRequest, $selector = null)
     {
@@ -177,7 +178,7 @@ class JsValidatorFactory
      *
      * @param \Illuminate\Validation\Validator $validator
      * @param null|string $selector
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function validator(Validator $validator, $selector = null)
     {
@@ -189,7 +190,7 @@ class JsValidatorFactory
      *
      * @param \Illuminate\Validation\Validator $validator
      * @param null|string $selector
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     protected function jsValidator(Validator $validator, $selector = null)
     {

@@ -8,8 +8,8 @@ use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 
 class RuleParser
 {
-    use RuleListTrait;
     use JavascriptRulesTrait;
+    use RuleListTrait;
     use UseDelegatedValidatorTrait;
 
     /**
