@@ -2,7 +2,9 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
-class JavascriptRulesTraitTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class JavascriptRulesTraitTest extends PHPUnit_Framework_TestCase
 {
     protected $mockTrait;
 

@@ -42,7 +42,6 @@ trait RuleListTrait
      * Returns if rule is validated using Javascript.
      *
      * @param $rule
-     *
      * @return bool
      */
     protected function isImplemented($rule)
@@ -54,7 +53,6 @@ trait RuleListTrait
      * Check if rule must be validated in server-side.
      *
      * @param $rule
-     *
      * @return bool
      */
     protected function isRemoteRule($rule)
@@ -67,7 +65,6 @@ trait RuleListTrait
      * Check if rule disables rule processing.
      *
      * @param $rule
-     *
      * @return bool
      */
     protected function isDisableRule($rule)
@@ -79,7 +76,6 @@ trait RuleListTrait
      * Check if rules should be validated.
      *
      * @param $rules
-     *
      * @return bool
      */
     protected function validationDisabled($rules)
@@ -93,7 +89,6 @@ trait RuleListTrait
      * Check if rules is for input file type.
      *
      * @param $rule
-     *
      * @return bool
      */
     protected function isFileRule($rule)

@@ -39,6 +39,7 @@ class RuleParser
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
      * @param string|null $remoteToken
+     * @return void
      */
     public function __construct(DelegatedValidator $validator, $remoteToken = null)
     {
@@ -53,7 +54,6 @@ class RuleParser
      * @param string $rule
      * @param $parameters
      * @param $rawRule
-     *
      * @return array
      */
     public function getRule($attribute, $rule, $parameters, $rawRule)
@@ -88,6 +88,7 @@ class RuleParser
      *
      * @param $attribute
      * @param array $rules
+     * @return void
      */
     public function addConditionalRules($attribute, $rules = [])
     {
@@ -117,7 +118,6 @@ class RuleParser
      * @param string $attribute
      * @param $rule
      * @param $parameters
-     *
      * @return array
      */
     protected function clientRule($attribute, $rule, $parameters)
@@ -137,7 +137,6 @@ class RuleParser
      *
      * @param string $attribute
      * @param bool $forceRemote
-     *
      * @return array
      */
     protected function remoteRule($attribute, $forceRemote)
@@ -156,7 +155,6 @@ class RuleParser
      * Handles multidimensional attribute names.
      *
      * @param $attribute
-     *
      * @return string
      */
     protected function getAttributeName($attribute)
@@ -172,7 +170,7 @@ class RuleParser
     /**
      * Parse named parameters to $key => $value items.
      *
-     * @param  array  $parameters
+     * @param array  $parameters
      * @return array
      */
     public function parseNamedParameters($parameters)

@@ -47,6 +47,7 @@ class JavascriptValidator implements Arrayable
     /**
      * @param \Proengsoft\JsValidation\Javascript\ValidatorHandler $validator
      * @param array $options
+     * @return void
      */
     public function __construct(ValidatorHandler $validator, $options = [])
     {
@@ -58,6 +59,7 @@ class JavascriptValidator implements Arrayable
      * Set default parameters.
      *
      * @param $options
+     * @return void
      */
     protected function setDefaults($options)
     {
@@ -70,8 +72,7 @@ class JavascriptValidator implements Arrayable
      * Render the specified view with validator data.
      *
      * @param \Illuminate\Contracts\View\View|string|null $view
-     * @param string|null                                 $selector
-     *
+     * @param string|null $selector
      * @return string
      */
     public function render($view = null, $selector = null)
@@ -111,7 +112,6 @@ class JavascriptValidator implements Arrayable
      * Gets value from view data.
      *
      * @param $name
-     *
      * @return string
      *
      * @throws \Proengsoft\JsValidation\Exceptions\PropertyNotFoundException
@@ -127,7 +127,7 @@ class JavascriptValidator implements Arrayable
     }
 
     /**
-     *  Gets view data.
+     * Gets view data.
      *
      * @return array
      */
@@ -148,7 +148,6 @@ class JavascriptValidator implements Arrayable
      * Set the form selector to validate.
      *
      * @param string $selector
-     *
      * @deprecated
      */
     public function setSelector($selector)
@@ -160,7 +159,6 @@ class JavascriptValidator implements Arrayable
      * Set the form selector to validate.
      *
      * @param string $selector
-     *
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function selector($selector)
@@ -174,7 +172,6 @@ class JavascriptValidator implements Arrayable
      * Set the input selector to ignore for validation.
      *
      * @param string $ignore
-     *
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function ignore($ignore)
@@ -188,7 +185,6 @@ class JavascriptValidator implements Arrayable
      * Set the view to render Javascript Validations.
      *
      * @param \Illuminate\Contracts\View\View|string|null $view
-     *
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function view($view)
@@ -201,8 +197,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Enables or disables remote validations.
      *
-     * @param bool|null $enabled
-     *
+     * @param null|bool $enabled
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function remote($enabled = true)
@@ -215,9 +210,8 @@ class JavascriptValidator implements Arrayable
     /**
      * Validate Conditional Validations using Ajax in specified fields.
      *
-     * @param  string  $attribute
-     * @param  string|array  $rules
-     *
+     * @param string $attribute
+     * @param string|array $rules
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function sometimes($attribute, $rules)

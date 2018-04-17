@@ -10,7 +10,6 @@ trait AccessProtectedTrait
      * Create closure to call inaccessible method.
      *
      * @param $instance
-     *
      * @return \Closure
      */
     protected function createProtectedCaller($instance)
@@ -29,7 +28,6 @@ trait AccessProtectedTrait
      *
      * @param $instance
      * @param $property
-     *
      * @return \Closure
      */
     protected function getProtected($instance, $property)
@@ -48,7 +46,6 @@ trait AccessProtectedTrait
      * @param object|\Closure $instance
      * @param $method
      * @param $args
-     *
      * @return mixed
      */
     protected function callProtected($instance, $method, $args = [])

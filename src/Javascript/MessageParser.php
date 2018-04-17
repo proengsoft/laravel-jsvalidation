@@ -14,6 +14,7 @@ class MessageParser
      * Create a new JsValidation instance.
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @return void
      */
     public function __construct(DelegatedValidator $validator)
     {
@@ -26,7 +27,6 @@ class MessageParser
      * @param string $attribute
      * @param string $rule
      * @param array  $parameters
-     *
      * @return mixed
      */
     public function getMessage($attribute, $rule, $parameters)
@@ -48,7 +48,6 @@ class MessageParser
      * @param string $attribute
      * @param string $rule
      * @param $parameters
-     *
      * @return array
      */
     protected function fakeValidationData($attribute, $rule, $parameters)
@@ -67,6 +66,7 @@ class MessageParser
      * @param $data
      * @param $rule
      * @param $parameters
+     * @return void
      */
     private function fakeRequiredIfData($data, $rule, $parameters)
     {
@@ -84,6 +84,7 @@ class MessageParser
      *
      * @param $data
      * @param $attribute
+     * @return void
      */
     private function fakeFileData($data, $attribute)
     {

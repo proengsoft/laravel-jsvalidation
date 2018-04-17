@@ -3,12 +3,18 @@
 namespace Proengsoft\JsValidation\Tests\Remote;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Translation\ArrayLoader;
+use Illuminate\Translation\Translator;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Validator as LaravelValidator;
-use Proengsoft\JsValidation\Exceptions\BadRequestHttpException;
+use PHPUnit_Framework_TestCase;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Remote\Validator;
+use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyArrayLoader;
+use Symfony\Component\Translation\MessageSelector;
+use Symfony\Component\Translation\Translator as SymfonyTranslator;
 
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends PHPUnit_Framework_TestCase
 {
     public function testValidateRemoteRulePasses()
     {
@@ -36,7 +42,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         try {
             $validator->validate('field',$params);
             $this->fail();
-        } catch (\Illuminate\Validation\ValidationException $ex) {
+        } catch (ValidationException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
             $this->assertEquals('["field active_url!"]', $ex->getResponse()->getContent());
         } catch (HttpResponseException $ex) {
@@ -71,7 +77,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         try {
             $validator->validate('field',$params);
             $this->fail();
-        } catch (\Illuminate\Validation\ValidationException $ex) {
+        } catch (ValidationException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
             $this->assertEquals('["validation.alpha"]', $ex->getResponse()->getContent());
         } catch (HttpResponseException $ex) {
@@ -87,14 +93,14 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'validation.active_url' => ':attribute active_url!'
         ];
 
-        if (method_exists(\Illuminate\Translation\Translator::class,'addLines')) {
-            $trans = new \Illuminate\Translation\Translator(
-                new \Illuminate\Translation\ArrayLoader, 'en'
+        if (method_exists(Translator::class,'addLines')) {
+            $trans = new Translator(
+                new ArrayLoader(), 'en'
             );
             $trans->addLines( $messages, 'en');
         } else {
-            $trans = new \Symfony\Component\Translation\Translator('en', new \Symfony\Component\Translation\MessageSelector);
-            $trans->addLoader('array', new \Symfony\Component\Translation\Loader\ArrayLoader);
+            $trans = new SymfonyTranslator('en', new MessageSelector());
+            $trans->addLoader('array', new SymfonyArrayLoader());
             $trans->addResource('array', $messages , 'en', 'messages' );
         }
 
@@ -104,7 +110,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     protected function getRealValidator($rules, $messages = [], $data = [])
     {
         $trans = $this->getRealTranslator();
-        $laravelValidator = new LaravelValidator($trans, $data, $rules, $messages );
+        $laravelValidator = new LaravelValidator($trans, $data, $rules, $messages);
         $laravelValidator->addExtension(ValidatorHandler::JSVALIDATION_DISABLE, function() {
             return true;
         });

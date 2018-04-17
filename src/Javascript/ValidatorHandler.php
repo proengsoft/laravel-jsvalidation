@@ -36,6 +36,7 @@ class ValidatorHandler
      *
      * @param RuleParser $rules
      * @param MessageParser $messages
+     * @return void
      */
     public function __construct(RuleParser $rules, MessageParser $messages)
     {
@@ -48,6 +49,7 @@ class ValidatorHandler
      * Sets delegated Validator instance.
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @return void
      */
     public function setDelegatedValidator(DelegatedValidator $validator)
     {
@@ -57,9 +59,10 @@ class ValidatorHandler
     }
 
     /**
-     *  Enable or disables remote validations.
+     * Enable or disables remote validations.
      *
      * @param bool $enabled
+     * @return void
      */
     public function setRemote($enabled)
     {
@@ -93,7 +96,6 @@ class ValidatorHandler
      * @param $attribute
      * @param $rules
      * @param bool $includeRemote
-     *
      * @return array
      */
     protected function jsConvertRules($attribute, $rules, $includeRemote)
@@ -129,7 +131,6 @@ class ValidatorHandler
      * Check if JS Validation is disabled for attribute.
      *
      * @param $attribute
-     *
      * @return bool
      */
     public function jsValidationEnabled($attribute)
@@ -158,6 +159,7 @@ class ValidatorHandler
      *
      * @param string $attribute
      * @param string|array $rules
+     * @return void
      */
     public function sometimes($attribute, $rules = [])
     {

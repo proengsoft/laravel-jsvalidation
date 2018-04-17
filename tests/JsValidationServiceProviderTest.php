@@ -2,7 +2,9 @@
 
 namespace Proengsoft\JsValidation\Tests;
 
-class JsValidationServiceProviderTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class JsValidationServiceProviderTest extends PHPUnit_Framework_TestCase
 {
     protected function getMockedService($app)
     {

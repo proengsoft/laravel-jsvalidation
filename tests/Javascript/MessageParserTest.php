@@ -2,10 +2,10 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
-
+use PHPUnit_Framework_TestCase;
 use Proengsoft\JsValidation\Javascript\MessageParser;
 
-class MessageParserTest extends \PHPUnit_Framework_TestCase
+class MessageParserTest extends PHPUnit_Framework_TestCase
 {
     public function testGetMessage()
     {

@@ -31,6 +31,7 @@ class Validator
      * RemoteValidator constructor.
      *
      * @param \Illuminate\Validation\Validator $validator
+     * @return void
      */
     public function __construct(BaseValidator $validator)
     {
@@ -42,6 +43,9 @@ class Validator
      *
      * @param $field
      * @param $parameters
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function validate($field, $parameters = [])
     {
@@ -55,8 +59,8 @@ class Validator
     /**
      * Throw the failed validation exception.
      *
-     * @param  mixed $result
-     * @param  \Illuminate\Validation\Validator  $validator
+     * @param mixed $result
+     * @param \Illuminate\Validation\Validator  $validator
      * @return void
      *
      * @throws \Illuminate\Validation\ValidationException|\Illuminate\Http\Exceptions\HttpResponseException
@@ -127,6 +131,7 @@ class Validator
      *
      * @param $attribute
      * @param bool $validateAll
+     * @return void
      */
     protected function setRemoteValidation($attribute, $validateAll = false)
     {

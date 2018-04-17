@@ -26,6 +26,7 @@ class Resolver
      * RemoteValidator constructor.
      *
      * @param \Illuminate\Contracts\Validation\Factory $factory
+     * @return void
      */
     public function __construct(ValidationFactory $factory)
     {
@@ -37,7 +38,6 @@ class Resolver
      * Closure used to resolve Validator instance.
      *
      * @param $field
-     *
      * @return \Closure
      */
     public function resolver($field)
@@ -56,7 +56,6 @@ class Resolver
      * @param $messages
      * @param $customAttributes
      * @param $field
-     *
      * @return \Illuminate\Validation\Validator
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)

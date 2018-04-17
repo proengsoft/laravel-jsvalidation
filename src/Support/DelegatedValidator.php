@@ -8,6 +8,7 @@ use Illuminate\Validation\Validator as BaseValidator;
 class DelegatedValidator
 {
     use AccessProtectedTrait;
+
     /**
      * The Validator resolved instance.
      *
@@ -34,6 +35,7 @@ class DelegatedValidator
      *
      * @param \Illuminate\Validation\Validator $validator
      * @param \Proengsoft\JsValidation\Support\ValidationRuleParserProxy $ruleParser
+     * @return void
      */
     public function __construct(BaseValidator $validator, ValidationRuleParserProxy $ruleParser)
     {
@@ -112,8 +114,7 @@ class DelegatedValidator
      * @param string $message
      * @param string $attribute
      * @param string $rule
-     * @param array  $parameters
-     *
+     * @param array $parameters
      * @return string
      */
     public function makeReplacements($message, $attribute, $rule, $parameters)
@@ -124,9 +125,8 @@ class DelegatedValidator
     /**
      * Determine if the given attribute has a rule in the given set.
      *
-     * @param string       $attribute
+     * @param string $attribute
      * @param string|array $rules
-     *
      * @return bool
      */
     public function hasRule($attribute, $rules)
@@ -139,7 +139,6 @@ class DelegatedValidator
      *
      * @param string $attribute
      * @param string $rule
-     *
      * @return string
      */
     public function getMessage($attribute, $rule)
@@ -151,7 +150,6 @@ class DelegatedValidator
      * Extract the rule name and parameters from a rule.
      *
      * @param array|string $rules
-     *
      * @return array
      */
     public function parseRule($rules)
@@ -162,7 +160,7 @@ class DelegatedValidator
     /**
      * Explode the rules into an array of rules.
      *
-     * @param  string|array  $rules
+     * @param string|array $rules
      * @return array
      */
     public function explodeRules($rules)
@@ -173,9 +171,9 @@ class DelegatedValidator
     /**
      * Add conditions to a given field based on a Closure.
      *
-     * @param  string  $attribute
-     * @param  string|array  $rules
-     * @param  callable  $callback
+     * @param string $attribute
+     * @param string|array $rules
+     * @param callable $callback
      * @return void
      */
     public function sometimes($attribute, $rules, callable $callback)

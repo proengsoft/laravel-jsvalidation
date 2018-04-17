@@ -1,9 +1,12 @@
-<?php namespace Proengsoft\JsValidation\Test\Facades;
+<?php
+
+namespace Proengsoft\JsValidation\Test\Facades;
 
 use Mockery as m;
+use PHPUnit_Framework_TestCase;
 use Proengsoft\JsValidation\Facades\JsValidatorFacade;
 
-class JsValidatorFacadeTest extends \PHPUnit_Framework_TestCase {
+class JsValidatorFacadeTest extends PHPUnit_Framework_TestCase {
 
     /**
      * Calls Mockery::close
@@ -20,15 +23,16 @@ class JsValidatorFacadeTest extends \PHPUnit_Framework_TestCase {
         | Set
         |------------------------------------------------------------
         */
-        $app['jsvalidator']=[];
+
+        $app['jsvalidator'] = [];
 
         /*
         |------------------------------------------------------------
         | Expectation
         |------------------------------------------------------------
         */
-        $expected=[];
 
+        $expected = [];
 
         /*
         |------------------------------------------------------------
@@ -36,17 +40,18 @@ class JsValidatorFacadeTest extends \PHPUnit_Framework_TestCase {
         |------------------------------------------------------------
         */
 
-        $facade=new JsValidatorFacade();
+        $facade = new JsValidatorFacade();
         $facade->setFacadeApplication($app);
-        $data=$facade->getFacadeRoot();
+        $data = $facade->getFacadeRoot();
 
-        $this->assertEquals($expected,$data);
+        $this->assertEquals($expected, $data);
 
         /*
         |------------------------------------------------------------
         | Cleanup
         |------------------------------------------------------------
         */
+
         $facade->setFacadeApplication(null);
         unset($app);
         unset($facade);

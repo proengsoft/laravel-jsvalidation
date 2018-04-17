@@ -2,9 +2,10 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
+use PHPUnit_Framework_TestCase;
 use Proengsoft\JsValidation\Javascript\RuleParser;
 
-class RuleParserTest extends \PHPUnit_Framework_TestCase
+class RuleParserTest extends PHPUnit_Framework_TestCase
 {
     public function testGetClientRule()
     {
