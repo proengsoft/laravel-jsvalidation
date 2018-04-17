@@ -39,7 +39,6 @@ class RuleParser
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
      * @param string|null $remoteToken
-     * @return void
      */
     public function __construct(DelegatedValidator $validator, $remoteToken = null)
     {

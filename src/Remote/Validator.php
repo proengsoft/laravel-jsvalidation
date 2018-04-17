@@ -31,7 +31,6 @@ class Validator
      * RemoteValidator constructor.
      *
      * @param \Illuminate\Validation\Validator $validator
-     * @return void
      */
     public function __construct(BaseValidator $validator)
     {

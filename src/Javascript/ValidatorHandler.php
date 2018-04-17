@@ -36,7 +36,6 @@ class ValidatorHandler
      *
      * @param RuleParser $rules
      * @param MessageParser $messages
-     * @return void
      */
     public function __construct(RuleParser $rules, MessageParser $messages)
     {

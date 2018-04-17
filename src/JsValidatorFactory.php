@@ -34,7 +34,6 @@ class JsValidatorFactory
      *
      * @param \Illuminate\Container\Container $app
      * @param array $options
-     * @return void
      */
     public function __construct($app, array $options = [])
     {

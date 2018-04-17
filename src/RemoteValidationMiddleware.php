@@ -30,7 +30,6 @@ class RemoteValidationMiddleware
      *
      * @param ValidationFactory $validator
      * @param Config $config
-     * @return void
      */
     public function __construct(ValidationFactory $validator, Config $config)
     {

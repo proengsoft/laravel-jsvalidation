@@ -47,7 +47,6 @@ class JavascriptValidator implements Arrayable
     /**
      * @param \Proengsoft\JsValidation\Javascript\ValidatorHandler $validator
      * @param array $options
-     * @return void
      */
     public function __construct(ValidatorHandler $validator, $options = [])
     {

@@ -35,7 +35,6 @@ class DelegatedValidator
      *
      * @param \Illuminate\Validation\Validator $validator
      * @param \Proengsoft\JsValidation\Support\ValidationRuleParserProxy $ruleParser
-     * @return void
      */
     public function __construct(BaseValidator $validator, ValidationRuleParserProxy $ruleParser)
     {

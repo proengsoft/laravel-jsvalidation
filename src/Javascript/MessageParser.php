@@ -14,7 +14,6 @@ class MessageParser
      * Create a new JsValidation instance.
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
-     * @return void
      */
     public function __construct(DelegatedValidator $validator)
     {

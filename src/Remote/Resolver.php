@@ -26,7 +26,6 @@ class Resolver
      * RemoteValidator constructor.
      *
      * @param \Illuminate\Contracts\Validation\Factory $factory
-     * @return void
      */
     public function __construct(ValidationFactory $factory)
     {
