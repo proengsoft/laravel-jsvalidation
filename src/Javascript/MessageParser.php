@@ -3,8 +3,8 @@
 namespace Proengsoft\JsValidation\Javascript;
 
 use Proengsoft\JsValidation\Support\DelegatedValidator;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MessageParser
 {

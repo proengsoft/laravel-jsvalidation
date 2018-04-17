@@ -8,7 +8,9 @@ use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 
 class RuleParser
 {
-    use RuleListTrait, JavascriptRulesTrait, UseDelegatedValidatorTrait;
+    use RuleListTrait;
+    use JavascriptRulesTrait;
+    use UseDelegatedValidatorTrait;
 
     /**
      * Rule used to validate remote requests.
@@ -23,7 +25,7 @@ class RuleParser
     /**
      * Token used to secure romte validations.
      *
-     * @string|null $remoteToken
+     * @var null|string $remoteToken
      */
     protected $remoteToken;
 
@@ -38,7 +40,7 @@ class RuleParser
      * Create a new JsValidation instance.
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
-     * @param string|null $remoteToken
+     * @param null|string $remoteToken
      */
     public function __construct(DelegatedValidator $validator, $remoteToken = null)
     {
@@ -85,7 +87,7 @@ class RuleParser
     /**
      * Add conditional rules.
      *
-     * @param $attribute
+     * @param mixed $attribute
      * @param array $rules
      * @return void
      */
@@ -101,8 +103,8 @@ class RuleParser
     /**
      * Determine if rule is passed with sometimes.
      *
-     * @param $attribute
-     * @param $rule
+     * @param mixed $attribute
+     * @param string $rule
      * @return bool
      */
     protected function isConditionalRule($attribute, $rule)
@@ -115,7 +117,7 @@ class RuleParser
      * Returns Javascript parameters for remote validated rules.
      *
      * @param string $attribute
-     * @param $rule
+     * @param string $rule
      * @param $parameters
      * @return array
      */
@@ -153,7 +155,7 @@ class RuleParser
     /**
      * Handles multidimensional attribute names.
      *
-     * @param $attribute
+     * @param mixed $attribute
      * @return string
      */
     protected function getAttributeName($attribute)
@@ -169,7 +171,7 @@ class RuleParser
     /**
      * Parse named parameters to $key => $value items.
      *
-     * @param array  $parameters
+     * @param array $parameters
      * @return array
      */
     public function parseNamedParameters($parameters)

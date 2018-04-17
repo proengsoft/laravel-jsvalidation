@@ -3,8 +3,8 @@
 namespace Proengsoft\JsValidation\Javascript;
 
 use Exception;
-use Illuminate\Support\Facades\View;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Facades\View;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 
 class JavascriptValidator implements Arrayable
@@ -70,8 +70,8 @@ class JavascriptValidator implements Arrayable
     /**
      * Render the specified view with validator data.
      *
-     * @param \Illuminate\Contracts\View\View|string|null $view
-     * @param string|null $selector
+     * @param null|\Illuminate\Contracts\View\View|string $view
+     * @param null|string $selector
      * @return string
      */
     public function render($view = null, $selector = null)
@@ -183,7 +183,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Set the view to render Javascript Validations.
      *
-     * @param \Illuminate\Contracts\View\View|string|null $view
+     * @param null|\Illuminate\Contracts\View\View|string $view
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function view($view)

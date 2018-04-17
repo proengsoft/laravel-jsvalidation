@@ -176,7 +176,7 @@ class JsValidatorFactory
      * Creates JsValidator instance based on Validator.
      *
      * @param \Illuminate\Validation\Validator $validator
-     * @param string|null $selector
+     * @param null|string $selector
      * @return JavascriptValidator
      */
     public function validator(Validator $validator, $selector = null)
@@ -188,7 +188,7 @@ class JsValidatorFactory
      * Creates JsValidator instance based on Validator.
      *
      * @param \Illuminate\Validation\Validator $validator
-     * @param string|null $selector
+     * @param null|string $selector
      * @return JavascriptValidator
      */
     protected function jsValidator(Validator $validator, $selector = null)
