@@ -2,11 +2,10 @@
 
 namespace Proengsoft\JsValidation\Remote;
 
-use Closure;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 class Resolver
 {

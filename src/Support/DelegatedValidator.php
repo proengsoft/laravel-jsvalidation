@@ -2,7 +2,6 @@
 
 namespace Proengsoft\JsValidation\Support;
 
-use Closure;
 use Illuminate\Validation\Validator as BaseValidator;
 
 class DelegatedValidator
@@ -24,9 +23,9 @@ class DelegatedValidator
     protected $ruleParser;
 
     /**
-     *  Closure to invoke non accessible Validator methods.
+     * Closure to invoke non accessible Validator methods.
      *
-     * @var Closure
+     * @var \Closure
      */
     protected $validatorMethod;
 
@@ -99,7 +98,6 @@ class DelegatedValidator
      * Determine if a given rule implies the attribute is required.
      *
      * @param string $rule
-     *
      * @return bool
      */
     public function isImplicit($rule)
@@ -185,7 +183,6 @@ class DelegatedValidator
      *
      * @param $method
      * @param $params
-     *
      * @return mixed
      */
     public function __call($method, $params)
