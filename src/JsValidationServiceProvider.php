@@ -10,6 +10,8 @@ class JsValidationServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
+     *
+     * @return void
      */
     public function boot()
     {
@@ -25,6 +27,8 @@ class JsValidationServiceProvider extends ServiceProvider
 
     /**
      * Register the application services.
+     *
+     * @return void
      */
     public function register()
     {
@@ -37,6 +41,8 @@ class JsValidationServiceProvider extends ServiceProvider
 
     /**
      * Configure and publish views.
+     *
+     * @return void
      */
     protected function bootstrapViews()
     {
@@ -49,7 +55,9 @@ class JsValidationServiceProvider extends ServiceProvider
     }
 
     /**
-     *  Configure Laravel Validator.
+     * Configure Laravel Validator.
+     *
+     * @return void
      */
     protected function bootstrapValidator()
     {
@@ -61,6 +69,8 @@ class JsValidationServiceProvider extends ServiceProvider
 
     /**
      * Load and publishes configs.
+     *
+     * @return void
      */
     protected function bootstrapConfigs()
     {
@@ -72,6 +82,8 @@ class JsValidationServiceProvider extends ServiceProvider
 
     /**
      * Publish public assets.
+     *
+     * @return void
      */
     protected function publishAssets()
     {

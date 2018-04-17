@@ -2,7 +2,6 @@
 
 namespace Proengsoft\JsValidation\Javascript;
 
-use Illuminate\Validation\Validator;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 
@@ -48,6 +47,7 @@ class ValidatorHandler
      * Sets delegated Validator instance.
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @return void
      */
     public function setDelegatedValidator(DelegatedValidator $validator)
     {
@@ -57,9 +57,10 @@ class ValidatorHandler
     }
 
     /**
-     *  Enable or disables remote validations.
+     * Enable or disables remote validations.
      *
      * @param bool $enabled
+     * @return void
      */
     public function setRemote($enabled)
     {
@@ -93,7 +94,6 @@ class ValidatorHandler
      * @param $attribute
      * @param $rules
      * @param bool $includeRemote
-     *
      * @return array
      */
     protected function jsConvertRules($attribute, $rules, $includeRemote)
@@ -129,7 +129,6 @@ class ValidatorHandler
      * Check if JS Validation is disabled for attribute.
      *
      * @param $attribute
-     *
      * @return bool
      */
     public function jsValidationEnabled($attribute)
@@ -158,6 +157,7 @@ class ValidatorHandler
      *
      * @param string $attribute
      * @param string|array $rules
+     * @return void
      */
     public function sometimes($attribute, $rules = [])
     {

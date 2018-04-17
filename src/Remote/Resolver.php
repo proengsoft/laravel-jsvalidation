@@ -2,11 +2,10 @@
 
 namespace Proengsoft\JsValidation\Remote;
 
-use Closure;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 class Resolver
 {
@@ -37,7 +36,6 @@ class Resolver
      * Closure used to resolve Validator instance.
      *
      * @param $field
-     *
      * @return \Closure
      */
     public function resolver($field)
@@ -56,7 +54,6 @@ class Resolver
      * @param $messages
      * @param $customAttributes
      * @param $field
-     *
      * @return \Illuminate\Validation\Validator
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)

@@ -2,6 +2,8 @@
 
 namespace Proengsoft\JsValidation\Tests\Remote;
 
+use Mockery;
+
 class CustomValidatorStubTest implements \Illuminate\Contracts\Validation\Factory
 {
     protected $resolver;
@@ -9,7 +11,7 @@ class CustomValidatorStubTest implements \Illuminate\Contracts\Validation\Factor
     public function __construct($translator)
     {
         $this->resolver = function() use ($translator) {
-            $m=\Mockery::mock('Illuminate\Validation\Validator[sometimes,getRules]',[$translator,[],[]])
+            $m = Mockery::mock('Illuminate\Validation\Validator[sometimes,getRules]',[$translator,[],[]])
                 ->shouldAllowMockingMethod('sometimes');
             $m->shouldReceive('sometimes')
                 ->once();

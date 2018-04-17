@@ -2,10 +2,11 @@
 
 namespace Proengsoft\JsValidation\Tests;
 
+use PHPUnit_Framework_TestCase;
 use Proengsoft\JsValidation\Remote\Validator;
 use Proengsoft\JsValidation\RemoteValidationMiddleware;
 
-class RemoteValidationMiddlewareTest extends \PHPUnit_Framework_TestCase
+class RemoteValidationMiddlewareTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

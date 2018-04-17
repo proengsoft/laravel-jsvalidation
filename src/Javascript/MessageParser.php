@@ -3,8 +3,8 @@
 namespace Proengsoft\JsValidation\Javascript;
 
 use Proengsoft\JsValidation\Support\DelegatedValidator;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MessageParser
 {
@@ -26,7 +26,6 @@ class MessageParser
      * @param string $attribute
      * @param string $rule
      * @param array  $parameters
-     *
      * @return mixed
      */
     public function getMessage($attribute, $rule, $parameters)
@@ -48,7 +47,6 @@ class MessageParser
      * @param string $attribute
      * @param string $rule
      * @param $parameters
-     *
      * @return array
      */
     protected function fakeValidationData($attribute, $rule, $parameters)
@@ -67,6 +65,7 @@ class MessageParser
      * @param $data
      * @param $rule
      * @param $parameters
+     * @return void
      */
     private function fakeRequiredIfData($data, $rule, $parameters)
     {
@@ -84,6 +83,7 @@ class MessageParser
      *
      * @param $data
      * @param $attribute
+     * @return void
      */
     private function fakeFileData($data, $attribute)
     {

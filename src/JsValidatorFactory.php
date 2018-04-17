@@ -2,16 +2,15 @@
 
 namespace Proengsoft\JsValidation;
 
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Proengsoft\JsValidation\Javascript\RuleParser;
-use Proengsoft\JsValidation\Javascript\MessageParser;
-use Proengsoft\JsValidation\Support\DelegatedValidator;
-use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
+use Proengsoft\JsValidation\Javascript\MessageParser;
+use Proengsoft\JsValidation\Javascript\RuleParser;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\ValidationRuleParserProxy;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 class JsValidatorFactory
 {
@@ -33,7 +32,7 @@ class JsValidatorFactory
      * Create a new Validator factory instance.
      *
      * @param \Illuminate\Container\Container $app
-     * @param array                                        $options
+     * @param array $options
      */
     public function __construct($app, array $options = [])
     {
@@ -41,6 +40,10 @@ class JsValidatorFactory
         $this->setOptions($options);
     }
 
+    /**
+     * @param $options
+     * @return void
+     */
     protected function setOptions($options)
     {
         $options['disable_remote_validation'] = empty($options['disable_remote_validation']) ? false : $options['disable_remote_validation'];
@@ -53,12 +56,11 @@ class JsValidatorFactory
     /**
      * Creates JsValidator instance based on rules and message arrays.
      *
-     * @param array       $rules
-     * @param array       $messages
-     * @param array       $customAttributes
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
      * @param null|string $selector
-     *
-     * @return JavascriptValidator
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function make(array $rules, array $messages = [], array $customAttributes = [], $selector = null)
     {
@@ -73,7 +75,7 @@ class JsValidatorFactory
      * @param array $rules
      * @param array $messages
      * @param array $customAttributes
-     * @return Validator
+     * @return \Illuminate\Validation\Validator
      */
     protected function getValidatorInstance(array $rules, array $messages = [], array $customAttributes = [])
     {
@@ -87,9 +89,9 @@ class JsValidatorFactory
     }
 
     /**
-     * gets fake data when validator has wildcard rules.
-     * @param array $rules
+     * Gets fake data when validator has wildcard rules.
      *
+     * @param array $rules
      * @return array
      */
     protected function getValidationData(array $rules, array $customAttributes = [])
@@ -113,9 +115,9 @@ class JsValidatorFactory
      *
      * @param $formRequest
      * @param null $selector
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      *
-     * @return JavascriptValidator
-     * @throws FormRequestArgumentException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function formRequest($formRequest, $selector = null)
     {
@@ -130,6 +132,10 @@ class JsValidatorFactory
         return $this->validator($validator, $selector);
     }
 
+    /**
+     * @param string|array $class
+     * @return array
+     */
     protected function parseFormRequestName($class)
     {
         $params = [];
@@ -142,10 +148,12 @@ class JsValidatorFactory
     }
 
     /**
-     *  Creates and initializes an Form Request instance.
+     * Creates and initializes an Form Request instance.
      *
      * @param string $class
-     * @return FormRequest
+     * @return \Illuminate\Foundation\Http\FormRequest
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected function createFormRequest($class)
     {
@@ -173,9 +181,8 @@ class JsValidatorFactory
      * Creates JsValidator instance based on Validator.
      *
      * @param \Illuminate\Validation\Validator $validator
-     * @param string|null                      $selector
-     *
-     * @return JavascriptValidator
+     * @param null|string $selector
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function validator(Validator $validator, $selector = null)
     {
@@ -186,9 +193,8 @@ class JsValidatorFactory
      * Creates JsValidator instance based on Validator.
      *
      * @param \Illuminate\Validation\Validator $validator
-     * @param string|null                      $selector
-     *
-     * @return JavascriptValidator
+     * @param null|string $selector
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     protected function jsValidator(Validator $validator, $selector = null)
     {

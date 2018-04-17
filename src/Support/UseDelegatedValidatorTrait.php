@@ -7,7 +7,7 @@ trait UseDelegatedValidatorTrait
     /**
      * Delegated validator.
      *
-     * \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @var \Proengsoft\JsValidation\Support\DelegatedValidator $validator
      */
     protected $validator;
 
@@ -15,6 +15,7 @@ trait UseDelegatedValidatorTrait
      * Sets delegated Validator instance.
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @return void
      */
     public function setDelegatedValidator(DelegatedValidator $validator)
     {
@@ -22,7 +23,8 @@ trait UseDelegatedValidatorTrait
     }
 
     /**
-     *  Gets current DelegatedValidator instance.
+     * Gets current DelegatedValidator instance.
+     *
      * @return \Proengsoft\JsValidation\Support\DelegatedValidator
      */
     public function getDelegatedValidator()

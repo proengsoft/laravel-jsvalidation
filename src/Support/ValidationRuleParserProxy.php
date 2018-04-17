@@ -9,7 +9,7 @@ class ValidationRuleParserProxy
     /**
      * Extract the rule name and parameters from a rule.
      *
-     * @param  array|string  $rules
+     * @param array|string $rules
      * @return array
      */
     public function parse($rules)

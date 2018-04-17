@@ -1,14 +1,15 @@
 <?php
 
-
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
 use Illuminate\Support\Facades\View;
 use Mockery as m;
+use PHPUnit_Framework_TestCase;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
-class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
+class JavascriptValidatorTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -17,7 +18,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -47,7 +48,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
             'remote' => false,
         ];
 
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->getMock();
         $mockHandler->expects($this->once())
@@ -72,7 +73,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testToArray()
     {
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->setMethods(['validationData','setRemote'])
             ->getMock();
@@ -96,7 +97,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->setMethods(['validationData','setRemote'])
             ->getMock();
@@ -119,7 +120,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetException()
     {
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->setMethods(['validationData','setRemote'])
             ->getMock();
@@ -149,7 +150,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testIgnore()
     {
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->setMethods(['validationData','setRemote'])
             ->getMock();
@@ -177,7 +178,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
     public function testRemote()
     {
         $remote = true;
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->setMethods(['validationData','setRemote'])
             ->getMock();
@@ -202,7 +203,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
     public function testSometimes()
     {
         $remote = true;
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->setMethods(['validationData','sometimes','setRemote'])
             ->getMock();
@@ -230,7 +231,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testToString()
     {
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -269,7 +270,7 @@ class JavascriptValidatorTest extends \PHPUnit_Framework_TestCase
         set_error_handler([$this, 'store_error']);
         $exception = new \Exception("Simulated exception for Testing");
 
-        $mockHandler = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\ValidatorHandler::class)
+        $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
             ->getMock();
         $mockHandler->expects($this->once())
