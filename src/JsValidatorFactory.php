@@ -2,15 +2,15 @@
 
 namespace Proengsoft\JsValidation;
 
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator;
-use Proengsoft\JsValidation\Javascript\RuleParser;
-use Proengsoft\JsValidation\Javascript\MessageParser;
-use Proengsoft\JsValidation\Support\DelegatedValidator;
-use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
+use Proengsoft\JsValidation\Javascript\MessageParser;
+use Proengsoft\JsValidation\Javascript\RuleParser;
+use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\ValidationRuleParserProxy;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 class JsValidatorFactory
 {
@@ -132,6 +132,10 @@ class JsValidatorFactory
         return $this->validator($validator, $selector);
     }
 
+    /**
+     * @param string|array $class
+     * @return array
+     */
     protected function parseFormRequestName($class)
     {
         $params = [];
