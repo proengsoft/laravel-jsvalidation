@@ -337,8 +337,11 @@ $.extend(true, laravelValidation, {
 
         /**
          * Validate that an attribute is an array.
+         *
+         * @param value
+         * @param element
          */
-        Array: function(value) {
+        Array: function(value, element) {
             if (element.name.indexOf('[') !== -1 && element.name.indexOf(']') !== -1) {
                 return true;
             }
