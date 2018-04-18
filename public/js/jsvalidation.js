@@ -2599,7 +2599,7 @@ laravelValidation = {
 
             var param = typeof param === "string" && { url: param } || param;
 
-            if ( previous.old === value ) {
+            if (laravelValidation.helpers.arrayEquals(previous.old, value) || previous.old === value) {
                 return previous.valid;
             }
 
@@ -2930,6 +2930,25 @@ $.extend(true, laravelValidation, {
          */
         arrayDiff: function (arr1, arr2) {
             return array_diff(arr1, arr2);
+        },
+
+        /**
+         * Check whether two arrays are equal to one another.
+         *
+         * @param arr1
+         * @param arr2
+         * @returns {*}
+         */
+        arrayEquals: function (arr1, arr2) {
+            if (! $.isArray(arr1) || ! $.isArray(arr2)) {
+                return false;
+            }
+            
+            if (arr1.length !== arr2.length) {
+                return false;
+            }
+            
+            return $.isEmptyObject(this.arrayDiff(arr1, arr2));
         },
 
         /**

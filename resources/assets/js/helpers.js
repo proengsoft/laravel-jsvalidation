@@ -250,6 +250,25 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * Check whether two arrays are equal to one another.
+         *
+         * @param arr1
+         * @param arr2
+         * @returns {*}
+         */
+        arrayEquals: function (arr1, arr2) {
+            if (! $.isArray(arr1) || ! $.isArray(arr2)) {
+                return false;
+            }
+            
+            if (arr1.length !== arr2.length) {
+                return false;
+            }
+            
+            return $.isEmptyObject(this.arrayDiff(arr1, arr2));
+        },
+
+        /**
          * Makes element dependant from other.
          *
          * @param validator

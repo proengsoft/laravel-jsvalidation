@@ -160,7 +160,7 @@ laravelValidation = {
 
             var param = typeof param === "string" && { url: param } || param;
 
-            if ( previous.old === value ) {
+            if (laravelValidation.helpers.arrayEquals(previous.old, value) || previous.old === value) {
                 return previous.valid;
             }
 
