@@ -194,6 +194,14 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     *  Test Replace all error message place-holders with actual object value.
+     */
+    public function testMakeReplacementsObject()
+    {
+        $this->callValidatorProtectedMethod('makeReplacements', (object) ['message','attribute','rule',[]]);
+    }
+
+    /**
      * Test if the given attribute has a rule in the given set.
      *
      */
@@ -208,6 +216,14 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
     public function testGetMessage()
     {
         $this->callValidatorProtectedMethod('getMessage', ['attribute','rule']);
+    }
+
+    /**
+     * Test the validation message for object with  attribute and rule.
+     */
+    public function testGetMessageObject()
+    {
+        $this->callValidatorProtectedMethod('getMessage', (object) ['attribute','rule']);
     }
 
     /**
