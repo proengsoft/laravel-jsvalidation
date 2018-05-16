@@ -15,7 +15,7 @@
                 }
             },
             highlight: function(element) {
-                $(element).removeClass('is-valid').addClass('is-invalid'); // add the Bootstrap error class to the control group
+                $(element).closest('.form.control').removeClass('is-valid').addClass('is-invalid'); // add the Bootstrap error class to the control group
             },
 
             <?php if (isset($validator['ignore']) && is_string($validator['ignore'])): ?>
@@ -26,11 +26,11 @@
             /*
              // Uncomment this to mark as validated non required fields
              unhighlight: function(element) {
-             $(element).removeClass('is-invalid').addClass('is-valid');
+             $(element).closest('.form.control').removeClass('is-invalid').addClass('is-valid');
              },
              */
             success: function(element) {
-                $(element).removeClass('is-invalid').addClass('is-valid'); // remove the Boostrap error class from the control group
+                $(element).closest('.form.control').removeClass('is-invalid').addClass('is-valid'); // remove the Boostrap error class from the control group
             },
 
             focusInvalid: false, // do not focus the last invalid input
