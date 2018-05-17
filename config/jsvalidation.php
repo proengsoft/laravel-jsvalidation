@@ -4,6 +4,8 @@ return [
 
     /*
      * Default view used to render Javascript validation code
+     *
+     * Supported: 'jsvalidation::bootstrap', 'jsvalidation::bootstrap4'
      */
     'view' => 'jsvalidation::bootstrap',
 

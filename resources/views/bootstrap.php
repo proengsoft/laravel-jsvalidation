@@ -1,7 +1,7 @@
 <script>
     jQuery(document).ready(function(){
 
-        $("<?php echo $validator['selector']; ?>").validate({
+        $("<?= $validator['selector']; ?>").validate({
             errorElement: 'span',
             errorClass: 'help-block error-help-block',
 
@@ -9,7 +9,7 @@
                 if (element.parent('.input-group').length ||
                     element.prop('type') === 'checkbox' || element.prop('type') === 'radio') {
                     error.insertAfter(element.parent());
-                    // else just place the validation message immediatly after the input
+                    // else just place the validation message immediately after the input
                 } else {
                     error.insertAfter(element);
                 }
@@ -20,7 +20,7 @@
 
             <?php if (isset($validator['ignore']) && is_string($validator['ignore'])): ?>
 
-            ignore: "<?php echo $validator['ignore']; ?>",
+            ignore: "<?= $validator['ignore']; ?>",
             <?php endif; ?>
 
             /*
@@ -42,13 +42,13 @@
 
                 $('html, body').animate({
                     scrollTop: $(validator.errorList[0].element).offset().top
-                }, <?php echo Config::get('jsvalidation.duration_animate') ?>);
+                }, <?= Config::get('jsvalidation.duration_animate') ?>);
                 $(validator.errorList[0].element).focus();
 
             },
             <?php endif; ?>
 
-            rules: <?php echo json_encode($validator['rules']); ?>
+            rules: <?= json_encode($validator['rules']); ?>
         })
     })
 </script>

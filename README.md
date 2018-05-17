@@ -18,7 +18,7 @@ You can validate forms automatically referencing it to your defined validations.
 | `5.5`           | `2.x (>2.1.0)`  |
 | `5.4`           | `2.x`           |
 | `5.3`           | `1.x`           |
-| `5.2`          | `1.x`           |
+| `5.2`           | `1.x`           |
 | `5.1`           | `1.x`           |
 | `5.0`           | `1.x`           |
 
