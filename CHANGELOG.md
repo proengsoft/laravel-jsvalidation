@@ -8,6 +8,10 @@ All notable changes to `laravel-jsvalidation` will be documented in this file.
 
 - (#325) Added Bootstrap 4 support
 
+### Fixed
+
+- (#312) Array validation rule fixed
+
 ## [2.2.2] - 2018-04-18
 
 ### Fixed
