@@ -1,56 +1,96 @@
+# Changelog
+
+All notable changes to `laravel-jsvalidation` will be documented in this file.
+
+## [2.2.3] - 2018-05-17
+
+### Added
+
+- (#325) Added Bootstrap 4 support
+
+## [2.2.2] - 2018-04-18
+
+### Fixed
+
+- (#316, #317) Array rule validation
+
+## [2.2.1] - 2018-02-27
+
+### Fixed
+
+- (#307) Fix images, mimetypes & files rules in Laravel 5.6
+
+## [2.2.0] - 2018-02-09
+
+### Added
+
+- (#302) Laravel 5.6 support
+
+## [2.1.0] - 2017-08-31
+
+### Added
+
+- (#277) Laravel 5.5 support
+
 ## [2.0.0] - 2017-07-10
 
 ### Added
 
-- Laravel 5.4 support (#224)
+- (#224) Laravel 5.4 support
 
 ### Changed
 
-- Typo in `resources/assets/js/helpers.js` method `gess` fixed. Method renamed to `guess` (#250)
+- (#250) Typo in `resources/assets/js/helpers.js` method `gess` fixed. Method renamed to `guess`
 
 ### Fixed
 
-- JPEG mime-type check in `image` rule (#239)
+- (#239) JPEG mime-type check in `image` rule
 
 ### Removed
 
-- Laravel <= 5.3 support. Will be maintained in 1.x releases (#258)
+- (#258) Laravel <= 5.3 support. Will be maintained in 1.x releases
 - PHP < 5.6.4 support (Laravel 5.4 minimum requirement)
 
 ## [1.5.0] - 2017-01-22
  
-Features:
-   - Javascript validation for [File](https://laravel.com/docs/5.3/validation#rule-file) rule
-   - Javascript validation for [Mimetypes](https://laravel.com/docs/5.3/validation#rule-mimetypes) rule
-   - Javascript validation for [Nullable](https://laravel.com/docs/5.3/validation#rule-nullable) rule
-   - Javascript validation for [Filled](https://laravel.com/docs/5.3/validation#rule-filled) rule
-   - Javascript validation for [Dimensions](https://laravel.com/docs/5.3/validation#rule-dimensions) rule
-   - Javascript validation for [InArray](https://laravel.com/docs/5.3/validation#rule-inarray) rule
-   - Javascript validation for [Distinct](https://laravel.com/docs/5.3/validation#rule-distinct) rule
+### Added
 
-Issues resolved:
-  - Fix issue with HttpResponseException (#130)
-  - Fix Undefined index: _jsvalidation_validate_all (#201)
+- Javascript validation for [File](https://laravel.com/docs/5.3/validation#rule-file) rule
+- Javascript validation for [Mimetypes](https://laravel.com/docs/5.3/validation#rule-mimetypes) rule
+- Javascript validation for [Nullable](https://laravel.com/docs/5.3/validation#rule-nullable) rule
+- Javascript validation for [Filled](https://laravel.com/docs/5.3/validation#rule-filled) rule
+- Javascript validation for [Dimensions](https://laravel.com/docs/5.3/validation#rule-dimensions) rule
+- Javascript validation for [InArray](https://laravel.com/docs/5.3/validation#rule-inarray) rule
+- Javascript validation for [Distinct](https://laravel.com/docs/5.3/validation#rule-distinct) rule
+
+### Fixed
+
+- (#130) Fix issue with HttpResponseException
+- (#201) Fix Undefined index: _jsvalidation_validate_all
  
 ## [1.4.3] - 2017-01-07
 
-Features:
-   - Add support for the "bail" keyword (#179)
-   - Add support to validate array fields using non array rules (#180, #158)
+### Added
 
-Issues resolved:
-   - Fix remote custom validation (#175) 
-   - File Size doesn't work with JavaScript Validator (#156)
+- (#179) Add support for the "bail" keyword
+- (#180, #158) Add support to validate array fields using non array rules
+
+### Fixed
+
+- (#175) Fix remote custom validation 
+- (#156) File Size doesn't work with JavaScript Validator
 
 ## [1.4.2] - 2016-12-28
 
-Bugfixes:
- - Fix javascript build files
+### Fixed
+
+- Fix javascript build files
 
 ## [1.4.1] - 2016-12-28
 
-Bugfixes:
- - Fix javascript build files
+### Fixed
+
+- Fix javascript build files
 
 ## [1.4.0] - 2016-12-28
 
@@ -204,6 +244,11 @@ Features:
  - Uses Laravel Localization to translate messages
  - Can be configured in controllers or views.
  
+[2.2.3]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.2...2.2.3
+[2.2.2]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.1...2.2.2
+[2.2.1]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.0...2.2.1
+[2.2.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/v2.1.0...2.2.0
+[2.1.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/v1.5.0...v2.0.0
 [1.5.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/v1.4.3...v1.5.0
 [1.4.3]: https://github.com/proengsoft/laravel-jsvalidation/compare/v1.4.2...v1.4.3
