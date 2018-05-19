@@ -116,6 +116,10 @@ class DelegatedValidator
      */
     public function makeReplacements($message, $attribute, $rule, $parameters)
     {
+        if (is_object($rule)) {
+            $rule = get_class($rule);
+        }
+        
         return $this->callValidator('makeReplacements', [$message, $attribute, $rule, $parameters]);
     }
 
@@ -140,6 +144,10 @@ class DelegatedValidator
      */
     public function getMessage($attribute, $rule)
     {
+        if (is_object($rule)) {
+            $rule = get_class($rule);
+        }
+        
         return $this->callValidator('getMessage', [$attribute, $rule]);
     }
 
