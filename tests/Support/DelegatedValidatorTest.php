@@ -198,7 +198,6 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testMakeReplacementsObject()
     {
-        $this->callValidatorProtectedMethod('makeReplacements', (object) ['message','attribute','rule',[]]);
     }
 
     /**
@@ -223,7 +222,7 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testGetMessageObject()
     {
-        $this->callValidatorProtectedMethod('getMessage', (object) ['attribute','rule']);
+        $this->callValidatorProtectedMethod('getMessage', ['attribute', (object) []]);
     }
 
     /**
