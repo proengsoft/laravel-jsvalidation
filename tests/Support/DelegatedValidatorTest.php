@@ -198,6 +198,7 @@ class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testMakeReplacementsObject()
     {
+        $this->callValidatorProtectedMethod('makeReplacements', ['message','attribute','rule',(object) []]);
     }
 
     /**
