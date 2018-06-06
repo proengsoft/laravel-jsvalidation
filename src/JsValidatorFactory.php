@@ -202,7 +202,7 @@ class JsValidatorFactory
         $view = $this->options['view'];
         $selector = is_null($selector) ? $this->options['form_selector'] : $selector;
 
-        $delegated = new DelegatedValidator($validator, new ValidationRuleParserProxy());
+        $delegated = new DelegatedValidator($validator, new ValidationRuleParserProxy($validator->getData()));
         $rules = new RuleParser($delegated, $this->getSessionToken());
         $messages = new MessageParser($delegated);
 
