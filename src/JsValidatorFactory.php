@@ -204,7 +204,7 @@ class JsValidatorFactory
 
         $delegated = new DelegatedValidator($validator, new ValidationRuleParserProxy());
         $rules = new RuleParser($delegated, $this->getSessionToken());
-        $messages = new MessageParser($delegated);
+        $messages = new MessageParser($delegated, isset($this->options['escape']) ? $this->options['escape'] : false);
 
         $jsValidator = new ValidatorHandler($rules, $messages);
 

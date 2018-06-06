@@ -51,6 +51,25 @@ class ValidatorTest extends TestCase
         }
     }
 
+    public function testEscapeMessage()
+    {
+        $rules = ['field' => 'active_url|required'];
+        $data = ['field' => 'http://nonexistentdomain'];
+        $params= ['false'];
+        $validator = $this->getRealValidator($rules, [ 'field.active_url' => '<html>' ], $data, true);
+
+        try {
+            $validator->validate('field',$params);
+            $this->fail();
+        } catch (ValidationException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('["&lt;html&gt;"]', $ex->getResponse()->getContent());
+        } catch (HttpResponseException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('["&lt;html&gt;"]', $ex->getResponse()->getContent());
+        }
+    }
+
     public function testValidateRemoteDisabled()
     {
         $rules = ['field' => 'active_url|required|alpha|no_js_validation'];
@@ -107,13 +126,13 @@ class ValidatorTest extends TestCase
         return $trans;
     }
 
-    protected function getRealValidator($rules, $messages = [], $data = [])
+    protected function getRealValidator($rules, $messages = [], $data = [], $escape = false)
     {
         $trans = $this->getRealTranslator();
         $laravelValidator = new LaravelValidator($trans, $data, $rules, $messages);
         $laravelValidator->addExtension(ValidatorHandler::JSVALIDATION_DISABLE, function() {
             return true;
         });
-        return new Validator($laravelValidator);
+        return new Validator($laravelValidator, $escape);
     }
 }

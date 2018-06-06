@@ -39,4 +39,8 @@ return [
      */
     'remote_validation_field' => '_jsvalidation',
 
+    /*
+     * Whether to escape all validation messages with htmlentities.
+     */
+    'escape' => false,
 ];
