@@ -3279,7 +3279,7 @@ $.extend(true, laravelValidation, {
                 return laravelValidation.helpers.escapeRegExp(currentValue);
             });
 
-            return new RegExp('^'+regexpParts.join('.*')+'$');
+            return new RegExp('^'+regexpParts.join('[^\\]]*')+'$');
         }
     }
 });
