@@ -657,6 +657,15 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * Validate that an attribute does not pass a regular expression check.
+         *
+         * @returns {boolean}
+         */
+        NotRegex: function(value, element, params) {
+            return ! laravelValidation.methods.Regex(value, element, params);
+        },
+
+        /**
          * Validate that an attribute is a valid date.
          *
          * @return {boolean}
