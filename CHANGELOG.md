@@ -8,6 +8,10 @@ All notable changes to `laravel-jsvalidation` will be documented in this file.
 
 - (#337) Validate each form with same selector
 
+### Fixed
+
+- (#319) Fix custom rules
+
 ## [2.2.3] - 2018-05-17
 
 ### Added
