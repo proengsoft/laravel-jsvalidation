@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-jsvalidation` will be documented in this file.
 
+## [2.3.0] - 2018-07-19
+
+### Added
+
+- (#337) Validate each form with same selector
+
 ## [2.2.3] - 2018-05-17
 
 ### Added
@@ -248,6 +254,7 @@ Features:
  - Uses Laravel Localization to translate messages
  - Can be configured in controllers or views.
  
+[2.3.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.3...2.3.0
 [2.2.3]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.2...2.2.3
 [2.2.2]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.1...2.2.2
 [2.2.1]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.0...2.2.1
