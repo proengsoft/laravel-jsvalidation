@@ -81,7 +81,9 @@ class DelegatedValidator
      */
     public function setData($data)
     {
+        $rules = $this->validator->getRules();
         $this->validator->setData($data);
+        $this->validator->setRules($rules);
     }
 
     /**
