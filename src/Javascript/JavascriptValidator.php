@@ -209,11 +209,12 @@ class JavascriptValidator implements Arrayable
     /**
      * Validate Conditional Validations using Ajax in specified fields.
      *
-     * @param string $attribute
+     * @param string       $attribute
      * @param string|array $rules
+     * @param null         $callback Dummy attribute to make API seamless with Laravel sometimes()
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
-    public function sometimes($attribute, $rules)
+    public function sometimes($attribute, $rules, $callback = null)
     {
         $this->validator->sometimes($attribute, $rules);
 
