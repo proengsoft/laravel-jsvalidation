@@ -83,7 +83,9 @@ class DelegatedValidator
     {
         $rules = $this->validator->getRules();
         $this->validator->setData($data);
-        $this->validator->setRules($rules);
+        if (! empty($rules)) {
+            $this->validator->setRules($rules);
+        }
     }
 
     /**
