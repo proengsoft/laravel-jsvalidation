@@ -1,6 +1,6 @@
 <?php
 
-namespace Proengsoft\JsValidation\Facades;
+namespace Isrenato\JsValidation\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

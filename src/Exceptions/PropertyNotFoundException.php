@@ -1,6 +1,6 @@
 <?php
 
-namespace Proengsoft\JsValidation\Exceptions;
+namespace Isrenato\JsValidation\Exceptions;
 
 use Exception;
 

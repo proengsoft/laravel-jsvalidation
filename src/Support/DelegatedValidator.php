@@ -1,6 +1,6 @@
 <?php
 
-namespace Proengsoft\JsValidation\Support;
+namespace Isrenato\JsValidation\Support;
 
 use Illuminate\Validation\Validator as BaseValidator;
 
@@ -18,7 +18,7 @@ class DelegatedValidator
     /**
      * Validation rule parser instance.
      *
-     * @var \Proengsoft\JsValidation\Support\ValidationRuleParserProxy
+     * @var \Isrenato\JsValidation\Support\ValidationRuleParserProxy
      */
     protected $ruleParser;
 
@@ -33,7 +33,7 @@ class DelegatedValidator
      * DelegatedValidator constructor.
      *
      * @param \Illuminate\Validation\Validator $validator
-     * @param \Proengsoft\JsValidation\Support\ValidationRuleParserProxy $ruleParser
+     * @param \Isrenato\JsValidation\Support\ValidationRuleParserProxy $ruleParser
      */
     public function __construct(BaseValidator $validator, ValidationRuleParserProxy $ruleParser)
     {

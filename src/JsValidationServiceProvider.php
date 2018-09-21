@@ -1,10 +1,10 @@
 <?php
 
-namespace Proengsoft\JsValidation;
+namespace Isrenato\JsValidation;
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
-use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Isrenato\JsValidation\Javascript\ValidatorHandler;
 
 class JsValidationServiceProvider extends ServiceProvider
 {

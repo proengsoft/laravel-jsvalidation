@@ -1,9 +1,9 @@
 <?php
 
-namespace Proengsoft\JsValidation\Javascript;
+namespace Isrenato\JsValidation\Javascript;
 
-use Proengsoft\JsValidation\Support\DelegatedValidator;
-use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
+use Isrenato\JsValidation\Support\DelegatedValidator;
+use Isrenato\JsValidation\Support\UseDelegatedValidatorTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MessageParser

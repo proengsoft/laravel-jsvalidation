@@ -1,14 +1,14 @@
 <?php
 
-namespace Proengsoft\JsValidation\Remote;
+namespace Isrenato\JsValidation\Remote;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\ValidationRuleParser;
 use Illuminate\Validation\Validator as BaseValidator;
-use Proengsoft\JsValidation\Support\AccessProtectedTrait;
-use Proengsoft\JsValidation\Support\RuleListTrait;
+use Isrenato\JsValidation\Support\AccessProtectedTrait;
+use Isrenato\JsValidation\Support\RuleListTrait;
 
 class Validator
 {
