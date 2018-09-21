@@ -66,8 +66,7 @@
          */
         public function make(array $rules, array $messages = [], array $customAttributes = [], $selector = null)
         {
-            $validator = $this->getValidatorInstance($rules, $messages, $customAttributes);
-            
+            $validator = $this->getValidatorInstance($rules, $messages, $customAttributes);           
             return str_replace('[#]', '[*]', $this->validator($validator, $selector)->render());
         }
 
@@ -105,9 +104,7 @@
             });
 
             $attributes = array_merge(array_keys($customAttributes), $attributes);
-
             $attributes = str_replace('*', '#', $attributes);
-
             $data       = array_reduce($attributes, function ($data, $attribute) {
                 Arr::set($data, $attribute, true);
 
