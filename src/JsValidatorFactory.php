@@ -1,16 +1,16 @@
 <?php
 
-    namespace Proengsoft\JsValidation;
+    namespace Isrenato\JsValidation;
 
     use Illuminate\Contracts\Validation\Factory as ValidationFactory;
     use Illuminate\Support\Arr;
     use Illuminate\Validation\Validator;
-    use Proengsoft\JsValidation\Javascript\JavascriptValidator;
-    use Proengsoft\JsValidation\Javascript\MessageParser;
-    use Proengsoft\JsValidation\Javascript\RuleParser;
-    use Proengsoft\JsValidation\Javascript\ValidatorHandler;
-    use Proengsoft\JsValidation\Support\DelegatedValidator;
-    use Proengsoft\JsValidation\Support\ValidationRuleParserProxy;
+    use Isrenato\JsValidation\Javascript\JavascriptValidator;
+    use Isrenato\JsValidation\Javascript\MessageParser;
+    use Isrenato\JsValidation\Javascript\RuleParser;
+    use Isrenato\JsValidation\Javascript\ValidatorHandler;
+    use Isrenato\JsValidation\Support\DelegatedValidator;
+    use Isrenato\JsValidation\Support\ValidationRuleParserProxy;
 
     class JsValidatorFactory
     {
@@ -62,7 +62,7 @@
          * @param array       $customAttributes
          * @param null|string $selector
          *
-         * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
+         * @return \Isrenato\JsValidation\Javascript\JavascriptValidator
          */
         public function make(array $rules, array $messages = [], array $customAttributes = [], $selector = null)
         {
@@ -120,7 +120,7 @@
          * @param      $formRequest
          * @param null $selector
          *
-         * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
+         * @return \Isrenato\JsValidation\Javascript\JavascriptValidator
          *
          * @throws \Illuminate\Contracts\Container\BindingResolutionException
          */
@@ -190,7 +190,7 @@
          * @param \Illuminate\Validation\Validator $validator
          * @param null|string                      $selector
          *
-         * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
+         * @return \Isrenato\JsValidation\Javascript\JavascriptValidator
          */
         public function validator(Validator $validator, $selector = null)
         {
