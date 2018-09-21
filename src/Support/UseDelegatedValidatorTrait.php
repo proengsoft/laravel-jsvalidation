@@ -1,20 +1,20 @@
 <?php
 
-namespace Proengsoft\JsValidation\Support;
+namespace Isrenato\JsValidation\Support;
 
 trait UseDelegatedValidatorTrait
 {
     /**
      * Delegated validator.
      *
-     * @var \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @var \Isrenato\JsValidation\Support\DelegatedValidator $validator
      */
     protected $validator;
 
     /**
      * Sets delegated Validator instance.
      *
-     * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @param \Isrenato\JsValidation\Support\DelegatedValidator $validator
      * @return void
      */
     public function setDelegatedValidator(DelegatedValidator $validator)
@@ -25,7 +25,7 @@ trait UseDelegatedValidatorTrait
     /**
      * Gets current DelegatedValidator instance.
      *
-     * @return \Proengsoft\JsValidation\Support\DelegatedValidator
+     * @return \Isrenato\JsValidation\Support\DelegatedValidator
      */
     public function getDelegatedValidator()
     {
