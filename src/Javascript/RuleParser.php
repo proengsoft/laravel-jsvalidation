@@ -1,10 +1,10 @@
 <?php
 
-namespace Proengsoft\JsValidation\Javascript;
+namespace Isrenato\JsValidation\Javascript;
 
-use Proengsoft\JsValidation\Support\RuleListTrait;
-use Proengsoft\JsValidation\Support\DelegatedValidator;
-use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
+use Isrenato\JsValidation\Support\RuleListTrait;
+use Isrenato\JsValidation\Support\DelegatedValidator;
+use Isrenato\JsValidation\Support\UseDelegatedValidatorTrait;
 
 class RuleParser
 {
@@ -39,7 +39,7 @@ class RuleParser
     /**
      * Create a new JsValidation instance.
      *
-     * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @param \Isrenato\JsValidation\Support\DelegatedValidator $validator
      * @param null|string $remoteToken
      */
     public function __construct(DelegatedValidator $validator, $remoteToken = null)
