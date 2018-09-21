@@ -1,5 +1,5 @@
 {
-    "name": "proengsoft/laravel-jsvalidation",
+    "name": "isrenato/laravel-js-validation",
     "type": "library",
     "description": "Validate forms transparently with Javascript reusing your Laravel Validation Rules, Messages, and FormRequest",
     "keywords": [
@@ -42,21 +42,21 @@
     },
     "autoload": {
         "psr-4": {
-            "Proengsoft\\JsValidation\\": "src"
+            "Isrenato\\JsValidation\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Proengsoft\\JsValidation\\Tests\\": "tests"
+            "Isrenato\\JsValidation\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Proengsoft\\JsValidation\\JsValidationServiceProvider"
+                "Isrenato\\JsValidation\\JsValidationServiceProvider"
             ],
             "aliases": {
-                "JsValidator": "Proengsoft\\JsValidation\\Facades\\JsValidatorFacade"
+                "JsValidator": "Isrenato\\JsValidation\\Facades\\JsValidatorFacade"
             }
         }
     },
