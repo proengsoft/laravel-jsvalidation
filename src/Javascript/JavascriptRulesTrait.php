@@ -1,6 +1,6 @@
 <?php
 
-namespace Proengsoft\JsValidation\Javascript;
+namespace Isrenato\JsValidation\Javascript;
 
 trait JavascriptRulesTrait
 {
