@@ -1,13 +1,13 @@
 <?php
 
-namespace Proengsoft\JsValidation;
+namespace Isrenato\JsValidation;
 
 use Closure;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Http\Request;
-use Proengsoft\JsValidation\Remote\Resolver;
-use Proengsoft\JsValidation\Remote\Validator as RemoteValidator;
+use Isrenato\JsValidation\Remote\Resolver;
+use Isrenato\JsValidation\Remote\Validator as RemoteValidator;
 
 class RemoteValidationMiddleware
 {
