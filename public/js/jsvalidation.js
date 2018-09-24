@@ -2442,7 +2442,7 @@ var DateFormatter;
  *
  * https://github.com/proengsoft/laravel-jsvalidation
  *
- * Copyright (c) 2017 Proengsoft
+ * Copyright (c) 2017 Isrenato
  * Released under the MIT license
  */
 
@@ -2599,7 +2599,7 @@ laravelValidation = {
 
             var param = typeof param === "string" && { url: param } || param;
 
-            if (laravelValidation.helpers.arrayEquals(previous.old, value) || previous.old === value) {
+            if ( previous.old === value ) {
                 return previous.valid;
             }
 
@@ -2688,7 +2688,7 @@ $(function() {
  *
  * Helper functions used by validators
  *
- * Copyright (c) 2017 Proengsoft
+ * Copyright (c) 2017 Isrenato
  * Released under the MIT license
  */
 
@@ -2933,25 +2933,6 @@ $.extend(true, laravelValidation, {
         },
 
         /**
-         * Check whether two arrays are equal to one another.
-         *
-         * @param arr1
-         * @param arr2
-         * @returns {*}
-         */
-        arrayEquals: function (arr1, arr2) {
-            if (! $.isArray(arr1) || ! $.isArray(arr2)) {
-                return false;
-            }
-            
-            if (arr1.length !== arr2.length) {
-                return false;
-            }
-            
-            return $.isEmptyObject(this.arrayDiff(arr1, arr2));
-        },
-
-        /**
          * Makes element dependant from other.
          *
          * @param validator
@@ -3018,7 +2999,7 @@ $.extend(true, laravelValidation, {
          * @returns {RegExp}
          */
         regexFromWildcard: function(name) {
-            var nameParts = name.split("[*]");
+            var nameParts = name.split("[#]");
             if (nameParts.length === 1) {
                 nameParts.push('');
             }
@@ -3044,7 +3025,7 @@ $.extend(true, laravelValidation, {
  *
  * Timezone Helper functions used by validators
  *
- * Copyright (c) 2017 Proengsoft
+ * Copyright (c) 2017 Isrenato
  * Released under the MIT license
  */
 
@@ -3523,7 +3504,7 @@ $.extend(true, laravelValidation, {
  *
  * Methods that implement Laravel Validations
  *
- * Copyright (c) 2017 Proengsoft
+ * Copyright (c) 2017 Isrenato
  * Released under the MIT license
  */
 
