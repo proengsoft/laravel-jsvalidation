@@ -24,12 +24,11 @@
                 ignore: "<?= $validator['ignore']; ?>",
                 <?php endif; ?>
 
-                /*
-                 // Uncomment this to mark as validated non required fields
-                 unhighlight: function(element) {
-                 $(element).closest('.form.control').removeClass('is-invalid').addClass('is-valid');
-                 },
-                 */
+                
+                unhighlight: function(element) {
+                    $(element).closest('.form-control').removeClass('is-invalid').addClass('is-valid');
+                },
+                
                 success: function (element) {
                     $(element).closest('.form-control').removeClass('is-invalid').addClass('is-valid'); // remove the Boostrap error class from the control group
                 },
