@@ -1,9 +1,9 @@
 {
-    "name": "proengsoft/laravel-jsvalidation",
+    "name": "thisismahabadi/laravel-jsvalidation",
     "type": "library",
     "description": "Validate forms transparently with Javascript reusing your Laravel Validation Rules, Messages, and FormRequest",
     "keywords": [
-        "proengsoft",
+        "thisismahabadi",
         "laravel",
         "javascript",
         "validator",
@@ -11,7 +11,7 @@
         "jquery",
         "form"
     ],
-    "homepage": "https://github.com/proengsoft/laravel-jsvalidation",
+    "homepage": "https://github.com/thisismahabadi/laravel-jsvalidation",
     "license": "MIT",
     "authors": [
         {
@@ -42,21 +42,21 @@
     },
     "autoload": {
         "psr-4": {
-            "Proengsoft\\JsValidation\\": "src"
+            "thisismahabadi\\JsValidation\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Proengsoft\\JsValidation\\Tests\\": "tests"
+            "thisismahabadi\\JsValidation\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Proengsoft\\JsValidation\\JsValidationServiceProvider"
+                "thisismahabadi\\JsValidation\\JsValidationServiceProvider"
             ],
             "aliases": {
-                "JsValidator": "Proengsoft\\JsValidation\\Facades\\JsValidatorFacade"
+                "JsValidator": "thisismahabadi\\JsValidation\\Facades\\JsValidatorFacade"
             }
         }
     },
