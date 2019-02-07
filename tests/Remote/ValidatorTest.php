@@ -14,6 +14,8 @@ use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyArrayLoader;
 use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
 
+require_once __DIR__.'/../stubs/ValidatorTest.php';
+
 class ValidatorTest extends PHPUnit_Framework_TestCase
 {
     public function testValidateRemoteRulePasses()
@@ -48,6 +50,46 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         } catch (HttpResponseException $ex) {
             $this->assertEquals(200, $ex->getResponse()->getStatusCode());
             $this->assertEquals('["field active_url!"]', $ex->getResponse()->getContent());
+        }
+    }
+
+    public function testValidateRemoteClassBasedRulePasses()
+    {
+        if (!interface_exists(\Illuminate\Contracts\Validation\Rule::class)) {
+            $this->markTestSkipped('Laravel 5.5+ is required for class-based rules.');
+        }
+
+        $rules = ['field' => [new \Proengsoft\JsValidation\Tests\Remote\UrlIsLaravel]];
+        $data = ['field' => 'https://www.laravel.com'];
+        $params= ['false'];
+        $validator = $this->getRealValidator($rules, [],$data);
+
+        try {
+            $validator->validate('field',$params);
+            $this->fail();
+        } catch (HttpResponseException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('true', $ex->getResponse()->getContent());
+        }
+    }
+
+    public function testValidateRemoteClassBasedRuleFails()
+    {
+        if (!interface_exists(\Illuminate\Contracts\Validation\Rule::class)) {
+            $this->markTestSkipped('Laravel 5.5+ is required for class-based rules.');
+        }
+
+        $rules = ['field' => [new \Proengsoft\JsValidation\Tests\Remote\UrlIsLaravel]];
+        $data = ['field' => 'http://www.google.com'];
+        $params= ['false'];
+        $validator = $this->getRealValidator($rules, [],$data);
+
+        try {
+            $validator->validate('field',$params);
+            $this->fail();
+        } catch (ValidationException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('["The field is not https:\/\/www.laravel.com"]', $ex->getResponse()->getContent());
         }
     }
 

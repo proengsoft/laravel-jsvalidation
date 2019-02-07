@@ -2,6 +2,7 @@
 
 namespace Proengsoft\JsValidation\Remote;
 
+use Illuminate\Contracts\Validation\Rule as RuleContract;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -158,7 +159,11 @@ class Validator
         $protectedValidator = $this->createProtectedCaller($validator);
 
         foreach ($rules as $i => $rule) {
-            $parsedRule = ValidationRuleParser::parse([$rule]);
+            $parsedRule = ValidationRuleParser::parse(
+                $rule instanceof RuleContract ?
+                    $rule :
+                    [$rule]
+            );
             if (! $this->isRemoteRule($parsedRule[0])) {
                 unset($rules[$i]);
             }
