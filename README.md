@@ -15,6 +15,8 @@ You can validate forms automatically referencing it to your defined validations.
 
 | Laravel Version | Package Version |
 | --------------- | --------------- |
+| `5.8`           | `2.x (>2.4.0)`  |
+| `5.7`           | `2.x (>2.3.1)`  |
 | `5.6`           | `2.x (>2.2.0)`  |
 | `5.5`           | `2.x (>2.1.0)`  |
 | `5.4`           | `2.x`           |
