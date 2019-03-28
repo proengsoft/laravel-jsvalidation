@@ -2,9 +2,9 @@
 namespace Proengsoft\JsValidation\Support;
 
 //use Proengsoft\JsValidation\Support\DelegatedValidator;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class DelegatedValidatorTest extends PHPUnit_Framework_TestCase
+class DelegatedValidatorTest extends TestCase
 {
     /**
      * Test getValidator method

@@ -2,7 +2,7 @@
 
 namespace Proengsoft\JsValidation\Support;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ProtectedClassStubTest
 {
@@ -14,7 +14,7 @@ class ProtectedClassStubTest
     }
 }
 
-class AccessProtectedTraitTest extends PHPUnit_Framework_TestCase
+class AccessProtectedTraitTest extends TestCase
 {
     private $mockTrait;
     private $stubInstance;

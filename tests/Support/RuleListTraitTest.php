@@ -2,9 +2,9 @@
 
 namespace Proengsoft\JsValidation\Support;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class RuleListTraitTest extends PHPUnit_Framework_TestCase
+class RuleListTraitTest extends TestCase
 {
     private $mockTrait;
 

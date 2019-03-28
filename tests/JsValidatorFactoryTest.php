@@ -3,12 +3,12 @@
 namespace Proengsoft\JsValidation\Tests;
 
 use Mockery as m;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Proengsoft\JsValidation\JsValidatorFactory;
 
 require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
 
-class JsValidatorFactoryTest extends PHPUnit_Framework_TestCase
+class JsValidatorFactoryTest extends TestCase
 {
     protected function mockedApp($rules, $messages, $customAttributes, $data = [])
     {

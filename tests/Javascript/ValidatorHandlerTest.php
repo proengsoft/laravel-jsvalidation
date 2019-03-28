@@ -2,11 +2,11 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Proengsoft\JsValidation\Javascript\RuleParser;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
-class ValidatorHandlerTest extends PHPUnit_Framework_TestCase
+class ValidatorHandlerTest extends TestCase
 {
     public function testValidationData()
     {
