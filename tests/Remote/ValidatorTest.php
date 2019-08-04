@@ -113,7 +113,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
             ->method('throwValidationException')
             ->with($passes ? true : $this->isType('array'), $laravelValidator);
 
-        $validator->validate('field', ['validate_all' => ['true']]);
+        $validator->validate('field', []);
     }
 
     public function ruleProvider()
