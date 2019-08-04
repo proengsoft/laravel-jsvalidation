@@ -86,6 +86,62 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @dataProvider ruleProvider
+     */
+    public function testPurgeNonRemoteRules($rule, $value, $passes)
+    {
+        $rules = ['field' => $rule];
+        $data = ['field' => $value];
+
+        $trans = $this->getRealTranslator();
+        $laravelValidator = new LaravelValidator($trans, $data, $rules);
+        $this->assertSame($passes, $laravelValidator->passes());
+
+        $validator = $this->getMockBuilder(Validator::class)
+            ->setConstructorArgs([$laravelValidator])
+            ->setMethods(['throwValidationException', 'isRemoteRule'])
+            ->getMock();
+
+        $validator
+            ->expects($this->any())
+            ->method('isRemoteRule')
+            ->will($this->returnValue(true));
+
+        $validator
+            ->expects($this->once())
+            ->method('throwValidationException')
+            ->with($passes ? true : $this->isType('array'), $laravelValidator);
+
+        $validator->validate('field', ['validate_all' => ['true']]);
+    }
+
+    public function ruleProvider()
+    {
+        return [
+            'string_rule_pass' => [
+                'required',
+                'foo',
+                true,
+            ],
+            'string_rule_fail' => [
+                'required',
+                '',
+                false,
+            ],
+            'array_rule_pass' => [
+                ['required', ['in', 'foo']],
+                'foo',
+                true,
+            ],
+            'array_rule_fail' => [
+                ['required', ['in', 'foo']],
+                'bar',
+                false,
+            ],
+        ];
+    }
+
     protected function getRealTranslator()
     {
         $messages = [

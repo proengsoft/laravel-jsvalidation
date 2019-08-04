@@ -158,7 +158,7 @@ class Validator
         $protectedValidator = $this->createProtectedCaller($validator);
 
         foreach ($rules as $i => $rule) {
-            $parsedRule = ValidationRuleParser::parse([$rule]);
+            $parsedRule = ValidationRuleParser::parse($rule);
             if (! $this->isRemoteRule($parsedRule[0])) {
                 unset($rules[$i]);
             }
