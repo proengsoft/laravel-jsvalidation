@@ -77,7 +77,7 @@ class ValidatorHandler
         $jsValidations = [];
 
         foreach ($this->validator->getRules() as $attribute => $rules) {
-            if (! $this->jsValidationEnabled($attribute)) {
+            if (!$this->jsValidationEnabled($attribute)) {
                 continue;
             }
 
@@ -100,8 +100,8 @@ class ValidatorHandler
     {
         $jsRules = [];
         foreach ($rules as $rawRule) {
-            list($rule, $parameters) = $this->validator->parseRule($rawRule);
-            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters, $rawRule);
+            [$rule, $parameters] = $this->validator->parseRule($rawRule);
+            [$jsAttribute, $jsRule, $jsParams] = $this->rules->getRule($attribute, $rule, $parameters, $rawRule);
             if ($this->isValidatable($jsRule, $includeRemote)) {
                 $jsRules[$jsAttribute][$jsRule][] = [$rule, $jsParams,
                     $this->messages->getMessage($attribute, $rule, $parameters),
@@ -133,7 +133,7 @@ class ValidatorHandler
      */
     public function jsValidationEnabled($attribute)
     {
-        return ! $this->validator->hasRule($attribute, self::JSVALIDATION_DISABLE);
+        return !$this->validator->hasRule($attribute, self::JSVALIDATION_DISABLE);
     }
 
     /**

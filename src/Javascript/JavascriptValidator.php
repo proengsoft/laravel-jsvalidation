@@ -118,7 +118,7 @@ class JavascriptValidator implements Arrayable
     public function __get($name)
     {
         $data = $this->getViewData();
-        if (! array_key_exists($name, $data)) {
+        if (!array_key_exists($name, $data)) {
             throw new PropertyNotFoundException($name, get_class());
         }
 
@@ -136,7 +136,7 @@ class JavascriptValidator implements Arrayable
         $data = $this->validator->validationData();
         $data['selector'] = $this->selector;
 
-        if (! is_null($this->ignore)) {
+        if (!is_null($this->ignore)) {
             $data['ignore'] = $this->ignore;
         }
 

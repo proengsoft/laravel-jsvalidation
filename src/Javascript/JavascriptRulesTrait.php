@@ -44,7 +44,7 @@ trait JavascriptRulesTrait
      */
     protected function ruleAfter($attribute, array $parameters)
     {
-        if (! ($date = strtotime($parameters[0]))) {
+        if (!($date = strtotime($parameters[0]))) {
             $date = $this->getAttributeName($parameters[0]);
         }
 

@@ -58,7 +58,7 @@ trait RuleListTrait
     protected function isRemoteRule($rule)
     {
         return in_array($rule, $this->serverRules) ||
-            ! in_array($rule, $this->clientRules);
+            !in_array($rule, $this->clientRules);
     }
 
     /**
