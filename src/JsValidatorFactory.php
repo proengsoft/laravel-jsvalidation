@@ -121,7 +121,7 @@ class JsValidatorFactory
      */
     public function formRequest($formRequest, $selector = null)
     {
-        if (! is_object($formRequest)) {
+        if (!is_object($formRequest)) {
             $formRequest = $this->createFormRequest($formRequest);
         }
 
@@ -161,7 +161,7 @@ class JsValidatorFactory
          * @var $formRequest \Illuminate\Foundation\Http\FormRequest
          * @var $request Request
          */
-        list($class, $params) = $this->parseFormRequestName($class);
+        [$class, $params] = $this->parseFormRequestName($class);
 
         $request = $this->app->__get('request');
         $formRequest = $this->app->build($class, $params);
@@ -198,7 +198,7 @@ class JsValidatorFactory
      */
     protected function jsValidator(Validator $validator, $selector = null)
     {
-        $remote = ! $this->options['disable_remote_validation'];
+        $remote = !$this->options['disable_remote_validation'];
         $view = $this->options['view'];
         $selector = is_null($selector) ? $this->options['form_selector'] : $selector;
 
