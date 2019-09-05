@@ -2,67 +2,91 @@
 
 All notable changes to `laravel-jsvalidation` will be documented in this file.
 
+## [2.5.0] - 2019-09-06
+
+### Added
+
+- ([#391]) Laravel 6 support
+
+## [2.4.0] - 2019-03-17
+
+### Added
+
+- ([#373]) Laravel 5.8 support
+
+## [2.3.2] - 2018-10-06
+
+### Fixed
+
+- ([#354]) Bootstrap 4 support
+
+## [2.3.1] - 2018-09-06
+
+### Added
+
+- ([#345]) Laravel 5.7 support
+
 ## [2.3.0] - 2018-07-19
 
 ### Added
 
-- (#337) Validate each form with same selector
+- ([#337]) Validate each form with same selector
 
 ### Fixed
 
-- (#319) Fix custom rules
+- ([#319]) Fix custom rules
 
 ## [2.2.3] - 2018-05-17
 
 ### Added
 
-- (#325) Added Bootstrap 4 support
+- ([#325]) Added Bootstrap 4 support
 
 ### Fixed
 
-- (#312) Array validation rule fixed
+- ([#312]) Array validation rule fixed
 
 ## [2.2.2] - 2018-04-18
 
 ### Fixed
 
-- (#316, #317) Array rule validation
+- ([#316], [#317]) Array rule validation
 
 ## [2.2.1] - 2018-02-27
 
 ### Fixed
 
-- (#307) Fix images, mimetypes & files rules in Laravel 5.6
+- ([#307]) Fix images, mimetypes & files rules in Laravel 5.6
 
 ## [2.2.0] - 2018-02-09
 
 ### Added
 
-- (#302) Laravel 5.6 support
+- ([#302]) Laravel 5.6 support
 
 ## [2.1.0] - 2017-08-31
 
 ### Added
 
-- (#277) Laravel 5.5 support
+- ([#277]) Laravel 5.5 support
 
 ## [2.0.0] - 2017-07-10
 
 ### Added
 
-- (#224) Laravel 5.4 support
+- ([#224]) Laravel 5.4 support
 
 ### Changed
 
-- (#250) Typo in `resources/assets/js/helpers.js` method `gess` fixed. Method renamed to `guess`
+- ([#250]) Typo in `resources/assets/js/helpers.js` method `gess` fixed. Method renamed to `guess`
 
 ### Fixed
 
-- (#239) JPEG mime-type check in `image` rule
+- ([#239]) JPEG mime-type check in `image` rule
 
 ### Removed
 
-- (#258) Laravel <= 5.3 support. Will be maintained in 1.x releases
+- ([#258]) Laravel <= 5.3 support. Will be maintained in 1.x releases
 - PHP < 5.6.4 support (Laravel 5.4 minimum requirement)
 
 ## [1.5.0] - 2017-01-22
@@ -258,6 +282,10 @@ Features:
  - Uses Laravel Localization to translate messages
  - Can be configured in controllers or views.
  
+[2.5.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.4.0...2.5.0
+[2.4.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.3.2...2.4.0
+[2.3.2]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.3.1...2.3.2
+[2.3.1]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.3.0...2.3.1
 [2.3.0]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.3...2.3.0
 [2.2.3]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.2...2.2.3
 [2.2.2]: https://github.com/proengsoft/laravel-jsvalidation/compare/2.2.1...2.2.2
@@ -283,3 +311,21 @@ Features:
 [1.0.3]: https://github.com/proengsoft/laravel-jsvalidation/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/proengsoft/laravel-jsvalidation/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/proengsoft/laravel-jsvalidation/compare/v1.0.0...v1.0.1
+
+[#391]: https://github.com/proengsoft/laravel-jsvalidation/pull/391
+[#373]: https://github.com/proengsoft/laravel-jsvalidation/pull/373
+[#354]: https://github.com/proengsoft/laravel-jsvalidation/pull/354
+[#345]: https://github.com/proengsoft/laravel-jsvalidation/pull/345
+[#337]: https://github.com/proengsoft/laravel-jsvalidation/pull/337
+[#325]: https://github.com/proengsoft/laravel-jsvalidation/pull/325
+[#319]: https://github.com/proengsoft/laravel-jsvalidation/pull/319
+[#317]: https://github.com/proengsoft/laravel-jsvalidation/pull/317
+[#316]: https://github.com/proengsoft/laravel-jsvalidation/pull/316
+[#312]: https://github.com/proengsoft/laravel-jsvalidation/pull/312
+[#307]: https://github.com/proengsoft/laravel-jsvalidation/pull/307
+[#302]: https://github.com/proengsoft/laravel-jsvalidation/pull/302
+[#277]: https://github.com/proengsoft/laravel-jsvalidation/pull/277
+[#250]: https://github.com/proengsoft/laravel-jsvalidation/pull/250
+[#239]: https://github.com/proengsoft/laravel-jsvalidation/pull/239
+[#224]: https://github.com/proengsoft/laravel-jsvalidation/pull/224
+[#258]: https://github.com/proengsoft/laravel-jsvalidation/pull/258
