@@ -11,7 +11,7 @@ class JsValidatorFacadeTest extends TestCase {
     /**
      * Calls Mockery::close
      */
-    public function tearDown()
+    protected function tearDown()
     {
         m::close();
     }
