@@ -1,5 +1,5 @@
 <script>
-    jQuery(document).ready(function(){
+    window.onload = function () {
 
         $("<?= $validator['selector']; ?>").each(function() {
             $(this).validate({
@@ -51,5 +51,5 @@
                 rules: <?= json_encode($validator['rules']); ?>
             });
         });
-    });
+    }
 </script>
