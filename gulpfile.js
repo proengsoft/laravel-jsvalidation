@@ -12,7 +12,7 @@ var elixir = require('laravel-elixir');
  */
 
 var minSuffix = '';
-var bowerPath = '../bower_components/';
+var path = '../node_modules/';
 if (elixir.config.production) {
     minSuffix = '.min';
 }
@@ -24,12 +24,12 @@ elixir(function(mix) {
      */
     mix.scripts(
         [
-                bowerPath + 'jquery-validation/dist/jquery.validate.js',
-                bowerPath + 'phpjs/functions/strings/strlen.js',
-                bowerPath + 'phpjs/functions/array/array_diff.js',
-                bowerPath + 'phpjs/functions/datetime/strtotime.js',
-                bowerPath + 'phpjs/functions/var/is_numeric.js',
-                bowerPath + 'php-date-formatter/js/php-date-formatter.js',
+                path + 'jquery-validation/dist/jquery.validate.js',
+                path + 'phpjs/functions/strings/strlen.js',
+                path + 'phpjs/functions/array/array_diff.js',
+                path + 'phpjs/functions/datetime/strtotime.js',
+                path + 'phpjs/functions/var/is_numeric.js',
+                path + 'php-date-formatter/js/php-date-formatter.js',
                 'assets/js/jsvalidation.js',
                 'assets/js/helpers.js',
                 'assets/js/timezones.js',
