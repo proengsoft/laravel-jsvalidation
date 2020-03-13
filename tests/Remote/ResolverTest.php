@@ -3,12 +3,12 @@
 namespace Proengsoft\JsValidation\Tests\Remote;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Proengsoft\JsValidation\Remote\Resolver;
 
 require_once __DIR__.'/../stubs/ResolverTest.php';
 
-class ResolverTest extends PHPUnit_Framework_TestCase
+class ResolverTest extends TestCase
 {
     public function setUp()
     {

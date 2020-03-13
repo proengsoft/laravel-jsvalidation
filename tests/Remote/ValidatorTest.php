@@ -7,14 +7,14 @@ use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Validator as LaravelValidator;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Remote\Validator;
 use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyArrayLoader;
 use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
 
-class ValidatorTest extends PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
     public function testValidateRemoteRulePasses()
     {

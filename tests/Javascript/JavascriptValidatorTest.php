@@ -4,12 +4,12 @@ namespace Proengsoft\JsValidation\Tests\Javascript;
 
 use Illuminate\Support\Facades\View;
 use Mockery as m;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
-class JavascriptValidatorTest extends PHPUnit_Framework_TestCase
+class JavascriptValidatorTest extends TestCase
 {
     public function setUp()
     {
