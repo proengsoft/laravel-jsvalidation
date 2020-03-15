@@ -11,13 +11,22 @@ class MessageParser
     use UseDelegatedValidatorTrait;
 
     /**
+     * Whether to escape messages using htmlentities.
+     *
+     * @var bool
+     */
+    protected $escape;
+
+    /**
      * Create a new JsValidation instance.
      *
      * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @param bool $escape
      */
-    public function __construct(DelegatedValidator $validator)
+    public function __construct(DelegatedValidator $validator, $escape = false)
     {
         $this->validator = $validator;
+        $this->escape = $escape;
     }
 
     /**
@@ -37,7 +46,7 @@ class MessageParser
 
         $this->validator->setData($data);
 
-        return $message;
+        return $this->escape ? e($message) : $message;
     }
 
     /**

@@ -29,9 +29,13 @@ class RemoteValidationMiddlewareTest extends TestCase
             ->with(Validator::EXTENSION_NAME, $this->isInstanceOf('Closure'));
 
         $mockedConfig = $this->getMockForAbstractClass(\Illuminate\Contracts\Config\Repository::class, [],'',false);
-        $mockedConfig->expects($this->once())
+        $mockedConfig->expects($this->at(0))
             ->method('get')
             ->with('jsvalidation.remote_validation_field')
+            ->will($this->returnValue('_jsvalidation'));
+        $mockedConfig->expects($this->at(1))
+            ->method('get')
+            ->with('jsvalidation.escape', false)
             ->will($this->returnValue('_jsvalidation'));
 
         $mockedRequest = $this->getMockBuilder(\Illuminate\Http\Request::class)
@@ -60,9 +64,13 @@ class RemoteValidationMiddlewareTest extends TestCase
             ->getMock();
 
         $mockedConfig = $this->getMockForAbstractClass(\Illuminate\Contracts\Config\Repository::class,[],'',false);
-        $mockedConfig->expects($this->once())
+        $mockedConfig->expects($this->at(0))
             ->method('get')
             ->with('jsvalidation.remote_validation_field')
+            ->will($this->returnValue('_jsvalidation'));
+        $mockedConfig->expects($this->at(1))
+            ->method('get')
+            ->with('jsvalidation.escape', false)
             ->will($this->returnValue('_jsvalidation'));
 
         $mockedRequest = $this->getMockBuilder(\Illuminate\Http\Request::class)

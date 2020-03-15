@@ -26,6 +26,13 @@ class RemoteValidationMiddleware
     protected $field;
 
     /**
+     * Whether to escape messages or not.
+     *
+     * @var bool
+     */
+    protected $escape;
+
+    /**
      * RemoteValidationMiddleware constructor.
      *
      * @param \Illuminate\Contracts\Validation\Factory $validator
@@ -35,6 +42,7 @@ class RemoteValidationMiddleware
     {
         $this->factory = $validator;
         $this->field = $config->get('jsvalidation.remote_validation_field');
+        $this->escape = (bool) $config->get('jsvalidation.escape', false);
     }
 
     /**
@@ -60,7 +68,7 @@ class RemoteValidationMiddleware
      */
     protected function wrapValidator()
     {
-        $resolver = new Resolver($this->factory);
+        $resolver = new Resolver($this->factory, $this->escape);
         $this->factory->resolver($resolver->resolver($this->field));
         $this->factory->extend(RemoteValidator::EXTENSION_NAME, $resolver->validatorClosure());
     }

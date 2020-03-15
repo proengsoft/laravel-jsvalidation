@@ -22,14 +22,23 @@ class Resolver
     protected $factory;
 
     /**
+     * Whether to escape validation messages.
+     *
+     * @var bool
+     */
+    protected $escape;
+
+    /**
      * RemoteValidator constructor.
      *
      * @param \Illuminate\Contracts\Validation\Factory $factory
+     * @param bool $escape
      */
-    public function __construct(ValidationFactory $factory)
+    public function __construct(ValidationFactory $factory, $escape = false)
     {
         $this->factory = $factory;
         $this->resolver = $this->getProtected($factory, 'resolver');
+        $this->escape = $escape;
     }
 
     /**
@@ -93,7 +102,7 @@ class Resolver
     public function validatorClosure()
     {
         return function ($attribute, $value, $parameters, BaseValidator $validator) {
-            $remoteValidator = new Validator($validator);
+            $remoteValidator = new Validator($validator, $this->escape);
             $remoteValidator->validate($value, $parameters);
 
             return $attribute;

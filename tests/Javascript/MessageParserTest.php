@@ -126,4 +126,40 @@ class MessageParserTest extends TestCase
 
         $this->assertEquals("$attribute $rule", $message);
     }
+
+    public function testEscape()
+    {
+        $attribute = 'field';
+        $rule = 'Image';
+        $return = "<html>";
+        
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $delegated->expects($this->once())
+            ->method('getData')
+            ->willReturn([]);
+        
+        $delegated->expects($this->once())
+            ->method('hasRule')
+            ->with($attribute, ['Mimes', 'Image'])
+            ->willReturn(true);
+        
+        $delegated->expects($this->once())
+            ->method('getMessage')
+            ->with($attribute, $rule)
+            ->willReturn($return);
+
+        $delegated->expects($this->once())
+            ->method('makeReplacements')
+            ->with($return, $attribute, $rule, [])
+            ->willReturn($return);
+
+        $parser = new MessageParser($delegated, true);
+
+        $message = $parser->getMessage($attribute, $rule, []);
+
+        $this->assertEquals("&lt;html&gt;", $message);
+    }
 }
