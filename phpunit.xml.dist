@@ -2,6 +2,7 @@
 <phpunit bootstrap="tests/autoload.php"
          backupGlobals="false"
          backupStaticAttributes="false"
+         beStrictAboutTestsThatDoNotTestAnything="false"
          colors="true"
          verbose="true"
          convertErrorsToExceptions="true"
