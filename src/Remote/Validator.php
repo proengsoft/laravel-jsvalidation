@@ -2,14 +2,14 @@
 
 namespace Proengsoft\JsValidation\Remote;
 
-use Illuminate\Support\Arr;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\ValidationRuleParser;
-use Proengsoft\JsValidation\Support\RuleListTrait;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Validator as BaseValidator;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
+use Proengsoft\JsValidation\Support\RuleListTrait;
 
 class Validator
 {

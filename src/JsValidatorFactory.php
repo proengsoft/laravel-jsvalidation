@@ -10,6 +10,7 @@ use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Javascript\RuleParser;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
+use Proengsoft\JsValidation\Support\FormRequestParser;
 use Proengsoft\JsValidation\Support\ValidationRuleParserProxy;
 
 class JsValidatorFactory
@@ -133,21 +134,6 @@ class JsValidatorFactory
     }
 
     /**
-     * @param string|array $class
-     * @return array
-     */
-    protected function parseFormRequestName($class)
-    {
-        $params = [];
-        if (is_array($class)) {
-            $params = empty($class[1]) ? $params : $class[1];
-            $class = $class[0];
-        }
-
-        return [$class, $params];
-    }
-
-    /**
      * Creates and initializes an Form Request instance.
      *
      * @param string $class
@@ -157,14 +143,10 @@ class JsValidatorFactory
      */
     protected function createFormRequest($class)
     {
-        /*
-         * @var $formRequest \Illuminate\Foundation\Http\FormRequest
-         * @var $request Request
-         */
-        list($class, $params) = $this->parseFormRequestName($class);
+        $parser = new FormRequestParser($class);
 
         $request = $this->app->__get('request');
-        $formRequest = $this->app->build($class, $params);
+        $formRequest = $this->app->make($parser->className(), $parser->params());
 
         if ($session = $request->getSession()) {
             $formRequest->setLaravelSession($session);

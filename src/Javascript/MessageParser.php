@@ -16,7 +16,7 @@ class MessageParser
      * @var bool
      */
     protected $escape;
-    
+
     /**
      * Create a new JsValidation instance.
      *
