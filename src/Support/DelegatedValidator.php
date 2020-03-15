@@ -81,7 +81,11 @@ class DelegatedValidator
      */
     public function setData($data)
     {
+        $rules = $this->validator->getRules();
         $this->validator->setData($data);
+        if (is_array($rules)) {
+            $this->validator->setRules($rules);
+        }
     }
 
     /**

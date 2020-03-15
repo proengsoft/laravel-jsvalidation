@@ -129,7 +129,13 @@ class JsValidatorFactory
 
         $validator = $this->getValidatorInstance($rules, $formRequest->messages(), $formRequest->attributes());
 
-        return $this->validator($validator, $selector);
+        $jsValidator = $this->validator($validator, $selector);
+        
+        if (method_exists($formRequest, 'withJsValidator')) {
+            $formRequest->withJsValidator($jsValidator);
+        }
+        
+        return $jsValidator;
     }
 
     /**
