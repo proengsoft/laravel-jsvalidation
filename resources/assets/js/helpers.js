@@ -200,6 +200,55 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * Compare a given date against another using an operator.
+         *
+         * @param validator
+         * @param value
+         * @param element
+         * @param params
+         * @param operator
+         * @return {boolean}
+         */
+        compareDates: function (validator, value, element, params, operator) {
+
+            var timeCompare = parseFloat(params);
+
+            if (isNaN(timeCompare)) {
+                var target = this.dependentElement(validator, element, params);
+                if (target === undefined) {
+                    return false;
+                }
+                timeCompare = this.parseTime(validator.elementValue(target), target);
+            }
+
+            var timeValue = this.parseTime(value, element);
+            if (timeValue === false) {
+                return false;
+            }
+
+            switch (operator) {
+                case '<':
+                    return timeValue < timeCompare;
+
+                case '<=':
+                    return timeValue <= timeCompare;
+
+                case '==':
+                case '===':
+                    return timeValue === timeCompare;
+
+                case '>':
+                    return timeValue > timeCompare;
+
+                case '>=':
+                    return timeValue >= timeCompare;
+
+                default:
+                    throw new Error("Unsupported operator.");
+            }
+        },
+
+        /**
          * This method allows you to intelligently guess the date by closely matching the specific format.
          *
          * @param value

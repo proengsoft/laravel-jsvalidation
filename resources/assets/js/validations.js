@@ -680,19 +680,16 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Before: function(value, element, params) {
+            return laravelValidation.helpers.compareDates(this, value, element, params, '<');
+        },
 
-            var timeCompare=parseFloat(params);
-            if (isNaN(timeCompare)) {
-                var target=laravelValidation.helpers.dependentElement(this, element, params);
-                if (target===undefined) {
-                    return false;
-                }
-                timeCompare= laravelValidation.helpers.parseTime(this.elementValue(target), target);
-            }
-
-            var timeValue=laravelValidation.helpers.parseTime(value, element);
-            return  (timeValue !==false && timeValue < timeCompare);
-
+        /**
+         * Validate the date is equal or before a given date.
+         *
+         * @return {boolean}
+         */
+        BeforeOrEqual: function(value, element, params) {
+            return laravelValidation.helpers.compareDates(this, value, element, params, '<=');
         },
 
         /**
@@ -701,18 +698,16 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         After: function(value, element, params) {
-            var timeCompare=parseFloat(params);
-            if (isNaN(timeCompare)) {
-                var target=laravelValidation.helpers.dependentElement(this, element, params);
-                if (target===undefined) {
-                    return false;
-                }
-                timeCompare= laravelValidation.helpers.parseTime(this.elementValue(target), target);
-            }
+            return laravelValidation.helpers.compareDates(this, value, element, params, '>');
+        },
 
-            var timeValue=laravelValidation.helpers.parseTime(value, element);
-            return  (timeValue !==false && timeValue > timeCompare);
-
+        /**
+         * Validate the date is equal or after a given date.
+         *
+         * @return {boolean}
+         */
+        AfterOrEqual: function(value, element, params) {
+            return laravelValidation.helpers.compareDates(this, value, element, params, '>=');
         },
 
 
