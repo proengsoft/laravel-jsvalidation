@@ -1,0 +1,19 @@
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+  - cron: "0 17 * * *"
+
+jobs:
+  stale:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/stale@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        stale-issue-message: 'This issue has been automatically marked as idle and stale because it has not had any recent activity. It will be automtically closed if no further activity occurs. If you think this is wrong, or the problem still persists, just pop a reply in the comments and one of the maintainers will (try!) to follow up. Thank you for contributing :)'
+        stale-pr-message: 'This proposal has been automatically marked as idle and stale because it has not had any recent activity. It will be automtically closed if no further activity occurs. If you think this is wrong, or the problem still persists, just pop a reply in the comments and one of the maintainers will (try!) to follow up. Thank you for contributing :)'
+        stale-issue-label: 'stale'
+        stale-pr-label: 'stale'
