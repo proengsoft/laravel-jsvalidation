@@ -33,7 +33,8 @@
         "illuminate/support": "^5.4|^6.0|^7.0",
         "illuminate/translation": "^5.4|^6.0|^7.0",
         "illuminate/validation": "^5.4|^6.0|^7.0",
-        "illuminate/view": "^5.4|^6.0|^7.0"
+        "illuminate/view": "^5.4|^6.0|^7.0",
+        "symfony/http-foundation": "^4.1|^5.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.10",
