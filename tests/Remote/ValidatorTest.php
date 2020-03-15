@@ -105,6 +105,35 @@ class ValidatorTest extends TestCase
         }
     }
 
+    public function testValidateRemoteClassBasedRulePasses()
+    {
+        $rules = ['field' => [new UrlIsLaravel]];
+        $data = ['field' => 'https://www.laravel.com'];
+        $params= ['false'];
+        $validator = $this->getRealValidator($rules, [],$data);
+        try {
+            $validator->validate('field',$params);
+            $this->fail();
+        } catch (HttpResponseException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('true', $ex->getResponse()->getContent());
+        }
+    }
+    public function testValidateRemoteClassBasedRuleFails()
+    {
+        $rules = ['field' => [new UrlIsLaravel]];
+        $data = ['field' => 'http://www.google.com'];
+        $params= ['false'];
+        $validator = $this->getRealValidator($rules, [],$data);
+        try {
+            $validator->validate('field',$params);
+            $this->fail();
+        } catch (ValidationException $ex) {
+            $this->assertEquals(200, $ex->getResponse()->getStatusCode());
+            $this->assertEquals('["The field is not https:\/\/www.laravel.com"]', $ex->getResponse()->getContent());
+        }
+    }
+
     protected function getRealTranslator()
     {
         $messages = [
