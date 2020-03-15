@@ -11,21 +11,9 @@
 
 You can validate forms automatically referencing it to your defined validations. The messages are loaded from your  validations and translated according your Localization preferences.
 
-#### Version matrix
+#### Supported versions
 
-| Laravel Version | Package Version | Support Status  |
-| --------------- | --------------- | --------------- |
-| `7.x`           | `2.x (>2.6.0)`  | Maintained      |
-| `6.x`           | `2.x (>2.5.0)`  | Maintained      |
-| `5.8`           | `2.x (>2.4.0)`  | EOL             |
-| `5.7`           | `2.x (>2.3.1)`  | EOL             |
-| `5.6`           | `2.x (>2.2.0)`  | EOL             |
-| `5.5`           | `2.x (>2.1.0)`  | EOL             |
-| `5.4`           | `2.x`           | EOL             |
-| `5.3`           | `1.x`           | EOL             |
-| `5.2`           | `1.x`           | EOL             |
-| `5.1`           | `1.x`           | EOL             |
-| `5.0`           | `1.x`           | EOL             |
+Laravel 5.6 - 7.x
 
 #### Feature overview
 
