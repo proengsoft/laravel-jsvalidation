@@ -173,8 +173,8 @@ class DelegatedValidatorTest extends TestCase
      */
     public function testExplodeRules()
     {
-        $arg='required|url';
-        $this->callValidatorProtectedMethod('explodeRules',$arg);
+        $arg = 'required|url';
+        $this->callParserMethod('explodeRules', [['required','url']], $arg);
     }
 
     /**
@@ -309,6 +309,38 @@ class DelegatedValidatorTest extends TestCase
 
         $delegated = new DelegatedValidator($validator, $parser);
         $value=call_user_func_array([$delegated, $method],$args);
+
+        $this->assertEquals($return, $value);
+    }
+
+    /**
+     * Helper to test calls to parser object.
+     *
+     * @param string $method
+     * @param mixed  $return
+     * @param array $args
+     * @return void
+     */
+    private function callParserMethod($method, $return = null, $args = [])
+    {
+        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $parser->expects($this->once())
+            ->method($method)
+            ->willReturn($return);
+
+        $delegated = new DelegatedValidator($validator, $parser);
+        if (is_array($args)) {
+            $value = call_user_func_array([$delegated,$method],$args);
+        } else {
+            $value = $delegated->$method($args);
+        }
 
         $this->assertEquals($return, $value);
     }

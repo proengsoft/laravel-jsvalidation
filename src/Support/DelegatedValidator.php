@@ -170,7 +170,7 @@ class DelegatedValidator
      */
     public function explodeRules($rules)
     {
-        return $this->callValidator('explodeRules', [$rules]);
+        return $this->ruleParser->explodeRules($rules);
     }
 
     /**
