@@ -3174,7 +3174,7 @@ $.extend(true, laravelValidation, {
                     return timeValue >= timeCompare;
 
                 default:
-                    throw new Error("Unsupported operator.");
+                    throw new Error('Unsupported operator.');
             }
         },
 
