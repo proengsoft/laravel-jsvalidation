@@ -34,7 +34,7 @@
                     $(element).closest('.uk-input').removeClass('uk-form-danger').addClass('uk-form-success'); // remove the Boostrap error class from the control group
                 },
 
-                focusInvalid: false, // do not focus the last invalid input
+                focusInvalid: true,
                 <?php if (Config::get('jsvalidation.focus_on_error')): ?>
                 invalidHandler: function (form, validator) {
 
@@ -44,7 +44,6 @@
                     $('html, body').animate({
                         scrollTop: $(validator.errorList[0].element).offset().top
                     }, <?= Config::get('jsvalidation.duration_animate') ?>);
-                    $(validator.errorList[0].element).focus();
 
                 },
                 <?php endif; ?>
