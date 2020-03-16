@@ -15,7 +15,7 @@ staleLabel: stale
 # Comment to post when marking an issue as stale. Set to `false` to disable
 markComment: >
   This issue/proposal has been automatically marked as idle and stale because it hasn't
-  had any recent activity. It will be automtically closed if no further activity
+  had any recent activity. It will be automatically closed if no further activity
   occurs. If you think this is wrong, or the problem still persists, just pop
   a reply in the comments and one of the maintainers will (try!) to follow up.
   Thank you for contributing :)
