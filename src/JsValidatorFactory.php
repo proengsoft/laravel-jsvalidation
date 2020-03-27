@@ -114,7 +114,7 @@ class JsValidatorFactory
      * Creates JsValidator instance based on FormRequest.
      *
      * @param $formRequest
-     * @param null $selector
+     * @param null|string $selector
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
