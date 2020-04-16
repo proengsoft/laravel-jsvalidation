@@ -3,7 +3,6 @@
 namespace Proengsoft\JsValidation\Tests;
 
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
 use Proengsoft\JsValidation\JsValidatorFactory;
 
 require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
@@ -194,7 +193,7 @@ class JsValidatorFactoryTest extends TestCase
         $app = $this->mockedApp($rules, $messages, $customAttributes);
 
         $mockFormRequest=m::mock(\Illuminate\Foundation\Http\FormRequest::class);
-        $mockFormRequest->shouldReceive('rules')->once()->andReturn($rules);
+        $mockFormRequest->shouldReceive('rules')->andReturn($rules);
         $mockFormRequest->shouldReceive('messages')->once()->andReturn([]);
         $mockFormRequest->shouldReceive('attributes')->once()->andReturn([]);
 

@@ -2,7 +2,7 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
-use PHPUnit\Framework\TestCase;
+use Proengsoft\JsValidation\Tests\TestCase;
 use Proengsoft\JsValidation\Javascript\RuleParser;
 
 class RuleParserTest extends TestCase

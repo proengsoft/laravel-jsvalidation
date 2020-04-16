@@ -4,18 +4,13 @@ namespace Proengsoft\JsValidation\Tests\Javascript;
 
 use Illuminate\Support\Facades\View;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Proengsoft\JsValidation\Tests\TestCase;
 use Proengsoft\JsValidation\Exceptions\PropertyNotFoundException;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
 class JavascriptValidatorTest extends TestCase
 {
-    public function setUp()
-    {
-
-    }
-
     public function testRender()
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
@@ -237,14 +232,11 @@ class JavascriptValidatorTest extends TestCase
 
         View::shouldReceive('make')
             ->with('jsvalidation::bootstrap', ['validator' => ['selector' => 'form']])
-            ->once()
             ->andReturn(
                 m::mock('Illuminate\Contracts\View\Factory')
                     ->shouldReceive('render')
-                    ->once()
                     ->andReturn('return')
                     ->getMock());
-
 
         $validator = new JavascriptValidator($mockHandler);
 
@@ -279,11 +271,9 @@ class JavascriptValidatorTest extends TestCase
 
         View::shouldReceive('make')
             ->with('jsvalidation::bootstrap', ['validator' => ['selector' => 'form']])
-            ->once()
             ->andReturn(
                 m::mock('Illuminate\Contracts\View\Factory')
                     ->shouldReceive('render')
-                    ->once()
                     ->andReturn('return')
                     ->getMock());
 

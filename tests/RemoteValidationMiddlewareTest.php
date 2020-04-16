@@ -2,17 +2,11 @@
 
 namespace Proengsoft\JsValidation\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Proengsoft\JsValidation\Remote\Validator;
 use Proengsoft\JsValidation\RemoteValidationMiddleware;
 
 class RemoteValidationMiddlewareTest extends TestCase
 {
-    public function setUp()
-    {
-
-    }
-
     public function testHandle()
     {
         $mockedFactory = $this->getMockBuilder(\Illuminate\Contracts\Validation\Factory::class)

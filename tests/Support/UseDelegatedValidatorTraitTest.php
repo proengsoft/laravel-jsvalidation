@@ -2,7 +2,7 @@
 
 namespace Proengsoft\JsValidation\Support;
 
-use PHPUnit\Framework\TestCase;
+use Proengsoft\JsValidation\Tests\TestCase;
 
 class UseDelegatedValidatorTraitTest extends TestCase
 {

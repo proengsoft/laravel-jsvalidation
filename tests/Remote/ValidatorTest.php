@@ -7,7 +7,7 @@ use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Validator as LaravelValidator;
-use PHPUnit\Framework\TestCase;
+use Proengsoft\JsValidation\Tests\TestCase;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Remote\Validator;
 use Symfony\Component\Translation\Loader\ArrayLoader as SymfonyArrayLoader;
