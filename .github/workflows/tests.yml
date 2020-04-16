@@ -1,0 +1,41 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        laravel: ['5.6', '5.7', '5.8', '6.0', '7.0']
+        php: ['7.1', '7.2', '7.3', '7.4']
+        exclude:
+          - {laravel: '5.6', php: '7.4'}
+          - {laravel: '5.7', php: '7.4'}
+          - {laravel: '6.0', php: '7.1'}
+          - {laravel: '7.0', php: '7.1'}
+
+    name: PHP ${{ matrix.php }} Laravel ${{ matrix.laravel }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Install dependencies
+        run: export COMPOSER=tests/composer-${{ matrix.laravel }}.json && composer install --no-interaction --prefer-source
+
+      - name: Execute tests
+        run: vendor/bin/phpunit --coverage-clover=coverage.clover
+
+      - name: Code Coverage
+        run: wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover
