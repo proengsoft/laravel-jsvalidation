@@ -13,8 +13,7 @@ class CustomValidatorStubTest implements \Illuminate\Contracts\Validation\Factor
         $this->resolver = function() use ($translator) {
             $m = Mockery::mock('Illuminate\Validation\Validator[sometimes,getRules]',[$translator,[],[]])
                 ->shouldAllowMockingMethod('sometimes');
-            $m->shouldReceive('sometimes')
-                ->once();
+            $m->shouldReceive('sometimes');
             $m->shouldReceive('getRules')
                 ->andReturn(['field'=>['required']]);
             return $m;

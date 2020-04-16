@@ -2,14 +2,21 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
-use PHPUnit\Framework\TestCase;
+use Proengsoft\JsValidation\Tests\TestCase;
 
 class JavascriptRulesTraitTest extends TestCase
 {
     protected $mockTrait;
 
-    public function setUp()
+    /**
+     * Setup the test environment.
+     *
+     * @return void
+     */
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $this->mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Javascript\JavascriptRulesTrait::class);
 
         $this->mockTrait->expects($this->any())

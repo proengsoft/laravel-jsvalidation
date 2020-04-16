@@ -11,6 +11,7 @@
         "symfony/http-foundation": "^4.1|^5.0"
     },
     "require-dev": {
+        "orchestra/testbench": "3.8.*",
         "phpunit/phpunit": "^7.0",
         "mockery/mockery": "^1.0"
     },

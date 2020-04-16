@@ -2,20 +2,11 @@
 
 namespace Proengsoft\JsValidation\Test\Facades;
 
-use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Proengsoft\JsValidation\Tests\TestCase;
 use Proengsoft\JsValidation\Facades\JsValidatorFacade;
 
-class JsValidatorFacadeTest extends TestCase {
-
-    /**
-     * Calls Mockery::close
-     */
-    protected function tearDown()
-    {
-        m::close();
-    }
-
+class JsValidatorFacadeTest extends TestCase
+{
     function testGetFacadeAccessor()
     {
         /*
