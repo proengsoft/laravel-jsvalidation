@@ -2,6 +2,7 @@
 
 namespace Proengsoft\JsValidation\Javascript;
 
+use Proengsoft\JsValidation\JsValidatorFactory;
 use Proengsoft\JsValidation\Support\RuleListTrait;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
@@ -109,8 +110,8 @@ class RuleParser
      */
     protected function isConditionalRule($attribute, $rule)
     {
-        return isset($this->conditional[$attribute]) &&
-        in_array($rule, $this->conditional[$attribute]);
+        return isset($this->conditional[$attribute])
+            && in_array($rule, $this->conditional[$attribute]);
     }
 
     /**
@@ -160,6 +161,8 @@ class RuleParser
      */
     protected function getAttributeName($attribute)
     {
+        $attribute = str_replace(JsValidatorFactory::ASTERISK, '*', $attribute);
+
         $attributeArray = explode('.', $attribute);
         if (count($attributeArray) > 1) {
             return $attributeArray[0].'['.implode('][', array_slice($attributeArray, 1)).']';
