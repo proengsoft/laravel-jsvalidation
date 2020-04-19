@@ -12,7 +12,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Registered validator instance.
      *
-     * @var \Proengsoft\JsValidation\Javascript\ValidatorHandler
+     * @var ValidatorHandler
      */
     protected $validator;
 
@@ -45,8 +45,10 @@ class JavascriptValidator implements Arrayable
     protected $ignore;
 
     /**
-     * @param \Proengsoft\JsValidation\Javascript\ValidatorHandler $validator
-     * @param array $options
+     * Constructor.
+     *
+     * @param ValidatorHandler $validator
+     * @param array            $options
      */
     public function __construct(ValidatorHandler $validator, $options = [])
     {
@@ -65,6 +67,10 @@ class JavascriptValidator implements Arrayable
         $this->selector = empty($options['selector']) ? 'form' : $options['selector'];
         $this->view = empty($options['view']) ? 'jsvalidation::bootstrap' : $options['view'];
         $this->remote = isset($options['remote']) ? $options['remote'] : true;
+
+        if (isset($options['ignore'])) {
+            $this->ignore = $options['ignore'];
+        }
     }
 
     /**

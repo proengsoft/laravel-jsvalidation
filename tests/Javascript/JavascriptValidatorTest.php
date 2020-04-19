@@ -170,6 +170,47 @@ class JavascriptValidatorTest extends TestCase
         $this->assertEquals($expected,$viewData);
     }
 
+    /**
+     * Test the default ignore parameter value.
+     *
+     * @return void
+     */
+    public function testIgnoreDefault()
+    {
+        $jsValidator = $this->app['jsvalidator']->make([]);
+
+        $this->assertArrayHasKey('ignore', $jsValidator->toArray());
+        $this->assertEquals(":hidden, [contenteditable='true']", $jsValidator->toArray()['ignore']);
+    }
+
+    /**
+     * Test a custom ignore parameter value.
+     *
+     * @return void
+     */
+    public function testIgnoreCustom()
+    {
+        $this->app['config']->set('jsvalidation.ignore', ':hidden');
+        $jsValidator = $this->app['jsvalidator']->make([]);
+
+        $this->assertArrayHasKey('ignore', $jsValidator->toArray());
+        $this->assertEquals(":hidden", $jsValidator->toArray()['ignore']);
+    }
+
+    /**
+     * Test a custom ignore parameter value.
+     *
+     * @return void
+     */
+    public function testIgnoreCustom2()
+    {
+        $jsValidator = $this->app['jsvalidator']->make([]);
+        $jsValidator->ignore(':hidden');
+
+        $this->assertArrayHasKey('ignore', $jsValidator->toArray());
+        $this->assertEquals(":hidden", $jsValidator->toArray()['ignore']);
+    }
+
     public function testRemote()
     {
         $remote = true;

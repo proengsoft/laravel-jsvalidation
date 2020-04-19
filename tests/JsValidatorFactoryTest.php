@@ -60,6 +60,7 @@ class JsValidatorFactoryTest extends TestCase
             ->with('encrypter')
             ->willReturn(null);
 
+        $options = $this->app['config']->get('jsvalidation');
         $options['disable_remote_validation'] = false;
         $options['view'] = 'jsvalidation::bootstrap';
         $options['form_selector'] = 'form';
@@ -91,6 +92,7 @@ class JsValidatorFactoryTest extends TestCase
             ->with('encrypter')
             ->willReturn(null);
 
+        $options = $this->app['config']->get('jsvalidation');
         $options['disable_remote_validation'] = false;
         $options['view'] = 'jsvalidation::bootstrap';
         $options['form_selector'] = 'form';
@@ -123,6 +125,7 @@ class JsValidatorFactoryTest extends TestCase
             ->with('encrypter')
             ->willReturn(null);
 
+        $options = $this->app['config']->get('jsvalidation');
         $options['disable_remote_validation'] = false;
         $options['view'] = 'jsvalidation::bootstrap';
         $options['form_selector'] = 'form';
@@ -168,6 +171,7 @@ class JsValidatorFactoryTest extends TestCase
             ->with('encrypter')
             ->willReturn($encrypterMock);
 
+        $options = $this->app['config']->get('jsvalidation');
         $options['disable_remote_validation'] = false;
         $options['view'] = 'jsvalidation::bootstrap';
         $options['form_selector'] = 'form';
@@ -186,6 +190,7 @@ class JsValidatorFactoryTest extends TestCase
         $customAttributes = [];
         $selector = null;
 
+        $options = $this->app['config']->get('jsvalidation');
         $options['disable_remote_validation'] = false;
         $options['view'] = 'jsvalidation::bootstrap';
         $options['form_selector'] = 'form';
@@ -214,6 +219,7 @@ class JsValidatorFactoryTest extends TestCase
         $customAttributes = [];
         $selector = null;
 
+        $options = $this->app['config']->get('jsvalidation');
         $options['disable_remote_validation'] = false;
         $options['view'] = 'jsvalidation::bootstrap';
         $options['form_selector'] = 'form';
