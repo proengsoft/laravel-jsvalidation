@@ -15,14 +15,14 @@ trait RuleListTrait
         'In', 'InArray', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Mimetypes', 'Min', 'NotIn', 'Nullable',
         'Numeric', 'Regex', 'Required', 'RequiredIf', 'RequiredUnless', 'RequiredWith', 'RequiredWithAll',
         'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes',
-        'String', 'Timezone', 'Url', ];
+        'String', 'Timezone', ];
 
     /**
      * Rules validated in Server-Side.
      *
      * @var array
      */
-    protected $serverRules = ['ActiveUrl', 'Exists', 'Unique'];
+    protected $serverRules = ['ActiveUrl', 'Exists', 'Unique', 'Url'];
 
     /**
      * Rules applyed to files.
