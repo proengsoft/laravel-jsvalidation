@@ -207,6 +207,7 @@ class JsValidatorFactory
         $remote = ! $this->options['disable_remote_validation'];
         $view = $this->options['view'];
         $selector = is_null($selector) ? $this->options['form_selector'] : $selector;
+        $ignore = $this->options['ignore'];
 
         $delegated = new DelegatedValidator($validator, new ValidationRuleParserProxy($validator->getData()));
         $rules = new RuleParser($delegated, $this->getSessionToken());
@@ -214,7 +215,7 @@ class JsValidatorFactory
 
         $jsValidator = new ValidatorHandler($rules, $messages);
 
-        $manager = new JavascriptValidator($jsValidator, compact('view', 'selector', 'remote'));
+        $manager = new JavascriptValidator($jsValidator, compact('view', 'selector', 'remote', 'ignore'));
 
         return $manager;
     }
