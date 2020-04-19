@@ -171,4 +171,18 @@ class RuleParserTest extends TestCase
 
         $this->assertEquals($expected, $values);
     }
+
+    /**
+     * Test array wildcard rules.
+     *
+     * @return void
+     */
+    public function testArrayWildcardMaintainsAsterisk()
+    {
+        $rules = ['foo.*.bar' => 'required'];
+
+        $jsValidator = $this->app['jsvalidator']->make($rules);
+
+        $this->assertArrayHasKey('foo[*][bar]', $jsValidator->toArray()['rules']);
+    }
 }

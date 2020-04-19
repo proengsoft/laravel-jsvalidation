@@ -14,6 +14,8 @@ use Proengsoft\JsValidation\Support\ValidationRuleParserProxy;
 
 class JsValidatorFactory
 {
+    const ASTERISK = '__asterisk__';
+
     /**
      * The application instance.
      *
@@ -91,7 +93,8 @@ class JsValidatorFactory
     /**
      * Gets fake data when validator has wildcard rules.
      *
-     * @param array $rules
+     * @param  array  $rules
+     * @param  array  $customAttributes
      * @return array
      */
     protected function getValidationData(array $rules, array $customAttributes = [])
@@ -102,6 +105,9 @@ class JsValidatorFactory
 
         $attributes = array_merge(array_keys($customAttributes), $attributes);
         $data = array_reduce($attributes, function ($data, $attribute) {
+            // Prevent wildcard rule being removed as an implicit attribute (not present in the data).
+            $attribute = str_replace('*', self::ASTERISK, $attribute);
+
             Arr::set($data, $attribute, true);
 
             return $data;

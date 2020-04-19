@@ -162,4 +162,39 @@ class MessageParserTest extends TestCase
 
         $this->assertEquals("&lt;html&gt;", $message);
     }
+
+    /**
+     * Test array wildcard rule message.
+     *
+     * @return void
+     */
+    public function testArrayWildcardDefault()
+    {
+        $rules = ['foo.*.bar' => 'required'];
+
+        $jsValidator = $this->app['jsvalidator']->make($rules);
+
+        $rules = $jsValidator->toArray()['rules'];
+        $this->assertArrayHasKey('foo[*][bar]', $rules);
+
+        $this->assertEquals("The foo.*.bar field is required.", $rules['foo[*][bar]']['laravelValidation'][0][2]);
+    }
+
+    /**
+     * Test array wildcard rule message.
+     *
+     * @return void
+     */
+    public function testArrayWildcardCustom()
+    {
+        $rules = ['foo.*.bar' => 'required'];
+        $messages = ['foo.*.bar.required' => 'Test 123'];
+
+        $jsValidator = $this->app['jsvalidator']->make($rules, $messages);
+
+        $rules = $jsValidator->toArray()['rules'];
+        $this->assertArrayHasKey('foo[*][bar]', $rules);
+
+        $this->assertEquals("Test 123", $rules['foo[*][bar]']['laravelValidation'][0][2]);
+    }
 }

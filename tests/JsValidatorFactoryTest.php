@@ -75,33 +75,20 @@ class JsValidatorFactoryTest extends TestCase
     public function testMakeArrayRules()
     {
         $rules=['name.*'=>'required'];
-        $data['name']['*']=true;
-        $messages = [];
-        $customAttributes = [];
-        $selector = null;
 
-        $app = $this->mockedApp($rules, $messages, $customAttributes, $data);
-
-        $app->expects($this->at(1))
-            ->method('__get')
-            ->with('session')
-            ->willReturn(null);
-
-        $app->expects($this->at(2))
-            ->method('__get')
-            ->with('encrypter')
-            ->willReturn(null);
-
-        $options = $this->app['config']->get('jsvalidation');
-        $options['disable_remote_validation'] = false;
-        $options['view'] = 'jsvalidation::bootstrap';
-        $options['form_selector'] = 'form';
-
-        $factory = new JsValidatorFactory($app, $options);
-
-        $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
-
-        $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
+        $jsValidator = $this->app['jsvalidator']->make($rules);
+        $this->assertEquals([
+            "name[*]" => [
+                "laravelValidation" => [
+                    [
+                        "Required",
+                        [],
+                        "The name.* field is required.",
+                        true
+                    ]
+                ]
+            ]
+        ], $jsValidator->toArray()['rules']);
     }
 
     public function testMakeArrayRulesAndAttributes()
@@ -113,28 +100,29 @@ class JsValidatorFactoryTest extends TestCase
         $customAttributes = ['name.*'=>'Name', 'name.key0'=>'Name Key 0'];
         $selector = null;
 
-        $app = $this->mockedApp($rules, $messages, $customAttributes, $data);
-
-        $app->expects($this->at(1))
-            ->method('__get')
-            ->with('session')
-            ->willReturn(null);
-
-        $app->expects($this->at(2))
-            ->method('__get')
-            ->with('encrypter')
-            ->willReturn(null);
-
-        $options = $this->app['config']->get('jsvalidation');
-        $options['disable_remote_validation'] = false;
-        $options['view'] = 'jsvalidation::bootstrap';
-        $options['form_selector'] = 'form';
-
-        $factory = new JsValidatorFactory($app, $options);
-
-        $jsValidator = $factory->make($rules, $messages, $customAttributes, $selector);
-
-        $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
+        $jsValidator = $this->app['jsvalidator']->make($rules, $messages, $customAttributes, $data);
+        $this->assertEquals([
+            "name[*]" => [
+                "laravelValidation" => [
+                    [
+                        "Required",
+                        [],
+                        "The Name field is required.",
+                        true
+                    ]
+                ]
+            ],
+            "name[key0]" => [
+                "laravelValidation" => [
+                    [
+                        "Required",
+                        [],
+                        "The Name Key 0 field is required.",
+                        true
+                    ]
+                ]
+            ]
+        ], $jsValidator->toArray()['rules']);
     }
 
     public function testMakeWithToken()
