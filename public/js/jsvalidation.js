@@ -4550,5 +4550,3 @@ $.extend(true, laravelValidation, {
         }
     }
 });
-
-//# sourceMappingURL=jsvalidation.js.map
