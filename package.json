@@ -2,7 +2,7 @@
   "private": true,
   "devDependencies": {
     "gulp": "^3.8.8",
-    "laravel-elixir": "^4.2.1"
+    "laravel-elixir": "^5.0.0"
   },
   "dependencies": {
     "jquery-validation": "^1.19.1",
