@@ -7,7 +7,7 @@ trait UseDelegatedValidatorTrait
     /**
      * Delegated validator.
      *
-     * @var \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @var \Proengsoft\JsValidation\Support\DelegatedValidator
      */
     protected $validator;
 

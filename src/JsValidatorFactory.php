@@ -173,7 +173,7 @@ class JsValidatorFactory
          * @var $formRequest \Illuminate\Foundation\Http\FormRequest
          * @var $request Request
          */
-        list($class, $params) = $this->parseFormRequestName($class);
+        [$class, $params] = $this->parseFormRequestName($class);
 
         $request = $this->app->__get('request');
         $formRequest = $this->app->build($class, $params);

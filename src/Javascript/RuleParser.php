@@ -3,8 +3,8 @@
 namespace Proengsoft\JsValidation\Javascript;
 
 use Proengsoft\JsValidation\JsValidatorFactory;
-use Proengsoft\JsValidation\Support\RuleListTrait;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
+use Proengsoft\JsValidation\Support\RuleListTrait;
 use Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait;
 
 class RuleParser
@@ -26,7 +26,7 @@ class RuleParser
     /**
      * Token used to secure romte validations.
      *
-     * @var null|string $remoteToken
+     * @var null|string
      */
     protected $remoteToken;
 
@@ -64,10 +64,10 @@ class RuleParser
         $isRemote = $this->isRemoteRule($rule);
 
         if ($isConditional || $isRemote) {
-            list($attribute, $parameters) = $this->remoteRule($attribute, $isConditional);
+            [$attribute, $parameters] = $this->remoteRule($attribute, $isConditional);
             $jsRule = self::REMOTE_RULE;
         } else {
-            list($jsRule, $attribute, $parameters) = $this->clientRule($attribute, $rule, $parameters);
+            [$jsRule, $attribute, $parameters] = $this->clientRule($attribute, $rule, $parameters);
         }
 
         $attribute = $this->getAttributeName($attribute);
@@ -128,7 +128,7 @@ class RuleParser
         $method = "rule{$rule}";
 
         if (method_exists($this, $method)) {
-            list($attribute, $parameters) = $this->$method($attribute, $parameters);
+            [$attribute, $parameters] = $this->$method($attribute, $parameters);
         }
 
         return [$jsRule, $attribute, $parameters];
@@ -180,7 +180,7 @@ class RuleParser
     public function parseNamedParameters($parameters)
     {
         return array_reduce($parameters, function ($result, $item) {
-            list($key, $value) = array_pad(explode('=', $item, 2), 2, null);
+            [$key, $value] = array_pad(explode('=', $item, 2), 2, null);
 
             $result[$key] = $value;
 

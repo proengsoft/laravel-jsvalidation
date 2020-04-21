@@ -3,6 +3,7 @@ preset: laravel
 enabled:
   - strict
   - unalign_double_arrow
+  - binary_operator_spaces
 
 disabled:
   - concat_without_spaces
