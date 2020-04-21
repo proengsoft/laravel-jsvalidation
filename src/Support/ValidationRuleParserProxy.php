@@ -7,7 +7,7 @@ use Illuminate\Validation\ValidationRuleParser;
 class ValidationRuleParserProxy
 {
     use AccessProtectedTrait;
-    
+
     /**
      * ValidationRuleParser instance.
      *
@@ -52,7 +52,7 @@ class ValidationRuleParserProxy
      */
     public function explodeRules($rules)
     {
-        return $this->callProtected($this->parserMethod, 'explodeRules', [ $rules ]);
+        return $this->callProtected($this->parserMethod, 'explodeRules', [$rules]);
     }
 
     /**

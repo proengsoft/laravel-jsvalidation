@@ -7,7 +7,6 @@ enabled:
 disabled:
   - concat_without_spaces
   - phpdoc_no_package
-  - logical_not_operators_with_successor_space
   - simplified_null_return
 
 finder:

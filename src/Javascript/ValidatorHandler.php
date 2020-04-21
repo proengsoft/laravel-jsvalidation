@@ -100,8 +100,8 @@ class ValidatorHandler
     {
         $jsRules = [];
         foreach ($rules as $rawRule) {
-            list($rule, $parameters) = $this->validator->parseRule($rawRule);
-            list($jsAttribute, $jsRule, $jsParams) = $this->rules->getRule($attribute, $rule, $parameters, $rawRule);
+            [$rule, $parameters] = $this->validator->parseRule($rawRule);
+            [$jsAttribute, $jsRule, $jsParams] = $this->rules->getRule($attribute, $rule, $parameters, $rawRule);
             if ($this->isValidatable($jsRule, $includeRemote)) {
                 $jsRules[$jsAttribute][$jsRule][] = [$rule, $jsParams,
                     $this->messages->getMessage($attribute, $rule, $parameters),
