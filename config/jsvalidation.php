@@ -42,7 +42,7 @@ return [
     /*
      * Whether to escape all validation messages with htmlentities.
      */
-    'escape' => false,
+    'escape' => true,
 
     /*
      * Set a default value for the validate ignore property.
