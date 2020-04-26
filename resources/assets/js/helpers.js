@@ -9,6 +9,11 @@
  * Released under the MIT license
  */
 
+import strlen from 'locutus/php/strings/strlen';
+import array_diff from 'locutus/php/array/array_diff';
+import strtotime from 'locutus/php/datetime/strtotime';
+import is_numeric from 'locutus/php/var/is_numeric';
+
 $.extend(true, laravelValidation, {
 
     helpers: {
