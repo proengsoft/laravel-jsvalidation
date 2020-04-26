@@ -2,6 +2,50 @@
 
 All notable changes to `laravel-jsvalidation` will be documented in this file.
 
+## [4.0.0](https://github.com/proengsoft/laravel-jsvalidation/compare/3.0.1...4.0.0) - 2020-04-24
+
+### Breaking Changes
+* Content editable elements are now ignored when validating. This can be changed in the configuration file.
+* URL validation is no longer performed on the client side and instead uses an AJAX request
+* Validation messages containing HTML are now escaped to prevent XSS. This can be changed in the configuration file.
+* `jsvalidation.js.map` is no longer included. If you need it, please generate it yourself.
+
+### Improvements
+* Switched to GitHub Actions [#431](https://github.com/proengsoft/laravel-jsvalidation/pull/431)
+* Added Orchestra Test Bench [#430](https://github.com/proengsoft/laravel-jsvalidation/pull/430)
+* Switched to Laravel Mix [#441](https://github.com/proengsoft/laravel-jsvalidation/pull/441)
+* Validation messages containing HTML are now escaped [#443](https://github.com/proengsoft/laravel-jsvalidation/pull/443)
+
+### Bug Fixes
+* Fixed inconsistent URL validation [#435](https://github.com/proengsoft/laravel-jsvalidation/pull/435)
+* Fixed contenteditable validation [#434](https://github.com/proengsoft/laravel-jsvalidation/pull/434)
+* Fixed array wildcard validation [#432](https://github.com/proengsoft/laravel-jsvalidation/pull/432)
+
+## [3.0.1](https://github.com/proengsoft/laravel-jsvalidation/compare/3.0.0...3.0.1) - 2020-04-10
+
+**Docblock Fixes:**
+* [#426](https://github.com/proengsoft/laravel-jsvalidation/pull/426) (Thanks to @yepzy)
+
+## [3.0.0](https://github.com/proengsoft/laravel-jsvalidation/compare/2.5.0...3.0.0) - 2020-03-15
+
+**Drops support for Laravel 5.4 and 5.5**
+
+### New features
+* uikit support [#395](https://github.com/proengsoft/laravel-jsvalidation/pull/395)
+* Laravel 7.x support [#415](https://github.com/proengsoft/laravel-jsvalidation/pull/415)
+* Ability to escape validation messages [#329](https://github.com/proengsoft/laravel-jsvalidation/pull/329)
+* `withJsValidator` support [#418](https://github.com/proengsoft/laravel-jsvalidation/pull/418)
+* `before_or_equal` and `after_or_equal` validation rule support [#421](https://github.com/proengsoft/laravel-jsvalidation/pull/421)
+
+### Improvements
+* Updated jquery-validation to latest [#409](https://github.com/proengsoft/laravel-jsvalidation/pull/409)
+
+### Bug fixes
+* [#245](https://github.com/proengsoft/laravel-jsvalidation/issues/245), PR [#330](https://github.com/proengsoft/laravel-jsvalidation/pull/330)
+* [#333](https://github.com/proengsoft/laravel-jsvalidation/issues/333), PR [#334](https://github.com/proengsoft/laravel-jsvalidation/pull/334)
+* [#364](https://github.com/proengsoft/laravel-jsvalidation/issues/364), PR [#419](https://github.com/proengsoft/laravel-jsvalidation/pull/419)
+* [#323](https://github.com/proengsoft/laravel-jsvalidation/issues/323), PR [#420](https://github.com/proengsoft/laravel-jsvalidation/pull/420)
+
 ## [2.5.0] - 2019-09-06
 
 ### Added
