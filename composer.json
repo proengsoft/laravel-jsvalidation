@@ -18,6 +18,11 @@
             "name": "Albert Moreno",
             "email": "albert@memorylimit.net",
             "homepage": "https://github.com/torrentalle"
+        },
+        {
+            "name": "Kieran Brahney",
+            "email": "kieran@supportpal.com",
+            "homepage": "https://github.com/bytestream"
         }
     ],
     "require": {
