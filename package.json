@@ -2,12 +2,13 @@
   "private": true,
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "laravel-mix": "^5.0.4"
+    "laravel-mix": "^5.0.4",
+    "vue-template-compiler": "^2.6.11"
   },
   "dependencies": {
     "jquery-validation": "^1.19.1",
-    "php-date-formatter": "^1.3.4",
-    "phpjs": "git://github.com/kvz/locutus.git#v1.3.2"
+    "locutus": "^2.0.11",
+    "php-date-formatter": "^1.3.4"
   },
   "scripts": {
     "build": "npm run development && npm run production",
