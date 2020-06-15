@@ -6,7 +6,7 @@
     "vue-template-compiler": "^2.6.11"
   },
   "dependencies": {
-    "jquery-validation": "^1.19.1",
+    "jquery-validation": "^1.19.2",
     "locutus": "^2.0.11",
     "php-date-formatter": "^1.3.4"
   },
