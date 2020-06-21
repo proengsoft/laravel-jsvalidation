@@ -2290,6 +2290,7 @@ laravelValidation = {
 
         $.validator.dataRules = this.arrayRules;
         $.validator.prototype.arrayRulesCache = {};
+
         // Register validations methods
         this.setupValidations();
     },
@@ -2301,23 +2302,23 @@ laravelValidation = {
             cache = validator.arrayRulesCache;
 
         // Is not an Array
-        if (element.name.indexOf('[') === -1 ) {
+        if (element.name.indexOf('[') === -1) {
             return rules;
         }
 
-        if (! (element.name in cache) ) {
-            cache[element.name]={};
+        if (! (element.name in cache)) {
+            cache[element.name] = {};
         }
 
-        $.each(validator.settings.rules, function(name, tmpRules){
+        $.each(validator.settings.rules, function(name, tmpRules) {
             if (name in cache[element.name]) {
                 $.extend(rules, cache[element.name][name]);
             } else {
-                cache[element.name][name]={};
+                cache[element.name][name] = {};
                 var nameRegExp = laravelValidation.helpers.regexFromWildcard(name);
                 if (element.name.match(nameRegExp)) {
                     var newRules = $.validator.normalizeRule( tmpRules ) || {};
-                    cache[element.name][name]=newRules;
+                    cache[element.name][name] = newRules;
                     $.extend(rules, newRules);
                 }
             }
@@ -2338,7 +2339,7 @@ laravelValidation = {
             var previous = this.previousValue( element );
 
             // put Implicit rules in front
-            var rules=[];
+            var rules = [];
             $.each(params, function (i, param) {
                 if (param[3] || laravelValidation.implicitRules.indexOf(param[0])!== -1) {
                     rules.unshift(param);
@@ -2347,48 +2348,62 @@ laravelValidation = {
                 }
             });
 
+            // Value is either String, Integer or Array.
+            // The only case where it's an array is select[multiple] elements.
+            var values = ! Array.isArray(value) ? [value] : value;
+
             $.each(rules, function (i, param) {
-                var implicit = param[3] || laravelValidation.implicitRules.indexOf(param[0])!== -1;
+                var implicit = param[3] || laravelValidation.implicitRules.indexOf(param[0]) !== -1;
                 var rule = param[0];
                 var message = param[2];
 
-                if ( !implicit && validator.optional( element ) ) {
-                    validated="dependency-mismatch";
+                if (! implicit && validator.optional(element)) {
+                    validated = "dependency-mismatch";
                     return false;
                 }
 
-                if (laravelValidation.methods[rule]!==undefined) {
-                    validated = laravelValidation.methods[rule].call(validator, value, element, param[1], function(valid) {
-                        validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
-                        if ( valid ) {
-                            var submitted = validator.formSubmitted;
-                            validator.prepareElement( element );
-                            validator.formSubmitted = submitted;
-                            validator.successList.push( element );
-                            delete validator.invalid[ element.name ];
-                            validator.showErrors();
-                        } else {
-                            var errors = {};
-                            errors[ element.name ] = previous.message = $.isFunction( message ) ? message( value ) : message;
-                            validator.invalid[ element.name ] = true;
-                            validator.showErrors( errors );
+                if (laravelValidation.methods[rule] !== undefined) {
+                    $.each(values, function(index, value) {
+                        validated = laravelValidation.methods[rule].call(validator, value, element, param[1], function(valid) {
+                            validator.settings.messages[element.name].laravelValidationRemote = previous.originalMessage;
+                            if (valid) {
+                                var submitted = validator.formSubmitted;
+                                validator.prepareElement(element);
+                                validator.formSubmitted = submitted;
+                                validator.successList.push(element);
+                                delete validator.invalid[element.name];
+                                validator.showErrors();
+                            } else {
+                                var errors = {};
+                                errors[element.name] = previous.message = $.isFunction(message) ? message(value) : message;
+                                validator.invalid[element.name] = true;
+                                validator.showErrors(errors);
+                            }
+                            validator.showErrors(validator.errorMap);
+                            previous.valid = valid;
+                        });
+
+                        // Break loop.
+                        if (validated === false) {
+                            return false;
                         }
-                        validator.showErrors(validator.errorMap);
-                        previous.valid = valid;
                     });
                 } else {
-                    validated=false;
+                    validated = false;
                 }
 
                 if (validated !== true) {
-                    if (!validator.settings.messages[ element.name ] ) {
-                        validator.settings.messages[ element.name ] = {};
+                    if (!validator.settings.messages[element.name] ) {
+                        validator.settings.messages[element.name] = {};
                     }
+
                     validator.settings.messages[element.name].laravelValidation= message;
+
                     return false;
                 }
 
             });
+
             return validated;
 
         }, '');
