@@ -108,7 +108,7 @@ class ValidatorHandler
                     $jsParams,
                     $this->messages->getMessage($attribute, $rule, $parameters),
                     $this->validator->isImplicit($rule),
-                    $jsAttribute
+                    $jsAttribute,
                 ];
             }
         }
