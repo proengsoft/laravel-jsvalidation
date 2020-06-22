@@ -47,14 +47,16 @@ laravelValidation = {
 
         $.each(validator.settings.rules, function(name, tmpRules) {
             if (name in cache[element.name]) {
-                $.extend(rules, cache[element.name][name]);
+                rules = laravelValidation.helpers.mergeRules(rules, cache[element.name][name]);
             } else {
                 cache[element.name][name] = {};
+
                 var nameRegExp = laravelValidation.helpers.regexFromWildcard(name);
                 if (element.name.match(nameRegExp)) {
-                    var newRules = $.validator.normalizeRule( tmpRules ) || {};
+                    var newRules = $.validator.normalizeRule(tmpRules) || {};
                     cache[element.name][name] = newRules;
-                    $.extend(rules, newRules);
+
+                    rules = laravelValidation.helpers.mergeRules(rules, newRules);
                 }
             }
         });
@@ -65,27 +67,17 @@ laravelValidation = {
     setupValidations: function () {
 
         /**
-         * Create JQueryValidation check to validate Laravel rules.
+         * Validate a set of local JS based rules against an element.
+         *
+         * @param validator
+         * @param values
+         * @param element
+         * @param rules
+         * @returns {boolean}
          */
-
-        $.validator.addMethod("laravelValidation", function (value, element, params) {
-            var validator = this;
-            var validated = true;
-            var previous = this.previousValue( element );
-
-            // put Implicit rules in front
-            var rules = [];
-            $.each(params, function (i, param) {
-                if (param[3] || laravelValidation.implicitRules.indexOf(param[0])!== -1) {
-                    rules.unshift(param);
-                } else {
-                    rules.push(param);
-                }
-            });
-
-            // Value is either String, Integer or Array.
-            // The only case where it's an array is select[multiple] elements.
-            var values = ! Array.isArray(value) ? [value] : value;
+        var validateLocalRules = function (validator, values, element, rules) {
+            var validated = true,
+                previous = validator.previousValue(element);
 
             $.each(rules, function (i, param) {
                 var implicit = param[3] || laravelValidation.implicitRules.indexOf(param[0]) !== -1;
@@ -142,7 +134,33 @@ laravelValidation = {
             });
 
             return validated;
+        };
 
+        /**
+         * Create JQueryValidation check to validate Laravel rules.
+         */
+
+        $.validator.addMethod("laravelValidation", function (value, element, params) {
+            var rules = [],
+                arrayRules = [];
+            $.each(params, function (i, param) {
+                // put Implicit rules in front
+                var isArrayRule = param[4].indexOf('[') !== -1;
+                if (param[3] || laravelValidation.implicitRules.indexOf(param[0]) !== -1) {
+                    isArrayRule ? arrayRules.unshift(param) : rules.unshift(param);
+                } else {
+                    isArrayRule ? arrayRules.push(param) : rules.push(param);
+                }
+            });
+
+            // Validate normal rules.
+            var localRulesResult = validateLocalRules(this, [value], element, rules);
+
+            // Validate items of the array using array rules.
+            var arrayValue = ! Array.isArray(value) ? [value] : value;
+            var arrayRulesResult = validateLocalRules(this, arrayValue, element, rules);
+
+            return localRulesResult && arrayRulesResult;
         }, '');
 
 
