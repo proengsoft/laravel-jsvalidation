@@ -65,7 +65,19 @@ class ValidatorHandlerTest extends TestCase
 
         $data = $handler->validationData();
         $expected = [
-            'rules' => ['field'=>['laravelValidation'=>[['RequiredIf',['field2','value2'],'Field is required if',false]]]],
+            'rules' => [
+                'field' => [
+                    'laravelValidation' => [
+                        [
+                            'RequiredIf',
+                            ['field2', 'value2'],
+                            'Field is required if',
+                            false,
+                            'field',
+                        ]
+                    ]
+                ]
+            ],
             'messages' =>  [],
         ];
 
@@ -174,7 +186,19 @@ class ValidatorHandlerTest extends TestCase
 
         $data = $handler->validationData();
         $expected = [
-            'rules' => ['field'=>['laravelValidationRemote'=>[['RequiredIf',['field2','value2'],'Field is required if',false]]]],
+            'rules' => [
+                'field' => [
+                    'laravelValidationRemote' => [
+                        [
+                            'RequiredIf',
+                            ['field2', 'value2'],
+                            'Field is required if',
+                            false,
+                            'field',
+                        ]
+                    ]
+                ]
+            ],
             'messages' => [],
         ];
 
