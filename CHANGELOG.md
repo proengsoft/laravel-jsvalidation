@@ -2,6 +2,16 @@
 
 All notable changes to `laravel-jsvalidation` will be documented in this file.
 
+## [4.1.0](...) - TBC
+
+### Improvements
+* Updated phpjs dependency [#445](https://github.com/proengsoft/laravel-jsvalidation/pull/445)
+* Updated jquery-validation dependency to 1.19.2 [#451](https://github.com/proengsoft/laravel-jsvalidation/pull/451)
+* Replaced deprecated jQuery functions [#458](https://github.com/proengsoft/laravel-jsvalidation/pull/458)
+
+### Bug Fixes
+* Fixed array rule validation against select-multiple elements [#454](https://github.com/proengsoft/laravel-jsvalidation/pull/454)
+
 ## [4.0.0](https://github.com/proengsoft/laravel-jsvalidation/compare/3.0.1...4.0.0) - 2020-04-24
 
 ### Breaking Changes
