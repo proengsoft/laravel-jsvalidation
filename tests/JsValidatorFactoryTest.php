@@ -84,7 +84,8 @@ class JsValidatorFactoryTest extends TestCase
                         "Required",
                         [],
                         "The name.* field is required.",
-                        true
+                        true,
+                        "name[*]",
                     ]
                 ]
             ]
@@ -108,7 +109,8 @@ class JsValidatorFactoryTest extends TestCase
                         "Required",
                         [],
                         "The Name field is required.",
-                        true
+                        true,
+                        "name[*]",
                     ]
                 ]
             ],
@@ -118,7 +120,8 @@ class JsValidatorFactoryTest extends TestCase
                         "Required",
                         [],
                         "The Name Key 0 field is required.",
-                        true
+                        true,
+                        "name[key0]",
                     ]
                 ]
             ]
