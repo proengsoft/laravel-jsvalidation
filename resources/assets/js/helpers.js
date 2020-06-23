@@ -183,8 +183,8 @@ $.extend(true, laravelValidation, {
             var timeValue = false;
             var fmt = new DateFormatter();
 
-            if ($.type(format) === 'object') {
-                var dateRule=this.getLaravelValidation('DateFormat', format);
+            if (typeof format === 'object') {
+                var dateRule = this.getLaravelValidation('DateFormat', format);
                 if (dateRule !== undefined) {
                     format = dateRule[1][0];
                 } else {
