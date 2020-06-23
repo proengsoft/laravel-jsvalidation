@@ -8,6 +8,7 @@ All notable changes to `laravel-jsvalidation` will be documented in this file.
 * Updated phpjs dependency [#445](https://github.com/proengsoft/laravel-jsvalidation/pull/445)
 * Updated jquery-validation dependency to 1.19.2 [#451](https://github.com/proengsoft/laravel-jsvalidation/pull/451)
 * Replaced deprecated jQuery functions [#458](https://github.com/proengsoft/laravel-jsvalidation/pull/458)
+* Laravel 8 support [#462](https://github.com/proengsoft/laravel-jsvalidation/pull/462)
 
 ### Bug Fixes
 * Fixed array rule validation against select-multiple elements [#454](https://github.com/proengsoft/laravel-jsvalidation/pull/454)
