@@ -25,6 +25,7 @@ laravelValidation = {
 
         $.validator.dataRules = this.arrayRules;
         $.validator.prototype.arrayRulesCache = {};
+
         // Register validations methods
         this.setupValidations();
     },
@@ -36,24 +37,26 @@ laravelValidation = {
             cache = validator.arrayRulesCache;
 
         // Is not an Array
-        if (element.name.indexOf('[') === -1 ) {
+        if (element.name.indexOf('[') === -1) {
             return rules;
         }
 
-        if (! (element.name in cache) ) {
-            cache[element.name]={};
+        if (! (element.name in cache)) {
+            cache[element.name] = {};
         }
 
-        $.each(validator.settings.rules, function(name, tmpRules){
+        $.each(validator.settings.rules, function(name, tmpRules) {
             if (name in cache[element.name]) {
-                $.extend(rules, cache[element.name][name]);
+                rules = laravelValidation.helpers.mergeRules(rules, cache[element.name][name]);
             } else {
-                cache[element.name][name]={};
+                cache[element.name][name] = {};
+
                 var nameRegExp = laravelValidation.helpers.regexFromWildcard(name);
                 if (element.name.match(nameRegExp)) {
-                    var newRules = $.validator.normalizeRule( tmpRules ) || {};
-                    cache[element.name][name]=newRules;
-                    $.extend(rules, newRules);
+                    var newRules = $.validator.normalizeRule(tmpRules) || {};
+                    cache[element.name][name] = newRules;
+
+                    rules = laravelValidation.helpers.mergeRules(rules, newRules);
                 }
             }
         });
@@ -64,70 +67,100 @@ laravelValidation = {
     setupValidations: function () {
 
         /**
+         * Validate a set of local JS based rules against an element.
+         *
+         * @param validator
+         * @param values
+         * @param element
+         * @param rules
+         * @returns {boolean}
+         */
+        var validateLocalRules = function (validator, values, element, rules) {
+            var validated = true,
+                previous = validator.previousValue(element);
+
+            $.each(rules, function (i, param) {
+                var implicit = param[3] || laravelValidation.implicitRules.indexOf(param[0]) !== -1;
+                var rule = param[0];
+                var message = param[2];
+
+                if (! implicit && validator.optional(element)) {
+                    validated = "dependency-mismatch";
+                    return false;
+                }
+
+                if (laravelValidation.methods[rule] !== undefined) {
+                    $.each(values, function(index, value) {
+                        validated = laravelValidation.methods[rule].call(validator, value, element, param[1], function(valid) {
+                            validator.settings.messages[element.name].laravelValidationRemote = previous.originalMessage;
+                            if (valid) {
+                                var submitted = validator.formSubmitted;
+                                validator.prepareElement(element);
+                                validator.formSubmitted = submitted;
+                                validator.successList.push(element);
+                                delete validator.invalid[element.name];
+                                validator.showErrors();
+                            } else {
+                                var errors = {};
+                                errors[ element.name ]
+                                    = previous.message
+                                    = typeof message === "function" ? message( value ) : message;
+                                validator.invalid[element.name] = true;
+                                validator.showErrors(errors);
+                            }
+                            validator.showErrors(validator.errorMap);
+                            previous.valid = valid;
+                        });
+
+                        // Break loop.
+                        if (validated === false) {
+                            return false;
+                        }
+                    });
+                } else {
+                    validated = false;
+                }
+
+                if (validated !== true) {
+                    if (!validator.settings.messages[element.name] ) {
+                        validator.settings.messages[element.name] = {};
+                    }
+
+                    validator.settings.messages[element.name].laravelValidation= message;
+
+                    return false;
+                }
+
+            });
+
+            return validated;
+        };
+
+        /**
          * Create JQueryValidation check to validate Laravel rules.
          */
 
         $.validator.addMethod("laravelValidation", function (value, element, params) {
-            var validator = this;
-            var validated = true;
-            var previous = this.previousValue( element );
-
-            // put Implicit rules in front
-            var rules=[];
+            var rules = [],
+                arrayRules = [];
             $.each(params, function (i, param) {
-                if (param[3] || laravelValidation.implicitRules.indexOf(param[0])!== -1) {
-                    rules.unshift(param);
+                // put Implicit rules in front
+                var isArrayRule = param[4].indexOf('[') !== -1;
+                if (param[3] || laravelValidation.implicitRules.indexOf(param[0]) !== -1) {
+                    isArrayRule ? arrayRules.unshift(param) : rules.unshift(param);
                 } else {
-                    rules.push(param);
+                    isArrayRule ? arrayRules.push(param) : rules.push(param);
                 }
             });
 
-            $.each(rules, function (i, param) {
-                var implicit = param[3] || laravelValidation.implicitRules.indexOf(param[0])!== -1;
-                var rule = param[0];
-                var message = param[2];
+            // Validate normal rules.
+            var localRulesResult = validateLocalRules(this, [value], element, rules);
 
-                if ( !implicit && validator.optional( element ) ) {
-                    validated="dependency-mismatch";
-                    return false;
-                }
+            // Validate items of the array using array rules.
+            var arrayValue = ! Array.isArray(value) ? [value] : value;
+            var arrayRulesResult = validateLocalRules(this, arrayValue, element, rules);
 
-                if (laravelValidation.methods[rule]!==undefined) {
-                    validated = laravelValidation.methods[rule].call(validator, value, element, param[1], function(valid) {
-                        validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
-                        if ( valid ) {
-                            var submitted = validator.formSubmitted;
-                            validator.prepareElement( element );
-                            validator.formSubmitted = submitted;
-                            validator.successList.push( element );
-                            delete validator.invalid[ element.name ];
-                            validator.showErrors();
-                        } else {
-                            var errors = {};
-                            errors[ element.name ]
-                                = previous.message
-                                = typeof message === "function" ? message( value ) : message;
-                            validator.invalid[ element.name ] = true;
-                            validator.showErrors( errors );
-                        }
-                        validator.showErrors(validator.errorMap);
-                        previous.valid = valid;
-                    });
-                } else {
-                    validated=false;
-                }
-
-                if (validated !== true) {
-                    if (!validator.settings.messages[ element.name ] ) {
-                        validator.settings.messages[ element.name ] = {};
-                    }
-                    validator.settings.messages[element.name].laravelValidation= message;
-                    return false;
-                }
-
-            });
-            return validated;
-
+            return localRulesResult && arrayRulesResult;
         }, '');
 
 

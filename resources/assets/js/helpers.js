@@ -415,6 +415,34 @@ $.extend(true, laravelValidation, {
             });
 
             return new RegExp('^'+regexpParts.join('[^\\]]*')+'$');
+        },
+
+        /**
+         * Merge additional laravel validation rules into the current rule set.
+         *
+         * @param {object} rules
+         * @param {object} newRules
+         * @returns {object}
+         */
+        mergeRules: function (rules, newRules) {
+            var rulesList = {
+                'laravelValidation': newRules.laravelValidation || [],
+                'laravelValidationRemote': newRules.laravelValidationRemote || []
+            };
+
+            for (var key in rulesList) {
+                if (rulesList[key].length === 0) {
+                    continue;
+                }
+
+                if (typeof rules[key] === "undefined") {
+                    rules[key] = [];
+                }
+
+                rules[key] = rules[key].concat(rulesList[key]);
+            }
+
+            return rules;
         }
     }
 });
