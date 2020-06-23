@@ -104,7 +104,9 @@ laravelValidation = {
                             validator.showErrors();
                         } else {
                             var errors = {};
-                            errors[ element.name ] = previous.message = $.isFunction( message ) ? message( value ) : message;
+                            errors[ element.name ]
+                                = previous.message
+                                = typeof message === "function" ? message( value ) : message;
                             validator.invalid[ element.name ] = true;
                             validator.showErrors( errors );
                         }
@@ -224,7 +226,9 @@ laravelValidation = {
                     } else {
                         errors = {};
                         message = response || validator.defaultMessage( element, "remote" );
-                        errors[ element.name ] = previous.message = $.isFunction( message ) ? message( value ) : message[0];
+                        errors[ element.name ]
+                            = previous.message
+                            = typeof message === "function" ? message( value ) : message[0];
                         validator.invalid[ element.name ] = true;
                         validator.showErrors( errors );
                     }

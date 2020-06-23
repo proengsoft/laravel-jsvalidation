@@ -346,7 +346,7 @@ $.extend(true, laravelValidation, {
                 return true;
             }
 
-            return $.isArray(value);
+            return laravelValidation.helpers.isArray(value);
         },
 
         /**
@@ -446,10 +446,14 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         In: function(value, element, params) {
-            if ($.isArray(value) && laravelValidation.helpers.hasRules(element, "Array")) {
+            if (laravelValidation.helpers.isArray(value)
+                && laravelValidation.helpers.hasRules(element, "Array")
+            ) {
                 var diff = laravelValidation.helpers.arrayDiff(value, params);
+
                 return Object.keys(diff).length === 0;
             }
+
             return params.indexOf(value.toString()) !== -1;
         },
 
