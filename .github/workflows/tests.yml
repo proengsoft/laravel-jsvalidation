@@ -18,6 +18,7 @@ jobs:
           - {laravel: '5.7', php: '7.4'}
           - {laravel: '6.0', php: '7.1'}
           - {laravel: '7.0', php: '7.1'}
+          - {laravel: '8.0', php: '7.1'}
           - {laravel: '8.0', php: '7.2'}
 
     name: PHP ${{ matrix.php }} Laravel ${{ matrix.laravel }}
