@@ -55,7 +55,7 @@ $.extend(true, laravelValidation, {
          */
         selector: function (names) {
             var selector = [];
-            if (!$.isArray(names))  {
+            if (! this.isArray(names))  {
                 names = [names];
             }
             for (var i = 0; i < names.length; i++) {
@@ -138,7 +138,7 @@ $.extend(true, laravelValidation, {
 
             if (this.hasNumericRules(element) && this.is_numeric(value)) {
                 return parseFloat(value);
-            } else if ($.isArray(value)) {
+            } else if (this.isArray(value)) {
                 return parseFloat(value.length);
             } else if (element.type === 'file') {
                 return parseFloat(Math.floor(this.fileinfo(element).size));
@@ -291,6 +291,17 @@ $.extend(true, laravelValidation, {
         },
 
         /**
+         * Check whether the argument is of type Array.
+         * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray#Polyfill
+         *
+         * @param arg
+         * @returns {boolean}
+         */
+        isArray: function(arg) {
+            return Object.prototype.toString.call(arg) === '[object Array]';
+        },
+
+        /**
          * Returns Array diff based on PHP function array_diff.
          * http://php.net/manual/es/function.array_diff.php
          * http://phpjs.org/functions/array_diff/
@@ -311,7 +322,7 @@ $.extend(true, laravelValidation, {
          * @returns {*}
          */
         arrayEquals: function (arr1, arr2) {
-            if (! $.isArray(arr1) || ! $.isArray(arr2)) {
+            if (! this.isArray(arr1) || ! this.isArray(arr2)) {
                 return false;
             }
             
@@ -365,7 +376,7 @@ $.extend(true, laravelValidation, {
             var newResponse = ['Whoops, looks like something went wrong.'];
             if ('responseText' in response) {
                 var errorMsg = response.responseText.match(/<h1\s*>(.*)<\/h1\s*>/i);
-                if ($.isArray(errorMsg)) {
+                if (this.isArray(errorMsg)) {
                     newResponse = [errorMsg[1]];
                 }
             }
