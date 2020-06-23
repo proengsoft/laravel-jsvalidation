@@ -3,7 +3,7 @@
         "php": ">=7.3",
         "illuminate/support": "^8.0",
         "illuminate/validation": "^8.0",
-        "illuminate/contracts": "^88.0",
+        "illuminate/contracts": "^8.0",
         "illuminate/view": "^8.0",
         "illuminate/config": "^8.0",
         "illuminate/http": "^8.0",
@@ -11,7 +11,7 @@
         "symfony/http-foundation": "^5.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^5.0",
+        "orchestra/testbench": "dev-master",
         "phpunit/phpunit": "^8.0",
         "mockery/mockery": "^1.0"
     },
