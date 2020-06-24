@@ -158,7 +158,7 @@ laravelValidation = {
 
             // Validate items of the array using array rules.
             var arrayValue = ! Array.isArray(value) ? [value] : value;
-            var arrayRulesResult = validateLocalRules(this, arrayValue, element, rules);
+            var arrayRulesResult = validateLocalRules(this, arrayValue, element, arrayRules);
 
             return localRulesResult && arrayRulesResult;
         }, '');
