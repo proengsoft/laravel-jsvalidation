@@ -2,7 +2,7 @@
 
 All notable changes to `laravel-jsvalidation` will be documented in this file.
 
-## [4.1.0](...) - TBC
+## [4.1.0](https://github.com/proengsoft/laravel-jsvalidation/compare/4.0.0...4.1.0) - 2020-06-25
 
 ### Improvements
 * Updated phpjs dependency [#445](https://github.com/proengsoft/laravel-jsvalidation/pull/445)
