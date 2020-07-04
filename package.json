@@ -1,7 +1,7 @@
 {
   "private": true,
   "devDependencies": {
-    "@babel/cli": "^7.10.3",
+    "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.4",
     "babel-loader": "^8.1.0",
