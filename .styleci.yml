@@ -1,5 +1,7 @@
 preset: laravel
 
+risky: true
+
 enabled:
   - strict
   - unalign_double_arrow
@@ -7,7 +9,7 @@ enabled:
 disabled:
   - concat_without_spaces
   - phpdoc_no_package
-  - simplified_null_return
+  - no_alternative_syntax
 
 finder:
   exclude:
