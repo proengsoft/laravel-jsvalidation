@@ -1,5 +1,7 @@
 preset: laravel
 
+risky: true
+
 enabled:
   - strict
   - unalign_double_arrow
