@@ -6,7 +6,7 @@ All notable changes to `laravel-jsvalidation` will be documented in this file.
 
 ### Improvements
 * Updated php-date-formatter from 1.3.4 to 1.3.6 [#467](https://github.com/proengsoft/laravel-jsvalidation/pull/467)
-* Updated locutus from 2.0.11 to 2.0.12 (#489)(https://github.com/proengsoft/laravel-jsvalidation/pull/489)
+* Updated locutus from 2.0.11 to 2.0.12 [#489](https://github.com/proengsoft/laravel-jsvalidation/pull/489)
 
 ## [4.1.0](https://github.com/proengsoft/laravel-jsvalidation/compare/4.0.0...4.1.0) - 2020-06-25
 
