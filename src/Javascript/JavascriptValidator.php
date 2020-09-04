@@ -45,6 +45,13 @@ class JavascriptValidator implements Arrayable
     protected $ignore;
 
     /**
+     * 'submitHandler' option for jQuery Validation Plugin.
+     *
+     * @var string
+     */
+    protected $submitHandler;
+
+    /**
      * Constructor.
      *
      * @param ValidatorHandler $validator
@@ -70,6 +77,10 @@ class JavascriptValidator implements Arrayable
 
         if (isset($options['ignore'])) {
             $this->ignore = $options['ignore'];
+        }
+
+        if (isset($options['submitHandler'])) {
+            $this->submitHandler = $options['submitHandler'];
         }
     }
 
@@ -146,6 +157,10 @@ class JavascriptValidator implements Arrayable
             $data['ignore'] = $this->ignore;
         }
 
+        if (! is_null($this->submitHandler)) {
+            $data['submitHandler'] = $this->submitHandler;
+        }
+
         return $data;
     }
 
@@ -182,6 +197,19 @@ class JavascriptValidator implements Arrayable
     public function ignore($ignore)
     {
         $this->ignore = $ignore;
+
+        return $this;
+    }
+
+    /**
+     * Set the input selector to submitHandler for validation.
+     *
+     * @param string $submitHandler
+     * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
+     */
+    public function submitHandler($submitHandler)
+    {
+        $this->submitHandler = $submitHandler;
 
         return $this;
     }
