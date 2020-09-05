@@ -131,7 +131,6 @@ class JsValidatorFactory
             $formRequest = $this->createFormRequest($formRequest);
         }
 
-        // see #495
         $rules = method_exists($formRequest, 'rules') ? $this->app->call([$formRequest, 'rules']) : [];
 
         $validator = $this->getValidatorInstance($rules, $formRequest->messages(), $formRequest->attributes());
