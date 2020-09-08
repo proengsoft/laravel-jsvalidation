@@ -24,7 +24,5 @@
         "psr-4": {
             "Proengsoft\\JsValidation\\Tests\\": "tests"
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
