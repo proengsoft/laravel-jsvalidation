@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-jsvalidation` will be documented in this file.
 
+## [4.3.0](https://github.com/proengsoft/laravel-jsvalidation/compare/4.2.0...4.3.0) - 2020-09-08
+
+### Improvements
+* Allow type-hint any dependencies in rules() [#496](https://github.com/proengsoft/laravel-jsvalidation/pull/496) - thanks to [@thewebartisan7](https://github.com/thewebartisan7) :tada:
+
 ## [4.2.0](https://github.com/proengsoft/laravel-jsvalidation/compare/4.1.0...4.2.0) - 2020-09-03
 
 ### Improvements
