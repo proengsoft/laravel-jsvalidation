@@ -454,5 +454,67 @@ $.extend(true, laravelValidation, {
         encode: function (string) {
             return $('<div/>').text(string).html();
         },
+
+        /**
+         * Lookup name in an array.
+         *
+         * @param {array} names List of names to match against.
+         * @param {string} name Name in dot notation format.
+         * @returns {null|string}
+         */
+        findByArrayName: function (names, name) {
+            var sq_name = name.replace(/\.([^\.]+)/g, '[$1]'),
+                lookups = [
+                    // Convert dot to square brackets. e.g. foo.bar.0 becomes foo[bar][0]
+                    sq_name,
+                    // Remove key from last array e.g. foo[bar][0] becomes foo[bar][]
+                    sq_name.replace(/(.*)\[(.*)\]$/g, '$1[]')
+                ];
+
+            for (var i = 0; i < lookups.length; i++) {
+                if ($.inArray(lookups[i], names) !== -1) {
+                    return lookups[i];
+                }
+            }
+
+            return null;
+        },
+
+        /**
+         * Attempt to find an element in the DOM matching the given name.
+         * Example names include:
+         *    - domain.0 which matches domain[]
+         *    - customfield.3 which matches customfield[3]
+         *
+         * @param validator
+         * @param {object} data
+         * @param {string} name
+         * @returns {*|null}
+         */
+        findByName: function (validator, data, name) {
+            // Exact match.
+            var elem = validator.findByName(name);
+            if (elem.length > 0) {
+                return elem;
+            }
+
+            // Find name in data, using dot notation.
+            var fields = data.map(function (item) { return item.name; }),
+                delim = '.',
+                parts  = name.split(delim);
+            for (var i = parts.length; i > 0; i--) {
+                var reconstructed = [];
+                for (var c = 0; c < i; c++) {
+                    reconstructed.push(parts[c]);
+                }
+
+                var match = this.findByArrayName(fields, reconstructed.join(delim));
+                if (match) {
+                    return validator.findByName(match);
+                }
+            }
+
+            return null;
+        }
     }
 });
