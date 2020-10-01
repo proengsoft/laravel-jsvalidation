@@ -318,10 +318,6 @@ laravelValidation = {
             var validator = this,
                 previous = validator.previousValue(element);
 
-            if (! isImplicit(params) && this.optional(element)) {
-                return "dependency-mismatch";
-            }
-
             var data = $(validator.currentForm).serializeArray();
             data.push({'name': '__proengsoft_form_request', 'value': 1});
 
