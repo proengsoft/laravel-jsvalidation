@@ -14,7 +14,25 @@ namespace  Illuminate\Foundation\Http {
 
 namespace Proengsoft\JsValidation\Tests {
     use Mockery as m;
+
     class  StubFormRequest extends \Illuminate\Foundation\Http\FormRequest {
+        public function rules(){return ['name'=>'require'];}
+        public function messages(){return [];}
+        public function attributes(){return [];}
+
+        public static function createFromBase() {
+            //$sessionMock =  m::mock('Symfony\Component\HttpFoundation\Session\SessionInterface',[]);
+            $mockedRequest = m::mock(\Symfony\Component\HttpFoundation\Request::class);
+            $mockedRequest->shouldReceive('setSession')
+                ->shouldReceive('setUserResolver')
+                ->shouldReceive('setRouteResolver')
+                ->shouldReceive('messages')->andReturn([])
+                ->shouldReceive('attributes')->andReturn([]);
+            return $mockedRequest;
+        }
+    }
+
+    class StubFormRequest2 extends \Proengsoft\JsValidation\Remote\FormRequest {
         public function rules(){return ['name'=>'require'];}
         public function messages(){return [];}
         public function attributes(){return [];}

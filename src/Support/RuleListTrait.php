@@ -2,6 +2,8 @@
 
 namespace Proengsoft\JsValidation\Support;
 
+use Proengsoft\JsValidation\Javascript\RuleParser;
+
 trait RuleListTrait
 {
     /**
@@ -59,6 +61,17 @@ trait RuleListTrait
     {
         return in_array($rule, $this->serverRules) ||
             ! in_array($rule, $this->clientRules);
+    }
+
+    /**
+     * Form request rule.
+     *
+     * @param string $rule
+     * @return bool
+     */
+    protected function isFormRequestRule($rule)
+    {
+        return $rule === RuleParser::FORM_REQUEST_RULE_NAME;
     }
 
     /**

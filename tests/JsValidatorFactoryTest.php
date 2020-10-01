@@ -3,6 +3,7 @@
 namespace Proengsoft\JsValidation\Tests;
 
 use Mockery as m;
+use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\JsValidatorFactory;
 
 require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
@@ -227,8 +228,6 @@ class JsValidatorFactoryTest extends TestCase
             ->shouldReceive('getUserResolver')->andReturn(function(){})
             ->shouldReceive('getRouteResolver')->andReturn(function(){});
 
-        //$requestMock= $this->getMock('\Symfony\Component\HttpFoundation\Request',['getUserResolver']);
-
         $app->expects($this->at(0))
             ->method('__get')
             ->with('request')
@@ -253,5 +252,16 @@ class JsValidatorFactoryTest extends TestCase
         $jsValidator = $factory->formRequest([\Proengsoft\JsValidation\Tests\StubFormRequest::class] , $selector);
 
         $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
+    }
+
+    public function testCreateFromFormRequestClassNameNew()
+    {
+        /** @var JavascriptValidator $jsValidator */
+        $jsValidator = app('jsvalidator')->formRequest(StubFormRequest2::class);
+        $data = $jsValidator->toArray();
+
+        $this->assertCount(1, $data['rules']);
+        $this->assertArrayHasKey('name', $data['rules']);
+        $this->assertArrayHasKey('laravelValidationFormRequest', $data['rules']['name']);
     }
 }

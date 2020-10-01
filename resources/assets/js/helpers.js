@@ -443,6 +443,16 @@ $.extend(true, laravelValidation, {
             }
 
             return rules;
-        }
+        },
+
+        /**
+         * HTML entity encode a string.
+         *
+         * @param string
+         * @returns {string}
+         */
+        encode: function (string) {
+            return $('<div/>').text(string).html();
+        },
     }
 });
