@@ -339,7 +339,7 @@ laravelValidation = {
                         validator.toHide = validator.errorsFor( element );
                     } else {
                         $.each( response, function( fieldName, errorMessages ) {
-                            var errorElement = laravelValidation.helpers.findByName(validator, data, fieldName)[0];
+                            var errorElement = laravelValidation.helpers.findByName(validator, fieldName)[0];
                             if (errorElement) {
                                 errors[errorElement.name]
                                     = laravelValidation.helpers.encode(errorMessages[0] || '');
