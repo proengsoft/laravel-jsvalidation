@@ -26,7 +26,7 @@ laravelValidation = {
                 $('<input>').attr({type: 'hidden', name: '__proengsoft_form_request'}).appendTo(this);
             }
 
-            constructor.apply(this, [options]);
+            return constructor.apply(this, [options]);
         };
 
         // Disable class rules and attribute rules
