@@ -134,7 +134,7 @@ class JsValidatorFactory
         }
 
         if ($formRequest instanceof FormRequest) {
-            return $this->newFormRequestValidator($formRequest, $selector);
+            return $this->newFormRequestValidator($selector);
         }
 
         return $this->oldFormRequestValidator($formRequest, $selector);
@@ -143,35 +143,16 @@ class JsValidatorFactory
     /**
      * Create form request validator.
      *
-     * @param FormRequest $formRequest
      * @param string $selector
      * @return JavascriptValidator
      */
-    private function newFormRequestValidator($formRequest, $selector)
+    private function newFormRequestValidator($selector)
     {
-        $rules = method_exists($formRequest, 'rules') ? $this->app->call([$formRequest, 'rules']) : [];
-
         $baseValidator = $this->getValidatorInstance(
-            $this->mapFormRequestRules($rules)
+            ['proengsoft_jsvalidation' => RuleParser::FORM_REQUEST_RULE_NAME]
         );
 
         return $this->validator($baseValidator, $selector);
-    }
-
-    /**
-     * Replace form request rules with a single dummy request.
-     *
-     * @param array $rules
-     * @return array
-     */
-    private function mapFormRequestRules(array $rules)
-    {
-        $keys = array_keys($rules);
-        if (count($keys) === 0) {
-            return [];
-        }
-        
-        return [$keys[0] => RuleParser::FORM_REQUEST_RULE_NAME];
     }
 
     /**

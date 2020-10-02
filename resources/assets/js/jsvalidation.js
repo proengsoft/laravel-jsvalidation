@@ -17,11 +17,21 @@ laravelValidation = {
      */
     init: function () {
 
+        // jquery-validation requires the field under validation to be present. We're adding a dummy hidden
+        // field so that any errors are not visible.
+        var constructor = $.fn.validate;
+        $.fn.validate = function( options ) {
+            var $elm = $(this).find('input[name="proengsoft_jsvalidation"]');
+            if ($elm.length === 0) {
+                $('<input>').attr({type: 'hidden', name: 'proengsoft_jsvalidation'}).appendTo(this);
+            }
+
+            constructor.apply(this, [options]);
+        };
+
         // Disable class rules and attribute rules
         $.validator.classRuleSettings = {};
-        $.validator.attributeRules = function () {
-            this.rules = {}
-        };
+        $.validator.attributeRules = function () {};
 
         $.validator.dataRules = this.arrayRules;
         $.validator.prototype.arrayRulesCache = {};

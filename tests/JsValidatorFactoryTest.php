@@ -261,7 +261,7 @@ class JsValidatorFactoryTest extends TestCase
         $data = $jsValidator->toArray();
 
         $this->assertCount(1, $data['rules']);
-        $this->assertArrayHasKey('name', $data['rules']);
-        $this->assertArrayHasKey('laravelValidationFormRequest', $data['rules']['name']);
+        $this->assertArrayHasKey('proengsoft_jsvalidation', $data['rules']);
+        $this->assertArrayHasKey('laravelValidationFormRequest', $data['rules']['proengsoft_jsvalidation']);
     }
 }
