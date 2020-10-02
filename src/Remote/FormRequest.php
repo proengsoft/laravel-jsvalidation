@@ -16,6 +16,19 @@ class FormRequest extends Request
     const JS_VALIDATION_FIELD = '__proengsoft_form_request';
 
     /**
+     * Validate the class instance.
+     *
+     * @return void
+     */
+    public function validateResolved()
+    {
+        parent::validateResolved();
+
+        // BC for Laravel versions prior to 6.x.
+        $this->passedValidation();
+    }
+
+    /**
      * Handle a passed validation attempt.
      *
      * @return void
