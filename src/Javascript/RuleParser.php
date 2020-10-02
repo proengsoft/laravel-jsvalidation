@@ -22,7 +22,7 @@ class RuleParser
      * Js validation rule used to validate form requests.
      */
     const FORM_REQUEST_RULE = 'laravelValidationFormRequest';
-    
+
     /**
      * Rule used to validate remote requests.
      */
