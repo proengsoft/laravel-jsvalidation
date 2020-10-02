@@ -110,7 +110,7 @@ laravelValidation = {
             });
 
             return implicit;
-        }
+        };
 
         /**
          * Get form method from a validator instance.
@@ -138,16 +138,16 @@ laravelValidation = {
          */
         var ajaxOpts = function (validator, element, params, data) {
             return {
-                mode: "abort",
-                port: "validate" + element.name,
-                dataType: "json",
+                mode: 'abort',
+                port: 'validate' + element.name,
+                dataType: 'json',
                 data: data,
                 context: validator.currentForm,
                 url: $(validator.currentForm).attr('action'),
                 type: formMethod(validator),
                 beforeSend: function (xhr) {
                     var token = getCsrfToken(params);
-                    if ($(validator.currentForm).attr('method').toLowerCase() !== 'get' && token) {
+                    if (formMethod(validator) !== 'get' && token) {
                         return xhr.setRequestHeader('X-XSRF-TOKEN', token);
                     }
                 },
@@ -347,7 +347,7 @@ laravelValidation = {
             $.ajax(ajaxOpts(validator, element, params, data))
                 .always(function( response, textStatus ) {
                     var errors = {},
-                        valid = textStatus === 'success' && (response === true || response === "true");
+                        valid = textStatus === 'success' && (response === true || response === 'true');
 
                     if (valid) {
                         validator.resetInternals();
@@ -356,13 +356,12 @@ laravelValidation = {
                         $.each( response, function( fieldName, errorMessages ) {
                             var errorElement = laravelValidation.helpers.findByName(validator, fieldName)[0];
                             if (errorElement) {
-                                errors[errorElement.name]
-                                    = laravelValidation.helpers.encode(errorMessages[0] || '');
+                                errors[errorElement.name] = laravelValidation.helpers.encode(errorMessages[0] || '');
                             }
                         });
 
-                        // Failed to find the error fields so mark the form as valid otherwise user will be left
-                        // in limbo with no visible error messages.
+                        // Failed to find the error fields so mark the form as valid otherwise user
+                        // will be left in limbo with no visible error messages.
                         if (errors.length === 0) {
                             valid = true;
                         }
@@ -374,7 +373,7 @@ laravelValidation = {
                     validator.stopRequest(element, valid);
                 });
 
-            return "pending";
+            return 'pending';
         }, '');
     }
 };

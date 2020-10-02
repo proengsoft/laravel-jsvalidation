@@ -463,12 +463,12 @@ $.extend(true, laravelValidation, {
          * @returns {*}
          */
         findByArrayName: function (validator, name) {
-            var sq_name = name.replace(/\.([^\.]+)/g, '[$1]'),
+            var sqName = name.replace(/\.([^\.]+)/g, '[$1]'),
                 lookups = [
                     // Convert dot to square brackets. e.g. foo.bar.0 becomes foo[bar][0]
-                    sq_name,
+                    sqName,
                     // Remove key from last array e.g. foo[bar][0] becomes foo[bar][]
-                    sq_name.replace(/(.*)\[(.*)\]$/g, '$1[]')
+                    sqName.replace(/(.*)\[(.*)\]$/g, '$1[]')
                 ];
 
             for (var i = 0; i < lookups.length; i++) {
