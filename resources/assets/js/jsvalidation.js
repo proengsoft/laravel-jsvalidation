@@ -21,9 +21,9 @@ laravelValidation = {
         // field so that any errors are not visible.
         var constructor = $.fn.validate;
         $.fn.validate = function( options ) {
-            var $elm = $(this).find('input[name="proengsoft_jsvalidation"]');
+            var $elm = $(this).find('input[name="__proengsoft_form_request"]');
             if ($elm.length === 0) {
-                $('<input>').attr({type: 'hidden', name: 'proengsoft_jsvalidation'}).appendTo(this);
+                $('<input>').attr({type: 'hidden', name: '__proengsoft_form_request'}).appendTo(this);
             }
 
             constructor.apply(this, [options]);
@@ -326,13 +326,15 @@ laravelValidation = {
         $.validator.addMethod("laravelValidationFormRequest", function (value, element, params) {
 
             var validator = this,
-                previous = validator.previousValue(element);
-
-            var data = $(validator.currentForm).serializeArray();
-            data.push({'name': '__proengsoft_form_request', 'value': 1});
+                previous = validator.previousValue(element),
+                data = $(validator.currentForm).serializeArray();
 
             // Skip AJAX if the value remains the same as a prior request.
             if (JSON.stringify(previous.old) === JSON.stringify(data)) {
+                if (! previous.valid) {
+                    validator.showErrors(previous.errors || {});
+                }
+
                 return previous.valid;
             }
 
@@ -363,9 +365,8 @@ laravelValidation = {
                         }
                     }
 
-                    previous.valid
-                        = validator.invalid[element.name]
-                        = valid;
+                    previous.valid = valid;
+                    previous.errors = errors;
                     validator.showErrors(errors);
                     validator.stopRequest(element, valid);
                 });
