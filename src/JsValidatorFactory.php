@@ -134,7 +134,7 @@ class JsValidatorFactory
         }
 
         if ($formRequest instanceof FormRequest) {
-            return $this->newFormRequestValidator($selector);
+            return $this->newFormRequestValidator($formRequest, $selector);
         }
 
         return $this->oldFormRequestValidator($formRequest, $selector);
@@ -143,14 +143,24 @@ class JsValidatorFactory
     /**
      * Create form request validator.
      *
+     * @param FormRequest $formRequest
      * @param string $selector
      * @return JavascriptValidator
      */
-    private function newFormRequestValidator($selector)
+    private function newFormRequestValidator($formRequest, $selector)
     {
-        $baseValidator = $this->getValidatorInstance(
-            ['proengsoft_jsvalidation' => RuleParser::FORM_REQUEST_RULE_NAME]
-        );
+        // Replace all rules with Noop rules which are checked client-side and always valid to true.
+        // This is important because jquery-validation expects fields under validation to have rules present. For
+        // example, if you mark a field as invalid without a defined rule, then unhighlight won't be called.
+        $rules = method_exists($formRequest, 'rules') ? $formRequest->rules() : [];
+        foreach ($rules as $key => $value) {
+            $rules[$key] = 'proengsoft_noop';
+        }
+
+        // This rule controls AJAX validation of all fields.
+        $rules['proengsoft_jsvalidation'] = RuleParser::FORM_REQUEST_RULE_NAME;
+
+        $baseValidator = $this->getValidatorInstance($rules);
 
         return $this->validator($baseValidator, $selector);
     }

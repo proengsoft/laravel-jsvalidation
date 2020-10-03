@@ -737,6 +737,16 @@ $.extend(true, laravelValidation, {
                 result = false;
             }
             return result;
-        }
+        },
+
+        /**
+         * Noop (always returns true).
+         *
+         * @param value
+         * @returns {boolean}
+         */
+        ProengsoftNoop: function (value) {
+            return true;
+        },
     }
 });
