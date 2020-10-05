@@ -468,7 +468,7 @@ $.extend(true, laravelValidation, {
                     // Convert dot to square brackets. e.g. foo.bar.0 becomes foo[bar][0]
                     sqName,
                     // Append [] to the name e.g. foo becomes foo[] or foo.bar.0 becomes foo[bar][0][]
-                    sqName + "[]",
+                    sqName + '[]',
                     // Remove key from last array e.g. foo[bar][0] becomes foo[bar][]
                     sqName.replace(/(.*)\[(.*)\]$/g, '$1[]')
                 ];
