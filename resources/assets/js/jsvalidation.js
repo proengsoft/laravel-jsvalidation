@@ -362,7 +362,7 @@ laravelValidation = {
 
                         // Failed to find the error fields so mark the form as valid otherwise user
                         // will be left in limbo with no visible error messages.
-                        if (errors.length === 0) {
+                        if ($.isEmptyObject(errors)) {
                             valid = true;
                         }
                     }
