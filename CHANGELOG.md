@@ -2,6 +2,21 @@
 
 All notable changes to `laravel-jsvalidation` will be documented in this file.
 
+## [4.4.0](https://github.com/proengsoft/laravel-jsvalidation/compare/4.3.1...4.4.0) - 2020-10-07
+
+Added experimental form request validation.
+All validation occurs via AJAX request on form submission. This resolves a number of issues
+regarding form request usage and unimplemented client side rules.
+See the PR for details on usage.
+
+### Improvements
+* **Experimental** - Improved form request validation - [#505](https://github.com/proengsoft/laravel-jsvalidation/pull/505)
+
+## [4.3.1](https://github.com/proengsoft/laravel-jsvalidation/compare/4.3.0...4.3.1) - 2020-10-03
+
+### Improvements
+* Bump locutus from 2.0.12 to 2.0.14 [#506](https://github.com/proengsoft/laravel-jsvalidation/pull/506)
+
 ## [4.3.0](https://github.com/proengsoft/laravel-jsvalidation/compare/4.2.0...4.3.0) - 2020-09-08
 
 ### Improvements
