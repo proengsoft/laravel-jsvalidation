@@ -2,6 +2,8 @@
 
 namespace Proengsoft\JsValidation\Support;
 
+use Proengsoft\JsValidation\Javascript\RuleParser;
+
 trait RuleListTrait
 {
     /**
@@ -9,13 +11,15 @@ trait RuleListTrait
      *
      * @var array
      */
-    protected $clientRules = ['Accepted', 'After', 'AfterOrEqual', 'Alpha', 'AlphaDash',
+    protected $clientRules = [
+        'Accepted', 'After', 'AfterOrEqual', 'Alpha', 'AlphaDash',
         'AlphaNum', 'Array', 'Bail', 'Before', 'BeforeOrEqual', 'Between', 'Boolean', 'Confirmed', 'Date', 'Dimensions',
         'DateFormat', 'Different', 'Digits', 'DigitsBetween', 'Distinct', 'Email', 'File', 'Filled', 'Image',
         'In', 'InArray', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Mimetypes', 'Min', 'NotIn', 'Nullable',
         'Numeric', 'Regex', 'Required', 'RequiredIf', 'RequiredUnless', 'RequiredWith', 'RequiredWithAll',
         'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes',
-        'String', 'Timezone', ];
+        'String', 'Timezone', 'ProengsoftNoop',
+    ];
 
     /**
      * Rules validated in Server-Side.
@@ -59,6 +63,17 @@ trait RuleListTrait
     {
         return in_array($rule, $this->serverRules) ||
             ! in_array($rule, $this->clientRules);
+    }
+
+    /**
+     * Form request rule.
+     *
+     * @param string $rule
+     * @return bool
+     */
+    protected function isFormRequestRule($rule)
+    {
+        return $rule === RuleParser::FORM_REQUEST_RULE_NAME;
     }
 
     /**

@@ -17,11 +17,22 @@ laravelValidation = {
      */
     init: function () {
 
+        // jquery-validation requires the field under validation to be present. We're adding a dummy hidden
+        // field so that any errors are not visible.
+        var constructor = $.fn.validate;
+        $.fn.validate = function( options ) {
+            var name = 'proengsoft_jsvalidation'; // must match the name defined in JsValidatorFactory.newFormRequestValidator
+            var $elm = $(this).find('input[name="' + name + '"]');
+            if ($elm.length === 0) {
+                $('<input>').attr({type: 'hidden', name: name}).appendTo(this);
+            }
+
+            return constructor.apply(this, [options]);
+        };
+
         // Disable class rules and attribute rules
         $.validator.classRuleSettings = {};
-        $.validator.attributeRules = function () {
-            this.rules = {}
-        };
+        $.validator.attributeRules = function () {};
 
         $.validator.dataRules = this.arrayRules;
         $.validator.prototype.arrayRulesCache = {};
@@ -65,6 +76,83 @@ laravelValidation = {
     },
 
     setupValidations: function () {
+
+        /**
+         * Get CSRF token.
+         *
+         * @param params
+         * @returns {string}
+         */
+        var getCsrfToken = function (params) {
+            return params[0][1][1];
+        };
+
+        /**
+         * Whether to validate all attributes.
+         *
+         * @param params
+         * @returns {boolean}
+         */
+        var isValidateAll = function (params) {
+            return params[0][1][2];
+        };
+
+        /**
+         * Determine whether the rule is implicit.
+         *
+         * @param params
+         * @returns {boolean}
+         */
+        var isImplicit = function (params) {
+            var implicit = false;
+            $.each(params, function (i, parameters) {
+                implicit = implicit || parameters[3];
+            });
+
+            return implicit;
+        };
+
+        /**
+         * Get form method from a validator instance.
+         *
+         * @param validator
+         * @returns {string}
+         */
+        var formMethod = function (validator) {
+            var formMethod = $(validator.currentForm).attr('method');
+            if ($(validator.currentForm).find('input[name="_method"]').length) {
+                formMethod = $(validator.currentForm).find('input[name="_method"]').val();
+            }
+
+            return formMethod;
+        };
+
+        /**
+         * Get AJAX parameters for remote requests.
+         *
+         * @param validator
+         * @param element
+         * @param params
+         * @param data
+         * @returns {object}
+         */
+        var ajaxOpts = function (validator, element, params, data) {
+            return {
+                mode: 'abort',
+                port: 'validate' + element.name,
+                dataType: 'json',
+                data: data,
+                context: validator.currentForm,
+                url: $(validator.currentForm).attr('action'),
+                type: formMethod(validator),
+                beforeSend: function (xhr) {
+                    var token = getCsrfToken(params);
+                    if (formMethod(validator) !== 'get' && token) {
+                        return xhr.setRequestHeader('X-XSRF-TOKEN', token);
+                    }
+                },
+            };
+        };
 
         /**
          * Validate a set of local JS based rules against an element.
@@ -169,31 +257,18 @@ laravelValidation = {
          */
         $.validator.addMethod("laravelValidationRemote", function (value, element, params) {
 
-            var implicit = false,
-                check = params[0][1],
-                attribute = element.name,
-                token = check[1],
-                validateAll = check[2];
-
-            $.each(params, function (i, parameters) {
-                implicit = implicit || parameters[3];
-            });
-
-
-            if ( !implicit && this.optional( element ) ) {
+            if (! isImplicit(params) && this.optional( element )) {
                 return "dependency-mismatch";
             }
 
             var previous = this.previousValue( element ),
                 validator, data;
 
-            if (!this.settings.messages[ element.name ] ) {
+            if (! this.settings.messages[ element.name ]) {
                 this.settings.messages[ element.name ] = {};
             }
             previous.originalMessage = this.settings.messages[ element.name ].laravelValidationRemote;
             this.settings.messages[ element.name ].laravelValidationRemote = previous.message;
-
-            var param = typeof param === "string" && { url: param } || param;
 
             if (laravelValidation.helpers.arrayEquals(previous.old, value) || previous.old === value) {
                 return previous.valid;
@@ -204,38 +279,11 @@ laravelValidation = {
             this.startRequest( element );
 
             data = $(validator.currentForm).serializeArray();
+            data.push({'name': '_jsvalidation', 'value': element.name});
+            data.push({'name': '_jsvalidation_validate_all', 'value': isValidateAll(params)});
 
-            data.push({
-                'name': '_jsvalidation',
-                'value': attribute
-            });
-
-            data.push({
-                'name': '_jsvalidation_validate_all',
-                'value': validateAll
-            });
-
-            var formMethod = $(validator.currentForm).attr('method');
-            if($(validator.currentForm).find('input[name="_method"]').length) {
-                formMethod = $(validator.currentForm).find('input[name="_method"]').val();
-            }
-
-            $.ajax( $.extend( true, {
-                mode: "abort",
-                port: "validate" + element.name,
-                dataType: "json",
-                data: data,
-                context: validator.currentForm,
-                url: $(validator.currentForm).attr('action'),
-                type: formMethod,
-
-                beforeSend: function (xhr) {
-                    if ($(validator.currentForm).attr('method').toLowerCase() !== 'get' && token) {
-                        return xhr.setRequestHeader('X-XSRF-TOKEN', token);
-                    }
-                }
-            }, param )
-            ).always(function( response, textStatus ) {
+            $.ajax( ajaxOpts(validator, element, params, data) )
+                .always(function( response, textStatus ) {
                     var errors, message, submitted, valid;
 
                     if (textStatus === 'error') {
@@ -271,6 +319,61 @@ laravelValidation = {
                 }
             );
             return "pending";
+        }, '');
+
+        /**
+         * Create JQueryValidation check to form requests.
+         */
+        $.validator.addMethod("laravelValidationFormRequest", function (value, element, params) {
+
+            var validator = this,
+                previous = validator.previousValue(element);
+
+            var data = $(validator.currentForm).serializeArray();
+            data.push({name: '__proengsoft_form_request', value: 1}); // must match FormRequest.JS_VALIDATION_FIELD
+
+            // Skip AJAX if the value remains the same as a prior request.
+            if (JSON.stringify(previous.old) === JSON.stringify(data)) {
+                if (! previous.valid) {
+                    validator.showErrors(previous.errors || {});
+                }
+
+                return previous.valid;
+            }
+
+            previous.old = data;
+            this.startRequest( element );
+
+            $.ajax(ajaxOpts(validator, element, params, data))
+                .always(function( response, textStatus ) {
+                    var errors = {},
+                        valid = textStatus === 'success' && (response === true || response === 'true');
+
+                    if (valid) {
+                        validator.resetInternals();
+                        validator.toHide = validator.errorsFor( element );
+                    } else {
+                        $.each( response, function( fieldName, errorMessages ) {
+                            var errorElement = laravelValidation.helpers.findByName(validator, fieldName)[0];
+                            if (errorElement) {
+                                errors[errorElement.name] = laravelValidation.helpers.encode(errorMessages[0] || '');
+                            }
+                        });
+
+                        // Failed to find the error fields so mark the form as valid otherwise user
+                        // will be left in limbo with no visible error messages.
+                        if ($.isEmptyObject(errors)) {
+                            valid = true;
+                        }
+                    }
+
+                    previous.valid = valid;
+                    previous.errors = errors;
+                    validator.showErrors(errors);
+                    validator.stopRequest(element, valid);
+                });
+
+            return 'pending';
         }, '');
     }
 };

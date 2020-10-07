@@ -185,4 +185,30 @@ class RuleParserTest extends TestCase
 
         $this->assertArrayHasKey('foo[*][bar]', $jsValidator->toArray()['rules']);
     }
+
+    /**
+     * Test form request rule parser.
+     *
+     * @return void
+     */
+    public function testGetFormRequestRule()
+    {
+        $attribute = 'field';
+        $rule = RuleParser::FORM_REQUEST_RULE_NAME;
+        $parameters = [];
+        $token = 'my token';
+
+        $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $parser = new RuleParser($delegated, $token);
+        $value = $parser->getRule($attribute, $rule, $parameters, $rule);
+
+        $this->assertEquals([
+            $attribute,
+            RuleParser::FORM_REQUEST_RULE,
+            [$attribute, $token, false]
+        ], $value);
+    }
 }

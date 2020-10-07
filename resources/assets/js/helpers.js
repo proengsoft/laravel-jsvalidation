@@ -443,6 +443,79 @@ $.extend(true, laravelValidation, {
             }
 
             return rules;
+        },
+
+        /**
+         * HTML entity encode a string.
+         *
+         * @param string
+         * @returns {string}
+         */
+        encode: function (string) {
+            return $('<div/>').text(string).html();
+        },
+
+        /**
+         * Lookup name in an array.
+         *
+         * @param validator
+         * @param {string} name Name in dot notation format.
+         * @returns {*}
+         */
+        findByArrayName: function (validator, name) {
+            var sqName = name.replace(/\.([^\.]+)/g, '[$1]'),
+                lookups = [
+                    // Convert dot to square brackets. e.g. foo.bar.0 becomes foo[bar][0]
+                    sqName,
+                    // Append [] to the name e.g. foo becomes foo[] or foo.bar.0 becomes foo[bar][0][]
+                    sqName + '[]',
+                    // Remove key from last array e.g. foo[bar][0] becomes foo[bar][]
+                    sqName.replace(/(.*)\[(.*)\]$/g, '$1[]')
+                ];
+
+            for (var i = 0; i < lookups.length; i++) {
+                var elem = validator.findByName(lookups[i]);
+                if (elem.length > 0) {
+                    return elem;
+                }
+            }
+
+            return $(null);
+        },
+
+        /**
+         * Attempt to find an element in the DOM matching the given name.
+         * Example names include:
+         *    - domain.0 which matches domain[]
+         *    - customfield.3 which matches customfield[3]
+         *
+         * @param validator
+         * @param {string} name
+         * @returns {*}
+         */
+        findByName: function (validator, name) {
+            // Exact match.
+            var elem = validator.findByName(name);
+            if (elem.length > 0) {
+                return elem;
+            }
+
+            // Find name in data, using dot notation.
+            var delim = '.',
+                parts  = name.split(delim);
+            for (var i = parts.length; i > 0; i--) {
+                var reconstructed = [];
+                for (var c = 0; c < i; c++) {
+                    reconstructed.push(parts[c]);
+                }
+
+                elem = this.findByArrayName(validator, reconstructed.join(delim));
+                if (elem.length > 0) {
+                    return elem;
+                }
+            }
+
+            return $(null);
         }
     }
 });

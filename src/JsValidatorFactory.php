@@ -3,12 +3,14 @@
 namespace Proengsoft\JsValidation;
 
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+use Illuminate\Foundation\Http\FormRequest as IlluminateFormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Javascript\RuleParser;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
+use Proengsoft\JsValidation\Remote\FormRequest;
 use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Support\ValidationRuleParserProxy;
 
@@ -131,6 +133,47 @@ class JsValidatorFactory
             $formRequest = $this->createFormRequest($formRequest);
         }
 
+        if ($formRequest instanceof FormRequest) {
+            return $this->newFormRequestValidator($formRequest, $selector);
+        }
+
+        return $this->oldFormRequestValidator($formRequest, $selector);
+    }
+
+    /**
+     * Create form request validator.
+     *
+     * @param FormRequest $formRequest
+     * @param string $selector
+     * @return JavascriptValidator
+     */
+    private function newFormRequestValidator($formRequest, $selector)
+    {
+        // Replace all rules with Noop rules which are checked client-side and always valid to true.
+        // This is important because jquery-validation expects fields under validation to have rules present. For
+        // example, if you mark a field as invalid without a defined rule, then unhighlight won't be called.
+        $rules = method_exists($formRequest, 'rules') ? $formRequest->rules() : [];
+        foreach ($rules as $key => $value) {
+            $rules[$key] = 'proengsoft_noop';
+        }
+
+        // This rule controls AJAX validation of all fields.
+        $rules['proengsoft_jsvalidation'] = RuleParser::FORM_REQUEST_RULE_NAME;
+
+        $baseValidator = $this->getValidatorInstance($rules);
+
+        return $this->validator($baseValidator, $selector);
+    }
+
+    /**
+     * Create a form request validator instance.
+     *
+     * @param IlluminateFormRequest $formRequest
+     * @param string $selector
+     * @return JavascriptValidator
+     */
+    private function oldFormRequestValidator($formRequest, $selector)
+    {
         $rules = method_exists($formRequest, 'rules') ? $this->app->call([$formRequest, 'rules']) : [];
 
         $validator = $this->getValidatorInstance($rules, $formRequest->messages(), $formRequest->attributes());
@@ -163,7 +206,7 @@ class JsValidatorFactory
      * Creates and initializes an Form Request instance.
      *
      * @param string $class
-     * @return \Illuminate\Foundation\Http\FormRequest
+     * @return IlluminateFormRequest
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
@@ -221,9 +264,7 @@ class JsValidatorFactory
 
         $jsValidator = new ValidatorHandler($rules, $messages);
 
-        $manager = new JavascriptValidator($jsValidator, compact('view', 'selector', 'remote', 'ignore'));
-
-        return $manager;
+        return new JavascriptValidator($jsValidator, compact('view', 'selector', 'remote', 'ignore'));
     }
 
     /**

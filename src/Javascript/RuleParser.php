@@ -14,6 +14,16 @@ class RuleParser
     use UseDelegatedValidatorTrait;
 
     /**
+     * Dummy Laravel validation rule for form requests.
+     */
+    const FORM_REQUEST_RULE_NAME = 'ProengsoftFormRequest';
+
+    /**
+     * Js validation rule used to validate form requests.
+     */
+    const FORM_REQUEST_RULE = 'laravelValidationFormRequest';
+
+    /**
      * Rule used to validate remote requests.
      */
     const REMOTE_RULE = 'laravelValidationRemote';
@@ -62,10 +72,11 @@ class RuleParser
     {
         $isConditional = $this->isConditionalRule($attribute, $rawRule);
         $isRemote = $this->isRemoteRule($rule);
+        $isFormRequest = $this->isFormRequestRule($rule);
 
-        if ($isConditional || $isRemote) {
+        if ($isFormRequest || $isConditional || $isRemote) {
             [$attribute, $parameters] = $this->remoteRule($attribute, $isConditional);
-            $jsRule = self::REMOTE_RULE;
+            $jsRule = $isFormRequest ? static::FORM_REQUEST_RULE : static::REMOTE_RULE;
         } else {
             [$jsRule, $attribute, $parameters] = $this->clientRule($attribute, $rule, $parameters);
         }
