@@ -13,7 +13,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12",
+    "webpack-cli": "^4.0.0",
     "webpack-stream": "^6.1.0"
   },
   "dependencies": {
