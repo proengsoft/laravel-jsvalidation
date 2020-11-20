@@ -5858,7 +5858,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Before: function(value, element, params) {
-            return laravelValidation.helpers.compareDates(this, value, element, params, '<');
+            return laravelValidation.helpers.compareDates(this, value, element, params[0], '<');
         },
 
         /**
@@ -5867,7 +5867,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         BeforeOrEqual: function(value, element, params) {
-            return laravelValidation.helpers.compareDates(this, value, element, params, '<=');
+            return laravelValidation.helpers.compareDates(this, value, element, params[0], '<=');
         },
 
         /**
@@ -5876,7 +5876,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         After: function(value, element, params) {
-            return laravelValidation.helpers.compareDates(this, value, element, params, '>');
+            return laravelValidation.helpers.compareDates(this, value, element, params[0], '>');
         },
 
         /**
@@ -5885,7 +5885,7 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         AfterOrEqual: function(value, element, params) {
-            return laravelValidation.helpers.compareDates(this, value, element, params, '>=');
+            return laravelValidation.helpers.compareDates(this, value, element, params[0], '>=');
         },
 
 
