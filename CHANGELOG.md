@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-jsvalidation` will be documented in this file.
 
+## [4.4.1](https://github.com/proengsoft/laravel-jsvalidation/compare/4.4.0...4.4.1) - 2020-11-22
+
+### Bug fixes
+* string.replace is not a function error on date comparison rules - [#532](https://github.com/proengsoft/laravel-jsvalidation/pull/532)
+
 ## [4.4.0](https://github.com/proengsoft/laravel-jsvalidation/compare/4.3.1...4.4.0) - 2020-10-07
 
 Added experimental form request validation.
