@@ -1,7 +1,8 @@
 name: "Lint PR Title"
 
-on: pull_request_target
-  types: [opened, synchronize, edited, reopened]
+on:
+  pull_request_target:
+    types: [opened, synchronize, edited, reopened]
 
 jobs:
   main:
