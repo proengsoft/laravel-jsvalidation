@@ -6,8 +6,7 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "fix"
-      prefix-development: "chore"
+      prefix: "chore"
       include: "scope"
 
   - package-ecosystem: "npm"
