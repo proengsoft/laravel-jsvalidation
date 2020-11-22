@@ -1,0 +1,17 @@
+# Copied from https://github.com/amannn/action-semantic-pull-request/blob/master/.github/workflows/lint-pr-title.yml
+name: 'Lint PR title'
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v1.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
