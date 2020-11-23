@@ -19,7 +19,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       # full checkout for semantic-release
-      - uses: actions/checkout@v2.3.3
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
           persist-credentials: false
