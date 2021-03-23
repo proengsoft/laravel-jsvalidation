@@ -19,7 +19,7 @@
     "gulp-uglify": "^3.0.2",
     "semantic-release": "^17.4.2",
     "webpack": "^5.27.2",
-    "webpack-cli": "^4.3.1",
+    "webpack-cli": "^4.5.0",
     "webpack-stream": "^6.1.2"
   },
   "dependencies": {
