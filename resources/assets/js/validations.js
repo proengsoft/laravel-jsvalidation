@@ -428,7 +428,9 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Min: function(value, element, params) {
-            return laravelValidation.helpers.getSize(this, element,value) >= parseFloat(params[0]);
+            value = laravelValidation.helpers.allElementValues(this, element);
+
+            return laravelValidation.helpers.getSize(this, element, value) >= parseFloat(params[0]);
         },
 
         /**
@@ -437,7 +439,9 @@ $.extend(true, laravelValidation, {
          * @return {boolean}
          */
         Max: function(value, element, params) {
-            return laravelValidation.helpers.getSize(this, element,value) <= parseFloat(params[0]);
+            value = laravelValidation.helpers.allElementValues(this, element);
+
+            return laravelValidation.helpers.getSize(this, element, value) <= parseFloat(params[0]);
         },
 
         /**

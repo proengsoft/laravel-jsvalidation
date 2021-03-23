@@ -516,6 +516,23 @@ $.extend(true, laravelValidation, {
             }
 
             return $(null);
+        },
+
+        /**
+         * If it's an array element, get all values.
+         *
+         * @param validator
+         * @param element
+         * @returns {*|string}
+         */
+        allElementValues: function (validator, element) {
+            if (element.name.indexOf('[') !== -1 && element.name.indexOf(']') !== -1) {
+                return validator.findByName(element.name).map(function (i, e) {
+                    return validator.elementValue(e);
+                }).get();
+            }
+
+            return validator.elementValue(element);
         }
     }
 });
