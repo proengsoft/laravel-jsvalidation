@@ -216,9 +216,9 @@ $.extend(true, laravelValidation, {
          */
         compareDates: function (validator, value, element, params, operator) {
 
-            var timeCompare = parseFloat(params);
+            var timeCompare = this.parseTime(params);
 
-            if (isNaN(timeCompare)) {
+            if (!timeCompare) {
                 var target = this.dependentElement(validator, element, params);
                 if (target === undefined) {
                     return false;
