@@ -1,4 +1,4 @@
-name: release
+name: coverage
 
 on:
   pull_request:
