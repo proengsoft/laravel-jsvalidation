@@ -25,12 +25,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: none
+          coverage: xdebug
 
       - name: Install dependencies
         run: export COMPOSER=tests/composer-${{ matrix.laravel }}.json && composer install --no-interaction --prefer-source
@@ -39,4 +41,5 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=coverage.clover
 
       - name: Code Coverage
-        run: wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+        run: vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
+        if: matrix.laravel == '8.0' && matrix.php == '7.4'
