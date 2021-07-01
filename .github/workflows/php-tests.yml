@@ -28,10 +28,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: xdebug
 
       - name: Install dependencies
         run: export COMPOSER=tests/composer-${{ matrix.laravel }}.json && composer install --no-interaction --prefer-source
 
       - name: Execute tests
-        run: vendor/bin/phpunit --coverage-text
+        run: vendor/bin/phpunit

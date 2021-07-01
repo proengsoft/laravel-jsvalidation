@@ -8,6 +8,7 @@
     "@semantic-release/git": "^9.0.0",
     "@semantic-release/github": "^7.2.3",
     "babel-loader": "^8.2.2",
+    "bundlewatch": "^0.3.2",
     "del": "^6.0.0",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
@@ -26,6 +27,15 @@
     "php-date-formatter": "^1.3.6"
   },
   "scripts": {
-    "build": "gulp build"
+    "build": "gulp build",
+    "bundlewatch": "bundlewatch"
+  },
+  "bundlewatch": {
+    "files": [
+      {
+        "path": "public/js/*.min.js",
+        "maxSize": "25kB"
+      }
+    ]
   }
 }
