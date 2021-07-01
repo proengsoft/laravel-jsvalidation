@@ -8,6 +8,7 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    rebase-strategy: "disabled"
 
   - package-ecosystem: "npm"
     directory: "/"
@@ -17,6 +18,7 @@ updates:
       prefix: "fix"
       prefix-development: "chore"
       include: "scope"
+    rebase-strategy: "disabled"
 
   - package-ecosystem: composer
     directory: "/"
@@ -26,3 +28,4 @@ updates:
       prefix: "fix"
       prefix-development: "chore"
       include: "scope"
+    rebase-strategy: "disabled"
