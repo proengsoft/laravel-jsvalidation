@@ -19,7 +19,7 @@
     "semantic-release": "^17.4.7",
     "webpack": "^5.51.1",
     "webpack-cli": "^4.8.0",
-    "webpack-stream": "^6.1.2"
+    "webpack-stream": "^7.0.0"
   },
   "dependencies": {
     "jquery-validation": "^1.19.3",
