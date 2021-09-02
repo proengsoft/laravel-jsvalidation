@@ -19,7 +19,10 @@ jobs:
           node-version: 14
 
       - name: Installing dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Execute gulp build
+        run: gulp build
 
       - name: Execute bundlewatch
         run: npm run bundlewatch
