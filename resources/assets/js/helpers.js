@@ -526,7 +526,7 @@ $.extend(true, laravelValidation, {
          * @returns {*|string}
          */
         allElementValues: function (validator, element) {
-            if (element.name.indexOf('[') !== -1 && element.name.indexOf(']') !== -1) {
+            if (element.name.indexOf('[]') !== -1) {
                 return validator.findByName(element.name).map(function (i, e) {
                     return validator.elementValue(e);
                 }).get();
