@@ -12,6 +12,7 @@ gulp.task('build', gulp.series(
     function () {
         return gulp.src(['resources/assets/js/helpers.js'])
             .pipe(webpack({
+                target: ['web', 'es5'],
                 devtool: 'inline-source-map',
                 mode: 'development',
                 output: {
