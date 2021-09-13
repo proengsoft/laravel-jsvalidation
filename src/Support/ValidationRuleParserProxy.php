@@ -25,7 +25,7 @@ class ValidationRuleParserProxy
     /**
      * ValidationRuleParserProxy constructor.
      *
-     * @param array $data
+     * @param  array  $data
      */
     public function __construct($data = [])
     {
@@ -36,7 +36,7 @@ class ValidationRuleParserProxy
     /**
      * Extract the rule name and parameters from a rule.
      *
-     * @param array|string $rules
+     * @param  array|string  $rules
      * @return array
      */
     public function parse($rules)
@@ -47,7 +47,7 @@ class ValidationRuleParserProxy
     /**
      * Explode the rules into an array of explicit rules.
      *
-     * @param  array $rules
+     * @param  array  $rules
      * @return mixed
      */
     public function explodeRules($rules)
@@ -58,7 +58,7 @@ class ValidationRuleParserProxy
     /**
      * Delegate method calls to parser instance.
      *
-     * @param  string $method
+     * @param  string  $method
      * @param  mixed  $params
      * @return mixed
      */

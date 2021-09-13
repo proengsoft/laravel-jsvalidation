@@ -32,8 +32,8 @@ class DelegatedValidator
     /**
      * DelegatedValidator constructor.
      *
-     * @param \Illuminate\Validation\Validator $validator
-     * @param \Proengsoft\JsValidation\Support\ValidationRuleParserProxy $ruleParser
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @param  \Proengsoft\JsValidation\Support\ValidationRuleParserProxy  $ruleParser
      */
     public function __construct(BaseValidator $validator, ValidationRuleParserProxy $ruleParser)
     {
@@ -45,8 +45,8 @@ class DelegatedValidator
     /**
      * Call validator method.
      *
-     * @param string $method
-     * @param array $args
+     * @param  string  $method
+     * @param  array  $args
      * @return mixed
      */
     private function callValidator($method, $args = [])
@@ -101,7 +101,7 @@ class DelegatedValidator
     /**
      * Determine if a given rule implies the attribute is required.
      *
-     * @param string $rule
+     * @param  string  $rule
      * @return bool
      */
     public function isImplicit($rule)
@@ -112,10 +112,10 @@ class DelegatedValidator
     /**
      * Replace all error message place-holders with actual values.
      *
-     * @param string $message
-     * @param string $attribute
-     * @param string $rule
-     * @param array $parameters
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array  $parameters
      * @return string
      */
     public function makeReplacements($message, $attribute, $rule, $parameters)
@@ -130,8 +130,8 @@ class DelegatedValidator
     /**
      * Determine if the given attribute has a rule in the given set.
      *
-     * @param string $attribute
-     * @param string|array $rules
+     * @param  string  $attribute
+     * @param  string|array  $rules
      * @return bool
      */
     public function hasRule($attribute, $rules)
@@ -142,8 +142,8 @@ class DelegatedValidator
     /**
      * Get the validation message for an attribute and rule.
      *
-     * @param string $attribute
-     * @param string $rule
+     * @param  string  $attribute
+     * @param  string  $rule
      * @return string
      */
     public function getMessage($attribute, $rule)
@@ -158,7 +158,7 @@ class DelegatedValidator
     /**
      * Extract the rule name and parameters from a rule.
      *
-     * @param array|string $rules
+     * @param  array|string  $rules
      * @return array
      */
     public function parseRule($rules)
@@ -169,7 +169,7 @@ class DelegatedValidator
     /**
      * Explode the rules into an array of rules.
      *
-     * @param string|array $rules
+     * @param  string|array  $rules
      * @return array
      */
     public function explodeRules($rules)
@@ -180,9 +180,9 @@ class DelegatedValidator
     /**
      * Add conditions to a given field based on a Closure.
      *
-     * @param string $attribute
-     * @param string|array $rules
-     * @param callable $callback
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     * @param  callable  $callback
      * @return void
      */
     public function sometimes($attribute, $rules, callable $callback)
