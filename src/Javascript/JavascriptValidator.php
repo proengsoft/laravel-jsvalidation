@@ -47,8 +47,8 @@ class JavascriptValidator implements Arrayable
     /**
      * Constructor.
      *
-     * @param ValidatorHandler $validator
-     * @param array            $options
+     * @param  ValidatorHandler  $validator
+     * @param  array  $options
      */
     public function __construct(ValidatorHandler $validator, $options = [])
     {
@@ -76,8 +76,8 @@ class JavascriptValidator implements Arrayable
     /**
      * Render the specified view with validator data.
      *
-     * @param null|\Illuminate\Contracts\View\View|string $view
-     * @param null|string $selector
+     * @param  null|\Illuminate\Contracts\View\View|string  $view
+     * @param  null|string  $selector
      * @return string
      */
     public function render($view = null, $selector = null)
@@ -152,7 +152,8 @@ class JavascriptValidator implements Arrayable
     /**
      * Set the form selector to validate.
      *
-     * @param string $selector
+     * @param  string  $selector
+     *
      * @deprecated
      */
     public function setSelector($selector)
@@ -163,7 +164,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Set the form selector to validate.
      *
-     * @param string $selector
+     * @param  string  $selector
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function selector($selector)
@@ -176,7 +177,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Set the input selector to ignore for validation.
      *
-     * @param string $ignore
+     * @param  string  $ignore
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function ignore($ignore)
@@ -189,7 +190,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Set the view to render Javascript Validations.
      *
-     * @param null|\Illuminate\Contracts\View\View|string $view
+     * @param  null|\Illuminate\Contracts\View\View|string  $view
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function view($view)
@@ -202,7 +203,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Enables or disables remote validations.
      *
-     * @param null|bool $enabled
+     * @param  null|bool  $enabled
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function remote($enabled = true)
@@ -215,9 +216,9 @@ class JavascriptValidator implements Arrayable
     /**
      * Validate Conditional Validations using Ajax in specified fields.
      *
-     * @param string       $attribute
-     * @param string|array $rules
-     * @param null         $callback Dummy attribute to make API seamless with Laravel sometimes()
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     * @param  null  $callback  Dummy attribute to make API seamless with Laravel sometimes()
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function sometimes($attribute, $rules, $callback = null)

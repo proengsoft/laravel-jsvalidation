@@ -68,7 +68,7 @@ trait RuleListTrait
     /**
      * Form request rule.
      *
-     * @param string $rule
+     * @param  string  $rule
      * @return bool
      */
     protected function isFormRequestRule($rule)

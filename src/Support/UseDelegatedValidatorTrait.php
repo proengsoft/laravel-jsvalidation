@@ -14,7 +14,7 @@ trait UseDelegatedValidatorTrait
     /**
      * Sets delegated Validator instance.
      *
-     * @param \Proengsoft\JsValidation\Support\DelegatedValidator $validator
+     * @param  \Proengsoft\JsValidation\Support\DelegatedValidator  $validator
      * @return void
      */
     public function setDelegatedValidator(DelegatedValidator $validator)

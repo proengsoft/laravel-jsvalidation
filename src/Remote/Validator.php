@@ -36,8 +36,8 @@ class Validator
     /**
      * RemoteValidator constructor.
      *
-     * @param \Illuminate\Validation\Validator $validator
-     * @param bool $escape
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @param  bool  $escape
      */
     public function __construct(BaseValidator $validator, $escape = false)
     {
@@ -66,8 +66,8 @@ class Validator
     /**
      * Throw the failed validation exception.
      *
-     * @param mixed $result
-     * @param \Illuminate\Validation\Validator  $validator
+     * @param  mixed  $result
+     * @param  \Illuminate\Validation\Validator  $validator
      * @return void
      *
      * @throws \Illuminate\Validation\ValidationException|\Illuminate\Http\Exceptions\HttpResponseException
@@ -118,7 +118,7 @@ class Validator
      * Validate remote Javascript Validations.
      *
      * @param $attribute
-     * @param array $parameters
+     * @param  array  $parameters
      * @return array|bool
      */
     protected function validateJsRemoteRequest($attribute, $parameters)
@@ -145,7 +145,7 @@ class Validator
      * Sets data for validate remote rules.
      *
      * @param $attribute
-     * @param bool $validateAll
+     * @param  bool  $validateAll
      * @return void
      */
     protected function setRemoteValidation($attribute, $validateAll = false)
@@ -168,7 +168,7 @@ class Validator
      * Remove rules that should not be validated remotely.
      *
      * @param $rules
-     * @param BaseValidator $validator
+     * @param  BaseValidator  $validator
      * @return mixed
      */
     protected function purgeNonRemoteRules($rules, $validator)

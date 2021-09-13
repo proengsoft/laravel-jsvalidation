@@ -31,8 +31,8 @@ class Resolver
     /**
      * RemoteValidator constructor.
      *
-     * @param \Illuminate\Contracts\Validation\Factory $factory
-     * @param bool $escape
+     * @param  \Illuminate\Contracts\Validation\Factory  $factory
+     * @param  bool  $escape
      */
     public function __construct(ValidationFactory $factory, $escape = false)
     {
