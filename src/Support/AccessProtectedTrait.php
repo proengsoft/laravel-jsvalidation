@@ -43,7 +43,7 @@ trait AccessProtectedTrait
     /**
      * Calls inaccessible method.
      *
-     * @param object|\Closure $instance
+     * @param  object|\Closure  $instance
      * @param $method
      * @param $args
      * @return mixed

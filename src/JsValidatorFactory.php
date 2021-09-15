@@ -35,8 +35,8 @@ class JsValidatorFactory
     /**
      * Create a new Validator factory instance.
      *
-     * @param \Illuminate\Container\Container $app
-     * @param array $options
+     * @param  \Illuminate\Container\Container  $app
+     * @param  array  $options
      */
     public function __construct($app, array $options = [])
     {
@@ -60,10 +60,10 @@ class JsValidatorFactory
     /**
      * Creates JsValidator instance based on rules and message arrays.
      *
-     * @param array $rules
-     * @param array $messages
-     * @param array $customAttributes
-     * @param null|string $selector
+     * @param  array  $rules
+     * @param  array  $messages
+     * @param  array  $customAttributes
+     * @param  null|string  $selector
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function make(array $rules, array $messages = [], array $customAttributes = [], $selector = null)
@@ -76,9 +76,9 @@ class JsValidatorFactory
     /**
      * Get the validator instance for the request.
      *
-     * @param array $rules
-     * @param array $messages
-     * @param array $customAttributes
+     * @param  array  $rules
+     * @param  array  $messages
+     * @param  array  $customAttributes
      * @return \Illuminate\Validation\Validator
      */
     protected function getValidatorInstance(array $rules, array $messages = [], array $customAttributes = [])
@@ -122,7 +122,7 @@ class JsValidatorFactory
      * Creates JsValidator instance based on FormRequest.
      *
      * @param $formRequest
-     * @param null|string $selector
+     * @param  null|string  $selector
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
@@ -143,8 +143,8 @@ class JsValidatorFactory
     /**
      * Create form request validator.
      *
-     * @param FormRequest $formRequest
-     * @param string $selector
+     * @param  FormRequest  $formRequest
+     * @param  string  $selector
      * @return JavascriptValidator
      */
     private function newFormRequestValidator($formRequest, $selector)
@@ -168,8 +168,8 @@ class JsValidatorFactory
     /**
      * Create a form request validator instance.
      *
-     * @param IlluminateFormRequest $formRequest
-     * @param string $selector
+     * @param  IlluminateFormRequest  $formRequest
+     * @param  string  $selector
      * @return JavascriptValidator
      */
     private function oldFormRequestValidator($formRequest, $selector)
@@ -188,7 +188,7 @@ class JsValidatorFactory
     }
 
     /**
-     * @param string|array $class
+     * @param  string|array  $class
      * @return array
      */
     protected function parseFormRequestName($class)
@@ -205,7 +205,7 @@ class JsValidatorFactory
     /**
      * Creates and initializes an Form Request instance.
      *
-     * @param string $class
+     * @param  string  $class
      * @return IlluminateFormRequest
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
@@ -235,8 +235,8 @@ class JsValidatorFactory
     /**
      * Creates JsValidator instance based on Validator.
      *
-     * @param \Illuminate\Validation\Validator $validator
-     * @param null|string $selector
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @param  null|string  $selector
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     public function validator(Validator $validator, $selector = null)
@@ -247,8 +247,8 @@ class JsValidatorFactory
     /**
      * Creates JsValidator instance based on Validator.
      *
-     * @param \Illuminate\Validation\Validator $validator
-     * @param null|string $selector
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @param  null|string  $selector
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      */
     protected function jsValidator(Validator $validator, $selector = null)
