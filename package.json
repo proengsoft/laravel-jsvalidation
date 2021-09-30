@@ -17,7 +17,7 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
     "semantic-release": "^17.4.7",
-    "webpack": "^5.52.1",
+    "webpack": "^5.55.1",
     "webpack-cli": "^4.8.0",
     "webpack-stream": "^7.0.0"
   },
