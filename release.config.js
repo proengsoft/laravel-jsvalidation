@@ -4,7 +4,10 @@ module.exports = {
   plugins: [
     '@semantic-release/commit-analyzer',
     '@semantic-release/exec',
-    '@semantic-release/git',
+    ["@semantic-release/git", {
+      "assets": ["public/**/*"],
+      "message": "chore(release): ${nextRelease.version} [skip ci]"
+    }],
     '@semantic-release/github'
   ],
   verifyConditions: [
