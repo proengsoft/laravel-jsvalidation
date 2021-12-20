@@ -12,6 +12,9 @@ jobs:
       matrix:
         laravel: ['6.0', '7.0', '8.0']
         php: ['7.4', '8.0', '8.1']
+        exclude:
+          - {laravel: '6.0', php: '8.1'}
+          - {laravel: '7.0', php: '8.1'}
 
     name: PHP ${{ matrix.php }} Laravel ${{ matrix.laravel }}
 
