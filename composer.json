@@ -26,21 +26,20 @@
         }
     ],
     "require": {
-        "php": ">=7.1.3",
-        "illuminate/config": "^5.6|^6.0|^7.0|^8.0",
-        "illuminate/contracts": "^5.6|^6.0|^7.0|^8.0",
-        "illuminate/http": "^5.6|^6.0|^7.0|^8.0",
-        "illuminate/support": "^5.6|^6.0|^7.0|^8.0",
-        "illuminate/translation": "^5.6|^6.0|^7.0|^8.0",
-        "illuminate/validation": "^5.6|^6.0|^7.0|^8.0",
-        "illuminate/view": "^5.6|^6.0|^7.0|^8.0",
+        "php": "^7.2 || ^8.0",
+        "illuminate/config": "^6.0|^7.0|^8.0",
+        "illuminate/contracts": "^6.0|^7.0|^8.0",
+        "illuminate/http": "^6.0|^7.0|^8.0",
+        "illuminate/support": "^6.0|^7.0|^8.0",
+        "illuminate/translation": "^6.0|^7.0|^8.0",
+        "illuminate/validation": "^6.0|^7.0|^8.0",
+        "illuminate/view": "^6.0|^7.0|^8.0",
         "symfony/http-foundation": "^4.1|^5.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^3.6|^4.0|^5.0",
-        "phpunit/phpunit": "^7.0|^8.0",
-        "scrutinizer/ocular": "^1.8"
+        "orchestra/testbench": "^4.0|^5.0|^6.0",
+        "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {
@@ -63,6 +62,9 @@
         }
     },
     "config": {
-        "sort-packages": true
-    }
+        "sort-packages": true,
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
