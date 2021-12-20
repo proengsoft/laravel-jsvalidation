@@ -11,12 +11,10 @@ jobs:
     strategy:
       matrix:
         laravel: ['6.0', '7.0', '8.0']
-        php: ['7.2', '7.3', '7.4', '8.0']
+        php: ['7.4', '8.0', '8.1']
         exclude:
-          - {laravel: '6.0', php: '7.1'}
-          - {laravel: '7.0', php: '7.1'}
-          - {laravel: '8.0', php: '7.1'}
-          - {laravel: '8.0', php: '7.2'}
+          - { laravel: '6.0', php: '8.1' }
+          - { laravel: '7.0', php: '8.1' }
 
     name: PHP ${{ matrix.php }} Laravel ${{ matrix.laravel }}
 
@@ -28,6 +26,18 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
       - name: Install dependencies
         run: export COMPOSER=tests/composer-${{ matrix.laravel }}.json && composer install --no-interaction --prefer-source
