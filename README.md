@@ -2,6 +2,7 @@
 
 ![Latest Version](https://img.shields.io/github/release/proengsoft/laravel-jsvalidation.svg?style=flat-square)
 ![tests](https://github.com/proengsoft/laravel-jsvalidation/actions/workflows/php-tests.yml/badge.svg)
+![Code Coverage](https://app.codecov.io/gh/proengsoft/laravel-jsvalidation)
 ![Total Downloads](https://img.shields.io/packagist/dt/proengsoft/laravel-jsvalidation.svg?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square)
 
