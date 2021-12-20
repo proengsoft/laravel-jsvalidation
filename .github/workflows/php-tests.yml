@@ -26,21 +26,45 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          coverage: pcov
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Setup Problem Matchers
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      - uses: actions/cache@v2
+      - name: Select Laravel 6
+        uses: nick-invision/retry@v1
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "laravel/framework:6.*" "phpunit/phpunit:^8.5.8|^9.3.7" --no-update --no-interaction
+        if: "matrix.laravel == '6'"
 
-      - name: Install dependencies
-        run: export COMPOSER=tests/composer-${{ matrix.laravel }}.json && composer install --no-interaction --prefer-source
+      - name: Select Laravel 7
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "laravel/framework:7.*" "phpunit/phpunit:^8.5.8|^9.3.7" --no-update --no-interaction
+        if: "matrix.laravel == '7'"
+
+      - name: Select Laravel 8
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "laravel/framework:8.*" "phpunit/phpunit:^9.3.7" --no-update --no-interaction
+        if: "matrix.laravel == '8'"
+
+      - name: Install PHP Dependencies
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --no-interaction --no-progress
 
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --coverage-clover clover.xml
+
+      - name: Check code coverage
+        uses: codecov/codecov-action@v2.1.0
+        if: "matrix.php == '8.1' && matrix.laravel == '8'"
