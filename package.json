@@ -4,9 +4,6 @@
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",
     "@babel/plugin-transform-runtime": "^7.16.4",
-    "@semantic-release/exec": "^6.0.1",
-    "@semantic-release/git": "^10.0.0",
-    "@semantic-release/github": "^8.0.1",
     "babel-loader": "^8.2.3",
     "bundlewatch": "^0.3.2",
     "del": "^6.0.0",
@@ -16,7 +13,6 @@
     "gulp-rename": "^2.0.0",
     "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
-    "semantic-release": "^18.0.0",
     "webpack": "^5.61.0",
     "webpack-cli": "^4.9.1",
     "webpack-stream": "^7.0.0"
