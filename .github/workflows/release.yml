@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  NODE_VERSION: 14
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -14,6 +17,14 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Installing dependencies
+        run: npm install
 
       - name: Run automated release process with semantic-release
         uses: cycjimmy/semantic-release-action@v2
