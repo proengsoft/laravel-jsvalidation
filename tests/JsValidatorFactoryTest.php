@@ -5,6 +5,7 @@ namespace Proengsoft\JsValidation\Tests;
 use Mockery as m;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\JsValidatorFactory;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
 
@@ -219,7 +220,7 @@ class JsValidatorFactoryTest extends TestCase
 
         $app = $this->mockedApp($rules, $messages, $customAttributes);
 
-        $sessionMock = $this->getMockBuilder(\Symfony\Component\HttpFoundation\Session\SessionInterface::class)
+        $sessionMock = $this->getMockBuilder(SessionInterface::class)
             ->getMock();
 
 
@@ -256,6 +257,8 @@ class JsValidatorFactoryTest extends TestCase
 
     public function testCreateFromFormRequestClassNameNew()
     {
+        $this->withSession([]);
+
         /** @var JavascriptValidator $jsValidator */
         $jsValidator = app('jsvalidator')->formRequest(StubFormRequest2::class);
         $data = $jsValidator->toArray();
