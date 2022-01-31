@@ -11,11 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        laravel: ['6', '7', '8']
+        laravel: ['6', '7', '8', '9']
         php: ['7.4', '8.0', '8.1']
         exclude:
           - { laravel: '6', php: '8.1' }
           - { laravel: '7', php: '8.1' }
+          - { laravel: '9', php: '7.4' }
 
     name: PHP ${{ matrix.php }} Laravel ${{ matrix.laravel }}
 
@@ -56,6 +57,14 @@ jobs:
           command: composer require "laravel/framework:8.*" "phpunit/phpunit:^9.3.7" --no-update --no-interaction
         if: "matrix.laravel == '8'"
 
+      - name: Select Laravel 9
+        uses: nick-invision/retry@v2.6.0
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "laravel/framework:9.*" "phpunit/phpunit:^9.3.7" --no-update --no-interaction
+        if: "matrix.laravel == '9'"
+
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v2.6.0
         with:
@@ -68,4 +77,4 @@ jobs:
 
       - name: Check code coverage
         uses: codecov/codecov-action@v2.1.0
-        if: "matrix.php == '8.1' && matrix.laravel == '8'"
+        if: "matrix.php == '8.1' && matrix.laravel == '9'"
