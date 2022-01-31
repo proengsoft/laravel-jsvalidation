@@ -257,7 +257,8 @@ class JsValidatorFactoryTest extends TestCase
 
     public function testCreateFromFormRequestClassNameNew()
     {
-        $this->withSession([]);
+        $this->startSession();
+        $this->app['request']->setLaravelSession($this->app['session.store']);
 
         /** @var JavascriptValidator $jsValidator */
         $jsValidator = app('jsvalidator')->formRequest(StubFormRequest2::class);
