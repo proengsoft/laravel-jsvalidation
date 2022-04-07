@@ -76,5 +76,5 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover clover.xml
 
       - name: Check code coverage
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v3
         if: "matrix.php == '8.1' && matrix.laravel == '9'"
