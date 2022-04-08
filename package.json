@@ -5,7 +5,7 @@
     "@babel/core": "^7.17.9",
     "@babel/plugin-transform-runtime": "^7.17.0",
     "babel-loader": "^8.2.3",
-    "bundlewatch": "^0.3.2",
+    "bundlewatch": "^0.3.3",
     "del": "^6.0.0",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
