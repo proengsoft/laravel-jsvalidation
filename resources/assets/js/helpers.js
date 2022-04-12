@@ -200,8 +200,10 @@ $.extend(true, laravelValidation, {
                 timeValue = this.strtotime(value);
             } else {
                 timeValue = fmt.parseDate(value, format);
-                if (timeValue) {
+                if (timeValue instanceof Date && fmt.formatDate(timeValue, format) === value) {
                     timeValue = Math.round((timeValue.getTime() / 1000));
+                } else {
+                    timeValue = false;
                 }
             }
 
