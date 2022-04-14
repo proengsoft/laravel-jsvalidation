@@ -4,10 +4,7 @@ module.exports = {
   plugins: [
     '@semantic-release/commit-analyzer',
     '@semantic-release/exec',
-    ["@semantic-release/git", {
-      "assets": ["public/**/*"],
-      "message": "chore(release): ${nextRelease.version} [skip ci]"
-    }],
+    '@semantic-release/git',
     '@semantic-release/github'
   ],
   verifyConditions: [
@@ -18,7 +15,11 @@ module.exports = {
       path: '@semantic-release/exec',
       cmd: 'gulp build'
     },
-    '@semantic-release/git',
+    {
+      path: '@semantic-release/git',
+      assets: ["public/**/*"],
+      message: "chore(release): ${nextRelease.version} [skip ci]"
+    },
   ],
   publish: [
     '@semantic-release/github'

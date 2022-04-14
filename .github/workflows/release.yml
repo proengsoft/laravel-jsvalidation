@@ -2,8 +2,7 @@ name: release
 
 on:
   push:
-    branches:
-      - master
+  pull_request:
 
 env:
   NODE_VERSION: 14
