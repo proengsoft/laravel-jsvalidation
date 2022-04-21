@@ -406,8 +406,11 @@ $.extend(true, laravelValidation, {
          * @returns {RegExp}
          */
         regexFromWildcard: function (name) {
-            return new RegExp('^' + name.split('[*]').map(function(x) {
-                laravelValidation.helpers.escapeRegExp(x)
+            var nameParts = name.split('[*]');
+            if (nameParts.length === 1) nameParts.push('');
+
+            return new RegExp('^' + nameParts.map(function(x) {
+                return laravelValidation.helpers.escapeRegExp(x)
             }).join('\\[[^\\]]*\\]') + '$');
         },
 
