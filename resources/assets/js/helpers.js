@@ -405,22 +405,10 @@ $.extend(true, laravelValidation, {
          * @param name
          * @returns {RegExp}
          */
-        regexFromWildcard: function(name) {
-            var nameParts = name.split("[*]");
-            if (nameParts.length === 1) {
-                nameParts.push('');
-            }
-            var regexpParts = nameParts.map(function(currentValue, index) {
-                if (index % 2 === 0) {
-                    currentValue = currentValue + '[';
-                } else {
-                    currentValue = ']' +currentValue;
-                }
-
-                return laravelValidation.helpers.escapeRegExp(currentValue);
-            });
-
-            return new RegExp('^'+regexpParts.join('[^\\]]*')+'$');
+        regexFromWildcard: function (name) {
+            return new RegExp('^' + name.split('[*]').map(function(x) {
+                laravelValidation.helpers.escapeRegExp(x)
+            }).join('\\[[^\\]]*\\]') + '$');
         },
 
         /**
