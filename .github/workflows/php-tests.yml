@@ -34,7 +34,7 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Select Laravel 6
-        uses: nick-invision/retry@v2.7.0
+        uses: nick-invision/retry@v2.8.0
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -42,7 +42,7 @@ jobs:
         if: "matrix.laravel == '6'"
 
       - name: Select Laravel 7
-        uses: nick-invision/retry@v2.7.0
+        uses: nick-invision/retry@v2.8.0
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -50,7 +50,7 @@ jobs:
         if: "matrix.laravel == '7'"
 
       - name: Select Laravel 8
-        uses: nick-invision/retry@v2.7.0
+        uses: nick-invision/retry@v2.8.0
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -58,7 +58,7 @@ jobs:
         if: "matrix.laravel == '8'"
 
       - name: Select Laravel 9
-        uses: nick-invision/retry@v2.7.0
+        uses: nick-invision/retry@v2.8.0
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -66,7 +66,7 @@ jobs:
         if: "matrix.laravel == '9'"
 
       - name: Install PHP Dependencies
-        uses: nick-invision/retry@v2.7.0
+        uses: nick-invision/retry@v2.8.0
         with:
           timeout_minutes: 5
           max_attempts: 5
