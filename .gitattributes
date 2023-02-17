@@ -12,7 +12,7 @@
 /.styleci.yml       export-ignore
 /CODE_OF_CONDUCT.md export-ignore
 /composer.json      export-ignore
-/gulpfile.js        export-ignore
+/gulpfile.cjs        export-ignore
 /package.json       export-ignore
 /package-lock.json  export-ignore
 /phpunit.xml.dist   export-ignore
