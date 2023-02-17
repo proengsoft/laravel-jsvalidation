@@ -31,6 +31,30 @@ jobs:
           ini-values: error_reporting=E_ALL
           coverage: pcov
 
+      - name: Select Laravel 8
+        uses: nick-invision/retry@v2.8.2
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "laravel/framework:8.*" "phpunit/phpunit:^9.3.7" --no-update --no-interaction
+        if: "matrix.laravel == '8'"
+
+      - name: Select Laravel 9
+        uses: nick-invision/retry@v2.8.2
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "laravel/framework:9.*" "phpunit/phpunit:^9.3.7" --no-update --no-interaction
+        if: "matrix.laravel == '9'"
+
+      - name: Select Laravel 10
+        uses: nick-invision/retry@v2.8.2
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "laravel/framework:10.*" "phpunit/phpunit:^10" --no-update --no-interaction
+        if: "matrix.laravel == '10'"
+
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v2.8.2
         with:
@@ -43,4 +67,4 @@ jobs:
 
       - name: Check code coverage
         uses: codecov/codecov-action@v3
-        if: "matrix.php == '8.1' && matrix.laravel == '9'"
+        if: "matrix.php == '8.2' && matrix.laravel == '10'"
