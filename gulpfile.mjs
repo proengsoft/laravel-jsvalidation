@@ -1,13 +1,13 @@
-var gulp = require('gulp'),
-    del = require('del'),
-    gp_sourcemaps = require('gulp-sourcemaps'),
-    gp_concat = require('gulp-concat'),
-    gp_rename = require('gulp-rename'),
-    gp_filter = require('gulp-filter'),
-    gp_uglify = require('gulp-uglify'),
-    webpack = require('webpack-stream');
+import gulp from 'gulp';
+import {deleteAsync} from 'del';
+import gp_sourcemaps from 'gulp-sourcemaps';
+import gp_concat from 'gulp-concat';
+import gp_rename from 'gulp-rename';
+import gp_filter from 'gulp-filter';
+import gp_uglify from 'gulp-uglify';
+import webpack from 'webpack-stream';
 
-var esBuildDir = 'es-build/';
+const esBuildDir = 'es-build/';
 gulp.task('build', gulp.series(
     function () {
         return gulp.src(['resources/assets/js/helpers.js'])
@@ -60,6 +60,6 @@ gulp.task('build', gulp.series(
             .pipe(gulp.dest('public/js'));
     },
     function () {
-        return del(esBuildDir);
+        return deleteAsync(esBuildDir);
     }
 ));
