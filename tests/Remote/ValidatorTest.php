@@ -7,6 +7,7 @@ use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Validator as LaravelValidator;
+use Proengsoft\JsValidation\Tests\stubs\UrlIsLaravel;
 use Proengsoft\JsValidation\Tests\TestCase;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 use Proengsoft\JsValidation\Remote\Validator;

@@ -75,7 +75,7 @@ class DelegatedValidatorTest extends TestCase
 
         $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getFiles'])
+            ->addMethods(['getFiles'])
             ->getMock();
 
         $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
@@ -124,7 +124,7 @@ class DelegatedValidatorTest extends TestCase
 
         $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
-            ->setMethods(['setFiles'])
+            ->addMethods(['setFiles'])
             ->getMock();
 
         $validator->expects($this->once())
@@ -247,7 +247,7 @@ class DelegatedValidatorTest extends TestCase
 
         $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->setConstructorArgs([$validator, $parser])
-            ->setMethods(['callProtected'])
+            ->onlyMethods(['callProtected'])
             ->getMock();
 
         if (is_array($args)) {
@@ -265,7 +265,7 @@ class DelegatedValidatorTest extends TestCase
     public function testCall()
     {
         $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
-            ->setMethods(['fakeMethod'])
+            ->addMethods(['fakeMethod'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -389,7 +389,7 @@ class DelegatedValidatorTest extends TestCase
 
         $delegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->setConstructorArgs([$validator, $parser])
-            ->setMethods(['callProtected'])
+            ->onlyMethods(['callProtected'])
             ->getMock();
 
         $delegated->expects($this->once())

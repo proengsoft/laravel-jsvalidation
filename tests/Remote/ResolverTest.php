@@ -3,10 +3,9 @@
 namespace Proengsoft\JsValidation\Tests\Remote;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Proengsoft\JsValidation\Tests\stubs\CustomValidatorStub;
 use Proengsoft\JsValidation\Tests\TestCase;
 use Proengsoft\JsValidation\Remote\Resolver;
-
-require_once __DIR__.'/../stubs/ResolverTest.php';
 
 class ResolverTest extends TestCase
 {
@@ -54,7 +53,7 @@ class ResolverTest extends TestCase
     public function testResolvesValidatorExists()
     {
         $translator = $this->getMockedTranslator();
-        $resolverObject = new Resolver(new CustomValidatorStubTest($translator));
+        $resolverObject = new Resolver(new CustomValidatorStub($translator));
 
         $resolver = $resolverObject->resolver('field');
         $translator = $this->getMockedTranslator();
@@ -72,7 +71,7 @@ class ResolverTest extends TestCase
     public function testResolvesAndValidated()
     {
         $translator = $this->getMockedTranslator();
-        $resolverObject = new Resolver(new CustomValidatorStubTest($translator));
+        $resolverObject = new Resolver(new CustomValidatorStub($translator));
 
         $resolver = $resolverObject->resolver('field');
 

@@ -11,6 +11,9 @@ use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
 class JavascriptValidatorTest extends TestCase
 {
+    private $_last_error_message;
+    private $_last_error_number;
+
     public function testRender()
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
@@ -70,7 +73,7 @@ class JavascriptValidatorTest extends TestCase
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -94,7 +97,7 @@ class JavascriptValidatorTest extends TestCase
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -117,7 +120,7 @@ class JavascriptValidatorTest extends TestCase
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -147,7 +150,7 @@ class JavascriptValidatorTest extends TestCase
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -216,7 +219,7 @@ class JavascriptValidatorTest extends TestCase
         $remote = true;
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -241,7 +244,7 @@ class JavascriptValidatorTest extends TestCase
         $remote = true;
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','sometimes','setRemote'])
+            ->onlyMethods(['validationData','sometimes','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
