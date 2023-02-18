@@ -137,8 +137,8 @@ class JsValidatorFactoryTest extends TestCase
         $customAttributes = [];
         $selector = null;
 
-        $sessionMock = $this->getMockBuilder('stdObject')
-            ->onlyMethods(['token'])
+        $sessionMock = $this->getMockBuilder('stdClass')
+            ->addMethods(['token'])
             ->getMock();
         $sessionMock->expects($this->once())
             ->method('token')
@@ -151,8 +151,8 @@ class JsValidatorFactoryTest extends TestCase
             ->with('session')
             ->willReturn($sessionMock);
 
-        $encrypterMock = $this->getMockBuilder('stdObject')
-            ->onlyMethods(['encrypt'])
+        $encrypterMock = $this->getMockBuilder('stdClass')
+            ->addMethods(['encrypt'])
             ->getMock();
         $encrypterMock->expects($this->once())
             ->method('encrypt')
