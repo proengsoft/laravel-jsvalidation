@@ -18,7 +18,8 @@ class ValidatorHandlerTest extends TestCase
 
         $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
-            ->addMethods(['getRules','hasRule','parseRule','getRule','isImplicit'])
+            ->onlyMethods(['getRules','hasRule','parseRule','isImplicit'])
+            ->addMethods(['getRule'])
             ->getMock();
 
         $mockDelegated->expects($this->any())
@@ -93,7 +94,8 @@ class ValidatorHandlerTest extends TestCase
 
         $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
-            ->addMethods(['getRules','hasRule','parseRule','getRule','isImplicit'])
+            ->onlyMethods(['getRules','hasRule','parseRule','isImplicit'])
+            ->addMethods(['getRule'])
             ->getMock();
 
         $mockDelegated->expects($this->any())
@@ -133,7 +135,8 @@ class ValidatorHandlerTest extends TestCase
 
         $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
-            ->addMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
+            ->addMethods(['getRules','hasRule','parseRule','isImplicit','sometimes','explodeRules'])
+            ->onlyMethods(['getRule'])
             ->getMock();
 
         $mockDelegated->expects($this->once())
@@ -212,7 +215,8 @@ class ValidatorHandlerTest extends TestCase
 
         $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
-            ->addMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
+            ->onlyMethods(['getRules','hasRule','parseRule','isImplicit','sometimes','explodeRules'])
+            ->addMethods(['getRule'])
             ->getMock();
 
         $mockDelegated->expects($this->any())
