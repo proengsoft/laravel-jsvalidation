@@ -18,7 +18,7 @@ class ValidatorHandlerTest extends TestCase
 
         $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getRules','hasRule','parseRule','getRule','isImplicit'])
+            ->addMethods(['getRules','hasRule','parseRule','getRule','isImplicit'])
             ->getMock();
 
         $mockDelegated->expects($this->any())
@@ -93,7 +93,7 @@ class ValidatorHandlerTest extends TestCase
 
         $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getRules','hasRule','parseRule','getRule','isImplicit'])
+            ->addMethods(['getRules','hasRule','parseRule','getRule','isImplicit'])
             ->getMock();
 
         $mockDelegated->expects($this->any())
@@ -133,7 +133,7 @@ class ValidatorHandlerTest extends TestCase
 
         $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
+            ->addMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
             ->getMock();
 
         $mockDelegated->expects($this->once())
@@ -212,7 +212,7 @@ class ValidatorHandlerTest extends TestCase
 
         $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
+            ->addMethods(['getRules','hasRule','parseRule','getRule','isImplicit','sometimes','explodeRules'])
             ->getMock();
 
         $mockDelegated->expects($this->any())

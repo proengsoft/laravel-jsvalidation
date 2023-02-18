@@ -11,7 +11,7 @@ class RemoteValidationMiddlewareTest extends TestCase
     {
         $mockedFactory = $this->getMockBuilder(\Illuminate\Contracts\Validation\Factory::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['resolver','extend','make','extendImplicit','replacer'])
+            ->addMethods(['resolver','extend','make','extendImplicit','replacer'])
             ->getMock();
         $mockedFactory->resolver = function(){};
         $mockedFactory->expects($this->once())
