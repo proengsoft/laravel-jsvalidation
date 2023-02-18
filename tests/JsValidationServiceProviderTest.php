@@ -2,6 +2,10 @@
 
 namespace Proengsoft\JsValidation\Tests;
 
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Proengsoft\JsValidation\JsValidationServiceProvider;
+
 class JsValidationServiceProviderTest extends TestCase
 {
     protected function getMockedService($app)
@@ -30,62 +34,40 @@ class JsValidationServiceProviderTest extends TestCase
 
     public function testBootstrapConfigs()
     {
-        $app = [];
-        $app['path.config']=dirname(__FILE__.'/../config');
-        $app['path.base']=dirname(__FILE__.'/../');
-        $app['path.public']=dirname(__FILE__.'/../public');
+        $this->app->useConfigPath(dirname(__FILE__.'/../config'));
+        $this->app->setBasePath(dirname(__FILE__.'/../'));
+        $this->app->usePublicPath(dirname(__FILE__.'/../public'));
 
-        $mock = $this->getMockedService($app);
+        $serviceProvider = new JsValidationServiceProvider($this->app);
+        $serviceProvider->boot();
 
-        $mock->expects($this->at(1))
-            ->method('publishes')
-            ->with([realpath(__DIR__.'/../config/jsvalidation.php')=>$app['path.config'].'/jsvalidation.php'], 'config');
-
-        $mock->boot();
+        $this->assertPublishes($this->app->configPath().'/jsvalidation.php', 'config');
+        $this->assertConfigMerged(realpath(__DIR__.'/../config/jsvalidation.php'), 'jsvalidation');
     }
 
     public function testBootstrapViews()
     {
-        $app = [];
-        $app['path.config']=dirname(__FILE__.'/../config');
-        $app['path.base']=dirname(__FILE__.'/../');
-        $app['path.public']=dirname(__FILE__.'/../public');
+        $this->app->useConfigPath(dirname(__FILE__.'/../config'));
+        $this->app->setBasePath(dirname(__FILE__.'/../'));
+        $this->app->usePublicPath(dirname(__FILE__.'/../public'));
 
-        $mock = $this->getMockedService($app);
+        $serviceProvider = new JsValidationServiceProvider($this->app);
+        $serviceProvider->boot();
 
-        $mock->expects($this->once())
-            ->method('loadViewsFrom')
-            ->with(realpath(__DIR__.'/../resources/views'), 'jsvalidation');
-
-
-        $mock->expects($this->at(3))
-            ->method('publishes')
-            ->with(
-                [realpath(__DIR__.'/../resources/views')=>$app['path.base'].'/resources/views/vendor/jsvalidation'],
-                'views'
-            );
-
-        $mock->boot();
+        $this->assertHasViews(realpath(__DIR__.'/../resources/views'), 'jsvalidation');
+        $this->assertPublishes($this->app->basePath().'/resources/views/vendor/jsvalidation', 'views');
     }
 
     public function testPublishAssets()
     {
-        $app = [];
-        $app['path.config']=dirname(__FILE__.'/../config');
-        $app['path.base']=dirname(__FILE__.'/../');
-        $app['path.public']=dirname(__FILE__.'/../public');
+        $this->app->useConfigPath(dirname(__FILE__.'/../config'));
+        $this->app->setBasePath(dirname(__FILE__.'/../'));
+        $this->app->usePublicPath(dirname(__FILE__.'/../public'));
 
-        $mock = $this->getMockedService($app);
+        $serviceProvider = new JsValidationServiceProvider($this->app);
+        $serviceProvider->boot();
 
-        $mock->expects($this->at(4))
-            ->method('publishes')
-            ->with(
-                [realpath(__DIR__.'/../public')=>$app['path.public'].'/vendor/jsvalidation'],
-                'public'
-            );
-
-        $mock->boot();
-
+        $this->assertPublishes($this->app->publicPath().'/vendor/jsvalidation', 'public');
     }
 
     public function testPushMiddleware()
@@ -153,8 +135,37 @@ class JsValidationServiceProviderTest extends TestCase
         $mock->register();
     }
 
-    public function testExtendValidator()
+    protected function assertConfigMerged(string $file, string $configKey = null): void
     {
+        $configKey ??= Str::of($file)->beforeLast('.php')->afterLast('/')->afterLast('\\')->toString();
 
+        static::assertThat(
+            $this->app->make('config')->has($configKey),
+            static::isTrue(),
+            "The configuration file was not merged as '$configKey'."
+        );
+
+        static::assertSame(
+            $this->app->make('files')->getRequire($file),
+            $this->app->make('config')->get($configKey),
+            "The configuration file in '$file' is not the same for '$configKey'."
+        );
+    }
+
+    protected function assertPublishes(string $file, string $tag): void
+    {
+        static::assertArrayHasKey($tag, ServiceProvider::$publishGroups, "The '$tag' is not a publishable tag.");
+
+        static::assertContains(
+            $file, ServiceProvider::$publishGroups[$tag], "The '$file' is not publishable in the '$tag' tag."
+        );
+    }
+
+    protected function assertHasViews(string $path, string $namespace): void
+    {
+        $namespaces = $this->app->make('view')->getFinder()->getHints();
+
+        static::assertArrayHasKey($namespace, $namespaces, "The '$namespace' views were not registered.");
+        static::assertContains($path, $namespaces[$namespace], "The '$namespace' does not correspond to the path '$path'.");
     }
 }
