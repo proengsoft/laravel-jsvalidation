@@ -26,20 +26,20 @@
         }
     ],
     "require": {
-        "php": "^7.2 || ^8.0",
-        "illuminate/config": "^6.0|^7.0|^8.0|^9.0",
-        "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0",
-        "illuminate/http": "^6.0|^7.0|^8.0|^9.0",
-        "illuminate/support": "^6.0|^7.0|^8.0|^9.0",
-        "illuminate/translation": "^6.0|^7.0|^8.0|^9.0",
-        "illuminate/validation": "^6.0|^7.0|^8.0|^9.0",
-        "illuminate/view": "^6.0|^7.0|^8.0|^9.0",
-        "symfony/http-foundation": "^4.1|^5.0|^6.0"
+        "php": "^8.0",
+        "illuminate/config": "^9.0",
+        "illuminate/contracts": "^9.0",
+        "illuminate/http": "^9.0",
+        "illuminate/support": "^9.0",
+        "illuminate/translation": "^9.0",
+        "illuminate/validation": "^9.0",
+        "illuminate/view": "^9.0",
+        "symfony/http-foundation": "^6.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^4.0|^5.0|^6.0|^7.0",
-        "phpunit/phpunit": "^8.0|^9.5"
+        "orchestra/testbench": "^7.0",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
