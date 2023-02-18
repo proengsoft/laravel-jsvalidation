@@ -1,5 +1,5 @@
 import gulp from 'gulp';
-import {delAsync} from 'del';
+import {deleteAsync} from 'del';
 import gp_sourcemaps from 'gulp-sourcemaps';
 import gp_concat from 'gulp-concat';
 import gp_rename from 'gulp-rename';
@@ -60,6 +60,6 @@ gulp.task('build', gulp.series(
             .pipe(gulp.dest('public/js'));
     },
     function () {
-        return delAsync(esBuildDir);
+        return deleteAsync(esBuildDir);
     }
 ));
