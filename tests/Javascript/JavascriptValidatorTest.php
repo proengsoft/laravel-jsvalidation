@@ -11,6 +11,9 @@ use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
 class JavascriptValidatorTest extends TestCase
 {
+    private $_last_error_message;
+    private $_last_error_number;
+
     public function testRender()
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
