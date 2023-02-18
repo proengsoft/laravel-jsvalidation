@@ -2,6 +2,7 @@
 
 namespace Proengsoft\JsValidation\Tests;
 
+use Illuminate\Support\Facades\Config;
 use Proengsoft\JsValidation\Remote\Validator;
 use Proengsoft\JsValidation\RemoteValidationMiddleware;
 
@@ -23,15 +24,8 @@ class RemoteValidationMiddlewareTest extends TestCase
             ->method('extend')
             ->with(Validator::EXTENSION_NAME, $this->isInstanceOf('Closure'));
 
-        $mockedConfig = $this->getMockForAbstractClass(\Illuminate\Contracts\Config\Repository::class, [],'',false);
-        $mockedConfig->expects($this->at(0))
-            ->method('get')
-            ->with('jsvalidation.remote_validation_field')
-            ->will($this->returnValue('_jsvalidation'));
-        $mockedConfig->expects($this->at(1))
-            ->method('get')
-            ->with('jsvalidation.escape', false)
-            ->will($this->returnValue('_jsvalidation'));
+        $this->app['config']->set('jsvalidation.remote_validation_field', '_jsvalidation');
+        $this->app['config']->set('jsvalidation.escape', '_jsvalidation');
 
         $mockedRequest = $this->getMockBuilder(\Illuminate\Http\Request::class)
             ->disableOriginalConstructor()
@@ -45,7 +39,7 @@ class RemoteValidationMiddlewareTest extends TestCase
 
         $stubClosure = function () {return true; };
 
-        $middleware = new RemoteValidationMiddleware($mockedFactory, $mockedConfig);
+        $middleware = new RemoteValidationMiddleware($mockedFactory, $this->app['config']);
         $result = $middleware->handle($mockedRequest, $stubClosure);
 
         $this->assertTrue($result);
@@ -58,15 +52,8 @@ class RemoteValidationMiddlewareTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockedConfig = $this->getMockForAbstractClass(\Illuminate\Contracts\Config\Repository::class,[],'',false);
-        $mockedConfig->expects($this->at(0))
-            ->method('get')
-            ->with('jsvalidation.remote_validation_field')
-            ->will($this->returnValue('_jsvalidation'));
-        $mockedConfig->expects($this->at(1))
-            ->method('get')
-            ->with('jsvalidation.escape', false)
-            ->will($this->returnValue('_jsvalidation'));
+        $this->app['config']->set('jsvalidation.remote_validation_field', '_jsvalidation');
+        $this->app['config']->set('jsvalidation.escape', '_jsvalidation');
 
         $mockedRequest = $this->getMockBuilder(\Illuminate\Http\Request::class)
             ->disableOriginalConstructor()
@@ -80,7 +67,7 @@ class RemoteValidationMiddlewareTest extends TestCase
 
         $stubClosure = function () {return true;};
 
-        $middleware = new RemoteValidationMiddleware($mockedFactory, $mockedConfig);
+        $middleware = new RemoteValidationMiddleware($mockedFactory, $this->app['config']);
         $result = $middleware->handle($mockedRequest, $stubClosure);
 
         $this->assertTrue($result);
