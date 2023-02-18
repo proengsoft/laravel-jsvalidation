@@ -1,6 +1,6 @@
 <?php
 
-namespace Proengsoft\JsValidation\Test\Facades;
+namespace Proengsoft\JsValidation\Tests\Facades;
 
 use Proengsoft\JsValidation\Tests\TestCase;
 use Proengsoft\JsValidation\Facades\JsValidatorFacade;
