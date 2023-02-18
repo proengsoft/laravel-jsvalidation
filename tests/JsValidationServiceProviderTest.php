@@ -8,30 +8,6 @@ use Proengsoft\JsValidation\JsValidationServiceProvider;
 
 class JsValidationServiceProviderTest extends TestCase
 {
-    protected function getMockedService($app)
-    {
-        $mockedConfig = $this->getMockForAbstractClass(\Illuminate\Contracts\Config\Repository::class, [],'',false);
-        $mockedConfig->expects($this->once())
-            ->method('get')
-            ->with('jsvalidation.disable_remote_validation')
-            ->will($this->returnValue(true));
-        $app['config']=$mockedConfig;
-
-        $mockedValidator = $this->getMockForAbstractClass(\Illuminate\Contracts\Validation\Factory::class, [],'',false);
-        $mockedValidator->expects($this->once())
-            ->method('extend')
-            ->will($this->returnValue(null));
-
-        $app['validator'] = $mockedValidator;
-
-        $mock = $this->getMockBuilder(\Proengsoft\JsValidation\JsValidationServiceProvider::class)
-            ->onlyMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
-            ->setConstructorArgs([$app])
-            ->getMock();
-
-        return $mock;
-    }
-
     public function testBootstrapConfigs()
     {
         $this->app->useConfigPath(dirname(__FILE__.'/../config'));
