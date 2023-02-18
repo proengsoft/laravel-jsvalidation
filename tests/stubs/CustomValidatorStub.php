@@ -1,10 +1,10 @@
 <?php
 
-namespace Proengsoft\JsValidation\Tests\Remote;
+namespace Proengsoft\JsValidation\Tests\stubs;
 
 use Mockery;
 
-class CustomValidatorStubTest implements \Illuminate\Contracts\Validation\Factory
+class CustomValidatorStub implements \Illuminate\Contracts\Validation\Factory
 {
     protected $resolver;
 

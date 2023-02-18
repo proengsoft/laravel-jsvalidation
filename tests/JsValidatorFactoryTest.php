@@ -6,9 +6,8 @@ use Illuminate\Contracts\Validation\Factory;
 use Mockery as m;
 use Proengsoft\JsValidation\Javascript\JavascriptValidator;
 use Proengsoft\JsValidation\JsValidatorFactory;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-
-require_once __DIR__.'/stubs/JsValidatorFactoryTest.php';
+use Proengsoft\JsValidation\Tests\stubs\StubFormRequest;
+use Proengsoft\JsValidation\Tests\stubs\StubFormRequest2;
 
 class JsValidatorFactoryTest extends TestCase
 {
@@ -184,7 +183,7 @@ class JsValidatorFactoryTest extends TestCase
 
         $factory = new JsValidatorFactory($this->app, $options);
 
-        $jsValidator = $factory->formRequest([\Proengsoft\JsValidation\Tests\StubFormRequest::class] , $selector);
+        $jsValidator = $factory->formRequest([StubFormRequest::class] , $selector);
 
         $this->assertInstanceOf(\Proengsoft\JsValidation\Javascript\JavascriptValidator::class, $jsValidator);
     }
