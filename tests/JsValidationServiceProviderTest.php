@@ -10,40 +10,40 @@ class JsValidationServiceProviderTest extends TestCase
 {
     public function testBootstrapConfigs()
     {
-        $this->app->useConfigPath(dirname(__FILE__.'/../config'));
-        $this->app->setBasePath(dirname(__FILE__.'/../'));
-        $this->app->usePublicPath(dirname(__FILE__.'/../public'));
+        $this->app['path.config'] = dirname(__FILE__.'/../config');
+        $this->app['path.base'] = dirname(__FILE__.'/../');
+        $this->app['path.public'] = dirname(__FILE__.'/../public');
 
         $serviceProvider = new JsValidationServiceProvider($this->app);
         $serviceProvider->boot();
 
-        $this->assertPublishes($this->app->configPath().'/jsvalidation.php', 'config');
+        $this->assertPublishes($this->app['path.config'].'/jsvalidation.php', 'config');
         $this->assertConfigMerged(realpath(__DIR__.'/../config/jsvalidation.php'), 'jsvalidation');
     }
 
     public function testBootstrapViews()
     {
-        $this->app->useConfigPath(dirname(__FILE__.'/../config'));
-        $this->app->setBasePath(dirname(__FILE__.'/../'));
-        $this->app->usePublicPath(dirname(__FILE__.'/../public'));
+        $this->app['path.config'] = dirname(__FILE__.'/../config');
+        $this->app['path.base'] = dirname(__FILE__.'/../');
+        $this->app['path.public'] = dirname(__FILE__.'/../public');
 
         $serviceProvider = new JsValidationServiceProvider($this->app);
         $serviceProvider->boot();
 
         $this->assertHasViews(realpath(__DIR__.'/../resources/views'), 'jsvalidation');
-        $this->assertPublishes($this->app->basePath().'/resources/views/vendor/jsvalidation', 'views');
+        $this->assertPublishes($this->app['path.base'].'/resources/views/vendor/jsvalidation', 'views');
     }
 
     public function testPublishAssets()
     {
-        $this->app->useConfigPath(dirname(__FILE__.'/../config'));
-        $this->app->setBasePath(dirname(__FILE__.'/../'));
-        $this->app->usePublicPath(dirname(__FILE__.'/../public'));
+        $this->app['path.config'] = dirname(__FILE__.'/../config');
+        $this->app['path.base'] = dirname(__FILE__.'/../');
+        $this->app['path.public'] = dirname(__FILE__.'/../public');
 
         $serviceProvider = new JsValidationServiceProvider($this->app);
         $serviceProvider->boot();
 
-        $this->assertPublishes($this->app->publicPath().'/vendor/jsvalidation', 'public');
+        $this->assertPublishes($this->app['path.public'].'/vendor/jsvalidation', 'public');
     }
 
     public function testPushMiddleware()
