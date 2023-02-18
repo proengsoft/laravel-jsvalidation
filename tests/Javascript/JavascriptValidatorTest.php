@@ -70,7 +70,7 @@ class JavascriptValidatorTest extends TestCase
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -94,7 +94,7 @@ class JavascriptValidatorTest extends TestCase
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -117,7 +117,7 @@ class JavascriptValidatorTest extends TestCase
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -147,7 +147,7 @@ class JavascriptValidatorTest extends TestCase
     {
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -216,7 +216,7 @@ class JavascriptValidatorTest extends TestCase
         $remote = true;
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','setRemote'])
+            ->onlyMethods(['validationData','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())
@@ -241,7 +241,7 @@ class JavascriptValidatorTest extends TestCase
         $remote = true;
         $mockHandler = $this->getMockBuilder(ValidatorHandler::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validationData','sometimes','setRemote'])
+            ->onlyMethods(['validationData','sometimes','setRemote'])
             ->getMock();
 
         $mockHandler->expects($this->once())

@@ -15,7 +15,7 @@ class JsValidatorFactoryTest extends TestCase
     {
         $mockValidator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
             ->disableOriginalConstructor()
-            ->setMethods(['addCustomAttributes'])
+            ->onlyMethods(['addCustomAttributes'])
             ->getMock();
 
         $mockValidator->expects($this->once())
@@ -24,7 +24,7 @@ class JsValidatorFactoryTest extends TestCase
 
         $mockFactory = $this->getMockBuilder(\Illuminate\Contracts\Validation\Factory::class)
             ->disableOriginalConstructor()
-            ->setMethods(['make','extend','extendImplicit','replacer'])
+            ->onlyMethods(['make','extend','extendImplicit','replacer'])
             ->getMock();
 
         $mockFactory->expects($this->once())
@@ -138,7 +138,7 @@ class JsValidatorFactoryTest extends TestCase
         $selector = null;
 
         $sessionMock = $this->getMockBuilder('stdObject')
-            ->setMethods(['token'])
+            ->onlyMethods(['token'])
             ->getMock();
         $sessionMock->expects($this->once())
             ->method('token')
@@ -152,7 +152,7 @@ class JsValidatorFactoryTest extends TestCase
             ->willReturn($sessionMock);
 
         $encrypterMock = $this->getMockBuilder('stdObject')
-            ->setMethods(['encrypt'])
+            ->onlyMethods(['encrypt'])
             ->getMock();
         $encrypterMock->expects($this->once())
             ->method('encrypt')

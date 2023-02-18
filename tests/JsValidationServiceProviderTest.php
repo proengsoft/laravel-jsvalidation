@@ -21,7 +21,7 @@ class JsValidationServiceProviderTest extends TestCase
         $app['validator'] = $mockedValidator;
 
         $mock = $this->getMockBuilder(\Proengsoft\JsValidation\JsValidationServiceProvider::class)
-            ->setMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
+            ->onlyMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
             ->setConstructorArgs([$app])
             ->getMock();
 
@@ -116,7 +116,7 @@ class JsValidationServiceProviderTest extends TestCase
 
         $mock = $this->getMockBuilder(\Proengsoft\JsValidation\JsValidationServiceProvider::class)
             ->setConstructorArgs([$app])
-            ->setMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
+            ->onlyMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
             ->getMock();
 
         $mock->boot();
@@ -147,7 +147,7 @@ class JsValidationServiceProviderTest extends TestCase
 
         $mock = $this->getMockBuilder(\Proengsoft\JsValidation\JsValidationServiceProvider::class)
             ->setConstructorArgs([$app])
-            ->setMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
+            ->onlyMethods(['loadViewsFrom','publishes','mergeConfigFrom'])
             ->getMock();
 
         $mock->register();
