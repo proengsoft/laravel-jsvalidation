@@ -12,7 +12,7 @@ You can validate forms automatically referencing it to your defined validations.
 
 #### Supported versions
 
-Laravel 6.x - 8.x
+Laravel 9.x - 10.x
 
 #### Feature overview
 
