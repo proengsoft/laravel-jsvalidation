@@ -13,7 +13,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
-    "webpack": "^5.73.0",
+    "webpack": "^5.76.1",
     "webpack-cli": "^4.10.0",
     "webpack-stream": "^7.0.0"
   },
