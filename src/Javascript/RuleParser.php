@@ -64,8 +64,8 @@ class RuleParser
      *
      * @param  string  $attribute
      * @param  string  $rule
-     * @param $parameters
-     * @param $rawRule
+     * @param  $parameters
+     * @param  $rawRule
      * @return array
      */
     public function getRule($attribute, $rule, $parameters, $rawRule)
@@ -130,7 +130,7 @@ class RuleParser
      *
      * @param  string  $attribute
      * @param  string  $rule
-     * @param $parameters
+     * @param  $parameters
      * @return array
      */
     protected function clientRule($attribute, $rule, $parameters)

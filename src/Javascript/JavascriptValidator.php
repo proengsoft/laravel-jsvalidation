@@ -59,7 +59,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Set default parameters.
      *
-     * @param $options
+     * @param  $options
      * @return void
      */
     protected function setDefaults($options)
@@ -116,7 +116,7 @@ class JavascriptValidator implements Arrayable
     /**
      * Gets value from view data.
      *
-     * @param $name
+     * @param  $name
      * @return string
      *
      * @throws \Proengsoft\JsValidation\Exceptions\PropertyNotFoundException

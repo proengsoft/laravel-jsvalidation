@@ -58,7 +58,7 @@ class MessageParser
      *
      * @param  string  $attribute
      * @param  string  $rule
-     * @param $parameters
+     * @param  $parameters
      * @return array
      */
     protected function fakeValidationData($attribute, $rule, $parameters)
@@ -74,9 +74,9 @@ class MessageParser
     /**
      * Generate fake data to get RequiredIf message.
      *
-     * @param $data
-     * @param $rule
-     * @param $parameters
+     * @param  $data
+     * @param  $rule
+     * @param  $parameters
      * @return void
      */
     private function fakeRequiredIfData($data, $rule, $parameters)
@@ -93,8 +93,8 @@ class MessageParser
     /**
      * Generate fake data to get file type messages.
      *
-     * @param $data
-     * @param $attribute
+     * @param  $data
+     * @param  $attribute
      * @return void
      */
     private function fakeFileData($data, $attribute)

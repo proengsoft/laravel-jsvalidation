@@ -44,7 +44,7 @@ class Resolver
     /**
      * Closure used to resolve Validator instance.
      *
-     * @param $field
+     * @param  $field
      * @return \Closure
      */
     public function resolver($field)
@@ -57,12 +57,12 @@ class Resolver
     /**
      * Resolves Validator instance.
      *
-     * @param $translator
-     * @param $data
-     * @param $rules
-     * @param $messages
-     * @param $customAttributes
-     * @param $field
+     * @param  $translator
+     * @param  $data
+     * @param  $rules
+     * @param  $messages
+     * @param  $customAttributes
+     * @param  $field
      * @return \Illuminate\Validation\Validator
      */
     protected function resolve($translator, $data, $rules, $messages, $customAttributes, $field)
@@ -78,11 +78,11 @@ class Resolver
     /**
      * Create new validator instance.
      *
-     * @param $translator
-     * @param $data
-     * @param $rules
-     * @param $messages
-     * @param $customAttributes
+     * @param  $translator
+     * @param  $data
+     * @param  $rules
+     * @param  $messages
+     * @param  $customAttributes
      * @return \Illuminate\Validation\Validator
      */
     protected function createValidator($translator, $data, $rules, $messages, $customAttributes)

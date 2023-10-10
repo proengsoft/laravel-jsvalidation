@@ -193,8 +193,8 @@ class DelegatedValidator
     /**
      * Delegate method calls to validator instance.
      *
-     * @param $method
-     * @param $params
+     * @param  $method
+     * @param  $params
      * @return mixed
      */
     public function __call($method, $params)

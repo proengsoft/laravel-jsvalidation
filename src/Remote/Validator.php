@@ -48,8 +48,8 @@ class Validator
     /**
      * Validate request.
      *
-     * @param $field
-     * @param $parameters
+     * @param  $field
+     * @param  $parameters
      * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -86,7 +86,7 @@ class Validator
     /**
      *  Parse Validation input request data.
      *
-     * @param $data
+     * @param  $data
      * @return array
      */
     protected function parseAttributeName($data)
@@ -101,7 +101,7 @@ class Validator
     /**
      *  Parse Validation parameters.
      *
-     * @param $parameters
+     * @param  $parameters
      * @return array
      */
     protected function parseParameters($parameters)
@@ -117,7 +117,7 @@ class Validator
     /**
      * Validate remote Javascript Validations.
      *
-     * @param $attribute
+     * @param  $attribute
      * @param  array  $parameters
      * @return array|bool
      */
@@ -144,7 +144,7 @@ class Validator
     /**
      * Sets data for validate remote rules.
      *
-     * @param $attribute
+     * @param  $attribute
      * @param  bool  $validateAll
      * @return void
      */
@@ -167,7 +167,7 @@ class Validator
     /**
      * Remove rules that should not be validated remotely.
      *
-     * @param $rules
+     * @param  $rules
      * @param  BaseValidator  $validator
      * @return mixed
      */
