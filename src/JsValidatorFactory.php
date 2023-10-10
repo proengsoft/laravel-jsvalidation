@@ -45,7 +45,7 @@ class JsValidatorFactory
     }
 
     /**
-     * @param $options
+     * @param  $options
      * @return void
      */
     protected function setOptions($options)
@@ -121,7 +121,7 @@ class JsValidatorFactory
     /**
      * Creates JsValidator instance based on FormRequest.
      *
-     * @param $formRequest
+     * @param  $formRequest
      * @param  null|string  $selector
      * @return \Proengsoft\JsValidation\Javascript\JavascriptValidator
      *

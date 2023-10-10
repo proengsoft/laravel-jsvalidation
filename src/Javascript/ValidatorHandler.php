@@ -91,8 +91,8 @@ class ValidatorHandler
     /**
      * Make Laravel Validations compatible with JQuery Validation Plugin.
      *
-     * @param $attribute
-     * @param $rules
+     * @param  $attribute
+     * @param  $rules
      * @param  bool  $includeRemote
      * @return array
      */
@@ -119,7 +119,7 @@ class ValidatorHandler
     /**
      * Check if rule should be validated with javascript.
      *
-     * @param $jsRule
+     * @param  $jsRule
      * @param  bool  $includeRemote
      * @return bool
      */
@@ -131,7 +131,7 @@ class ValidatorHandler
     /**
      * Check if JS Validation is disabled for attribute.
      *
-     * @param $attribute
+     * @param  $attribute
      * @return bool
      */
     public function jsValidationEnabled($attribute)

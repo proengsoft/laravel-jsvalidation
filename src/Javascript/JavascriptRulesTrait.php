@@ -23,7 +23,7 @@ trait JavascriptRulesTrait
     /**
      * Confirmed rule is applied to confirmed attribute.
      *
-     * @param $attribute
+     * @param  $attribute
      * @param  array  $parameters
      * @return array
      */
@@ -38,7 +38,7 @@ trait JavascriptRulesTrait
     /**
      * Returns Javascript parameters for After rule.
      *
-     * @param $attribute
+     * @param  $attribute
      * @param  array  $parameters
      * @return array
      */
@@ -54,7 +54,7 @@ trait JavascriptRulesTrait
     /**
      * Returns Javascript parameters for Before rule.
      *
-     * @param $attribute
+     * @param  $attribute
      * @param  array  $parameters
      * @return array
      */
