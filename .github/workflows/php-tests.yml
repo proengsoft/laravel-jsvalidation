@@ -39,7 +39,7 @@ jobs:
         if: "matrix.laravel == '9'"
 
       - name: Select Laravel 10
-        uses: nick-invision/retry@v2.8.2
+        uses: nick-invision/retry@v2.8.3
         with:
           timeout_minutes: 5
           max_attempts: 5
