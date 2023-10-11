@@ -3,7 +3,7 @@
   "devDependencies": {
     "@babel/cli": "^7.20.7",
     "@babel/core": "^7.20.12",
-    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/plugin-transform-runtime": "^7.22.15",
     "babel-loader": "^8.2.5",
     "bundlewatch": "^0.3.3",
     "del": "^7.0.0",
