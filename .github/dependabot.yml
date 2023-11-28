@@ -19,6 +19,12 @@ updates:
       prefix-development: "chore"
       include: "scope"
     rebase-strategy: "disabled"
+    groups:
+      dev-dependencies:
+        patterns:
+          - "@babel/*"
+          - "webpack*"
+          - "gulp*"
 
   - package-ecosystem: composer
     directory: "/"
