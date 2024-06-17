@@ -375,6 +375,25 @@ laravelValidation = {
 
             return 'pending';
         }, '');
+
+        /**
+         *  override the default staticRules method to support array rules
+         */
+        $.validator.methods.staticRules = function (element) {
+            var rules = {},
+                validator = $.data(element.form, "validator");
+            // if name contains [] then it is an array
+            // and we need to convert it from [n] to [*]
+            var name = element.name;
+            if (name.indexOf('[') !== -1) {
+                name = name.replace(/\[\d+\]/g, '[*]');
+            }
+            if (validator.settings.rules) {
+                rules = $.validator.normalizeRule(validator.settings.rules[name]) || {};
+            }
+            
+            return rules;
+        }
     }
 };
 
