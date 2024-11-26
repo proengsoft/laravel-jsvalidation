@@ -111,7 +111,7 @@ class JsValidationServiceProviderTest extends TestCase
         $mock->register();
     }
 
-    protected function assertConfigMerged(string $file, string $configKey = null): void
+    protected function assertConfigMerged(string $file, ?string $configKey = null): void
     {
         $configKey ??= Str::of($file)->beforeLast('.php')->afterLast('/')->afterLast('\\')->toString();
 
