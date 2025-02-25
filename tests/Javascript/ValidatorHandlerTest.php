@@ -2,6 +2,9 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
+use Mockery;
+use Proengsoft\JsValidation\Javascript\MessageParser;
+use Proengsoft\JsValidation\Support\DelegatedValidator;
 use Proengsoft\JsValidation\Tests\TestCase;
 use Proengsoft\JsValidation\Javascript\RuleParser;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
@@ -14,35 +17,13 @@ class ValidatorHandlerTest extends TestCase
         $attribute = 'field';
         $rule = 'required_if:field2,value2';
 
-        $rules = ['field'=>['required','array']];
+        $mockDelegated = Mockery::mock(DelegatedValidator::class)->makePartial();
+        $mockDelegated->shouldReceive('getRules')->andReturn([$attribute=>[$rule]]);
+        $mockDelegated->shouldReceive('hasRule')->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)->andReturn(false);
+        $mockDelegated->shouldReceive('parseRule')->with($rule)->andReturn(['RequiredIf',['field2','value2']]);
+        $mockDelegated->shouldReceive('isImplicit')->with('RequiredIf')->andReturn(false);
 
-        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getRules','hasRule','parseRule','isImplicit'])
-            ->addMethods(['getRule'])
-            ->getMock();
-
-        $mockDelegated->expects($this->any())
-            ->method('getRules')
-            ->willReturn([$attribute=>[$rule]]);
-
-        $mockDelegated->expects($this->any())
-            ->method('hasRule')
-            ->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)
-            ->willReturn(false);
-
-        $mockDelegated->expects($this->once())
-            ->method('parseRule')
-            ->with($rule)
-            ->willReturn(['RequiredIf',['field2','value2']]);
-
-        $mockDelegated->expects($this->once())
-            ->method('isImplicit')
-            ->with('RequiredIf')
-            ->willReturn(false);
-
-
-        $mockRule = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\RuleParser::class)
+        $mockRule = $this->getMockBuilder(RuleParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
@@ -90,31 +71,17 @@ class ValidatorHandlerTest extends TestCase
         $attribute = 'field';
         $rule = 'required_if:field2,value2|no_js_validation';
 
-        $rules = ['field'=>['required','array']];
+        $mockDelegated = Mockery::mock(DelegatedValidator::class)->makePartial();
+        $mockDelegated->shouldReceive('getRules')->andReturn([$attribute=>explode('|',$rule)]);
+        $mockDelegated->shouldReceive('hasRule')->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)->andReturn(true);
 
-        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getRules','hasRule','parseRule','isImplicit'])
-            ->addMethods(['getRule'])
-            ->getMock();
-
-        $mockDelegated->expects($this->any())
-            ->method('getRules')
-            ->willReturn([$attribute=>explode('|',$rule)]);
-
-        $mockDelegated->expects($this->any())
-            ->method('hasRule')
-            ->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)
-            ->willReturn(true);
-
-        $mockRule = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\RuleParser::class)
+        $mockRule = $this->getMockBuilder(RuleParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
-        $mockMessages = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\MessageParser::class)
+        $mockMessages = $this->getMockBuilder(MessageParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
-
 
         $handler = new ValidatorHandler($mockRule, $mockMessages);
         $handler->setDelegatedValidator($mockDelegated);
@@ -133,38 +100,14 @@ class ValidatorHandlerTest extends TestCase
         $attribute = 'field';
         $rule = 'required_if:field2,value2';
 
-        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getRules','hasRule','parseRule','isImplicit','sometimes','explodeRules'])
-            ->addMethods(['getRule'])
-            ->getMock();
+        $mockDelegated = Mockery::mock(DelegatedValidator::class)->makePartial();
+        $mockDelegated->shouldReceive('sometimes')->andReturn(null);
+        $mockDelegated->shouldReceive('getRules')->andReturn([$attribute=>[$rule]]);
+        $mockDelegated->shouldReceive('hasRule')->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)->andReturn(false);
+        $mockDelegated->shouldReceive('parseRule')->with($rule)->andReturn(['RequiredIf',['field2','value2']]);
+        $mockDelegated->shouldReceive('isImplicit')->with('RequiredIf')->andReturn(false);
 
-        $mockDelegated->expects($this->once())
-            ->method('sometimes')
-            ->willReturn(null);
-
-
-        $mockDelegated->expects($this->any())
-            ->method('getRules')
-            ->willReturn([$attribute=>[$rule]]);
-
-        $mockDelegated->expects($this->any())
-            ->method('hasRule')
-            ->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)
-            ->willReturn(false);
-
-        $mockDelegated->expects($this->once())
-            ->method('parseRule')
-            ->with($rule)
-            ->willReturn(['RequiredIf',['field2','value2']]);
-
-        $mockDelegated->expects($this->once())
-            ->method('isImplicit')
-            ->with('RequiredIf')
-            ->willReturn(false);
-
-
-        $mockRule = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\RuleParser::class)
+        $mockRule = $this->getMockBuilder(RuleParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
@@ -173,7 +116,7 @@ class ValidatorHandlerTest extends TestCase
             ->with($attribute, 'RequiredIf', ['field2','value2'])
             ->willReturn([$attribute, RuleParser::REMOTE_RULE, ['field2','value2']]);
 
-        $mockMessages = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\MessageParser::class)
+        $mockMessages = $this->getMockBuilder(MessageParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
@@ -213,27 +156,12 @@ class ValidatorHandlerTest extends TestCase
         $attribute = 'field';
         $rule = 'active_url';
 
-        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getRules','hasRule','parseRule','isImplicit','sometimes','explodeRules'])
-            ->addMethods(['getRule'])
-            ->getMock();
+        $mockDelegated = Mockery::mock(DelegatedValidator::class)->makePartial();
+        $mockDelegated->shouldReceive('getRules')->andReturn([$attribute=>[$rule]]);
+        $mockDelegated->shouldReceive('hasRule')->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)->andReturn(false);
+        $mockDelegated->shouldReceive('parseRule')->with($rule)->andReturn(['ActiveUrl',['token',false,false]]);
 
-        $mockDelegated->expects($this->any())
-            ->method('getRules')
-            ->willReturn([$attribute=>[$rule]]);
-
-        $mockDelegated->expects($this->any())
-            ->method('hasRule')
-            ->with($attribute, ValidatorHandler::JSVALIDATION_DISABLE)
-            ->willReturn(false);
-
-        $mockDelegated->expects($this->once())
-            ->method('parseRule')
-            ->with($rule)
-            ->willReturn(['ActiveUrl',['token',false,false]]);
-
-        $mockRule = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\RuleParser::class)
+        $mockRule = $this->getMockBuilder(RuleParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
@@ -242,14 +170,13 @@ class ValidatorHandlerTest extends TestCase
             ->with($attribute, 'ActiveUrl', ['token',false,false])
             ->willReturn([$attribute, RuleParser::REMOTE_RULE, ['token',false,false]]);
 
-        $mockMessages = $this->getMockBuilder(\Proengsoft\JsValidation\Javascript\MessageParser::class)
+        $mockMessages = $this->getMockBuilder(MessageParser::class)
             ->setConstructorArgs([$mockDelegated] )
             ->getMock();
 
         $handler = new ValidatorHandler($mockRule, $mockMessages);
         $handler->setDelegatedValidator($mockDelegated);
         $handler->setRemote(false);
-        //$handler->sometimes($attribute, $rule);
 
         $data = $handler->validationData();
         $expected = [
