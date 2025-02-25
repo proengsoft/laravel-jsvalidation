@@ -2,20 +2,20 @@
 
 namespace Proengsoft\JsValidation\Support;
 
+use Mockery;
+use Proengsoft\JsValidation\Javascript\MessageParser;
 use Proengsoft\JsValidation\Tests\TestCase;
 
 class UseDelegatedValidatorTraitTest extends TestCase
 {
     public function testGetterAndSetter()
     {
-        $mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Support\UseDelegatedValidatorTrait::class);
-        $mockDelegated = $this->getMockBuilder(\Proengsoft\JsValidation\Support\DelegatedValidator::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockDelegated1 = Mockery::mock(\Proengsoft\JsValidation\Support\DelegatedValidator::class);
+        $mockDelegated2 = Mockery::mock(\Proengsoft\JsValidation\Support\DelegatedValidator::class);
 
-        $mockTrait->setDelegatedValidator($mockDelegated);
-        $value = $mockTrait->getDelegatedValidator($mockDelegated);
+        $messageParser = new MessageParser($mockDelegated1);
+        $messageParser->setDelegatedValidator($mockDelegated2);
 
-        $this->assertEquals($mockDelegated, $value);
+        $this->assertSame($mockDelegated2, $messageParser->getDelegatedValidator());
     }
 }

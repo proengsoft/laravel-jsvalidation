@@ -6,6 +6,8 @@ use Proengsoft\JsValidation\Tests\TestCase;
 
 class ProtectedClassStubTest
 {
+    use AccessProtectedTrait;
+
     protected $protectedProperty = true;
 
     protected function protectedMethod()
@@ -16,7 +18,6 @@ class ProtectedClassStubTest
 
 class AccessProtectedTraitTest extends TestCase
 {
-    private $mockTrait;
     private $stubInstance;
 
     /**
@@ -28,7 +29,6 @@ class AccessProtectedTraitTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Support\AccessProtectedTrait::class);
         $this->stubInstance = new ProtectedClassStubTest();
     }
 
@@ -39,7 +39,7 @@ class AccessProtectedTraitTest extends TestCase
             return $this->createProtectedCaller($stubInstance);
         };
 
-        $testCaller = $caller->bindTo($this->mockTrait, $this->mockTrait);
+        $testCaller = $caller->bindTo($this->stubInstance, $this->stubInstance);
 
         $this->assertInstanceOf('Closure', $testCaller());
     }
@@ -51,7 +51,7 @@ class AccessProtectedTraitTest extends TestCase
             return $this->getProtected($stubInstance,'protectedProperty');
         };
 
-        $testCaller = $caller->bindTo($this->mockTrait, $this->mockTrait);
+        $testCaller = $caller->bindTo($this->stubInstance, $this->stubInstance);
 
         $this->assertTrue($testCaller());
     }
@@ -63,7 +63,7 @@ class AccessProtectedTraitTest extends TestCase
             return $this->callProtected($stubInstance,'protectedMethod');
         };
 
-        $testCaller = $caller->bindTo($this->mockTrait, $this->mockTrait);
+        $testCaller = $caller->bindTo($this->stubInstance, $this->stubInstance);
 
         $this->assertTrue($testCaller());
     }

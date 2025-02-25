@@ -2,6 +2,8 @@
 
 namespace Proengsoft\JsValidation\Tests\Javascript;
 
+use Mockery as m;
+use Proengsoft\JsValidation\Javascript\RuleParser;
 use Proengsoft\JsValidation\Tests\TestCase;
 
 class JavascriptRulesTraitTest extends TestCase
@@ -17,11 +19,10 @@ class JavascriptRulesTraitTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Javascript\JavascriptRulesTrait::class);
-
-        $this->mockTrait->expects($this->any())
-            ->method('getAttributeName')
-            ->will($this->returnArgument(0));
+        $this->mockTrait = m::mock(RuleParser::class)->makePartial();
+        $this->mockTrait->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('getAttributeName')
+            ->andReturnArg(0);
     }
 
     public function testRuleConfirmed()
@@ -156,7 +157,7 @@ class JavascriptRulesTraitTest extends TestCase
     public function testRuleDimensions()
     {
         $values = $this->callProtected('ruleDimensions','field',['min_width=100','ratio=16/9']);
-        $expected = ['field', null];
+        $expected = ['field', ['min_width' => '100', 'ratio' => '16/9']];
 
         $this->assertEquals($expected,$values);
     }
