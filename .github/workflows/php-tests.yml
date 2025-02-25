@@ -68,4 +68,4 @@ jobs:
 
       - name: Check code coverage
         uses: codecov/codecov-action@v4
-        if: "matrix.php == '8.2' && matrix.laravel == '10'"
+        if: "matrix.php == '8.4' && matrix.laravel == '12'"

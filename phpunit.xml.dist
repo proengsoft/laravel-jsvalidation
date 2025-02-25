@@ -6,13 +6,11 @@
          colors="true"
          processIsolation="false"
          stopOnFailure="false"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
          cacheDirectory=".phpunit.cache"
+         displayDetailsOnPhpunitDeprecations="true"
          backupStaticProperties="false">
   <coverage>
-    <include>
-      <directory suffix=".php">src/</directory>
-    </include>
     <report>
       <clover outputFile="build/logs/clover.xml"/>
     </report>
@@ -28,4 +26,9 @@
   <php>
     <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
   </php>
+  <source>
+    <include>
+      <directory suffix=".php">src/</directory>
+    </include>
+  </source>
 </phpunit>
