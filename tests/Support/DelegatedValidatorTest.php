@@ -1,6 +1,7 @@
 <?php
 namespace Proengsoft\JsValidation\Support;
 
+use Mockery;
 use Proengsoft\JsValidation\Tests\TestCase;
 
 class DelegatedValidatorTest extends TestCase
@@ -73,18 +74,12 @@ class DelegatedValidatorTest extends TestCase
     {
         $expected = ['field'=>'data'];
 
-        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
-            ->disableOriginalConstructor()
-            ->addMethods(['getFiles'])
-            ->getMock();
+        $validator = Mockery::mock(\Illuminate\Validation\Validator::class);
+        $validator->shouldReceive('getFiles')->once()->andReturn($expected);
 
         $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
-
-        $validator->expects($this->once())
-            ->method('getFiles')
-            ->willReturn($expected);
 
         $delegated = new DelegatedValidator($validator, $parser);
         $files = $delegated->getFiles();
@@ -122,15 +117,8 @@ class DelegatedValidatorTest extends TestCase
         $return = true;
         $arg = [];
 
-        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
-            ->disableOriginalConstructor()
-            ->addMethods(['setFiles'])
-            ->getMock();
-
-        $validator->expects($this->once())
-            ->method('setFiles')
-            ->with($arg)
-            ->willReturn($return);
+        $validator = Mockery::mock(\Illuminate\Validation\Validator::class);
+        $validator->shouldReceive('setFiles')->once()->with($arg)->andReturn($return);
 
         $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
@@ -264,20 +252,14 @@ class DelegatedValidatorTest extends TestCase
      */
     public function testCall()
     {
-        $validator = $this->getMockBuilder(\Illuminate\Validation\Validator::class)
-            ->addMethods(['fakeMethod'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $validator = Mockery::mock(\Illuminate\Validation\Validator::class);
+        $validator->shouldReceive('fakeMethod')->once()->with(Mockery::type('string'))->andReturn(true);
 
         $parser = $this->getMockBuilder(\Proengsoft\JsValidation\Support\ValidationRuleParserProxy::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $delegated = new DelegatedValidator($validator, $parser);
-        $validator->expects($this->once())
-            ->method('fakeMethod')
-            ->with($this->isType('string'))
-            ->willReturn(true);
 
         $value= $delegated->__call('fakeMethod', ['param']);
 

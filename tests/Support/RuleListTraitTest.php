@@ -2,6 +2,8 @@
 
 namespace Proengsoft\JsValidation\Support;
 
+use Mockery as m;
+use Proengsoft\JsValidation\Javascript\RuleParser;
 use Proengsoft\JsValidation\Tests\TestCase;
 
 class RuleListTraitTest extends TestCase
@@ -17,7 +19,7 @@ class RuleListTraitTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockTrait = $this->getMockForTrait(\Proengsoft\JsValidation\Support\RuleListTrait::class);
+        $this->mockTrait = m::mock(RuleParser::class);
     }
 
     public function testIsImplemented() {
