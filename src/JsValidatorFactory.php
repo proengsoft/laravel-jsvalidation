@@ -152,7 +152,7 @@ class JsValidatorFactory
         // Replace all rules with Noop rules which are checked client-side and always valid to true.
         // This is important because jquery-validation expects fields under validation to have rules present. For
         // example, if you mark a field as invalid without a defined rule, then unhighlight won't be called.
-        $rules = method_exists($formRequest, 'rules') ? $formRequest->rules() : [];
+        $rules = method_exists($formRequest, 'rules') ? $this->app->call([$formRequest, 'rules']) : [];
         foreach ($rules as $key => $value) {
             $rules[$key] = 'proengsoft_noop';
         }

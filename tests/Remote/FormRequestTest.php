@@ -34,8 +34,6 @@ class FormRequestTest extends TestCase
 
     /**
      * Test passedValidation response.
-     *
-     * @return void
      */
     public function testPasses(): void
     {

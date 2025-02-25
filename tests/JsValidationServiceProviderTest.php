@@ -2,9 +2,13 @@
 
 namespace Proengsoft\JsValidation\Tests;
 
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Mockery;
 use Proengsoft\JsValidation\JsValidationServiceProvider;
+use Proengsoft\JsValidation\RemoteValidationMiddleware;
 
 class JsValidationServiceProviderTest extends TestCase
 {
@@ -53,23 +57,15 @@ class JsValidationServiceProviderTest extends TestCase
         $app['path.base']=dirname(__FILE__.'/../');
         $app['path.public']=dirname(__FILE__.'/../public');
 
-        $mockedConfig = $this->getMockForAbstractClass(\Illuminate\Contracts\Config\Repository::class, [],'',false);
-        $mockedConfig->expects($this->once())
-            ->method('get')
-            ->with('jsvalidation.disable_remote_validation')
-            ->will($this->returnValue(false));
-        $app['config']=$mockedConfig;
+        Config::set('jsvalidation.disable_remote_validation', false);
+        $app['config'] = Config::getFacadeRoot();
 
-        $mockedValidator = $this->getMockForAbstractClass(\Illuminate\Contracts\Validation\Factory::class, [],'',false);
-        $mockedValidator->expects($this->once())
-            ->method('extend')
-            ->will($this->returnValue(null));
-
+        $mockedValidator = Mockery::mock(\Illuminate\Contracts\Validation\Factory::class);
+        $mockedValidator->shouldReceive('extend')->once();
         $app['validator'] = $mockedValidator;
 
-
-        $mockKernel = $this->getMockForAbstractClass(\Illuminate\Contracts\Http\Kernel::class, [],'',true,true,true,['pushMiddleware']);
-
+        $mockKernel = Mockery::mock(\Illuminate\Contracts\Http\Kernel::class);
+        $mockKernel->shouldReceive('pushMiddleware')->once();
         $app[\Illuminate\Contracts\Http\Kernel::class] = $mockKernel;
 
         $mock = $this->getMockBuilder(\Proengsoft\JsValidation\JsValidationServiceProvider::class)
@@ -78,7 +74,6 @@ class JsValidationServiceProviderTest extends TestCase
             ->getMock();
 
         $mock->boot();
-
     }
 
     public function testRegister()
@@ -90,18 +85,13 @@ class JsValidationServiceProviderTest extends TestCase
             ->method('singleton')
             ->with('jsvalidator', $this->isInstanceOf(\Closure::class))
             ->willReturnCallback(function($name, $callback)  {
-                $mockedConfig = $this->getMockForAbstractClass(\Illuminate\Contracts\Config\Repository::class, [],'',false);
-                $mockedConfig->expects($this->once())
-                    ->method('get')
-                    ->with('jsvalidation')
-                    ->will($this->returnValue([]));
+                Config::set('jsvalidation', []);
 
-                $newApp['config'] = $mockedConfig;
+                $newApp['config'] = Config::getFacadeRoot();
 
                 $factory = $callback($newApp);
                 $this->assertInstanceOf(\Proengsoft\JsValidation\JsValidatorFactory::class, $factory);
             });
-
 
         $mock = $this->getMockBuilder(\Proengsoft\JsValidation\JsValidationServiceProvider::class)
             ->setConstructorArgs([$app])
@@ -111,7 +101,7 @@ class JsValidationServiceProviderTest extends TestCase
         $mock->register();
     }
 
-    protected function assertConfigMerged(string $file, string $configKey = null): void
+    protected function assertConfigMerged(string $file, ?string $configKey = null): void
     {
         $configKey ??= Str::of($file)->beforeLast('.php')->afterLast('/')->afterLast('\\')->toString();
 
