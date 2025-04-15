@@ -13,7 +13,7 @@ class PropertyNotFoundException extends Exception
      * @param  string  $caller
      * @param  \Exception  $previous
      */
-    public function __construct($property = '', $caller = '', Exception $previous = null)
+    public function __construct($property = '', $caller = '', ?Exception $previous = null)
     {
         $message = "'$property' not found in '$caller'' object";
         parent::__construct($message, 0, $previous);
