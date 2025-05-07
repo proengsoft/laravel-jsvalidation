@@ -348,28 +348,31 @@ $.extend(true, laravelValidation, {
          * @returns {*}
          */
         dependentElement: function(validator, element, name) {
-
-            var el=validator.findByName(name);
-
-            if ( el[0]!==undefined  && validator.settings.onfocusout ) {
+            var el = validator.findByName(name);
+            
+            var targetElement = el[el.length - 1];
+    
+            if (targetElement !== undefined && validator.settings.onfocusout) {
                 var event = 'blur';
-                if (el[0].tagName === 'SELECT' ||
-                    el[0].tagName === 'OPTION' ||
-                    el[0].type === 'checkbox' ||
-                    el[0].type === 'radio'
+                if (
+                    targetElement.tagName === 'SELECT' ||
+                    targetElement.tagName === 'OPTION' ||
+                    targetElement.type === 'checkbox' ||
+                    targetElement.type === 'radio'
                 ) {
                     event = 'click';
                 }
-
+    
                 var ruleName = '.validate-laravelValidation';
-                el.off( ruleName )
+                $(targetElement)
+                    .off(ruleName)
                     .off(event + ruleName + '-' + element.name)
-                    .on( event + ruleName + '-' + element.name, function() {
-                        $( element ).valid();
+                    .on(event + ruleName + '-' + element.name, function () {
+                        $(element).valid();
                     });
             }
-
-            return el[0];
+    
+            return targetElement;
         },
 
         /**
