@@ -6,7 +6,7 @@
     "@babel/plugin-transform-runtime": "^7.26.10",
     "babel-loader": "^10.0.0",
     "bundlewatch": "^0.4.1",
-    "del": "^8.0.0",
+    "del": "^8.0.1",
     "gulp": "^5.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-filter": "^9.0.1",
