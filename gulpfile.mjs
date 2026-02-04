@@ -24,6 +24,8 @@ const amdWrapper = `(function (root, factory) {
     }
 }(typeof self !== 'undefined' ? self : this, function ($) {
 <%= contents %>
+// Make laravelValidation accessible through the module export
+$.laravelValidation = laravelValidation;
 return $;
 }));
 `;

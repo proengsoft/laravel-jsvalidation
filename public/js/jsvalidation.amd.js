@@ -6081,6 +6081,8 @@ $.extend(true, laravelValidation, {
     }
 });
 
+// Make laravelValidation accessible through the module export
+$.laravelValidation = laravelValidation;
 return $;
 }));
 //# sourceMappingURL=jsvalidation.amd.js.map
