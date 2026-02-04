@@ -6081,7 +6081,7 @@ $.extend(true, laravelValidation, {
     }
 });
 
-// Make laravelValidation accessible through the module export
+// Make laravelValidation accessible via $.laravelValidation (in addition to global scope)
 $.laravelValidation = laravelValidation;
 return $;
 }));
