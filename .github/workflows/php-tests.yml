@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        laravel: ['10', '11', '12']
+        laravel: [10, 11, 12, 13]
         php: ['8.1', '8.2', '8.3', '8.4']
         exclude:
           - laravel: '11'
@@ -21,6 +21,10 @@ jobs:
             php: '8.4'
           - laravel: '12'
             php: '8.1'
+          - laravel: '13'
+            php: '8.1'
+          - laravel: '13'
+            php: '8.2'
 
     name: PHP ${{ matrix.php }} Laravel ${{ matrix.laravel }}
 
@@ -44,7 +48,7 @@ jobs:
           timeout_minutes: 5
           max_attempts: 5
           command: composer require "laravel/framework:10.*" "phpunit/phpunit:^10" --no-update --no-interaction
-        if: "matrix.laravel == '10'"
+        if: matrix.laravel == '10'
 
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v3.0.2
@@ -58,4 +62,4 @@ jobs:
 
       - name: Check code coverage
         uses: codecov/codecov-action@v5
-        if: "matrix.php == '8.4' && matrix.laravel == '12'"
+        if: matrix.php == '8.4' && matrix.laravel == '12'
