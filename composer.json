@@ -26,20 +26,20 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "illuminate/config": "^10.0|^11.0|^12.0|^13.0",
-        "illuminate/contracts": "^10.0|^11.0|^12.0|^13.0",
-        "illuminate/http": "^10.0|^11.0|^12.0|^13.0",
-        "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
-        "illuminate/translation": "^10.0|^11.0|^12.0|^13.0",
-        "illuminate/validation": "^10.0|^11.0|^12.0|^13.0",
-        "illuminate/view": "^10.0|^11.0|^12.0|^13.0",
-        "symfony/http-foundation": "^6.0|^7.0"
+        "php": "^8.2",
+        "illuminate/config": "^11.0|^12.0|^13.0",
+        "illuminate/contracts": "^11.0|^12.0|^13.0",
+        "illuminate/http": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "illuminate/translation": "^11.0|^12.0|^13.0",
+        "illuminate/validation": "^11.0|^12.0|^13.0",
+        "illuminate/view": "^11.0|^12.0|^13.0",
+        "symfony/http-foundation": "^7.0|^8.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
-        "phpunit/phpunit": "^9.5|^10.0|^11.5.3|^12.5.12"
+        "orchestra/testbench": "^9.0|^11.0",
+        "phpunit/phpunit": "^11.5.3|^12.5.12"
     },
     "autoload": {
         "psr-4": {
