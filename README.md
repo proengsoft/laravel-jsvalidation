@@ -12,7 +12,8 @@ You can validate forms automatically referencing it to your defined validations.
 
 #### Supported versions
 
-Laravel 9.x - 11.x
+- PHP 8.2 - 8.4
+- Laravel 11.x - 13.x
 
 #### Feature overview
 

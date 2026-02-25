@@ -12,21 +12,17 @@ jobs:
 
     strategy:
       matrix:
-        laravel: ['10', '11', '12']
-        php: ['8.1', '8.2', '8.3', '8.4']
+        laravel: [11, 12, 13]
+        php: ['8.2', '8.3', '8.4']
         exclude:
-          - laravel: '11'
-            php: '8.1'
-          - laravel: '10'
-            php: '8.4'
-          - laravel: '12'
-            php: '8.1'
+          - laravel: '13'
+            php: '8.2'
 
     name: PHP ${{ matrix.php }} Laravel ${{ matrix.laravel }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -37,14 +33,6 @@ jobs:
 
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
-      - name: Select Laravel 10
-        uses: nick-invision/retry@v3.0.2
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer require "laravel/framework:10.*" "phpunit/phpunit:^10" --no-update --no-interaction
-        if: "matrix.laravel == '10'"
 
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v3.0.2
@@ -58,4 +46,4 @@ jobs:
 
       - name: Check code coverage
         uses: codecov/codecov-action@v5
-        if: "matrix.php == '8.4' && matrix.laravel == '12'"
+        if: matrix.php == '8.4' && matrix.laravel == '12'

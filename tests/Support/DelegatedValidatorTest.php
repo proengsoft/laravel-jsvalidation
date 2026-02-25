@@ -376,7 +376,7 @@ class DelegatedValidatorTest extends TestCase
 
         $delegated->expects($this->once())
             ->method('callProtected')
-            ->with($this->isInstanceOf(\Closure::class), $method, $this->isType('array'))
+            ->with($this->isInstanceOf(\Closure::class), $method, $this->isArray())
             ->willReturn(true);
 
         if (is_array($args)) {
