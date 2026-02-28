@@ -69,6 +69,27 @@ Call [JsValidator Facade][] in your view to validate any [FormRequest](https://l
 {!! JsValidator::formRequest('App\Http\Requests\MyFormRequest') !!}
 ```
 
+##### AMD/RequireJS Support
+
+For projects using AMD (RequireJS), use the AMD-compatible build:
+
+```html
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script>
+    requirejs.config({
+        paths: {
+            'jquery': '//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min',
+            'jsvalidation': '{{ asset('vendor/jsvalidation/js/jsvalidation.amd') }}'
+        }
+    });
+
+    requirejs(['jsvalidation'], function($) {
+        // Laravel validation is now available via $.laravelValidation or global laravelValidation
+        {!! JsValidator::formRequest('App\Http\Requests\MyFormRequest') !!}
+    });
+</script>
+```
+
 Take a look to [Basic Usage](https://github.com/proengsoft/laravel-jsvalidation/wiki/Basic-Usage) or [Examples](https://github.com/proengsoft/laravel-jsvalidation/wiki/Validating-Examples) to get more information.
 
 #### Documentation
