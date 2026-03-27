@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "jquery-validation": "^1.21.0",
-    "locutus": "^2.0.32",
+    "locutus": "^3.0.25",
     "php-date-formatter": "^1.3.7"
   },
   "scripts": {
