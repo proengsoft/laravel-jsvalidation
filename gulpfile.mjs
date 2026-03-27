@@ -6,6 +6,20 @@ import gp_rename from 'gulp-rename';
 import gp_filter from 'gulp-filter';
 import gp_uglify from 'gulp-uglify';
 import webpack from 'webpack-stream';
+import requirejs from 'requirejs';
+
+function buildAmd(done) {
+    requirejs.optimize({
+        baseUrl: 'resources/assets/js',
+        mainConfigFile: null,
+        name: 'jsvalidation',
+        out: 'public/js/jsvalidation.amd.js',
+        optimize: 'uglify2',
+        preserveLicenseComments: false
+    }, () => done(), err => done(err));
+}
+
+
 
 const esBuildDir = 'es-build/';
 gulp.task('build', gulp.series(
@@ -59,6 +73,7 @@ gulp.task('build', gulp.series(
             .pipe(gp_sourcemaps.write('./'))
             .pipe(gulp.dest('public/js'));
     },
+    buildAmd,
     function () {
         return deleteAsync(esBuildDir);
     }
